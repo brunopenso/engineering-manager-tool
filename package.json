@@ -1,0 +1,20 @@
+{
+  "name": "engineering-manager-tool",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "lerna run dev --parallel --stream",
+    "build": "lerna run build",
+    "lint": "lerna run lint --parallel",
+    "clean": "lerna run clean --parallel && rm -rf node_modules"
+  },
+  "devDependencies": {
+    "lerna": "^8.1.9",
+    "typescript": "^5.8.3"
+  },
+  "engines": {
+    "node": ">=24.0.0"
+  }
+}
