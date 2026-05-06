@@ -1,14 +1,16 @@
-import express from 'express';
+import Fastify from 'fastify';
 
-const app = express();
-const PORT = process.env.PORT ?? 3001;
+const app = Fastify({ logger: true });
+const PORT = Number(process.env.PORT ?? 3001);
 
-app.use(express.json());
-
-app.get('/health', (_req, res) => {
-  res.json({ status: 'ok' });
+app.get('/healthcheck', async () => {
+  return { status: 'ok' };
 });
 
-app.listen(PORT, () => {
+try {
+  await app.listen({ port: PORT, host: '0.0.0.0' });
   console.log(`Backend running on http://localhost:${PORT}`);
-});
+} catch (error) {
+  app.log.error(error);
+  process.exit(1);
+}
