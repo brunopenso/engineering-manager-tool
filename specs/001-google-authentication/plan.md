@@ -5,27 +5,31 @@
 
 ## Summary
 
-Add Google-only authentication to the existing Lerna monorepo by refactoring both web and backend workspaces: implement Google token login, redirect successful logins to a welcome page, enforce login-page-only public access, persist users, and record successful login audits.
+Refactor the existing Lerna web and backend workspaces to implement Google-only authentication with welcome-page redirect, authenticated access for all non-login web pages, public operational healthcheck endpoints, persistent user lifecycle tracking, and successful-login auditing.
 
 ## Technical Context
 
 **Language/Version**: TypeScript (Node.js >=24 backend, React 19 frontend)  
 **Primary Dependencies**: Fastify, TypeORM, pg, dotenv, React, Vite  
-**Storage**: PostgreSQL via TypeORM + SQL migrations in `database/migrations`  
-**Testing**: Backend integration tests for auth flows and migration outcomes; web route-guard/auth-flow tests (Vitest + React Testing Library introduced for this feature)  
-**Target Platform**: Linux-hosted Node backend + browser-based React SPA
-**Project Type**: Monorepo web application (frontend + backend workspaces)  
-**Performance Goals**: p95 login request processing under 500ms excluding Google network latency; no regression to healthcheck responsiveness  
-**Constraints**: Login page is the only public page; non-login pages require authentication; keep existing healthcheck endpoints publicly reachable for ops; preserve Lerna workspace boundaries  
-**Scale/Scope**: Initial release scope for one backend service and one web client, expected hundreds of users and daily authentication events
+**Storage**: PostgreSQL via TypeORM with migrations under `database/migrations`  
+**Testing**: Backend integration tests for auth and migration behavior; web route and auth flow verification (Vitest + React Testing Library)  
+**Target Platform**: Linux-hosted Node backend and browser-based React SPA  
+**Project Type**: Monorepo web application (Lerna workspaces for backend and web)  
+**Performance Goals**: No regression to current healthcheck responsiveness; authentication and redirects complete within standard interactive web expectations  
+**Constraints**: Google is the only login method; non-login web pages require authentication; healthcheck endpoints remain publicly accessible for operations; user-visible error messages must be detailed by failure cause without leaking sensitive internals  
+**Scale/Scope**: Initial rollout for one backend service and one web client with hundreds of users and ongoing login audit growth
 
 ## Constitution Check
 
 *GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
 
-- Constitution file at `.specify/memory/constitution.md` is currently a template with placeholder principles and no enforceable gates.
-- Pre-Phase-0 Gate Result: PASS (no active constitutional constraints to violate).
-- Post-Phase-1 Re-check: PASS (design remains within existing monorepo architecture and clarified scope).
+- Principle I (Type-Safe Monorepo Ownership): PASS. Design keeps existing package boundaries and TypeScript-first implementation.
+- Principle II (Security-First Authentication and Data Handling): PASS with constraint. Detailed user-facing error messages are allowed only as controlled error categories (invalid, expired, issuer/audience mismatch) and must avoid sensitive internals.
+- Principle III (Migration-Backed Data Integrity): PASS. User and login-audit persistence changes are migration-backed and entity-aligned.
+- Principle IV (API and UX Contract Fidelity): PASS. Contract and quickstart artifacts align with clarified redirect, access, and healthcheck exception behavior.
+- Principle V (Incremental Delivery with Verifiable Outcomes): PASS. Story-based breakdown remains independently deliverable and measurable.
+
+Post-Phase-1 Re-check: PASS. No constitutional violations remain.
 
 ## Project Structure
 
@@ -68,8 +72,8 @@ packages/
         └── App.tsx
 ```
 
-**Structure Decision**: Keep the existing Lerna workspaces and implement auth by adding focused modules/routes/entities inside `packages/backend` and route/view/auth-state logic inside `packages/web`; no new top-level packages are required.
+**Structure Decision**: Keep the existing Lerna workspace layout and implement authentication by adding backend auth modules/routes/entities and frontend auth-state/pages/routing, without introducing new top-level services.
 
 ## Complexity Tracking
 
-No constitution violations requiring justification at this stage.
+No constitutional violations requiring justification.

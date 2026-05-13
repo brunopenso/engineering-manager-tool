@@ -27,7 +27,7 @@ In packages/backend:
 - Add entities for User and LoginAuditEvent.
 - Add Google token validation service.
 - Add auth route(s) for Google login and session introspection.
-- Keep healthcheck endpoints public.
+- Keep healthcheck endpoints (`/healthcheck` and `/healthcheck/complete`) public as operational exceptions.
 - Protect non-public routes with authentication middleware.
 
 ## 5. Implement web auth flow
@@ -44,6 +44,7 @@ From repository root:
 Expected local behavior:
 - Login route is publicly accessible.
 - All other web routes redirect to login when unauthenticated.
+- Backend healthcheck endpoints remain publicly accessible without authentication.
 - Successful Google login redirects to welcome page.
 - Backend creates/updates User and writes LoginAuditEvent.
 
@@ -52,3 +53,4 @@ Expected local behavior:
 - Second login for same email updates only lastLoginAt.
 - Each successful login writes exactly one LoginAuditEvent row.
 - Invalid/expired Google token denies access and does not write success audit.
+- Invalid, expired, issuer-mismatch, and audience-mismatch token failures return distinct user-readable messages.

@@ -7,11 +7,12 @@
   - Frontend-only validation: rejected because trust cannot rely on browser-side checks.
   - Introspection through custom auth proxy only: rejected for unnecessary new infrastructure at this stage.
 
-## Decision 2: Keep login page as the only public web route and guard all other routes via auth state
-- Decision: Web app will expose a public login route and require authenticated state for every other route, redirecting unauthenticated users to login.
-- Rationale: Matches clarified feature scope and minimizes accidental public surface.
+## Decision 2: Keep login page as the only public web route and preserve public healthcheck API endpoints
+- Decision: Web app will expose only the login page publicly and require authenticated state for every other web route, while backend healthcheck endpoints remain public as an explicit operational exception.
+- Rationale: Matches clarified feature scope and preserves operational monitoring behavior.
 - Alternatives considered:
   - Multiple semi-public informational routes: rejected by clarified requirement.
+  - Requiring auth for healthchecks: rejected because it weakens standard operational liveness/readiness checks.
   - Backend-only protection without web route guards: rejected because UX and navigation would still expose protected pages briefly.
 
 ## Decision 3: Persist user lifecycle and login audit in PostgreSQL using TypeORM migrations
@@ -33,3 +34,10 @@
 - Rationale: User explicitly requested adapting the existing application and current repo already separates web/backend concerns adequately.
 - Alternatives considered:
   - Creating new auth microservice/package: rejected due to unnecessary operational overhead for first feature.
+
+## Decision 6: Return detailed user-facing authentication failure messages as controlled categories
+- Decision: API and frontend will expose explicit failure categories for invalid token, expired token, and issuer/audience mismatch, while avoiding sensitive internal validation details.
+- Rationale: Meets clarified UX requirement for detailed feedback while remaining aligned with security constraints.
+- Alternatives considered:
+  - Generic single error message for all failures: rejected by clarified requirement.
+  - Full raw validation error disclosure: rejected because it risks leaking internals.

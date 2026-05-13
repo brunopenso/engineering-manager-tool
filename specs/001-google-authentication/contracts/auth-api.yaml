@@ -46,6 +46,23 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                invalidToken:
+                  value:
+                    code: INVALID_TOKEN
+                    message: Google token is invalid.
+                expiredToken:
+                  value:
+                    code: EXPIRED_TOKEN
+                    message: Google token has expired.
+                issuerMismatch:
+                  value:
+                    code: ISSUER_MISMATCH
+                    message: Google token issuer is not accepted.
+                audienceMismatch:
+                  value:
+                    code: AUDIENCE_MISMATCH
+                    message: Google token audience does not match this application.
   /auth/me:
     get:
       summary: Return current authenticated user
@@ -69,6 +86,22 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+  /healthcheck:
+    get:
+      summary: Public liveness endpoint
+      tags: [Ops]
+      responses:
+        '200':
+          description: Service is running
+  /healthcheck/complete:
+    get:
+      summary: Public readiness endpoint
+      tags: [Ops]
+      responses:
+        '200':
+          description: Service dependencies are healthy
+        '503':
+          description: Service dependencies are degraded
 components:
   securitySchemes:
     bearerAuth:
@@ -96,7 +129,16 @@ components:
           format: date-time
     ErrorResponse:
       type: object
-      required: [message]
+      required: [code, message]
       properties:
+        code:
+          type: string
+          enum:
+            - INVALID_TOKEN
+            - EXPIRED_TOKEN
+            - ISSUER_MISMATCH
+            - AUDIENCE_MISMATCH
+            - MISSING_APP_TOKEN
+            - INVALID_APP_TOKEN
         message:
           type: string

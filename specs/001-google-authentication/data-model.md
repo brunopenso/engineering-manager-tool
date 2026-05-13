@@ -44,6 +44,15 @@
   - expiresAt must be after issuedAt.
   - session payload must map to an existing User at issuance time.
 
+## Value Object: AuthFailureFeedback (non-persistent)
+- Purpose: Represents user-facing authentication error payload for failed login attempts.
+- Fields:
+  - code: enum (INVALID_TOKEN, EXPIRED_TOKEN, ISSUER_MISMATCH, AUDIENCE_MISMATCH).
+  - message: string, required, user-readable and specific to the failure cause.
+- Validation rules:
+  - code must be one of the approved categories.
+  - message must be human-readable and MUST NOT include sensitive validation internals.
+
 ## State Transitions
 - New Google user authenticates successfully:
   - User does not exist by email -> create User with firstLoginAt = now and lastLoginAt = now.
@@ -56,4 +65,4 @@
 - Authentication fails:
   - Do not create/update User.
   - Do not create LoginAuditEvent for success category.
-  - Return unauthorized result and keep user on login flow.
+  - Return AuthFailureFeedback with cause-specific message and keep user on login flow.
