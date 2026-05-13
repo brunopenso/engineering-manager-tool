@@ -7,6 +7,7 @@
   "scripts": {
     "dev": "tsx watch src/index.ts",
     "build": "tsc --build",
+    "lint": "tsc --noEmit",
     "start": "node dist/index.js",
     "clean": "rm -rf dist tsconfig.tsbuildinfo",
     "db:migration:create": "tsx scripts/migration-create.ts",
@@ -14,14 +15,18 @@
     "db:migration:rollback": "tsx scripts/migration-rollback.ts"
   },
   "dependencies": {
+    "@fastify/jwt": "^9.1.0",
     "dotenv": "^17.4.2",
     "fastify": "^5.8.5",
+    "google-auth-library": "^9.15.1",
+    "jsonwebtoken": "^9.0.2",
     "pg": "^8.20.0",
     "reflect-metadata": "^0.2.2",
     "typeorm": "^0.3.29"
   },
   "devDependencies": {
     "@types/node": "^24.0.0",
+    "@types/jsonwebtoken": "^9.0.7",
     "tsx": "^4.19.4"
   }
 }
