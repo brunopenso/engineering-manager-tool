@@ -11,6 +11,9 @@
 
 - Q: Where should users land after successful login? → A: Redirect to a page saying "Welcome to the system".
 - Q: Which pages are publicly accessible? → A: Only the login page is public; all other pages require authentication.
+- Q: Should healthcheck endpoints be a public exception to the login-only access rule? → A: Yes, keep healthcheck endpoints public as an explicit operational exception.
+- Q: Should SC-001 remain in Success Criteria? → A: Remove SC-001.
+- Q: How specific should user-facing authentication failure messages be? → A: Provide detailed user-facing messages per failure cause.
 
 ## User Scenarios & Testing *(mandatory)*
 
@@ -80,9 +83,10 @@ Each authentication creates an audit entry so the organization can track user si
 - **FR-007**: The system MUST preserve the original first login date after the initial user creation.
 - **FR-008**: The system MUST create an audit entry for each login event.
 - **FR-009**: The system MUST store the time of each audit login event.
-- **FR-010**: The system MUST provide user-readable feedback when authentication cannot be completed.
+- **FR-010**: The system MUST provide detailed user-readable feedback for each authentication failure cause (including invalid token, expired token, and issuer/audience mismatch).
 - **FR-011**: The system MUST redirect users to a page that displays "Welcome to the system" immediately after successful Google authentication.
-- **FR-012**: The system MUST restrict all non-login pages to authenticated users only.
+- **FR-012**: The system MUST restrict all non-login web pages to authenticated users only.
+- **FR-013**: The system MUST keep backend healthcheck endpoints publicly accessible as an explicit operational exception.
 
 ### Key Entities *(include if feature involves data)*
 
@@ -93,17 +97,18 @@ Each authentication creates an audit entry so the organization can track user si
 
 ### Measurable Outcomes
 
-- **SC-001**: At least 95% of valid Google sign-in attempts successfully result in authenticated access on the first attempt.
 - **SC-002**: 100% of first-time successful sign-ins produce exactly one new user record with all required fields populated.
 - **SC-003**: 100% of repeat successful sign-ins update the existing user's last login date without changing first login date.
 - **SC-004**: 100% of successful sign-ins create exactly one corresponding successful-login audit record.
 - **SC-005**: 100% of successful sign-ins redirect users to the welcome page that displays "Welcome to the system".
-- **SC-006**: 100% of unauthenticated requests to non-login pages are redirected to the login page.
+- **SC-006**: 100% of unauthenticated requests to non-login web pages are redirected to the login page.
+- **SC-007**: 100% of unauthenticated requests to backend healthcheck endpoints receive healthcheck responses without authentication challenges.
 
 ## Assumptions
 
 - The application is intended for users who have access to Google accounts.
 - No non-Google authentication methods are included in this feature scope.
 - The login page is the only public page in the application.
+- Backend healthcheck endpoints are public for operational monitoring.
 - Email is treated as the unique identifier for matching a returning user.
 - Date and time values are stored in a consistent, system-wide standard timezone format.
