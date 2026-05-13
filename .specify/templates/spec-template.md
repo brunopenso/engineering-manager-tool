@@ -28,6 +28,8 @@
 
 **Automated Test Requirement**: [Describe the automated test(s) that will verify this story. All user stories MUST have automated tests covering acceptance criteria.]
 
+**Access Control Validation**: [If this story exposes collaborator or organizational data, define explicit allow/deny visibility outcomes for self, direct/indirect subordinates, peers, and superiors.]
+
 **Acceptance Scenarios**:
 
 1. **Given** [initial state], **When** [action], **Then** [expected outcome]
@@ -43,6 +45,8 @@
 
 **Independent Test**: [Describe how this can be tested independently]
 
+**Access Control Validation**: [If this story exposes collaborator or organizational data, define explicit allow/deny visibility outcomes for self, direct/indirect subordinates, peers, and superiors.]
+
 **Acceptance Scenarios**:
 
 1. **Given** [initial state], **When** [action], **Then** [expected outcome]
@@ -56,6 +60,8 @@
 **Why this priority**: [Explain the value and why it has this priority level]
 
 **Independent Test**: [Describe how this can be tested independently]
+
+**Access Control Validation**: [If this story exposes collaborator or organizational data, define explicit allow/deny visibility outcomes for self, direct/indirect subordinates, peers, and superiors.]
 
 **Acceptance Scenarios**:
 
@@ -86,6 +92,8 @@
 
 *All functional requirements MUST be covered by automated tests. Define the test(s) for each requirement below.*
 
+*For features that expose collaborator or organizational data, requirements MUST define a hierarchical DAC matrix that allows only self + descendants (recursive) and denies peer/superior visibility for every API endpoint, report, and visualization in scope.*
+
 - **FR-001**: System MUST [specific capability, e.g., "allow users to create accounts"]
 - **FR-002**: System MUST [specific capability, e.g., "validate email addresses"]  
 - **FR-003**: Users MUST be able to [key interaction, e.g., "reset their password"]
@@ -96,6 +104,14 @@
 
 - **FR-006**: System MUST authenticate users via [NEEDS CLARIFICATION: auth method not specified - email/password, SSO, OAuth?]
 - **FR-007**: System MUST retain user data for [NEEDS CLARIFICATION: retention period not specified]
+
+### Access Control Matrix *(required when data visibility is in scope)*
+
+| Actor | Allowed Data Visibility | Explicitly Denied Visibility | Validation Notes |
+|-------|--------------------------|-------------------------------|------------------|
+| [e.g., Top leader] | [self + all descendants] | [all non-descendants] | [tests/scenarios] |
+| [e.g., Mid leader] | [self + descendant subtree] | [superiors, peers, other branches] | [tests/scenarios] |
+| [e.g., Individual contributor] | [self only] | [all other users] | [tests/scenarios] |
 
 ### Key Entities *(include if feature involves data)*
 
