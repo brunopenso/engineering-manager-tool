@@ -1,0 +1,96 @@
+# Feature Specification: Google-only Authentication
+
+**Feature Branch**: `001-google-authentication`  
+**Created**: 2026-05-13  
+**Status**: Draft  
+**Input**: User description: "Lets create our first feature authentication. Create a login screen that will be able to authenticate with google only. Create the backend steps that will validate the user token, create a audit table that will register when a user have login and create a user table to register the user with full name, mail, date of first login and date of the last login."
+
+## User Scenarios & Testing *(mandatory)*
+
+### User Story 1 - Sign in with Google (Priority: P1)
+
+A user can sign in through a login screen using only their Google account to access the application.
+
+**Why this priority**: Authentication is the entry point to all protected areas of the product and is required before any other value can be delivered.
+
+**Independent Test**: Can be fully tested by attempting sign-in with a valid Google account and confirming the user is granted access.
+
+**Acceptance Scenarios**:
+
+1. **Given** a user is on the login screen, **When** they choose Google sign-in and complete Google authentication successfully, **Then** they are authenticated and can access the application.
+2. **Given** a user tries to sign in with an invalid or expired Google token, **When** the token is submitted, **Then** sign-in is denied and the user sees a clear failure message.
+
+---
+
+### User Story 2 - Create and maintain user profile on sign-in (Priority: P2)
+
+When a user signs in with Google, the system creates a user record on first login and keeps login timestamps up to date on future logins.
+
+**Why this priority**: User identity persistence is required to recognize returning users and support downstream product behavior tied to the authenticated user.
+
+**Independent Test**: Can be tested by signing in once with a new Google account and again with the same account, then verifying first-login and last-login dates are recorded correctly.
+
+**Acceptance Scenarios**:
+
+1. **Given** a user signs in for the first time with a valid Google account, **When** authentication succeeds, **Then** a user record is created with full name, email, first login date, and last login date.
+2. **Given** an existing user signs in again with the same Google account, **When** authentication succeeds, **Then** the existing user record is reused and only the last login date is updated.
+
+---
+
+### User Story 3 - Record login audit trail (Priority: P3)
+
+Each authentication creates an audit entry so the organization can track user sign-in events.
+
+**Why this priority**: Auditability supports operational oversight and incident investigation while keeping the authentication process accountable.
+
+**Independent Test**: Can be tested by completing successful sign-ins and confirming one audit record is written per successful login event.
+
+**Acceptance Scenarios**:
+
+1. **Given** a user successfully signs in through Google, **When** authentication is finalized, **Then** an audit record is created for that login event.
+2. **Given** authentication fails, **When** no user session is created, **Then** no successful-login audit entry is created.
+
+---
+
+### Edge Cases
+
+- A Google-authenticated response is missing required identity data (full name or email).
+- The email from Google matches an existing account with different profile name formatting.
+- A user initiates multiple rapid sign-in attempts in parallel.
+- The audit write fails after authentication has succeeded.
+
+## Requirements *(mandatory)*
+
+### Functional Requirements
+
+- **FR-001**: The system MUST provide a login screen that offers Google as the only sign-in method.
+- **FR-002**: The system MUST authenticate users only when a submitted Google token is valid, unexpired, and issued for this application.
+- **FR-003**: The system MUST deny access when Google token validation fails.
+- **FR-004**: The system MUST create a user record on first successful login containing full name, email, first login date, and last login date.
+- **FR-005**: The system MUST match returning users by email and avoid creating duplicate user records for the same person.
+- **FR-006**: The system MUST update the user last login date on every subsequent successful login.
+- **FR-007**: The system MUST preserve the original first login date after the initial user creation.
+- **FR-008**: The system MUST create an audit entry for each login event.
+- **FR-009**: The system MUST store the time of each audit login event.
+- **FR-010**: The system MUST provide user-readable feedback when authentication cannot be completed.
+
+### Key Entities *(include if feature involves data)*
+
+- **User**: Represents an authenticated person in the system, including full name, email, first login date, and last login date.
+- **Login Audit Event**: Represents a successful sign-in occurrence, including the associated user and the login timestamp.
+
+## Success Criteria *(mandatory)*
+
+### Measurable Outcomes
+
+- **SC-001**: At least 95% of valid Google sign-in attempts successfully result in authenticated access on the first attempt.
+- **SC-002**: 100% of first-time successful sign-ins produce exactly one new user record with all required fields populated.
+- **SC-003**: 100% of repeat successful sign-ins update the existing user's last login date without changing first login date.
+- **SC-004**: 100% of successful sign-ins create exactly one corresponding successful-login audit record.
+
+## Assumptions
+
+- The application is intended for users who have access to Google accounts.
+- No non-Google authentication methods are included in this feature scope.
+- Email is treated as the unique identifier for matching a returning user.
+- Date and time values are stored in a consistent, system-wide standard timezone format.
