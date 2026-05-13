@@ -5,6 +5,13 @@
 **Status**: Draft  
 **Input**: User description: "Lets create our first feature authentication. Create a login screen that will be able to authenticate with google only. Create the backend steps that will validate the user token, create a audit table that will register when a user have login and create a user table to register the user with full name, mail, date of first login and date of the last login."
 
+## Clarifications
+
+### Session 2026-05-13
+
+- Q: Where should users land after successful login? → A: Redirect to a page saying "Welcome to the system".
+- Q: Which pages are publicly accessible? → A: Only the login page is public; all other pages require authentication.
+
 ## User Scenarios & Testing *(mandatory)*
 
 ### User Story 1 - Sign in with Google (Priority: P1)
@@ -17,7 +24,7 @@ A user can sign in through a login screen using only their Google account to acc
 
 **Acceptance Scenarios**:
 
-1. **Given** a user is on the login screen, **When** they choose Google sign-in and complete Google authentication successfully, **Then** they are authenticated and can access the application.
+1. **Given** a user is on the login screen, **When** they choose Google sign-in and complete Google authentication successfully, **Then** they are authenticated and redirected to a page that says "Welcome to the system".
 2. **Given** a user tries to sign in with an invalid or expired Google token, **When** the token is submitted, **Then** sign-in is denied and the user sees a clear failure message.
 
 ---
@@ -58,6 +65,7 @@ Each authentication creates an audit entry so the organization can track user si
 - The email from Google matches an existing account with different profile name formatting.
 - A user initiates multiple rapid sign-in attempts in parallel.
 - The audit write fails after authentication has succeeded.
+- An unauthenticated user attempts to open any route other than the login page and healthcheck endpoints.
 
 ## Requirements *(mandatory)*
 
@@ -73,6 +81,8 @@ Each authentication creates an audit entry so the organization can track user si
 - **FR-008**: The system MUST create an audit entry for each login event.
 - **FR-009**: The system MUST store the time of each audit login event.
 - **FR-010**: The system MUST provide user-readable feedback when authentication cannot be completed.
+- **FR-011**: The system MUST redirect users to a page that displays "Welcome to the system" immediately after successful Google authentication.
+- **FR-012**: The system MUST restrict all non-login pages to authenticated users only.
 
 ### Key Entities *(include if feature involves data)*
 
@@ -87,10 +97,13 @@ Each authentication creates an audit entry so the organization can track user si
 - **SC-002**: 100% of first-time successful sign-ins produce exactly one new user record with all required fields populated.
 - **SC-003**: 100% of repeat successful sign-ins update the existing user's last login date without changing first login date.
 - **SC-004**: 100% of successful sign-ins create exactly one corresponding successful-login audit record.
+- **SC-005**: 100% of successful sign-ins redirect users to the welcome page that displays "Welcome to the system".
+- **SC-006**: 100% of unauthenticated requests to non-login pages are redirected to the login page.
 
 ## Assumptions
 
 - The application is intended for users who have access to Google accounts.
 - No non-Google authentication methods are included in this feature scope.
+- The login page is the only public page in the application.
 - Email is treated as the unique identifier for matching a returning user.
 - Date and time values are stored in a consistent, system-wide standard timezone format.
