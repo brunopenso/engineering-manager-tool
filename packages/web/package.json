@@ -6,12 +6,15 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc --build && vite build",
+    "lint": "tsc --noEmit",
     "preview": "vite preview",
     "clean": "rm -rf dist tsconfig.tsbuildinfo"
   },
   "dependencies": {
+    "@react-oauth/google": "^0.12.2",
     "react": "^19.1.0",
-    "react-dom": "^19.1.0"
+    "react-dom": "^19.1.0",
+    "react-router-dom": "^7.6.0"
   },
   "devDependencies": {
     "@types/react": "^19.1.4",

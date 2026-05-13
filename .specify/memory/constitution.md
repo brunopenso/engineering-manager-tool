@@ -47,7 +47,7 @@ be non-optional and testable.
 
 ### III. Migration-Backed Data Integrity
 Persistent schema changes MUST be delivered via migration files under
-`database/migrations`, paired with corresponding entity updates in backend source.
+`packages/backend/database/migrations`, paired with corresponding entity updates in backend source.
 Critical identity data (for example user records and login audits) MUST enforce unique
 and relational integrity at the database level.
 

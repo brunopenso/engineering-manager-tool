@@ -11,7 +11,7 @@ Refactor the existing Lerna web and backend workspaces to implement Google-only 
 
 **Language/Version**: TypeScript (Node.js >=24 backend, React 19 frontend)  
 **Primary Dependencies**: Fastify, TypeORM, pg, dotenv, React, Vite  
-**Storage**: PostgreSQL via TypeORM with migrations under `database/migrations`  
+**Storage**: PostgreSQL via TypeORM with migrations under `packages/backend/database/migrations`  
 **Testing**: Backend integration tests for auth and migration behavior; web route and auth flow verification (Vitest + React Testing Library)  
 **Target Platform**: Linux-hosted Node backend and browser-based React SPA  
 **Project Type**: Monorepo web application (Lerna workspaces for backend and web)  

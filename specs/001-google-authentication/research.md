@@ -16,7 +16,7 @@
   - Backend-only protection without web route guards: rejected because UX and navigation would still expose protected pages briefly.
 
 ## Decision 3: Persist user lifecycle and login audit in PostgreSQL using TypeORM migrations
-- Decision: Add User and LoginAudit tables through migrations under database/migrations and map entities in backend source.
+- Decision: Add User and LoginAudit tables through migrations under packages/backend/database/migrations and map entities in backend source.
 - Rationale: Existing backend already uses TypeORM + PostgreSQL; migrations are the existing operational mechanism.
 - Alternatives considered:
   - In-memory persistence: rejected because audit and login history must be durable.

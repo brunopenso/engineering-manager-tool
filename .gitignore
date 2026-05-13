@@ -2,3 +2,11 @@ node_modules/
 dist/
 .env
 *.log
+build/
+.env*
+*.tmp
+*.swp
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

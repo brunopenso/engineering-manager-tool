@@ -1,17 +1,28 @@
-import 'reflect-metadata';
+// This should be loaded first to ensure environment variables are available for the database connection
 import dotenv from 'dotenv';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import fs from 'fs';
-
-dotenv.config();
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+const envPath = path.resolve(__dirname, '..', '.env');
 
-function generateMigrationName(baseName: string): string {
-  const timestamp = new Date().getTime();
-  return `${timestamp}-${baseName}.ts`;
+dotenv.config({ path: envPath });
+
+import 'reflect-metadata';
+import fs from 'fs';
+
+function toMigrationClassBase(baseName: string): string {
+  return baseName
+    .split(/[^a-zA-Z0-9]+/)
+    .filter(Boolean)
+    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+    .join('');
+}
+
+function generateTimestamp(): number {
+  // TypeORM expects a 13-digit epoch-milliseconds suffix on migration class names.
+  return Date.now();
 }
 
 async function createMigration() {
@@ -23,13 +34,15 @@ async function createMigration() {
   }
 
   try {
-    const migrationsDir = path.join(__dirname, '..', '..', '..', 'database', 'migrations');
-    const fileName = generateMigrationName(migrationName);
+    const timestamp = generateTimestamp();
+    const migrationClassBase = toMigrationClassBase(migrationName);
+    const migrationsDir = path.join(__dirname, '..', 'database', 'migrations');
+    const fileName = `${new Date().getTime()}-${migrationName}.ts`;
     const filePath = path.join(migrationsDir, fileName);
     
     const template = `import { MigrationInterface, QueryRunner } from "typeorm";
 
-export class ${migrationName}${new Date().getTime()} implements MigrationInterface {
+export class ${migrationClassBase}${timestamp} implements MigrationInterface {
     name = '${fileName}'
 
     public async up(queryRunner: QueryRunner): Promise<void> {
