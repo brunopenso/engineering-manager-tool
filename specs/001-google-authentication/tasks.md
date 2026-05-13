@@ -99,6 +99,10 @@
 - [ ] T033 Harden auth error responses and backend logging consistency in packages/backend/src/routes/auth.ts
 - [ ] T034 [P] Validate and refine end-to-end feature runbook in specs/001-google-authentication/quickstart.md
 - [ ] T035 Refactor duplicated auth mapping logic into a shared mapper utility in packages/backend/src/services/authUserMapper.ts
+- [ ] T036 Validate unauthenticated access for /healthcheck and /healthcheck/complete and record evidence in specs/001-google-authentication/quickstart.md
+- [ ] T037 Run monorepo build verification (npm run build) and resolve failures across impacted packages
+- [ ] T038 Run monorepo lint verification (npm run lint) and resolve findings across impacted packages
+- [ ] T039 Run feature verification checklist for US1-US3 outcomes and capture results in specs/001-google-authentication/quickstart.md
 
 ---
 
@@ -134,6 +138,7 @@
 - US2: T022 can run in parallel with T023 preparation work
 - US3: T027 can run in parallel with T028 preparation work
 - Polish: T032 and T034 can run in parallel
+- Validation: T037 and T038 can run independently once implementation is complete
 
 ---
 
@@ -174,6 +179,7 @@
 2. Add user persistence lifecycle behavior (US2)
 3. Add audit trail behavior (US3)
 4. Apply polish and operational hardening
+5. Execute T036-T039 as mandatory release-quality gates
 
 ### Team Parallelization Strategy
 
