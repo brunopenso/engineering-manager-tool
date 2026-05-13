@@ -1,31 +1,29 @@
 <!--
 Sync Impact Report
-Version change: unversioned draft -> 1.0.0
+Version change: 1.0.0 -> 1.1.0
 Modified principles:
-- 1. Code Quality & Type Safety -> I. Type-Safe Monorepo Ownership
-- 2. Testing Standards -> V. Incremental Delivery with Verifiable Outcomes
-- 3. Monorepo Structure & Conventions -> I. Type-Safe Monorepo Ownership
-- 4. Backend Package Standards -> III. Migration-Backed Data Integrity
-- 5. Web Package Standards -> IV. API and UX Contract Fidelity
-- 8. Security & Data Handling -> II. Security-First Authentication and Data Handling
+- V. Incremental Delivery with Verifiable Outcomes -> V. Incremental Delivery with Verifiable Outcomes
+- VI. Mandatory Automated Testing (added)
 Added sections:
-- Technical Standards
-- Delivery Workflow
-Removed sections:
-- Numbered "Project Principles" list (replaced with constitutional principle model)
+- VI. Mandatory Automated Testing (new principle)
 Templates requiring updates:
-- ✅ .specify/templates/plan-template.md (reviewed, no updates required)
-- ✅ .specify/templates/spec-template.md (reviewed, no updates required)
-- ✅ .specify/templates/tasks-template.md (reviewed, no updates required)
-- ✅ .specify/templates/commands/*.md (directory not present, no updates required)
+- ⚠ .specify/templates/plan-template.md (update Constitution Check to require tests for all features)
+- ⚠ .specify/templates/spec-template.md (ensure all user stories and requirements include test coverage)
+- ⚠ .specify/templates/tasks-template.md (make test tasks mandatory, not optional)
 - ✅ README.md (reviewed, no constitution reference drift)
 Follow-up TODOs:
-- None
+- Update plan, spec, and tasks templates to reflect mandatory test requirements
 -->
+
 
 # engineering-manager-tool Constitution
 
+
 ## Core Principles
+### VI. Mandatory Automated Testing
+All new features and changes MUST include automated tests that cover all acceptance criteria and critical paths. No code may be merged without passing tests for all affected areas. Test coverage MUST be enforced at the pull request level, and test failures MUST block merges.
+
+Rationale: Automated tests are essential for preventing regressions, ensuring requirements are met, and enabling safe, rapid iteration. Mandatory testing discipline is foundational for quality and maintainability as the codebase evolves.
 
 ### I. Type-Safe Monorepo Ownership
 All production code MUST be TypeScript with strict typing enabled at package level.
@@ -62,14 +60,11 @@ with the active feature spec clarifications before implementation closes.
 Rationale: Keeping contracts and UX behavior synchronized prevents regressions and
 misaligned expectations between backend and web changes.
 
-### V. Incremental Delivery with Verifiable Outcomes
-Work MUST be organized into independently deliverable user stories with clear
-acceptance checks. Tasks MUST map to functional requirements and measurable success
-criteria. Before merge, each changed package MUST pass build and lint checks, and
-feature-critical behavior MUST be verified with repeatable validation steps.
 
-Rationale: Incremental delivery reduces risk and ensures each release adds validated
-value rather than partial, unverifiable changes.
+### V. Incremental Delivery with Verifiable Outcomes
+Work MUST be organized into independently deliverable user stories with clear acceptance checks. Tasks MUST map to functional requirements and measurable success criteria. Before merge, each changed package MUST pass build, lint, and test checks. Feature-critical behavior MUST be verified with repeatable validation steps, and automated tests MUST be present for all new or changed functionality.
+
+Rationale: Incremental delivery reduces risk and ensures each release adds validated value. Automated tests guarantee that each increment is verifiable and regression-free.
 
 ## Technical Standards
 
@@ -105,4 +100,4 @@ Compliance review is required during planning and before merge for feature branc
 Any temporary exception MUST be logged in the feature plan Complexity Tracking section
 with rationale and explicit expiration criteria.
 
-**Version**: 1.0.0 | **Ratified**: 2026-05-13 | **Last Amended**: 2026-05-13
+**Version**: 1.1.0 | **Ratified**: 2026-05-13 | **Last Amended**: 2026-05-13
