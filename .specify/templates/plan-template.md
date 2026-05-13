@@ -31,7 +31,7 @@
 
 *GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
 
-[Gates determined based on constitution file]
+All features and changes MUST include automated tests covering all acceptance criteria and critical paths. No implementation may proceed or be merged without a test plan and passing tests for all affected areas. This is a constitutional requirement.
 
 ## Project Structure
 

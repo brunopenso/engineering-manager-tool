@@ -5,7 +5,7 @@
 **Status**: Draft  
 **Input**: User description: "$ARGUMENTS"
 
-## User Scenarios & Testing *(mandatory)*
+## User Scenarios & Testing *(mandatory, with required automated tests)*
 
 <!--
   IMPORTANT: User stories should be PRIORITIZED as user journeys ordered by importance.
@@ -26,7 +26,7 @@
 
 **Why this priority**: [Explain the value and why it has this priority level]
 
-**Independent Test**: [Describe how this can be tested independently - e.g., "Can be fully tested by [specific action] and delivers [specific value]"]
+**Automated Test Requirement**: [Describe the automated test(s) that will verify this story. All user stories MUST have automated tests covering acceptance criteria.]
 
 **Acceptance Scenarios**:
 
@@ -75,7 +75,7 @@
 - What happens when [boundary condition]?
 - How does system handle [error scenario]?
 
-## Requirements *(mandatory)*
+## Requirements *(mandatory, with required test coverage)*
 
 <!--
   ACTION REQUIRED: The content in this section represents placeholders.
@@ -83,6 +83,8 @@
 -->
 
 ### Functional Requirements
+
+*All functional requirements MUST be covered by automated tests. Define the test(s) for each requirement below.*
 
 - **FR-001**: System MUST [specific capability, e.g., "allow users to create accounts"]
 - **FR-002**: System MUST [specific capability, e.g., "validate email addresses"]  
