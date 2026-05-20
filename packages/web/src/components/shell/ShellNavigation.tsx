@@ -1,41 +1,60 @@
 import { NavLink } from 'react-router-dom';
+import {
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemText,
+  Box,
+  Divider,
+} from '@mui/material';
 import type { ShellMenuOption } from '../../routes/shellOptions.js';
 
 type ShellNavigationProps = {
-  isExpanded: boolean;
   options: ShellMenuOption[];
-  onToggle: () => void;
   onOptionSelected: () => void;
 };
 
 export default function ShellNavigation({
-  isExpanded,
   options,
-  onToggle,
   onOptionSelected,
 }: ShellNavigationProps) {
   return (
-    <aside>
-      <button type="button" onClick={onToggle} aria-expanded={isExpanded}>
-        Menu
-      </button>
-      {isExpanded ? (
-        <nav aria-label="App navigation">
-          <ul>
-            {options.map((option) => (
-              <li key={option.id}>
-                <NavLink
+    <Box
+      sx={{
+        width: '100%',
+        height: '100%',
+        display: 'flex',
+        flexDirection: 'column',
+      }}
+    >
+      <Divider />
+      <nav aria-label="App navigation" style={{ flex: 1 }}>
+        <List disablePadding>
+          {options.map((option, index) => (
+            <Box key={option.id}>
+              {index > 0 && <Divider />}
+              <ListItem disablePadding>
+                <ListItemButton
+                  component={NavLink}
                   to={option.route}
                   onClick={onOptionSelected}
-                  aria-disabled={!option.available}
+                  disabled={!option.available}
+                  sx={{
+                    '&.active': {
+                      backgroundColor: 'action.selected',
+                      '&:hover': {
+                        backgroundColor: 'action.selected',
+                      },
+                    },
+                  }}
                 >
-                  {option.label}
-                </NavLink>
-              </li>
-            ))}
-          </ul>
-        </nav>
-      ) : null}
-    </aside>
+                  <ListItemText primary={option.label} />
+                </ListItemButton>
+              </ListItem>
+            </Box>
+          ))}
+        </List>
+      </nav>
+    </Box>
   );
 }
