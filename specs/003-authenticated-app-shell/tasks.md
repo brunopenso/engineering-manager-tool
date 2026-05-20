@@ -45,7 +45,7 @@
 
 - [ ] T011 [US1] Add protected-route redirect tests (unauthenticated + missing email) in packages/web/src/__tests__/auth-guard.us1.test.tsx
 - [ ] T012 [US1] Add shell header rendering test (system name + user email) in packages/web/src/__tests__/shell-header.us1.test.tsx
-- [ ] T013 [US1] Add fixed post-login default route test in packages/web/src/__tests__/default-route.us1.test.tsx
+- [ ] T013 [US1] Add fixed post-login default route and `/` + `/login` alias tests in packages/web/src/__tests__/default-route.us1.test.tsx
 
 ### Implementation for User Story 1
 
@@ -77,7 +77,7 @@
 - [ ] T023 [US2] Integrate route-driven menu state and outlet content switching in packages/web/src/components/shell/AppShellLayout.tsx
 - [ ] T024 [US2] Add unavailable-option fallback content view in packages/web/src/pages/OptionUnavailablePage.tsx
 - [ ] T025 [US2] Register menu option routes and route metadata in packages/web/src/routes/shellOptions.ts
-- [ ] T026 [US2] Add route contract assertions for `/`, `/login`, and `/app` behavior in packages/web/src/__tests__/shell-route-contract.us2.test.tsx
+- [ ] T026 [US2] Add route contract assertions for `/`, `/login`, `/app`, and explicit absence of `/app/welcome` in packages/web/src/__tests__/shell-route-contract.us2.test.tsx
 
 **Checkpoint**: User Stories 1 and 2 work independently.
 
@@ -112,7 +112,7 @@
 
 - [ ] T034 Document final shell behavior verification matrix in specs/003-authenticated-app-shell/quickstart.md
 - [ ] T035 Sync finalized shell contract details and examples in specs/003-authenticated-app-shell/contracts/app-shell-routes.yaml
-- [ ] T036 Add implementation notes for future menu-option expansion in specs/003-authenticated-app-shell/research.md
+- [ ] T036 Add route-validation notes for `/` + `/login` alias, `/app` default, and `/app/welcome` absence in specs/003-authenticated-app-shell/quickstart.md
 - [ ] T037 Record final validation outcomes (lint/build/test + story checks) in specs/003-authenticated-app-shell/quickstart.md
 
 ---
@@ -164,11 +164,8 @@
 4. Add US3, validate independently.
 5. Complete Phase 6 polish and final validation evidence.
 
-### Parallel Team Strategy
+### Team Execution Strategy
 
-1. Pair on setup/foundation.
-2. After Phase 2:
-   - Developer A: US1
-   - Developer B: US2
-   - Developer C: US3
-3. Merge by story checkpoints with contract and quickstart updates.
+1. Execute in sequential phase order with one active story stream at a time.
+2. Complete each story checkpoint before starting the next story.
+3. Merge only after route contract and quickstart validation evidence are recorded.
