@@ -5,6 +5,16 @@
 **Status**: Draft  
 **Input**: User description: "lets prepare the web package to evolution. After the user make a login the system should show a web interface that have on the top a fixed banner with the system name and in the left corner a menu that is always closed. The user should click in this menu and this will expand with the system options. On the right corner it should show the mail from the logged user. If the user click on it, it should ask to logoff. The rest of the page should be rendered with the clicked option in the menu."
 
+## Clarifications
+
+### Session 2026-05-20
+
+- Q: For the main content area, how should menu selections be represented? → A: URL route changes per menu option (deep-linkable).
+- Q: When the user clicks their email, how should logout confirmation be presented? → A: Two-step inline confirmation in header (click email, then click confirm).
+- Q: After successful login, which route should the user land on first? → A: Fixed default route (for example, dashboard).
+- Q: After a user selects a menu option, what should happen to the left menu state? → A: Auto-collapse after each option selection.
+- Q: If the authenticated session exists but user email is missing, what should the header display? → A: Redirect immediately to login.
+
 ## User Scenarios & Testing *(mandatory, with required automated tests)*
 
 ### User Story 1 - Access the authenticated shell (Priority: P1)
@@ -19,7 +29,7 @@ As an authenticated user, I can land on a consistent post-login interface with a
 
 **Acceptance Scenarios**:
 
-1. **Given** a user has completed login successfully, **When** the first authenticated page is displayed, **Then** the top banner remains visible with the system name and the left menu is collapsed by default.
+1. **Given** a user has completed login successfully, **When** the first authenticated page is displayed, **Then** the user lands on a fixed default route and the top banner remains visible with the system name and the left menu collapsed by default.
 2. **Given** a user is authenticated, **When** the shell is rendered, **Then** the right side of the top banner shows that user's email.
 3. **Given** a user is not authenticated, **When** they attempt to access the shell, **Then** they are redirected to the login page.
 
@@ -38,7 +48,7 @@ As an authenticated user, I can expand the left menu on demand, select an option
 **Acceptance Scenarios**:
 
 1. **Given** the menu is collapsed, **When** the user clicks the menu control, **Then** the menu expands and displays available system options.
-2. **Given** the menu is expanded, **When** the user clicks an option, **Then** the main page content changes to the selected option context.
+2. **Given** the menu is expanded, **When** the user clicks an option, **Then** the URL changes to the option route, the main page content changes to the selected option context, and the menu auto-collapses.
 3. **Given** the menu is expanded, **When** the user clicks outside navigation interactions, **Then** the selected option remains active in the main content area.
 
 ---
@@ -55,13 +65,13 @@ As an authenticated user, I can click my email in the header and confirm sign-ou
 
 **Acceptance Scenarios**:
 
-1. **Given** a user is authenticated, **When** they click the email in the header, **Then** the interface asks for logout confirmation.
+1. **Given** a user is authenticated, **When** they click the email in the header, **Then** the header shows an inline confirmation action for logout.
 2. **Given** the logout confirmation is shown, **When** the user confirms, **Then** the session is terminated and login is required again.
 3. **Given** the logout confirmation is shown, **When** the user cancels, **Then** the session stays active and the current page remains unchanged.
 
 ### Edge Cases
 
-- What happens when a user has no email available in session data? The user is redirected to login before additional content is displayed.
+- What happens when a user has no email available in session data? The user is redirected to login immediately and authenticated shell content is not rendered.
 - How does the system handle login expiration while the user is in the shell? The user is redirected to login before additional content is displayed.
 - What happens if a selected menu option is temporarily unavailable? The main area shows a clear unavailable-state message while preserving shell controls.
 - What happens if a user triggers logout while viewing an option with unsaved interaction state? Logout confirmation proceeds and session termination takes precedence.
@@ -72,8 +82,8 @@ As an authenticated user, I can click my email in the header and confirm sign-ou
 
 *All functional requirements MUST be covered by automated tests. Define the test(s) for each requirement below.*
 
-- **FR-001**: System MUST redirect authenticated users to a post-login application shell view immediately after successful login.  
-  **Automated Test Coverage**: Authentication flow test validates redirect behavior after login success.
+- **FR-001**: System MUST redirect authenticated users to a fixed default post-login route in the application shell immediately after successful login.  
+  **Automated Test Coverage**: Authentication flow test validates redirect behavior to the fixed default route after login success.
 - **FR-002**: System MUST display a fixed top banner across all authenticated shell pages.  
   **Automated Test Coverage**: UI test verifies banner remains visible when navigating between menu options.
 - **FR-003**: System MUST show the system name in the top banner.  
@@ -82,18 +92,28 @@ As an authenticated user, I can click my email in the header and confirm sign-ou
   **Automated Test Coverage**: UI test validates initial collapsed menu state.
 - **FR-005**: System MUST allow users to expand the menu by clicking the menu control and expose available navigation options.  
   **Automated Test Coverage**: Interaction test validates expand action and option visibility.
-- **FR-006**: System MUST update the main content area according to the menu option selected by the user.  
-  **Automated Test Coverage**: Navigation test validates content switch for each selectable option.
-- **FR-007**: System MUST display the authenticated user's email in the top-right area of the banner while the session is active.  
+- **FR-006**: System MUST update the URL route and main content area according to the menu option selected by the user.  
+  **Automated Test Coverage**: Navigation test validates route change and content switch for each selectable option.
+- **FR-007**: System MUST auto-collapse the left menu immediately after a menu option is selected.  
+  **Automated Test Coverage**: Interaction test validates menu returns to collapsed state after each option selection.
+- **FR-008**: System MUST display the authenticated user's email in the top-right area of the banner while the session is active.  
   **Automated Test Coverage**: UI test verifies current user email is rendered for authenticated session.
-- **FR-008**: System MUST prompt the user to confirm logout when the user clicks the email in the banner.  
-  **Automated Test Coverage**: Interaction test verifies prompt display after clicking user email.
-- **FR-009**: System MUST terminate the authenticated session and require login again after logout is confirmed.  
+- **FR-009**: System MUST prompt the user to confirm logout when the user clicks the email in the banner.  
+  **Automated Test Coverage**: Interaction test verifies inline confirmation action appears in the header after clicking user email.
+- **FR-010**: System MUST terminate the authenticated session and require login again after logout is confirmed.  
   **Automated Test Coverage**: Session test verifies authenticated access is denied after sign-out.
-- **FR-010**: System MUST keep the current session and page state unchanged when logout is canceled.  
+- **FR-011**: System MUST keep the current session and page state unchanged when logout is canceled.  
   **Automated Test Coverage**: Interaction test verifies cancellation preserves session and current content.
-- **FR-011**: System MUST prevent unauthenticated users from viewing authenticated shell content and redirect them to login.  
+- **FR-012**: System MUST prevent unauthenticated users from viewing authenticated shell content and redirect them to login.  
   **Automated Test Coverage**: Access-control test verifies unauthenticated route protection.
+- **FR-013**: System MUST allow direct access to a menu option route for authenticated users and render the corresponding content on load.  
+  **Automated Test Coverage**: Routing test validates deep-link navigation to each supported menu option route.
+- **FR-014**: System MUST implement logout as a two-step inline header interaction: first click reveals confirmation actions, second click confirms logout.  
+  **Automated Test Coverage**: Interaction test verifies two-step flow and that no session termination occurs on the first click.
+- **FR-015**: System MUST use the same fixed default route for all successful login entries unless the user explicitly navigates elsewhere after shell load.  
+  **Automated Test Coverage**: Routing test verifies all successful login flows land on the configured default route.
+- **FR-016**: System MUST redirect to login immediately when authenticated identity data required for header display (user email) is missing.  
+  **Automated Test Coverage**: Session-integrity test verifies missing-email sessions are redirected before shell content renders.
 
 ### Key Entities *(include if feature involves data)*
 
@@ -115,6 +135,10 @@ As an authenticated user, I can click my email in the header and confirm sign-ou
 
 - The existing login flow already establishes a valid authenticated session before shell rendering.
 - A finite set of initial menu options exists and each option maps to one main content view.
+- Each menu option has a unique URL route used for deep-link access.
+- The left menu auto-collapses after every menu option selection.
+- The authenticated shell defines one fixed default route used as the first destination after login.
 - Mobile and desktop experiences both require the same fixed-header and collapsible-menu interaction model for this feature scope.
 - The system name is a defined product label available for display in the header.
 - Logout confirmation uses a standard confirmation interaction pattern already accepted in the product UX.
+- Logout confirmation is implemented as an inline two-step header interaction rather than a modal dialog.
