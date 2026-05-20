@@ -29,6 +29,24 @@ paths:
           description: Authenticated shell rendered with default post-login content
         '302':
           description: Redirect to /login when unauthenticated or identity email missing
+  /app/updates:
+    get:
+      summary: Authenticated menu option route
+      tags: [WebRoutes]
+      responses:
+        '200':
+          description: Team Updates content view is rendered in the shell outlet
+        '302':
+          description: Redirect to /login when unauthenticated or identity email missing
+  /app/unavailable:
+    get:
+      summary: Authenticated unavailable-option fallback route
+      tags: [WebRoutes]
+      responses:
+        '200':
+          description: Unavailable-option informational view is rendered in the shell outlet
+        '302':
+          description: Redirect to /login when unauthenticated or identity email missing
 components:
   schemas:
     ShellHeader:
@@ -54,6 +72,24 @@ components:
         activeRoute:
           type: string
           example: /app
+    ShellRouteInvariants:
+      type: object
+      required: [publicLoginAliases, defaultAuthenticatedRoute, forbiddenRoutes]
+      properties:
+        publicLoginAliases:
+          type: array
+          items:
+            type: string
+          example: ['/', '/login']
+        defaultAuthenticatedRoute:
+          type: string
+          example: /app
+        forbiddenRoutes:
+          type: array
+          description: Routes intentionally absent from shell route tree.
+          items:
+            type: string
+          example: ['/app/welcome']
     LogoutInteraction:
       type: object
       required: [firstClickShowsConfirm, confirmTerminatesSession, cancelKeepsSession]

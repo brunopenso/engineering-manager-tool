@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import { useAuth } from '../auth/AuthProvider.js';
 import { AuthApiError, loginWithGoogle } from '../services/authApi.js';
+import { DEFAULT_APP_ROUTE } from '../routes/shellOptions.js';
 
 const FALLBACK_ERROR = 'Authentication failed. Please try again.';
 
@@ -35,7 +36,7 @@ export default function LoginPage() {
     try {
       const result = await loginWithGoogle(response.credential);
       setSession({ accessToken: result.accessToken, user: result.user });
-      navigate(result.redirectPath, { replace: true });
+      navigate(DEFAULT_APP_ROUTE, { replace: true });
     } catch (error) {
       if (error instanceof AuthApiError) {
         setErrorMessage(mapErrorMessage(error));

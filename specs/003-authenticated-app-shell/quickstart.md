@@ -64,3 +64,29 @@ Suggested automated tests:
 - Shell layout tests for fixed banner and header identity rendering.
 - Interaction tests for menu toggle, auto-collapse, and route updates.
 - Session tests for missing-email redirect and inline two-step logout flow.
+
+## 10. Final behavior verification matrix
+| Scenario | Expected Result | Automated Coverage |
+|---|---|---|
+| Open `/` while unauthenticated | Login screen renders | `default-route.us1.test.tsx` |
+| Open `/login` while unauthenticated | Login screen renders | `default-route.us1.test.tsx` |
+| Open `/app` without token | Redirect to login | `auth-guard.us1.test.tsx` |
+| Open `/app` with token but missing email | Redirect to login | `auth-guard.us1.test.tsx` |
+| Open `/app` with valid session | Shell renders fixed banner and email | `shell-header.us1.test.tsx` |
+| Open `/app/updates` with valid session | Team Updates content renders | `deep-link-routing.us2.test.tsx` |
+| Toggle menu | Starts collapsed and expands on click | `menu-toggle.us2.test.tsx` |
+| Select menu option | URL/content change and menu collapses | `menu-selection.us2.test.tsx` |
+| Click header email once | Inline confirmation appears | `logout-confirm.us3.test.tsx` |
+| Confirm logout | Session clears and user returns to login | `logout-confirm.us3.test.tsx` |
+| Cancel logout | Session and route remain active | `logout-confirm.us3.test.tsx` |
+
+## 11. Route validation notes
+- `/` and `/login` are equivalent public login entry routes.
+- `/app` is the fixed authenticated default route after successful login.
+- `/app/welcome` is intentionally not exposed as a route; unknown nested `/app/*` paths resolve back to `/app`.
+- Contract guard tests assert route invariants via `shell-route-contract.us1/2/3` test suites.
+
+## 12. Final validation outcomes
+- `npm run lint`: PASS (`@em-tool/backend`, `@em-tool/web`).
+- `npm run build`: PASS (`@em-tool/backend`, `@em-tool/web`).
+- `npm run test`: PASS (`@em-tool/web`, 10 test files, 16 tests).
