@@ -11,9 +11,11 @@
 
 - Q: For the main content area, how should menu selections be represented? → A: URL route changes per menu option (deep-linkable).
 - Q: When the user clicks their email, how should logout confirmation be presented? → A: Two-step inline confirmation in header (click email, then click confirm).
-- Q: After successful login, which route should the user land on first? → A: Fixed default route (for example, dashboard).
+- Q: After successful login, which route should the user land on first? → A: Fixed default route `/app` with a welcome message.
 - Q: After a user selects a menu option, what should happen to the left menu state? → A: Auto-collapse after each option selection.
 - Q: If the authenticated session exists but user email is missing, what should the header display? → A: Redirect immediately to login.
+- Q: Should the specification include the prior timing-style performance requirement? → A: No, remove this requirement.
+- Q: Should parallel processing behavior be in scope for this feature specification? → A: No, parallel processing behavior is out of scope.
 
 ## User Scenarios & Testing *(mandatory, with required automated tests)*
 
@@ -29,7 +31,7 @@ As an authenticated user, I can land on a consistent post-login interface with a
 
 **Acceptance Scenarios**:
 
-1. **Given** a user has completed login successfully, **When** the first authenticated page is displayed, **Then** the user lands on a fixed default route and the top banner remains visible with the system name and the left menu collapsed by default.
+1. **Given** a user has completed login successfully, **When** the first authenticated page is displayed, **Then** the user lands on `/app`, sees the welcome message, and the top banner remains visible with the system name and the left menu collapsed by default.
 2. **Given** a user is authenticated, **When** the shell is rendered, **Then** the right side of the top banner shows that user's email.
 3. **Given** a user is not authenticated, **When** they attempt to access the shell, **Then** they are redirected to the login page.
 
@@ -82,8 +84,8 @@ As an authenticated user, I can click my email in the header and confirm sign-ou
 
 *All functional requirements MUST be covered by automated tests. Define the test(s) for each requirement below.*
 
-- **FR-001**: System MUST redirect authenticated users to a fixed default post-login route in the application shell immediately after successful login.  
-  **Automated Test Coverage**: Authentication flow test validates redirect behavior to the fixed default route after login success.
+- **FR-001**: System MUST redirect authenticated users to `/app` as the fixed default post-login route in the application shell immediately after successful login.  
+  **Automated Test Coverage**: Authentication flow test validates redirect behavior to `/app` after login success.
 - **FR-002**: System MUST display a fixed top banner across all authenticated shell pages.  
   **Automated Test Coverage**: UI test verifies banner remains visible when navigating between menu options.
 - **FR-003**: System MUST show the system name in the top banner.  
@@ -111,9 +113,11 @@ As an authenticated user, I can click my email in the header and confirm sign-ou
 - **FR-014**: System MUST implement logout as a two-step inline header interaction: first click reveals confirmation actions, second click confirms logout.  
   **Automated Test Coverage**: Interaction test verifies two-step flow and that no session termination occurs on the first click.
 - **FR-015**: System MUST use the same fixed default route for all successful login entries unless the user explicitly navigates elsewhere after shell load.  
-  **Automated Test Coverage**: Routing test verifies all successful login flows land on the configured default route.
+  **Automated Test Coverage**: Routing test verifies all successful login flows land on `/app`.
 - **FR-016**: System MUST redirect to login immediately when authenticated identity data required for header display (user email) is missing.  
   **Automated Test Coverage**: Session-integrity test verifies missing-email sessions are redirected before shell content renders.
+- **FR-017**: System MUST render a welcome message in the main content area when `/app` is loaded as the default route.  
+  **Automated Test Coverage**: UI test verifies welcome message is visible on `/app` after successful login.
 
 ### Key Entities *(include if feature involves data)*
 
@@ -126,10 +130,9 @@ As an authenticated user, I can click my email in the header and confirm sign-ou
 ### Measurable Outcomes
 
 - **SC-001**: 100% of successful logins route users to the authenticated shell without manual URL entry.
-- **SC-002**: At least 95% of authenticated users can open the menu and reach a target option within 10 seconds in usability validation.
-- **SC-003**: 100% of authenticated shell views display the system name and the current user's email during active sessions.
-- **SC-004**: 100% of logout confirmations end the user session and block protected shell access until the next successful login.
-- **SC-005**: At least 90% of users report the shell navigation and identity controls as clear and easy to understand in post-release feedback.
+- **SC-002**: 100% of authenticated shell views display the system name and the current user's email during active sessions.
+- **SC-003**: 100% of logout confirmations end the user session and block protected shell access until the next successful login.
+- **SC-004**: At least 90% of users report the shell navigation and identity controls as clear and easy to understand in post-release feedback.
 
 ## Assumptions
 
@@ -137,8 +140,9 @@ As an authenticated user, I can click my email in the header and confirm sign-ou
 - A finite set of initial menu options exists and each option maps to one main content view.
 - Each menu option has a unique URL route used for deep-link access.
 - The left menu auto-collapses after every menu option selection.
-- The authenticated shell defines one fixed default route used as the first destination after login.
+- The authenticated shell uses `/app` as the fixed default route and renders a welcome message there.
 - Mobile and desktop experiences both require the same fixed-header and collapsible-menu interaction model for this feature scope.
 - The system name is a defined product label available for display in the header.
 - Logout confirmation uses a standard confirmation interaction pattern already accepted in the product UX.
 - Logout confirmation is implemented as an inline two-step header interaction rather than a modal dialog.
+- Parallel processing behavior is out of scope for this feature specification.

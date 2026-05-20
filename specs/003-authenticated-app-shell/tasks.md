@@ -13,8 +13,8 @@
 
 - [ ] T001 Add web test scripts and test dependencies in packages/web/package.json
 - [ ] T002 Create Vitest configuration for React/browser tests in packages/web/vitest.config.ts
-- [ ] T003 [P] Create testing library setup entrypoint in packages/web/src/test/setup.ts
-- [ ] T004 [P] Create shared render helpers with router/auth wrappers in packages/web/src/test/renderWithProviders.tsx
+- [ ] T003 Create testing library setup entrypoint in packages/web/src/test/setup.ts
+- [ ] T004 Create shared render helpers with router/auth wrappers in packages/web/src/test/renderWithProviders.tsx
 
 ---
 
@@ -29,7 +29,7 @@
 - [ ] T007 Add nested protected shell route tree (`/app`, `/app/welcome`) in packages/web/src/App.tsx
 - [ ] T008 Add reusable session-shape validator utilities for shell identity requirements in packages/web/src/auth/sessionGuards.ts
 - [ ] T009 Enforce protected-route redirects for missing token or missing email in packages/web/src/auth/ProtectedRoute.tsx
-- [ ] T010 [P] Add contract fixture for shell route expectations in packages/web/src/test/fixtures/shellRouteContract.ts
+- [ ] T010 Add contract fixture for shell route expectations in packages/web/src/test/fixtures/shellRouteContract.ts
 
 **Checkpoint**: Foundation complete. User stories can proceed.
 
@@ -43,9 +43,9 @@
 
 ### Tests for User Story 1 (MANDATORY)
 
-- [ ] T011 [P] [US1] Add protected-route redirect tests (unauthenticated + missing email) in packages/web/src/__tests__/auth-guard.us1.test.tsx
-- [ ] T012 [P] [US1] Add shell header rendering test (system name + user email) in packages/web/src/__tests__/shell-header.us1.test.tsx
-- [ ] T013 [P] [US1] Add fixed post-login default route test in packages/web/src/__tests__/default-route.us1.test.tsx
+- [ ] T011 [US1] Add protected-route redirect tests (unauthenticated + missing email) in packages/web/src/__tests__/auth-guard.us1.test.tsx
+- [ ] T012 [US1] Add shell header rendering test (system name + user email) in packages/web/src/__tests__/shell-header.us1.test.tsx
+- [ ] T013 [US1] Add fixed post-login default route test in packages/web/src/__tests__/default-route.us1.test.tsx
 
 ### Implementation for User Story 1
 
@@ -67,9 +67,9 @@
 
 ### Tests for User Story 2 (MANDATORY)
 
-- [ ] T019 [P] [US2] Add menu default-collapsed and expand interaction tests in packages/web/src/__tests__/menu-toggle.us2.test.tsx
-- [ ] T020 [P] [US2] Add menu selection route-transition and auto-collapse tests in packages/web/src/__tests__/menu-selection.us2.test.tsx
-- [ ] T021 [P] [US2] Add deep-link route render tests for menu option routes in packages/web/src/__tests__/deep-link-routing.us2.test.tsx
+- [ ] T019 [US2] Add menu default-collapsed and expand interaction tests in packages/web/src/__tests__/menu-toggle.us2.test.tsx
+- [ ] T020 [US2] Add menu selection route-transition and auto-collapse tests in packages/web/src/__tests__/menu-selection.us2.test.tsx
+- [ ] T021 [US2] Add deep-link route render tests for menu option routes in packages/web/src/__tests__/deep-link-routing.us2.test.tsx
 
 ### Implementation for User Story 2
 
@@ -91,9 +91,9 @@
 
 ### Tests for User Story 3 (MANDATORY)
 
-- [ ] T027 [P] [US3] Add first-click inline confirmation visibility test in packages/web/src/__tests__/logout-confirm.us3.test.tsx
-- [ ] T028 [P] [US3] Add confirm-logout session-clear and redirect test in packages/web/src/__tests__/logout-confirm.us3.test.tsx
-- [ ] T029 [P] [US3] Add cancel-logout state-preservation test in packages/web/src/__tests__/logout-confirm.us3.test.tsx
+- [ ] T027 [US3] Add first-click inline confirmation visibility test in packages/web/src/__tests__/logout-confirm.us3.test.tsx
+- [ ] T028 [US3] Add confirm-logout session-clear and redirect test in packages/web/src/__tests__/logout-confirm.us3.test.tsx
+- [ ] T029 [US3] Add cancel-logout state-preservation test in packages/web/src/__tests__/logout-confirm.us3.test.tsx
 
 ### Implementation for User Story 3
 
@@ -110,8 +110,8 @@
 
 **Purpose**: Final hardening and documentation updates spanning all stories.
 
-- [ ] T034 [P] Document final shell behavior verification matrix in specs/003-authenticated-app-shell/quickstart.md
-- [ ] T035 [P] Sync finalized shell contract details and examples in specs/003-authenticated-app-shell/contracts/app-shell-routes.yaml
+- [ ] T034 Document final shell behavior verification matrix in specs/003-authenticated-app-shell/quickstart.md
+- [ ] T035 Sync finalized shell contract details and examples in specs/003-authenticated-app-shell/contracts/app-shell-routes.yaml
 - [ ] T036 Add implementation notes for future menu-option expansion in specs/003-authenticated-app-shell/research.md
 - [ ] T037 Record final validation outcomes (lint/build/test + story checks) in specs/003-authenticated-app-shell/quickstart.md
 
@@ -140,43 +140,12 @@
 - UI/state primitives before route wiring.
 - Route wiring before contract assertions/documentation updates.
 
-### Parallel Opportunities
+### Execution Notes
 
-- Setup tasks `T003` and `T004` can run in parallel.
-- Foundational task `T010` can run in parallel with `T005`-`T009`.
-- US1 tests `T011`-`T013` can run in parallel.
-- US2 tests `T019`-`T021` can run in parallel.
-- US3 tests `T027`-`T029` can run in parallel.
-- Polish tasks `T034` and `T035` can run in parallel.
+- Execute tasks sequentially in listed order.
+- Complete each story's tests before implementation tasks in that story.
 
 ---
-
-## Parallel Example: User Story 1
-
-```bash
-# Run in parallel:
-T011 [US1] packages/web/src/__tests__/auth-guard.us1.test.tsx
-T012 [US1] packages/web/src/__tests__/shell-header.us1.test.tsx
-T013 [US1] packages/web/src/__tests__/default-route.us1.test.tsx
-```
-
-## Parallel Example: User Story 2
-
-```bash
-# Run in parallel:
-T019 [US2] packages/web/src/__tests__/menu-toggle.us2.test.tsx
-T020 [US2] packages/web/src/__tests__/menu-selection.us2.test.tsx
-T021 [US2] packages/web/src/__tests__/deep-link-routing.us2.test.tsx
-```
-
-## Parallel Example: User Story 3
-
-```bash
-# Run in parallel:
-T027 [US3] packages/web/src/__tests__/logout-confirm.us3.test.tsx
-T028 [US3] packages/web/src/__tests__/logout-confirm.us3.test.tsx
-T029 [US3] packages/web/src/__tests__/logout-confirm.us3.test.tsx
-```
 
 ---
 

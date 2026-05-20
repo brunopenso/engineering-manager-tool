@@ -15,7 +15,7 @@ Evolve the existing authenticated web experience from a single welcome page into
 **Testing**: Vitest + React Testing Library for web route and interaction tests, plus backend integration tests for auth/session edge responses  
 **Target Platform**: Browser-based SPA served from Linux-hosted Node backend APIs  
 **Project Type**: Monorepo web application (Lerna workspaces for backend and web)  
-**Performance Goals**: Shell route transitions and menu toggle interactions feel immediate during normal client-side navigation; no regression to current login-to-first-page experience  
+**Performance Goals**: Removed from this feature scope per clarification decision (A1).  
 **Constraints**: Login remains required for all shell routes, menu starts collapsed and auto-collapses after option selection, logout uses inline two-step confirmation, missing email in authenticated identity forces login redirect  
 **Scale/Scope**: One web client shell experience with initial finite menu routes and future growth to additional menu options/views
 
