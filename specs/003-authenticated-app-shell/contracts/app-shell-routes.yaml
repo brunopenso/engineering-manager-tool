@@ -1,0 +1,105 @@
+openapi: 3.0.3
+info:
+  title: Engineering Manager Tool App Shell Contract
+  version: 0.1.0
+  description: Contract for authenticated shell routing and session-driven UI behaviors.
+servers:
+  - url: http://localhost:5173
+paths:
+  /:
+    get:
+      summary: Public login route alias
+      tags: [WebRoutes]
+      responses:
+        '200':
+          description: Login view is rendered
+  /login:
+    get:
+      summary: Public login route alias
+      tags: [WebRoutes]
+      responses:
+        '200':
+          description: Login view is rendered
+  /app:
+    get:
+      summary: Default authenticated shell route
+      tags: [WebRoutes]
+      responses:
+        '200':
+          description: Authenticated shell rendered with default post-login content
+        '302':
+          description: Redirect to /login when unauthenticated or identity email missing
+  /app/updates:
+    get:
+      summary: Authenticated menu option route
+      tags: [WebRoutes]
+      responses:
+        '200':
+          description: Team Updates content view is rendered in the shell outlet
+        '302':
+          description: Redirect to /login when unauthenticated or identity email missing
+  /app/unavailable:
+    get:
+      summary: Authenticated unavailable-option fallback route
+      tags: [WebRoutes]
+      responses:
+        '200':
+          description: Unavailable-option informational view is rendered in the shell outlet
+        '302':
+          description: Redirect to /login when unauthenticated or identity email missing
+components:
+  schemas:
+    ShellHeader:
+      type: object
+      required: [systemName, userEmail, logoutState]
+      properties:
+        systemName:
+          type: string
+          example: Engineering Manager Tool
+        userEmail:
+          type: string
+          format: email
+        logoutState:
+          type: string
+          enum: [IDLE, CONFIRM_VISIBLE]
+    ShellNavigationState:
+      type: object
+      required: [isMenuExpanded, activeRoute]
+      properties:
+        isMenuExpanded:
+          type: boolean
+          description: Must initialize false and reset false after option selection.
+        activeRoute:
+          type: string
+          example: /app
+    ShellRouteInvariants:
+      type: object
+      required: [publicLoginAliases, defaultAuthenticatedRoute, forbiddenRoutes]
+      properties:
+        publicLoginAliases:
+          type: array
+          items:
+            type: string
+          example: ['/', '/login']
+        defaultAuthenticatedRoute:
+          type: string
+          example: /app
+        forbiddenRoutes:
+          type: array
+          description: Routes intentionally absent from shell route tree.
+          items:
+            type: string
+          example: ['/app/welcome']
+    LogoutInteraction:
+      type: object
+      required: [firstClickShowsConfirm, confirmTerminatesSession, cancelKeepsSession]
+      properties:
+        firstClickShowsConfirm:
+          type: boolean
+          example: true
+        confirmTerminatesSession:
+          type: boolean
+          example: true
+        cancelKeepsSession:
+          type: boolean
+          example: true

@@ -14,6 +14,8 @@ type AuthUser = {
   lastLoginAt: string;
 };
 
+export type { AuthUser };
+
 type AuthState = {
   accessToken: string | null;
   user: AuthUser | null;
@@ -25,11 +27,22 @@ const AuthContext = createContext<AuthState | null>(null);
 
 type AuthProviderProps = {
   children: ReactNode;
+  initialSession?: {
+    accessToken: string;
+    user: AuthUser;
+  };
 };
 
-export function AuthProvider({ children }: AuthProviderProps) {
-  const [accessToken, setAccessToken] = useState<string | null>(null);
-  const [user, setUser] = useState<AuthUser | null>(null);
+export function AuthProvider({
+  children,
+  initialSession,
+}: AuthProviderProps) {
+  const [accessToken, setAccessToken] = useState<string | null>(
+    initialSession?.accessToken ?? null,
+  );
+  const [user, setUser] = useState<AuthUser | null>(
+    initialSession?.user ?? null,
+  );
 
   const value = useMemo<AuthState>(
     () => ({

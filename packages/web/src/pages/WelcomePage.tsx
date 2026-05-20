@@ -1,7 +1,8 @@
 export default function WelcomePage() {
   return (
-    <main>
-      <h1>Welcome to the system</h1>
-    </main>
+    <section>
+      <h1>Welcome</h1>
+      <p>Select an option from the menu to continue.</p>
+    </section>
   );
 }
