@@ -40,6 +40,10 @@ downward-only hierarchical visibility model (self + direct/indirect subordinates
 MUST explicitly deny peer/superior visibility, and MUST include recursive DAC
 validation scenarios across APIs, reports, and UI visualizations.
 
+If the feature includes any screen, page, form, or dashboard creation, the frontend
+implementation MUST use the `frontend-design` skill with Material UI best practices
+for responsive design, accessibility, and consistent visual hierarchy.
+
 ## Project Structure
 
 ### Documentation (this feature)

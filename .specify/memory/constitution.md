@@ -1,18 +1,17 @@
 <!--
 Sync Impact Report
-Version change: 1.1.0 -> 1.2.0
+Version change: 1.2.0 -> 1.3.0
 Modified principles:
-- II. Security-First Authentication and Data Handling -> II. Security-First Authentication, Authorization, and Data Handling
-- VI. Mandatory Automated Testing -> VI. Mandatory Automated Testing
+- None
 Added sections:
-- VII. Hierarchical Data Access Control (new principle)
+- VIII. Consistent Frontend Design Standards (new principle)
 Removed sections:
 - None
 Templates requiring updates:
-- ✅ .specify/templates/plan-template.md (Constitution Check now includes mandatory DAC constraints and tests)
-- ✅ .specify/templates/spec-template.md (story and requirement scaffolding now includes access-control coverage)
-- ✅ .specify/templates/tasks-template.md (test tasks are mandatory across all stories, including US3)
-- ✅ README.md (reviewed, no constitution reference drift)
+- ✅ .specify/templates/plan-template.md (Technical Context now includes frontend-design skill requirement)
+- ✅ .specify/templates/spec-template.md (User scenarios now include frontend-design skill reference for screen creation)
+- ✅ .specify/templates/tasks-template.md (Phase 3+ tasks for UI screens now include frontend-design skill requirement)
+- ✅ README.md (no updates needed, governance reference remains aligned)
 Follow-up TODOs:
 - None
 -->
@@ -93,6 +92,17 @@ Rationale: A mandatory downward-only model protects sensitive collaborator infor
 prevents lateral data leakage, and provides a consistent, auditable authorization rule
 for all product surfaces.
 
+### VIII. Consistent Frontend Design Standards
+Every screen, page, form, dashboard, or UI component created for the frontend MUST use
+the `frontend-design` skill. Screen implementation MUST follow Material UI best practices
+including responsive design, accessibility standards, and modern visual hierarchy.
+Before any new screen is merged, design MUST be reviewed for consistency with the
+established Material UI design system.
+
+Rationale: A unified skill-driven approach ensures consistent user experience, reduces
+design-to-implementation friction, and guarantees accessibility and responsiveness
+across all frontend surfaces.
+
 ## Technical Standards
 
 - Runtime stack MUST remain Node.js + TypeScript for backend and Vite + React for web
@@ -117,7 +127,7 @@ for all product surfaces.
 This constitution overrides conflicting local conventions and guidance files for feature
 delivery decisions. Amendments require:
 
-1. A documented change proposal describing principle or section impact.
+1. A documented3.0 | **Ratified**: 2026-05-13 | **Last Amended**: 2026-05-20
 2. Synchronization of affected templates and operational guidance files.
 3. A semantic version update using this policy:
 	 - MAJOR: Principle removal/redefinition or governance breaking change.

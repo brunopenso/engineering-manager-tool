@@ -25,6 +25,17 @@ description: "Task list template for feature implementation"
 - **Mobile**: `api/src/`, `ios/src/` or `android/src/`
 - Paths shown below assume single project - adjust based on plan.md structure
 
+## Frontend Design Standards
+
+**IMPORTANT**: Every screen, page, form, or dashboard task MUST use the `frontend-design` skill.
+Frontend implementation tasks MUST include Material UI best practices and MUST reference:
+- Responsive design using Material UI breakpoints
+- Accessibility standards (WCAG 2.1 AA)
+- Consistent visual hierarchy and spacing
+- Component reusability
+
+Example task: `Create Dashboard UI in packages/web/src/pages/DashboardPage.tsx using frontend-design skill`
+
 <!-- 
   ============================================================================
   IMPORTANT: The tasks below are SAMPLE TASKS for illustration purposes only.

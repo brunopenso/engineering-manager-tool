@@ -28,6 +28,8 @@
 
 **Automated Test Requirement**: [Describe the automated test(s) that will verify this story. All user stories MUST have automated tests covering acceptance criteria.]
 
+**Frontend Design**: [If this story includes screen, page, form, or dashboard creation, the implementation MUST use the `frontend-design` skill with Material UI best practices.]
+
 **Access Control Validation**: [If this story exposes collaborator or organizational data, define explicit allow/deny visibility outcomes for self, direct/indirect subordinates, peers, and superiors.]
 
 **Acceptance Scenarios**:
@@ -45,6 +47,8 @@
 
 **Independent Test**: [Describe how this can be tested independently]
 
+**Frontend Design**: [If this story includes screen, page, form, or dashboard creation, the implementation MUST use the `frontend-design` skill with Material UI best practices.]
+
 **Access Control Validation**: [If this story exposes collaborator or organizational data, define explicit allow/deny visibility outcomes for self, direct/indirect subordinates, peers, and superiors.]
 
 **Acceptance Scenarios**:
@@ -60,6 +64,8 @@
 **Why this priority**: [Explain the value and why it has this priority level]
 
 **Independent Test**: [Describe how this can be tested independently]
+
+**Frontend Design**: [If this story includes screen, page, form, or dashboard creation, the implementation MUST use the `frontend-design` skill with Material UI best practices.]
 
 **Access Control Validation**: [If this story exposes collaborator or organizational data, define explicit allow/deny visibility outcomes for self, direct/indirect subordinates, peers, and superiors.]
 
