@@ -1,4 +1,4 @@
 <!-- SPECKIT START -->
 For additional context about technologies to be used, project structure,
-shell commands, and other important information, read specs/001-google-authentication/plan.md
+shell commands, and other important information, read specs/003-authenticated-app-shell/plan.md
 <!-- SPECKIT END -->

@@ -1,0 +1,71 @@
+openapi: 3.0.3
+info:
+  title: Engineering Manager Tool App Shell Contract
+  version: 0.1.0
+  description: Contract for authenticated shell routing and session-driven UI behaviors.
+servers:
+  - url: http://localhost:5173
+paths:
+  /login:
+    get:
+      summary: Public login route
+      tags: [WebRoutes]
+      responses:
+        '200':
+          description: Login view is rendered
+  /app:
+    get:
+      summary: Default authenticated shell route
+      tags: [WebRoutes]
+      responses:
+        '200':
+          description: Authenticated shell rendered on default option content
+        '302':
+          description: Redirect to /login when unauthenticated or identity email missing
+  /app/welcome:
+    get:
+      summary: Authenticated menu option route for welcome content
+      tags: [WebRoutes]
+      responses:
+        '200':
+          description: Welcome option content rendered inside shell layout
+        '302':
+          description: Redirect to /login when unauthenticated or identity email missing
+components:
+  schemas:
+    ShellHeader:
+      type: object
+      required: [systemName, userEmail, logoutState]
+      properties:
+        systemName:
+          type: string
+          example: Engineering Manager Tool
+        userEmail:
+          type: string
+          format: email
+        logoutState:
+          type: string
+          enum: [IDLE, CONFIRM_VISIBLE]
+    ShellNavigationState:
+      type: object
+      required: [isMenuExpanded, activeRoute]
+      properties:
+        isMenuExpanded:
+          type: boolean
+          description: Must initialize false and reset false after option selection.
+        activeRoute:
+          type: string
+          example: /app/welcome
+    LogoutInteraction:
+      type: object
+      required: [firstClickShowsConfirm, confirmTerminatesSession, cancelKeepsSession]
+      properties:
+        firstClickShowsConfirm:
+          type: boolean
+          example: true
+        confirmTerminatesSession:
+          type: boolean
+          example: true
+        cancelKeepsSession:
+          type: boolean
+          example: true
