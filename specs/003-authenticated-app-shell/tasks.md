@@ -26,7 +26,7 @@
 
 - [ ] T005 Create shell route option model and default route constants in packages/web/src/routes/shellOptions.ts
 - [ ] T006 Create base shell layout with header, left-nav container, and outlet region in packages/web/src/components/shell/AppShellLayout.tsx
-- [ ] T007 Add nested protected shell route tree (`/`, `/login`, `/app`) in packages/web/src/App.tsx
+- [ ] T007 Add nested protected shell route tree (`/app`) in packages/web/src/App.tsx
 - [ ] T008 Add reusable session-shape validator utilities for shell identity requirements in packages/web/src/auth/sessionGuards.ts
 - [ ] T009 Enforce protected-route redirects for missing token or missing email in packages/web/src/auth/ProtectedRoute.tsx
 - [ ] T010 Add contract fixture for shell route expectations in packages/web/src/test/fixtures/shellRouteContract.ts
