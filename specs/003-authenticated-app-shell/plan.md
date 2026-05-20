@@ -5,7 +5,7 @@
 
 ## Summary
 
-Evolve the existing authenticated web experience from a single welcome page into a reusable application shell with a fixed top banner, default-collapsed left navigation, route-driven menu options, inline two-step logout confirmation from the user identity area, and strict redirect behavior for invalid session identity data.
+Evolve the existing authenticated web experience into a reusable application shell with `/` and `/login` as the same public login entry, `/app` as the fixed post-login default route, no `/app/welcome` route, a fixed top banner, default-collapsed left navigation, route-driven menu options, inline two-step logout confirmation from the user identity area, and strict redirect behavior for invalid session identity data.
 
 ## Technical Context
 
@@ -61,8 +61,7 @@ packages/
 │       ├── components/
 │       │   └── shell/                # new shell layout and menu components
 │       ├── pages/
-│       │   ├── LoginPage.tsx
-│       │   └── WelcomePage.tsx       # becomes one menu target route
+│       │   └── LoginPage.tsx
 │       └── routes/                   # new route map for shell options
 └── backend/
     └── src/
@@ -70,7 +69,7 @@ packages/
             └── auth.ts               # existing auth/me response contract source
 ```
 
-**Structure Decision**: Keep implementation within existing monorepo workspaces, introducing web-only shell UI modules and route mapping while reusing current backend authentication endpoints and session payload contracts.
+**Structure Decision**: Keep implementation within existing monorepo workspaces, introducing web-only shell UI modules and route mapping while reusing current backend authentication endpoints and session payload contracts. Public login routes are `/` and `/login`; protected shell routes begin at `/app`.
 
 ## Complexity Tracking
 
