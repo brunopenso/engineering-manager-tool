@@ -6,9 +6,16 @@ info:
 servers:
   - url: http://localhost:5173
 paths:
+  /:
+    get:
+      summary: Public login route alias
+      tags: [WebRoutes]
+      responses:
+        '200':
+          description: Login view is rendered
   /login:
     get:
-      summary: Public login route
+      summary: Public login route alias
       tags: [WebRoutes]
       responses:
         '200':
@@ -19,16 +26,7 @@ paths:
       tags: [WebRoutes]
       responses:
         '200':
-          description: Authenticated shell rendered on default option content
-        '302':
-          description: Redirect to /login when unauthenticated or identity email missing
-  /app/welcome:
-    get:
-      summary: Authenticated menu option route for welcome content
-      tags: [WebRoutes]
-      responses:
-        '200':
-          description: Welcome option content rendered inside shell layout
+          description: Authenticated shell rendered with default post-login content
         '302':
           description: Redirect to /login when unauthenticated or identity email missing
 components:
@@ -55,7 +53,7 @@ components:
           description: Must initialize false and reset false after option selection.
         activeRoute:
           type: string
-          example: /app/welcome
+          example: /app
     LogoutInteraction:
       type: object
       required: [firstClickShowsConfirm, confirmTerminatesSession, cancelKeepsSession]

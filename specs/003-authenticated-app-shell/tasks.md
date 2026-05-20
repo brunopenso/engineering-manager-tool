@@ -26,7 +26,7 @@
 
 - [ ] T005 Create shell route option model and default route constants in packages/web/src/routes/shellOptions.ts
 - [ ] T006 Create base shell layout with header, left-nav container, and outlet region in packages/web/src/components/shell/AppShellLayout.tsx
-- [ ] T007 Add nested protected shell route tree (`/app`, `/app/welcome`) in packages/web/src/App.tsx
+- [ ] T007 Add nested protected shell route tree (`/`, `/login`, `/app`) in packages/web/src/App.tsx
 - [ ] T008 Add reusable session-shape validator utilities for shell identity requirements in packages/web/src/auth/sessionGuards.ts
 - [ ] T009 Enforce protected-route redirects for missing token or missing email in packages/web/src/auth/ProtectedRoute.tsx
 - [ ] T010 Add contract fixture for shell route expectations in packages/web/src/test/fixtures/shellRouteContract.ts
@@ -77,7 +77,7 @@
 - [ ] T023 [US2] Integrate route-driven menu state and outlet content switching in packages/web/src/components/shell/AppShellLayout.tsx
 - [ ] T024 [US2] Add unavailable-option fallback content view in packages/web/src/pages/OptionUnavailablePage.tsx
 - [ ] T025 [US2] Register menu option routes and route metadata in packages/web/src/routes/shellOptions.ts
-- [ ] T026 [US2] Add route contract assertions for `/app/welcome` and option-routing behavior in packages/web/src/__tests__/shell-route-contract.us2.test.tsx
+- [ ] T026 [US2] Add route contract assertions for `/`, `/login`, and `/app` behavior in packages/web/src/__tests__/shell-route-contract.us2.test.tsx
 
 **Checkpoint**: User Stories 1 and 2 work independently.
 
@@ -144,8 +144,6 @@
 
 - Execute tasks sequentially in listed order.
 - Complete each story's tests before implementation tasks in that story.
-
----
 
 ---
 
