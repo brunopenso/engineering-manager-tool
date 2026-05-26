@@ -89,7 +89,10 @@ describe('US1 deliverable creation', () => {
         { target: { value: 'Write more docs' } },
       );
 
-      await userEvent.click(within(createDialog).getByRole('button', { name: 'Platform' }));
+      fireEvent.mouseDown(within(createDialog).getByRole('combobox', { name: 'Tags' }));
+      const listbox = await screen.findByRole('listbox');
+      await userEvent.click(within(listbox).getByRole('option', { name: 'Platform' }));
+      await userEvent.keyboard('{Escape}');
       await userEvent.click(within(createDialog).getByRole('button', { name: 'Save' }));
 
       await waitFor(() => {

@@ -26,6 +26,10 @@ describe('US1 deliverable create validation', () => {
 
     renderWithProviders(<DeliverablesPage />, { isAuthenticated: true });
 
+    await waitFor(() => {
+      expect(screen.queryByText('Loading deliverables…')).not.toBeInTheDocument();
+    });
+
     await userEvent.click(screen.getByRole('button', { name: 'Add deliverable' }));
 
     await waitFor(() => {

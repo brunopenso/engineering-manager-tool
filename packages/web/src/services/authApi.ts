@@ -27,6 +27,11 @@ type LoginResponse = {
   user: AuthUser;
 };
 
+type RefreshResponse = {
+  accessToken: string;
+  user: AuthUser;
+};
+
 export class AuthApiError extends Error {
   code: AuthErrorCode;
 
@@ -84,4 +89,19 @@ export async function getCurrentUser(accessToken: string): Promise<AuthUser> {
 
   const payload = (await response.json()) as { user: AuthUser };
   return payload.user;
+}
+
+export async function refreshSession(accessToken: string): Promise<RefreshResponse> {
+  const response = await fetch(`${API_BASE_URL}/auth/refresh`, {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  });
+
+  if (!response.ok) {
+    throw await parseError(response);
+  }
+
+  return (await response.json()) as RefreshResponse;
 }

@@ -51,7 +51,7 @@ type FormState = {
   improvementPoints: string;
   technicalDescription: string;
   userTagsText: string;
-  linksText: string;
+  links: { url: string; label: string }[];
 };
 
 const emptyForm = (): FormState => ({
@@ -63,7 +63,7 @@ const emptyForm = (): FormState => ({
   improvementPoints: '',
   technicalDescription: '',
   userTagsText: '',
-  linksText: '',
+  links: [],
 });
 
 function parseUserTags(text: string): string[] {
@@ -73,15 +73,14 @@ function parseUserTags(text: string): string[] {
     .filter(Boolean);
 }
 
-function parseLinks(text: string): { url: string; label?: string }[] {
-  return text
-    .split('\n')
-    .map((line) => line.trim())
-    .filter(Boolean)
-    .map((line) => {
-      const [url, label] = line.split('|').map((part) => part.trim());
-      return { url, label: label || undefined };
-    });
+function parseLinks(rows: { url: string; label: string }[]): { url: string; label?: string }[] {
+  return rows
+    .map((row) => ({
+      url: row.url.trim(),
+      label: row.label.trim(),
+    }))
+    .filter((row) => row.url.length > 0)
+    .map((row) => ({ url: row.url, label: row.label || undefined }));
 }
 
 function formFromDetail(detail: DeliverableDetail): FormState {
@@ -94,7 +93,7 @@ function formFromDetail(detail: DeliverableDetail): FormState {
     improvementPoints: detail.improvementPoints,
     technicalDescription: detail.technicalDescription ?? '',
     userTagsText: detail.userTags.join(', '),
-    linksText: detail.links.map((link) => (link.label ? `${link.url} | ${link.label}` : link.url)).join('\n'),
+    links: detail.links.map((link) => ({ url: link.url, label: link.label ?? '' })),
   };
 }
 
@@ -111,7 +110,7 @@ function toWriteInput(form: FormState): DeliverableWriteInput & {
     improvementPoints: form.improvementPoints,
     technicalDescription: form.technicalDescription || null,
     userTags: parseUserTags(form.userTagsText),
-    links: parseLinks(form.linksText),
+    links: parseLinks(form.links),
   };
 }
 
@@ -124,11 +123,19 @@ function DeliverableFormFields({
   tagCatalog: Tag[];
   onChange: (next: FormState) => void;
 }) {
-  const toggleSystemTag = (tagId: string) => {
-    const selected = form.systemTagIds.includes(tagId)
-      ? form.systemTagIds.filter((id) => id !== tagId)
-      : [...form.systemTagIds, tagId];
-    onChange({ ...form, systemTagIds: selected });
+  const updateLink = (index: number, field: 'url' | 'label', value: string) => {
+    const nextLinks = form.links.map((link, linkIndex) =>
+      linkIndex === index ? { ...link, [field]: value } : link,
+    );
+    onChange({ ...form, links: nextLinks });
+  };
+
+  const addLinkRow = () => {
+    onChange({ ...form, links: [...form.links, { url: '', label: '' }] });
+  };
+
+  const removeLinkRow = (index: number) => {
+    onChange({ ...form, links: form.links.filter((_, linkIndex) => linkIndex !== index) });
   };
 
   return (
@@ -153,27 +160,32 @@ function DeliverableFormFields({
         value={form.roleInDeliverable}
         onChange={(event) => onChange({ ...form, roleInDeliverable: event.target.value })}
       />
-      <FormControl required component="fieldset" variant="standard">
-        <Typography component="legend" variant="subtitle2" sx={{ mb: 1 }}>
-          System tags
-        </Typography>
-        <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap>
-          {tagCatalog.map((tag) => {
-            const selected = form.systemTagIds.includes(tag.id);
-            return (
-              <Chip
-                key={tag.id}
-                label={tag.name}
-                clickable
-                color={selected ? 'primary' : 'default'}
-                variant={selected ? 'filled' : 'outlined'}
-                onClick={() => toggleSystemTag(tag.id)}
-                aria-pressed={selected}
-                sx={selected ? { bgcolor: tag.color, color: '#fff' } : undefined}
-              />
-            );
-          })}
-        </Stack>
+      <FormControl required>
+        <InputLabel id="tags-label">Tags</InputLabel>
+        <Select
+          labelId="tags-label"
+          multiple
+          label="Tags"
+          value={form.systemTagIds}
+          onChange={(event) =>
+            onChange({
+              ...form,
+              systemTagIds: event.target.value as string[],
+            })
+          }
+          renderValue={(selected) => {
+            const selectedIds = selected as string[];
+            return selectedIds
+              .map((tagId) => tagCatalog.find((tag) => tag.id === tagId)?.name ?? tagId)
+              .join(', ');
+          }}
+        >
+          {tagCatalog.map((tag) => (
+            <MenuItem key={tag.id} value={tag.id}>
+              {tag.name}
+            </MenuItem>
+          ))}
+        </Select>
         <FormHelperText>Select at least one catalog tag</FormHelperText>
       </FormControl>
       <FormControl required>
@@ -213,13 +225,50 @@ function DeliverableFormFields({
         value={form.userTagsText}
         onChange={(event) => onChange({ ...form, userTagsText: event.target.value })}
       />
-      <TextField
-        label="Reference links (optional, one per line: url or url | label)"
-        multiline
-        minRows={2}
-        value={form.linksText}
-        onChange={(event) => onChange({ ...form, linksText: event.target.value })}
-      />
+      <Box>
+        <Typography variant="subtitle2" sx={{ mb: 1 }}>
+          Reference links (optional)
+        </Typography>
+        <Table size="small" aria-label="Reference links table">
+          <TableHead>
+            <TableRow>
+              <TableCell>URL</TableCell>
+              <TableCell>Label</TableCell>
+              <TableCell align="right">Actions</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {form.links.map((link, index) => (
+              <TableRow key={`link-${index}`}>
+                <TableCell>
+                  <TextField
+                    label={`Link URL ${index + 1}`}
+                    size="small"
+                    fullWidth
+                    value={link.url}
+                    onChange={(event) => updateLink(index, 'url', event.target.value)}
+                  />
+                </TableCell>
+                <TableCell>
+                  <TextField
+                    label={`Link label ${index + 1}`}
+                    size="small"
+                    fullWidth
+                    value={link.label}
+                    onChange={(event) => updateLink(index, 'label', event.target.value)}
+                  />
+                </TableCell>
+                <TableCell align="right">
+                  <Button onClick={() => removeLinkRow(index)}>Remove</Button>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+        <Button sx={{ mt: 1 }} onClick={addLinkRow}>
+          Add link
+        </Button>
+      </Box>
     </Stack>
   );
 }
@@ -388,7 +437,7 @@ export default function DeliverablesPage() {
                 <TableRow>
                   <TableCell>Title</TableCell>
                   <TableCell>Impact</TableCell>
-                  <TableCell>System tags</TableCell>
+                  <TableCell>Tags</TableCell>
                   <TableCell>Updated</TableCell>
                   <TableCell align="right">Actions</TableCell>
                 </TableRow>

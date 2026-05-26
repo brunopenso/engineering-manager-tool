@@ -92,4 +92,34 @@ export async function registerAuthRoutes(app: FastifyInstance): Promise<void> {
       };
     }
   });
+
+  app.post('/auth/refresh', async (request, reply) => {
+    if (!request.auth) {
+      reply.code(401);
+      return {
+        code: AUTH_ERROR_CODES.MISSING_APP_TOKEN,
+        message: 'Authentication token is missing.',
+      };
+    }
+
+    const user = await findUserById(request.auth.userId);
+    if (!user) {
+      reply.code(401);
+      return {
+        code: AUTH_ERROR_CODES.INVALID_APP_TOKEN,
+        message: 'Authentication token is invalid.',
+      };
+    }
+
+    const accessToken = app.issueAccessToken({
+      sub: user.id,
+      email: user.email,
+      fullName: user.fullName,
+    });
+
+    return {
+      accessToken,
+      user: await mapUserToAuthResponse(user),
+    };
+  });
 }

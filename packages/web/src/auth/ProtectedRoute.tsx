@@ -8,7 +8,11 @@ type ProtectedRouteProps = {
 };
 
 export function ProtectedRoute({ children }: ProtectedRouteProps) {
-  const { accessToken, user } = useAuth();
+  const { accessToken, user, sessionStatus } = useAuth();
+
+  if (sessionStatus === 'loading') {
+    return null;
+  }
 
   if (!hasValidShellSession(accessToken, user)) {
     return <Navigate to="/login" replace />;

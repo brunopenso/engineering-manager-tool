@@ -26,6 +26,7 @@ type RenderOptions = {
   initialPath?: string;
   isAuthenticated?: boolean;
   user?: AuthUser;
+  enableSessionBootstrap?: boolean;
 };
 
 export function renderWithProviders(
@@ -35,6 +36,7 @@ export function renderWithProviders(
   const initialPath = options?.initialPath ?? '/';
   const isAuthenticated = options?.isAuthenticated ?? false;
   const user = options?.user ?? testUser;
+  const enableSessionBootstrap = options?.enableSessionBootstrap ?? false;
 
   const initialSession = isAuthenticated
     ? {
@@ -47,7 +49,12 @@ export function renderWithProviders(
     <AppThemeProvider>
       <GoogleOAuthProvider clientId="test-client-id">
         <MemoryRouter initialEntries={[initialPath]}>
-          <AuthProvider initialSession={initialSession}>{ui}</AuthProvider>
+          <AuthProvider
+            initialSession={initialSession}
+            enableSessionBootstrap={enableSessionBootstrap}
+          >
+            {ui}
+          </AuthProvider>
         </MemoryRouter>
       </GoogleOAuthProvider>
     </AppThemeProvider>,

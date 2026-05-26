@@ -9,7 +9,11 @@ type AdminRouteProps = {
 };
 
 export function AdminRoute({ children }: AdminRouteProps) {
-  const { user } = useAuth();
+  const { user, sessionStatus } = useAuth();
+
+  if (sessionStatus === 'loading') {
+    return null;
+  }
 
   if (!isAdministrator(user)) {
     return <Navigate to={DEFAULT_APP_ROUTE} replace />;

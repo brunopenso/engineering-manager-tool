@@ -15,8 +15,12 @@ import { DEFAULT_APP_ROUTE, LOGIN_ROUTE } from './routes/shellOptions.js';
 import { useAuth } from './auth/AuthProvider.js';
 
 function DefaultRouteRedirect() {
-  const { accessToken, user } = useAuth();
+  const { accessToken, user, sessionStatus } = useAuth();
   const canAccessApp = Boolean(accessToken && user?.email);
+
+  if (sessionStatus === 'loading') {
+    return null;
+  }
 
   if (canAccessApp) {
     return <Navigate to={DEFAULT_APP_ROUTE} replace />;
