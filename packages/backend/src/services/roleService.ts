@@ -31,7 +31,7 @@ export function sortRoles(roles: UserRoleType[]): UserRoleType[] {
 export async function loadRolesForUser(userId: string): Promise<UserRoleType[]> {
   const rows = await userRoleRepository().find({
     where: { userId },
-    select: ['role'],
+    select: { role: true },
   });
 
   const roles = rows.map((row) => row.role);
