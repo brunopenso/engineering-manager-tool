@@ -1,6 +1,11 @@
+import type { AuthUser } from '../auth/AuthProvider.js';
+import { isAdministrator } from '../auth/roleGuards.js';
+
 export const LOGIN_ROUTE = '/login';
 export const ROOT_LOGIN_ROUTE = '/';
 export const DEFAULT_APP_ROUTE = '/app';
+export const PROFILE_ROUTE = '/app/profile';
+export const ADMIN_USERS_ROUTE = '/app/admin/users';
 
 export type ShellMenuOption = {
   id: string;
@@ -9,11 +14,17 @@ export type ShellMenuOption = {
   available: boolean;
 };
 
-export const SHELL_MENU_OPTIONS: ShellMenuOption[] = [
+const BASE_SHELL_MENU_OPTIONS: ShellMenuOption[] = [
   {
     id: 'home',
     label: 'Home',
     route: '/app',
+    available: true,
+  },
+  {
+    id: 'profile',
+    label: 'Profile',
+    route: PROFILE_ROUTE,
     available: true,
   },
   {
@@ -29,3 +40,23 @@ export const SHELL_MENU_OPTIONS: ShellMenuOption[] = [
     available: false,
   },
 ];
+
+const ADMIN_SHELL_MENU_OPTION: ShellMenuOption = {
+  id: 'admin-users',
+  label: 'User roles',
+  route: ADMIN_USERS_ROUTE,
+  available: true,
+};
+
+export function getVisibleShellMenuOptions(user: AuthUser | null): ShellMenuOption[] {
+  const options = [...BASE_SHELL_MENU_OPTIONS];
+
+  if (isAdministrator(user)) {
+    options.push(ADMIN_SHELL_MENU_OPTION);
+  }
+
+  return options;
+}
+
+/** @deprecated Use getVisibleShellMenuOptions(user) for role-aware navigation */
+export const SHELL_MENU_OPTIONS = BASE_SHELL_MENU_OPTIONS;

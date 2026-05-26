@@ -1,5 +1,6 @@
 import type { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify';
 import { AUTH_ERROR_CODES } from '../auth/types.js';
+import { loadRolesForUser } from '../services/roleService.js';
 
 const PUBLIC_ROUTES = new Set([
   '/healthcheck',
@@ -46,7 +47,15 @@ export async function registerAuthMiddleware(app: FastifyInstance): Promise<void
     }
 
     try {
-      await app.verifyAccessToken(token);
+      const payload = await app.verifyAccessToken(token);
+      const roles = await loadRolesForUser(payload.sub);
+
+      request.auth = {
+        userId: payload.sub,
+        email: payload.email,
+        fullName: payload.fullName,
+        roles,
+      };
     } catch {
       reply.code(401).send({
         code: AUTH_ERROR_CODES.INVALID_APP_TOKEN,

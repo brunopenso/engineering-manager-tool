@@ -12,7 +12,9 @@
     "clean": "rm -rf dist tsconfig.tsbuildinfo",
     "db:migration:create": "tsx scripts/migration-create.ts",
     "db:migration:run": "tsx scripts/migration-run.ts",
-    "db:migration:rollback": "tsx scripts/migration-rollback.ts"
+    "db:migration:rollback": "tsx scripts/migration-rollback.ts",
+    "test": "vitest run",
+    "test:watch": "vitest"
   },
   "dependencies": {
     "@fastify/jwt": "^9.1.0",
@@ -27,6 +29,7 @@
   "devDependencies": {
     "@types/node": "^24.0.0",
     "@types/jsonwebtoken": "^9.0.7",
-    "tsx": "^4.19.4"
+    "tsx": "^4.19.4",
+    "vitest": "^2.1.8"
   }
 }

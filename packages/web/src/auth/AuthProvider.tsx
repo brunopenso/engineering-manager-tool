@@ -6,12 +6,15 @@ import {
   type ReactNode,
 } from 'react';
 
+export type UserRoleType = 'COLLABORATOR' | 'LEADER' | 'ADMINISTRATOR';
+
 type AuthUser = {
   id: string;
   email: string;
   fullName: string;
   firstLoginAt: string;
   lastLoginAt: string;
+  roles: UserRoleType[];
 };
 
 export type { AuthUser };

@@ -1,5 +1,6 @@
 import App from '../App.js';
-import { renderWithProviders, testUser } from '../test/renderWithProviders.js';
+import { renderWithProviders } from '../test/renderWithProviders.js';
+import { getIdentityButton } from '../test/testHelpers.js';
 import { screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 
@@ -8,6 +9,6 @@ describe('US1 shell header', () => {
     renderWithProviders(<App />, { initialPath: '/app', isAuthenticated: true });
 
     expect(screen.getByText('Engineering Manager Tool')).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: testUser.email })).toBeInTheDocument();
+    expect(getIdentityButton()).toBeInTheDocument();
   });
 });

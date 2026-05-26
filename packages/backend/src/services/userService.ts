@@ -1,5 +1,6 @@
 import { AppDataSource } from '../database/connection.js';
 import { User } from '../database/entities/User.js';
+import { ensureCollaboratorRole } from './roleService.js';
 
 type GoogleIdentity = {
   email: string;
@@ -21,7 +22,9 @@ export async function upsertUserFromGoogleIdentity(
   if (existingUser) {
     existingUser.fullName = identity.fullName;
     existingUser.lastLoginAt = now;
-    return userRepository().save(existingUser);
+    const savedUser = await userRepository().save(existingUser);
+    await ensureCollaboratorRole(savedUser.id);
+    return savedUser;
   }
 
   const createdUser = userRepository().create({
@@ -31,7 +34,13 @@ export async function upsertUserFromGoogleIdentity(
     lastLoginAt: now,
   });
 
-  return userRepository().save(createdUser);
+  const savedUser = await userRepository().save(createdUser);
+  await ensureCollaboratorRole(savedUser.id);
+  return savedUser;
+}
+
+export async function findAllUsers(): Promise<User[]> {
+  return userRepository().find({ order: { email: 'ASC' } });
 }
 
 export async function findUserById(id: string): Promise<User | null> {

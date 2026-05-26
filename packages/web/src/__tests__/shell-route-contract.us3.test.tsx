@@ -1,5 +1,6 @@
 import App from '../App.js';
-import { renderWithProviders, testUser } from '../test/renderWithProviders.js';
+import { renderWithProviders } from '../test/renderWithProviders.js';
+import { getIdentityButton } from '../test/testHelpers.js';
 import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it } from 'vitest';
@@ -9,8 +10,12 @@ describe('US3 logout contract assertions', () => {
     const user = userEvent.setup();
     renderWithProviders(<App />, { initialPath: '/app', isAuthenticated: true });
 
-    await user.click(screen.getByRole('button', { name: testUser.email }));
-    expect(screen.getByRole('heading', { name: 'Welcome' })).toBeInTheDocument();
-    expect(screen.getByText('Do you want to log out?')).toBeInTheDocument();
+    await user.click(getIdentityButton());
+    expect(
+      screen.getByRole('dialog', { name: 'Confirm Logout' }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText(/Are you sure you want to log out\?/i),
+    ).toBeInTheDocument();
   });
 });

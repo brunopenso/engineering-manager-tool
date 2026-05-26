@@ -1,5 +1,6 @@
 import App from '../App.js';
 import { renderWithProviders, testUser } from '../test/renderWithProviders.js';
+import { LOGIN_HEADING } from '../test/testHelpers.js';
 import { screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 
@@ -7,7 +8,7 @@ describe('US1 auth guard', () => {
   it('redirects unauthenticated users to login', () => {
     renderWithProviders(<App />, { initialPath: '/app' });
 
-    expect(screen.getByRole('heading', { name: 'Login' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: LOGIN_HEADING })).toBeInTheDocument();
   });
 
   it('redirects users with missing email to login', () => {
@@ -17,6 +18,6 @@ describe('US1 auth guard', () => {
       user: { ...testUser, email: '' },
     });
 
-    expect(screen.getByRole('heading', { name: 'Login' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: LOGIN_HEADING })).toBeInTheDocument();
   });
 });

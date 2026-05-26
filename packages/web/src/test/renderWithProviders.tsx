@@ -3,6 +3,7 @@ import { MemoryRouter } from 'react-router-dom';
 import type { ReactElement } from 'react';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import { AuthProvider, type AuthUser } from '../auth/AuthProvider.js';
+import { AppThemeProvider } from '../theme/AppThemeProvider.js';
 
 export const testUser: AuthUser = {
   id: 'user-1',
@@ -10,6 +11,15 @@ export const testUser: AuthUser = {
   fullName: 'Engineering Manager',
   firstLoginAt: '2026-01-01T00:00:00.000Z',
   lastLoginAt: '2026-01-01T00:00:00.000Z',
+  roles: ['COLLABORATOR'],
+};
+
+export const testAdminUser: AuthUser = {
+  ...testUser,
+  id: 'admin-1',
+  email: 'admin@example.com',
+  fullName: 'System Admin',
+  roles: ['COLLABORATOR', 'ADMINISTRATOR'],
 };
 
 type RenderOptions = {
@@ -34,10 +44,12 @@ export function renderWithProviders(
     : undefined;
 
   return render(
-    <GoogleOAuthProvider clientId="test-client-id">
-      <MemoryRouter initialEntries={[initialPath]}>
-        <AuthProvider initialSession={initialSession}>{ui}</AuthProvider>
-      </MemoryRouter>
-    </GoogleOAuthProvider>,
+    <AppThemeProvider>
+      <GoogleOAuthProvider clientId="test-client-id">
+        <MemoryRouter initialEntries={[initialPath]}>
+          <AuthProvider initialSession={initialSession}>{ui}</AuthProvider>
+        </MemoryRouter>
+      </GoogleOAuthProvider>
+    </AppThemeProvider>,
   );
 }

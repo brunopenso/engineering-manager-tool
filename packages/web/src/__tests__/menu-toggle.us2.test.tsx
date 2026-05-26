@@ -1,5 +1,6 @@
 import App from '../App.js';
 import { renderWithProviders } from '../test/renderWithProviders.js';
+import { getMenuToggleButton } from '../test/testHelpers.js';
 import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it } from 'vitest';
@@ -9,7 +10,7 @@ describe('US2 menu toggle', () => {
     const user = userEvent.setup();
     renderWithProviders(<App />, { initialPath: '/app', isAuthenticated: true });
 
-    const menuButton = screen.getByRole('button', { name: 'Menu' });
+    const menuButton = getMenuToggleButton();
     expect(menuButton).toHaveAttribute('aria-expanded', 'false');
     expect(screen.queryByRole('navigation', { name: 'App navigation' })).not.toBeInTheDocument();
 
