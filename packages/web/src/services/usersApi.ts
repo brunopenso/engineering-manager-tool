@@ -30,6 +30,22 @@ export type RoleChangeRequest = {
   action: 'GRANT' | 'REVOKE';
 };
 
+export type LeaderCreateUserRequest = {
+  fullName: string;
+  email: string;
+  role: string;
+};
+
+export type LeaderCreatedUser = {
+  id: string;
+  email: string;
+  fullName: string;
+  role: string;
+  leaderId: string;
+  createdByUserId: string;
+  createdAt: string;
+};
+
 async function parseError(response: Response): Promise<UsersApiError> {
   let payload: ErrorResponse | null = null;
 
@@ -77,5 +93,26 @@ export async function updateUserRole(
   }
 
   const payload = (await response.json()) as { user: AuthUser };
+  return payload.user;
+}
+
+export async function createUser(
+  accessToken: string,
+  input: LeaderCreateUserRequest,
+): Promise<LeaderCreatedUser> {
+  const response = await fetch(`${API_BASE_URL}/users`, {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(input),
+  });
+
+  if (!response.ok) {
+    throw await parseError(response);
+  }
+
+  const payload = (await response.json()) as { user: LeaderCreatedUser };
   return payload.user;
 }

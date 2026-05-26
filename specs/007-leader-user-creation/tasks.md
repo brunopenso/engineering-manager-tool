@@ -17,9 +17,9 @@
 
 **Purpose**: Validate contracts and prepare test scaffolds.
 
-- [ ] T001 Validate Leader User Creation API contract consistency in `specs/007-leader-user-creation/contracts/leader-user-creation-api.yaml` against `specs/007-leader-user-creation/spec.md`
-- [ ] T002 [P] Create backend test scaffold for leader user creation in `packages/backend/src/__tests__/leader-user-creation.setup.test.ts`
-- [ ] T003 [P] Create web test scaffold for leader create-user route in `packages/web/src/__tests__/leader-user-creation.setup.test.tsx`
+- [x] T001 Validate Leader User Creation API contract consistency in `specs/007-leader-user-creation/contracts/leader-user-creation-api.yaml` against `specs/007-leader-user-creation/spec.md`
+- [x] T002 [P] Create backend test scaffold for leader user creation in `packages/backend/src/__tests__/leader-user-creation.setup.test.ts`
+- [x] T003 [P] Create web test scaffold for leader create-user route in `packages/web/src/__tests__/leader-user-creation.setup.test.tsx`
 
 ---
 
@@ -29,18 +29,18 @@
 
 **⚠️ CRITICAL**: No user story work begins until this phase is complete.
 
-- [ ] T004 Add nullable `leader_id` FK column on `users` in migration `packages/backend/database/migrations/*-AddUserLeaderRelationship.ts`
-- [ ] T005 [P] Add `UserCreationAudit` entity in `packages/backend/src/database/entities/UserCreationAudit.ts`
-- [ ] T006 Map `leaderId` on `User` entity in `packages/backend/src/database/entities/User.ts`
-- [ ] T007 Register `UserCreationAudit` and updated `User` in `packages/backend/src/database/connection.ts`
-- [ ] T008 [P] Add leader-create error codes (e.g. `LEADER_REQUIRED`, `USER_CREATE_FORBIDDEN`) in `packages/backend/src/auth/types.ts`
-- [ ] T009 Add `assertLeaderRole` throw helper in `packages/backend/src/services/authorizationService.ts`
-- [ ] T010 [P] Add leader create request validation (name, email, duplicate email) in `packages/backend/src/services/userCreateValidation.ts`
-- [ ] T011 Add `createUserByLeader` service (set `leaderId` to actor, persist audit row, ensure `COLLABORATOR` role) in `packages/backend/src/services/userService.ts`
-- [ ] T012 [P] Add leader create-user API types and `createUser` client stub in `packages/web/src/services/usersApi.ts`
-- [ ] T013 [P] Add `LEADER_CREATE_USER_ROUTE` constant in `packages/web/src/routes/shellOptions.ts`
-- [ ] T014 [P] Create `LeaderRoute` guard component in `packages/web/src/auth/LeaderRoute.tsx`
-- [ ] T015 [P] Add leader/ non-leader test fixtures in `packages/backend/src/test/fixtures/leaderUserCreation.ts`
+- [x] T004 Add nullable `leader_id` FK column on `users` in migration `packages/backend/database/migrations/*-AddUserLeaderRelationship.ts`
+- [x] T005 [P] Add `UserCreationAudit` entity in `packages/backend/src/database/entities/UserCreationAudit.ts`
+- [x] T006 Map `leaderId` on `User` entity in `packages/backend/src/database/entities/User.ts`
+- [x] T007 Register `UserCreationAudit` and updated `User` in `packages/backend/src/database/connection.ts`
+- [x] T008 [P] Add leader-create error codes (e.g. `LEADER_REQUIRED`, `USER_CREATE_FORBIDDEN`) in `packages/backend/src/auth/types.ts`
+- [x] T009 Add `assertLeaderRole` throw helper in `packages/backend/src/services/authorizationService.ts`
+- [x] T010 [P] Add leader create request validation (name, email, duplicate email) in `packages/backend/src/services/userCreateValidation.ts`
+- [x] T011 Add `createUserByLeader` service (set `leaderId` to actor, persist audit row, ensure `COLLABORATOR` role) in `packages/backend/src/services/userService.ts`
+- [x] T012 [P] Add leader create-user API types and `createUser` client stub in `packages/web/src/services/usersApi.ts`
+- [x] T013 [P] Add `LEADER_CREATE_USER_ROUTE` constant in `packages/web/src/routes/shellOptions.ts`
+- [x] T014 [P] Create `LeaderRoute` guard component in `packages/web/src/auth/LeaderRoute.tsx`
+- [x] T015 [P] Add leader/ non-leader test fixtures in `packages/backend/src/test/fixtures/leaderUserCreation.ts`
 
 **Checkpoint**: Foundation complete; user story phases can proceed.
 
@@ -54,19 +54,19 @@
 
 ### Tests for User Story 1 (MANDATORY)
 
-- [ ] T016 [P] [US1] Add backend integration test for leader `POST /users` success and `leaderId` assignment in `packages/backend/src/__tests__/users-create-leader.us1.test.ts`
-- [ ] T017 [P] [US1] Add backend integration tests for create validation failures (missing fields, duplicate email) in `packages/backend/src/__tests__/users-create-validation.us1.test.ts`
-- [ ] T018 [P] [US1] Add web test for leader create form submit and success state in `packages/web/src/__tests__/leader-create-user.us1.test.tsx`
-- [ ] T019 [P] [US1] Add web test for leader route/menu visibility for leader role in `packages/web/src/__tests__/leader-create-user-route.us1.test.tsx`
+- [x] T016 [P] [US1] Add backend integration test for leader `POST /users` success and `leaderId` assignment in `packages/backend/src/__tests__/users-create-leader.us1.test.ts`
+- [x] T017 [P] [US1] Add backend integration tests for create validation failures (missing fields, duplicate email) in `packages/backend/src/__tests__/users-create-validation.us1.test.ts`
+- [x] T018 [P] [US1] Add web test for leader create form submit and success state in `packages/web/src/__tests__/leader-create-user.us1.test.tsx`
+- [x] T019 [P] [US1] Add web test for leader route/menu visibility for leader role in `packages/web/src/__tests__/leader-create-user-route.us1.test.tsx`
 
 ### Implementation for User Story 1
 
-- [ ] T020 [US1] Implement leader-only `POST /users` route in `packages/backend/src/routes/users.ts`
-- [ ] T021 [US1] Map create response DTO (`leaderId`, `createdByUserId`) in `packages/backend/src/services/authUserMapper.ts` or dedicated mapper in `packages/backend/src/services/userService.ts`
-- [ ] T022 [US1] Implement `createUser` API client method in `packages/web/src/services/usersApi.ts`
-- [ ] T023 [US1] Implement `LeaderCreateUserPage` create form with success/error feedback using `frontend-design` skill with Material UI in `packages/web/src/pages/LeaderCreateUserPage.tsx`
-- [ ] T024 [US1] Register `/app/leader/users/new` route with `LeaderRoute` in `packages/web/src/App.tsx`
-- [ ] T025 [US1] Expose leader-only shell menu entry via `getVisibleShellMenuOptions` in `packages/web/src/routes/shellOptions.ts`
+- [x] T020 [US1] Implement leader-only `POST /users` route in `packages/backend/src/routes/users.ts`
+- [x] T021 [US1] Map create response DTO (`leaderId`, `createdByUserId`) in `packages/backend/src/services/authUserMapper.ts` or dedicated mapper in `packages/backend/src/services/userService.ts`
+- [x] T022 [US1] Implement `createUser` API client method in `packages/web/src/services/usersApi.ts`
+- [x] T023 [US1] Implement `LeaderCreateUserPage` create form with success/error feedback using `frontend-design` skill with Material UI in `packages/web/src/pages/LeaderCreateUserPage.tsx`
+- [x] T024 [US1] Register `/app/leader/users/new` route with `LeaderRoute` in `packages/web/src/App.tsx`
+- [x] T025 [US1] Expose leader-only shell menu entry via `getVisibleShellMenuOptions` in `packages/web/src/routes/shellOptions.ts`
 
 **Checkpoint**: User Story 1 works independently (leader create + persistence + UI success path).
 
@@ -80,16 +80,16 @@
 
 ### Tests for User Story 2 (MANDATORY)
 
-- [ ] T026 [P] [US2] Add backend integration test for non-leader `POST /users` forbidden in `packages/backend/src/__tests__/users-create-deny.us2.test.ts`
-- [ ] T027 [P] [US2] Add web test for non-leader blocked route access in `packages/web/src/__tests__/leader-create-user-deny.us2.test.tsx`
-- [ ] T028 [P] [US2] Add web test confirming create menu entry hidden for non-leaders in `packages/web/src/__tests__/leader-create-user-menu-deny.us2.test.tsx`
+- [x] T026 [P] [US2] Add backend integration test for non-leader `POST /users` forbidden in `packages/backend/src/__tests__/users-create-deny.us2.test.ts`
+- [x] T027 [P] [US2] Add web test for non-leader blocked route access in `packages/web/src/__tests__/leader-create-user-deny.us2.test.tsx`
+- [x] T028 [P] [US2] Add web test confirming create menu entry hidden for non-leaders in `packages/web/src/__tests__/leader-create-user-menu-deny.us2.test.tsx`
 
 ### Implementation for User Story 2
 
-- [ ] T029 [US2] Enforce `assertLeaderRole` at start of `POST /users` handler in `packages/backend/src/routes/users.ts`
-- [ ] T030 [US2] Return stable 403 payload for non-leader create attempts in `packages/backend/src/routes/users.ts`
-- [ ] T031 [US2] Hide leader create menu entry for non-leaders in `packages/web/src/routes/shellOptions.ts`
-- [ ] T032 [US2] Add permission-denied UX for direct route access in `packages/web/src/auth/LeaderRoute.tsx`
+- [x] T029 [US2] Enforce `assertLeaderRole` at start of `POST /users` handler in `packages/backend/src/routes/users.ts`
+- [x] T030 [US2] Return stable 403 payload for non-leader create attempts in `packages/backend/src/routes/users.ts`
+- [x] T031 [US2] Hide leader create menu entry for non-leaders in `packages/web/src/routes/shellOptions.ts`
+- [x] T032 [US2] Add permission-denied UX for direct route access in `packages/web/src/auth/LeaderRoute.tsx`
 
 **Checkpoint**: User Stories 1 and 2 each run independently (allow + deny paths).
 
@@ -103,14 +103,14 @@
 
 ### Tests for User Story 3 (MANDATORY)
 
-- [ ] T033 [P] [US3] Add backend integration test ignoring/rejecting tampered `leaderId` on create in `packages/backend/src/__tests__/users-create-leader-override.us3.test.ts`
-- [ ] T034 [P] [US3] Add web test asserting no leader selector and visible auto-assignment copy in `packages/web/src/__tests__/leader-create-user-assignment.us3.test.tsx`
+- [x] T033 [P] [US3] Add backend integration test ignoring/rejecting tampered `leaderId` on create in `packages/backend/src/__tests__/users-create-leader-override.us3.test.ts`
+- [x] T034 [P] [US3] Add web test asserting no leader selector and visible auto-assignment copy in `packages/web/src/__tests__/leader-create-user-assignment.us3.test.tsx`
 
 ### Implementation for User Story 3
 
-- [ ] T035 [US3] Strip or reject client `leaderId` and force actor assignment in `packages/backend/src/services/userService.ts`
-- [ ] T036 [US3] Display non-editable "Leader assigned automatically to you" context on create form using `frontend-design` skill in `packages/web/src/pages/LeaderCreateUserPage.tsx`
-- [ ] T037 [US3] Omit `leaderId` from web create request payload in `packages/web/src/services/usersApi.ts`
+- [x] T035 [US3] Strip or reject client `leaderId` and force actor assignment in `packages/backend/src/services/userService.ts`
+- [x] T036 [US3] Display non-editable "Leader assigned automatically to you" context on create form using `frontend-design` skill in `packages/web/src/pages/LeaderCreateUserPage.tsx`
+- [x] T037 [US3] Omit `leaderId` from web create request payload in `packages/web/src/services/usersApi.ts`
 
 **Checkpoint**: All user stories independently functional with assignment integrity enforced.
 
@@ -120,9 +120,9 @@
 
 **Purpose**: Edge cases, audit verification, and regression validation across stories.
 
-- [ ] T038 [P] Add backend test for revoked-leader deny on create in `packages/backend/src/__tests__/users-create-revoked-leader.test.ts`
-- [ ] T039 [P] Add backend test preventing duplicate unintended user on repeated identical email in `packages/backend/src/__tests__/users-create-duplicate-email.test.ts`
-- [ ] T040 Verify `user_creation_audits` row written per successful create in `packages/backend/src/__tests__/users-create-audit.test.ts`
+- [x] T038 [P] Add backend test for revoked-leader deny on create in `packages/backend/src/__tests__/users-create-revoked-leader.test.ts`
+- [x] T039 [P] Add backend test preventing duplicate unintended user on repeated identical email in `packages/backend/src/__tests__/users-create-duplicate-email.test.ts`
+- [x] T040 Verify `user_creation_audits` row written per successful create in `packages/backend/src/__tests__/users-create-audit.test.ts`
 - [ ] T041 Run quickstart manual and automated validation checklist in `specs/007-leader-user-creation/quickstart.md`
 
 ---

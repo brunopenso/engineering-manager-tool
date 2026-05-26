@@ -21,7 +21,7 @@ import type { AuthUser } from '../auth/AuthProvider.js';
 type ElevatedRole = 'LEADER' | 'ADMINISTRATOR';
 
 export default function AdminUsersPage() {
-  const { accessToken } = useAuth();
+  const { accessToken, user: currentUser, setSession } = useAuth();
   const [users, setUsers] = useState<AuthUser[]>([]);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -64,8 +64,12 @@ export default function AdminUsersPage() {
     setErrorMessage(null);
 
     try {
-      await updateUserRole(accessToken, userId, { role, action });
+      const updatedUser = await updateUserRole(accessToken, userId, { role, action });
       await refreshUsers();
+
+      if (currentUser && userId === currentUser.id) {
+        setSession({ accessToken, user: updatedUser });
+      }
     } catch (error) {
       const message =
         error instanceof UsersApiError

@@ -22,6 +22,14 @@ export const testAdminUser: AuthUser = {
   roles: ['COLLABORATOR', 'ADMINISTRATOR'],
 };
 
+export const testLeaderUser: AuthUser = {
+  ...testUser,
+  id: 'leader-1',
+  email: 'leader@example.com',
+  fullName: 'Team Leader',
+  roles: ['COLLABORATOR', 'LEADER'],
+};
+
 type RenderOptions = {
   initialPath?: string;
   isAuthenticated?: boolean;
