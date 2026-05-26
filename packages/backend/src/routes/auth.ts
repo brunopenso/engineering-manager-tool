@@ -48,9 +48,9 @@ export async function registerAuthRoutes(app: FastifyInstance): Promise<void> {
 
     return {
       accessToken,
-      redirectPath: '/welcome',
+      redirectPath: '/app',
       welcomeMessage: 'Welcome to the system',
-      user: mapUserToAuthResponse(user),
+      user: await mapUserToAuthResponse(user),
     };
   });
 
@@ -81,7 +81,7 @@ export async function registerAuthRoutes(app: FastifyInstance): Promise<void> {
       }
 
       return {
-        user: mapUserToAuthResponse(user),
+        user: await mapUserToAuthResponse(user),
       };
     } catch {
       app.log.warn({ route: '/auth/me' }, 'App token verification failed');

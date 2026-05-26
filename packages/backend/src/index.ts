@@ -9,6 +9,7 @@ import { registerAuthMiddleware } from './middleware/auth.js';
 import { registerAuthPlugin } from './plugins/auth.js';
 import { registerAuthRoutes } from './routes/auth.js';
 import { registerHealthcheckRoutes } from './routes/healthcheck.js';
+import { registerUsersRoutes } from './routes/users.js';
 
 
 const app = Fastify({ logger: true });
@@ -18,6 +19,7 @@ await registerAuthPlugin(app);
 await registerAuthMiddleware(app);
 await registerHealthcheckRoutes(app);
 await registerAuthRoutes(app);
+await registerUsersRoutes(app);
 
 try {
   try {

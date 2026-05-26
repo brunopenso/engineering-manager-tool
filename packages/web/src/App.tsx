@@ -5,6 +5,9 @@ import WelcomePage from './pages/WelcomePage.js';
 import AppShellLayout from './components/shell/AppShellLayout.js';
 import OptionUnavailablePage from './pages/OptionUnavailablePage.js';
 import UpdatesPage from './pages/UpdatesPage.js';
+import ProfilePage from './pages/ProfilePage.js';
+import AdminUsersPage from './pages/AdminUsersPage.js';
+import { AdminRoute } from './auth/AdminRoute.js';
 import { DEFAULT_APP_ROUTE, LOGIN_ROUTE } from './routes/shellOptions.js';
 import { useAuth } from './auth/AuthProvider.js';
 
@@ -33,6 +36,15 @@ export default function App() {
         }
       >
         <Route index element={<WelcomePage />} />
+        <Route path="profile" element={<ProfilePage />} />
+        <Route
+          path="admin/users"
+          element={
+            <AdminRoute>
+              <AdminUsersPage />
+            </AdminRoute>
+          }
+        />
         <Route path="updates" element={<UpdatesPage />} />
         <Route path="unavailable" element={<OptionUnavailablePage />} />
         <Route path="*" element={<Navigate to={DEFAULT_APP_ROUTE} replace />} />

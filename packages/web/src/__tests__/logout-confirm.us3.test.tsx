@@ -1,6 +1,7 @@
 import App from '../App.js';
-import { renderWithProviders, testUser } from '../test/renderWithProviders.js';
-import { screen } from '@testing-library/react';
+import { renderWithProviders } from '../test/renderWithProviders.js';
+import { getIdentityButton, LOGIN_HEADING } from '../test/testHelpers.js';
+import { screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it } from 'vitest';
 
@@ -9,10 +10,12 @@ describe('US3 logout confirmation', () => {
     const user = userEvent.setup();
     renderWithProviders(<App />, { initialPath: '/app', isAuthenticated: true });
 
-    await user.click(screen.getByRole('button', { name: testUser.email }));
+    await user.click(getIdentityButton());
 
-    expect(screen.getByText('Do you want to log out?')).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: 'Confirm logout' })).toBeInTheDocument();
+    expect(
+      screen.getByText(/Are you sure you want to log out\?/i),
+    ).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Log Out' })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Cancel' })).toBeInTheDocument();
   });
 
@@ -20,20 +23,24 @@ describe('US3 logout confirmation', () => {
     const user = userEvent.setup();
     renderWithProviders(<App />, { initialPath: '/app', isAuthenticated: true });
 
-    await user.click(screen.getByRole('button', { name: testUser.email }));
-    await user.click(screen.getByRole('button', { name: 'Confirm logout' }));
+    await user.click(getIdentityButton());
+    await user.click(screen.getByRole('button', { name: 'Log Out' }));
 
-    expect(screen.getByRole('heading', { name: 'Login' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: LOGIN_HEADING })).toBeInTheDocument();
   });
 
   it('keeps session active when logout is canceled', async () => {
     const user = userEvent.setup();
     renderWithProviders(<App />, { initialPath: '/app', isAuthenticated: true });
 
-    await user.click(screen.getByRole('button', { name: testUser.email }));
+    await user.click(getIdentityButton());
     await user.click(screen.getByRole('button', { name: 'Cancel' }));
 
-    expect(screen.queryByText('Do you want to log out?')).not.toBeInTheDocument();
+    await waitFor(() => {
+      expect(
+        screen.queryByRole('dialog', { name: 'Confirm Logout' }),
+      ).not.toBeInTheDocument();
+    });
     expect(screen.getByRole('heading', { name: 'Welcome' })).toBeInTheDocument();
   });
 });

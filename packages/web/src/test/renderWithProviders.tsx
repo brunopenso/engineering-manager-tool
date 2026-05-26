@@ -10,6 +10,15 @@ export const testUser: AuthUser = {
   fullName: 'Engineering Manager',
   firstLoginAt: '2026-01-01T00:00:00.000Z',
   lastLoginAt: '2026-01-01T00:00:00.000Z',
+  roles: ['COLLABORATOR'],
+};
+
+export const testAdminUser: AuthUser = {
+  ...testUser,
+  id: 'admin-1',
+  email: 'admin@example.com',
+  fullName: 'System Admin',
+  roles: ['COLLABORATOR', 'ADMINISTRATOR'],
 };
 
 type RenderOptions = {

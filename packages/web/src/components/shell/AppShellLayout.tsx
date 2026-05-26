@@ -13,7 +13,7 @@ import {
 } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import { useAuth } from '../../auth/AuthProvider.js';
-import { SHELL_MENU_OPTIONS, LOGIN_ROUTE } from '../../routes/shellOptions.js';
+import { getVisibleShellMenuOptions, LOGIN_ROUTE } from '../../routes/shellOptions.js';
 import ShellNavigation from './ShellNavigation.js';
 import HeaderIdentityAction from './HeaderIdentityAction.js';
 import { useHeaderIdentityAction } from './useHeaderIdentityAction.js';
@@ -49,9 +49,11 @@ export default function AppShellLayout() {
     navigate(LOGIN_ROUTE, { replace: true });
   }
 
+  const menuOptions = getVisibleShellMenuOptions(user);
+
   const navigationContent = (
     <ShellNavigation
-      options={SHELL_MENU_OPTIONS}
+      options={menuOptions}
       onOptionSelected={closeDrawer}
     />
   );
@@ -71,6 +73,7 @@ export default function AppShellLayout() {
             <IconButton
               color="inherit"
               aria-label="open drawer"
+              aria-expanded={isDrawerOpen}
               onClick={toggleDrawer}
               edge="start"
               sx={{ mr: 2 }}

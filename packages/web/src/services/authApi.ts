@@ -9,12 +9,15 @@ type AuthErrorCode =
   | 'MISSING_APP_TOKEN'
   | 'INVALID_APP_TOKEN';
 
+export type UserRoleType = 'COLLABORATOR' | 'LEADER' | 'ADMINISTRATOR';
+
 export type AuthUser = {
   id: string;
   email: string;
   fullName: string;
   firstLoginAt: string;
   lastLoginAt: string;
+  roles: UserRoleType[];
 };
 
 type LoginResponse = {

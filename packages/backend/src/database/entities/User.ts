@@ -7,6 +7,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { LoginAuditEvent } from './LoginAuditEvent.js';
+import { UserRole } from './UserRole.js';
 
 @Entity({ name: 'users' })
 export class User {
@@ -33,4 +34,7 @@ export class User {
 
   @OneToMany(() => LoginAuditEvent, (loginAuditEvent) => loginAuditEvent.user)
   loginAuditEvents!: LoginAuditEvent[];
+
+  @OneToMany(() => UserRole, (userRole) => userRole.user)
+  userRoles!: UserRole[];
 }
