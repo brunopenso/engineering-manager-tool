@@ -93,7 +93,7 @@ export default function DeliverablesViewPage() {
                     <TableCell>{item.title}</TableCell>
                     <TableCell>{item.businessImpact}</TableCell>
                     <TableCell>
-                      <Stack direction="row" spacing={0.5} flexWrap="wrap" useFlexGap>
+                      <Stack direction="row" spacing={0.5} useFlexGap sx={{ flexWrap: 'wrap' }}>
                         {item.systemTags.map((tag) => (
                           <Chip
                             key={tag.id}

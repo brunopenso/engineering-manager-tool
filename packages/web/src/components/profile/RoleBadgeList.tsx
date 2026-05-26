@@ -13,7 +13,7 @@ type RoleBadgeListProps = {
 
 export default function RoleBadgeList({ roles }: RoleBadgeListProps) {
   return (
-    <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap>
+    <Stack direction="row" spacing={1} useFlexGap sx={{ flexWrap: 'wrap' }}>
       {roles.map((role) => (
         <Chip
           key={role}

@@ -109,7 +109,7 @@ export default function AdminUsersPage() {
                         <RoleBadgeList roles={user.roles} />
                       </TableCell>
                       <TableCell align="right">
-                        <Stack direction="row" spacing={1} justifyContent="flex-end">
+                        <Stack direction="row" spacing={1} sx={{ justifyContent: 'flex-end' }}>
                           <Button
                             size="small"
                             variant={hasRole(user, 'LEADER') ? 'outlined' : 'contained'}

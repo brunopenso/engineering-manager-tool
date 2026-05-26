@@ -448,7 +448,7 @@ export default function DeliverablesPage() {
                     <TableCell>{item.title}</TableCell>
                     <TableCell>{item.businessImpact}</TableCell>
                     <TableCell>
-                      <Stack direction="row" spacing={0.5} flexWrap="wrap" useFlexGap>
+                      <Stack direction="row" spacing={0.5} useFlexGap sx={{ flexWrap: 'wrap' }}>
                         {item.systemTags.map((tag) => (
                           <Chip
                             key={tag.id}
@@ -461,7 +461,7 @@ export default function DeliverablesPage() {
                     </TableCell>
                     <TableCell>{new Date(item.updatedAt).toLocaleString()}</TableCell>
                     <TableCell align="right">
-                      <Stack direction="row" spacing={1} justifyContent="flex-end">
+                      <Stack direction="row" spacing={1} sx={{ justifyContent: 'flex-end' }}>
                         <Button size="small" onClick={() => void openEdit(item)}>
                           Edit
                         </Button>

@@ -148,7 +148,11 @@ export default function AdminTagsPage() {
 
             {errorMessage && <Alert severity="error">{errorMessage}</Alert>}
 
-            <Stack direction={{ xs: 'column', md: 'row' }} spacing={2} alignItems={{ md: 'end' }}>
+            <Stack
+              direction={{ xs: 'column', md: 'row' }}
+              spacing={2}
+              sx={{ alignItems: { md: 'end' } }}
+            >
               <TextField
                 label="Tag name"
                 value={newName}
@@ -201,7 +205,7 @@ export default function AdminTagsPage() {
                           />
                         </TableCell>
                         <TableCell sx={{ width: '25%' }}>
-                          <Stack direction="row" spacing={2} alignItems="center">
+                          <Stack direction="row" spacing={2} sx={{ alignItems: 'center' }}>
                             <TextField
                               type="color"
                               value={edit.color}
@@ -227,7 +231,7 @@ export default function AdminTagsPage() {
                           </Stack>
                         </TableCell>
                         <TableCell align="right">
-                          <Stack direction="row" spacing={1} justifyContent="flex-end">
+                          <Stack direction="row" spacing={1} sx={{ justifyContent: 'flex-end' }}>
                             <Button size="small" variant="outlined" onClick={() => void handleSave(tag.id)}>
                               Save
                             </Button>
