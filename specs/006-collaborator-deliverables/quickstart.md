@@ -65,7 +65,13 @@ In `packages/web`:
 npm run dev
 ```
 
-## 6. Verify acceptance (manual)
+## 6. Routes implemented
+
+- Owner portfolio: `/app/deliverables`
+- Superior read-only view: `/app/deliverables/view/:userId`
+- Tag catalog picker API: `GET /tags/catalog` (authenticated, non-admin)
+
+## 7. Verify acceptance (manual)
 
 ### Owner portfolio (US1/US2)
 

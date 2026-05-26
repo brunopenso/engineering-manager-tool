@@ -56,6 +56,25 @@ function notFound(reply: FastifyReply) {
 }
 
 export async function registerTagsRoutes(app: FastifyInstance): Promise<void> {
+  app.get('/tags/catalog', async (request, reply) => {
+    const auth = requireAuth(request, reply);
+    if (!auth) {
+      return {
+        code: AUTH_ERROR_CODES.MISSING_APP_TOKEN,
+        message: 'Authentication token is missing.',
+      };
+    }
+
+    const tags = await listTags();
+    return {
+      tags: tags.map((tag) => ({
+        id: tag.id,
+        name: tag.name,
+        color: tag.color,
+      })),
+    };
+  });
+
   app.get('/tags', async (request, reply) => {
     const auth = requireAuth(request, reply);
     if (!auth) {

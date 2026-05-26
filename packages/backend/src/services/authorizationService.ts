@@ -4,6 +4,7 @@ import {
   type ElevatedRoleType,
   type UserRoleType,
 } from '../auth/types.js';
+import { isOrganizationalDescendantOf } from './organizationalHierarchy.js';
 
 export function hasRole(roles: UserRoleType[], role: UserRoleType): boolean {
   return roles.includes(role);
@@ -41,6 +42,30 @@ export function canAccessOrganizationalDataForTarget(
 ): boolean {
   // Org hierarchy not persisted yet; leader gate is role-only until subtree resolver ships.
   return false;
+}
+
+export function canReadDeliverablesForOwner(actorUserId: string, ownerUserId: string): boolean {
+  if (actorUserId === ownerUserId) {
+    return true;
+  }
+
+  return isOrganizationalDescendantOf(ownerUserId, actorUserId);
+}
+
+export function assertCanMutateDeliverable(actorUserId: string, ownerUserId: string): void {
+  if (actorUserId !== ownerUserId) {
+    const error = new Error('Only the deliverable owner can modify this record.');
+    error.name = AUTH_ERROR_CODES.DELIVERABLE_FORBIDDEN;
+    throw error;
+  }
+}
+
+export function assertCanReadDeliverables(actorUserId: string, ownerUserId: string): void {
+  if (!canReadDeliverablesForOwner(actorUserId, ownerUserId)) {
+    const error = new Error('You do not have permission to view these deliverables.');
+    error.name = AUTH_ERROR_CODES.DELIVERABLE_FORBIDDEN;
+    throw error;
+  }
 }
 
 export function isElevatedRole(role: string): role is ElevatedRoleType {
