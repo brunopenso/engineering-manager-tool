@@ -1,10 +1,18 @@
 import {
   createContext,
   useContext,
+  useEffect,
   useMemo,
   useState,
   type ReactNode,
 } from 'react';
+import { refreshSession, type AuthUser as ApiAuthUser } from '../services/authApi.js';
+import {
+  clearStoredSession,
+  readStoredSession,
+  writeStoredSession,
+} from './sessionStorage.js';
+import { useSessionRefresh } from './useSessionRefresh.js';
 
 export type UserRoleType = 'COLLABORATOR' | 'LEADER' | 'ADMINISTRATOR';
 
@@ -22,6 +30,7 @@ export type { AuthUser };
 type AuthState = {
   accessToken: string | null;
   user: AuthUser | null;
+  sessionStatus: 'loading' | 'authenticated' | 'anonymous';
   setSession: (session: { accessToken: string; user: AuthUser }) => void;
   clearSession: () => void;
 };
@@ -34,11 +43,13 @@ type AuthProviderProps = {
     accessToken: string;
     user: AuthUser;
   };
+  enableSessionBootstrap?: boolean;
 };
 
 export function AuthProvider({
   children,
   initialSession,
+  enableSessionBootstrap = true,
 }: AuthProviderProps) {
   const [accessToken, setAccessToken] = useState<string | null>(
     initialSession?.accessToken ?? null,
@@ -46,21 +57,91 @@ export function AuthProvider({
   const [user, setUser] = useState<AuthUser | null>(
     initialSession?.user ?? null,
   );
+  const [sessionStatus, setSessionStatus] = useState<
+    'loading' | 'authenticated' | 'anonymous'
+  >(initialSession ? 'authenticated' : 'loading');
+
+  useEffect(() => {
+    if (!enableSessionBootstrap) {
+      setSessionStatus(accessToken && user ? 'authenticated' : 'anonymous');
+      return;
+    }
+
+    if (initialSession) {
+      setSessionStatus('authenticated');
+      return;
+    }
+
+    const storedSession = readStoredSession();
+    if (!storedSession) {
+      setSessionStatus('anonymous');
+      return;
+    }
+
+    let isMounted = true;
+
+    void refreshSession(storedSession.accessToken)
+      .then((nextSession) => {
+        if (!isMounted) {
+          return;
+        }
+
+        setAccessToken(nextSession.accessToken);
+        setUser(nextSession.user);
+        writeStoredSession({ accessToken: nextSession.accessToken });
+        setSessionStatus('authenticated');
+      })
+      .catch(() => {
+        if (!isMounted) {
+          return;
+        }
+
+        clearStoredSession();
+        setAccessToken(null);
+        setUser(null);
+        setSessionStatus('anonymous');
+      });
+
+    return () => {
+      isMounted = false;
+    };
+  }, [enableSessionBootstrap, initialSession]);
+
+  useSessionRefresh({
+    accessToken,
+    enabled: enableSessionBootstrap && sessionStatus === 'authenticated',
+    onSessionRefreshed: (nextSession: { accessToken: string; user: ApiAuthUser }) => {
+      setAccessToken(nextSession.accessToken);
+      setUser(nextSession.user);
+      writeStoredSession({ accessToken: nextSession.accessToken });
+    },
+    onSessionExpired: () => {
+      clearStoredSession();
+      setAccessToken(null);
+      setUser(null);
+      setSessionStatus('anonymous');
+    },
+  });
 
   const value = useMemo<AuthState>(
     () => ({
       accessToken,
       user,
+      sessionStatus,
       setSession: ({ accessToken: nextToken, user: nextUser }) => {
         setAccessToken(nextToken);
         setUser(nextUser);
+        writeStoredSession({ accessToken: nextToken });
+        setSessionStatus('authenticated');
       },
       clearSession: () => {
         setAccessToken(null);
         setUser(null);
+        clearStoredSession();
+        setSessionStatus('anonymous');
       },
     }),
-    [accessToken, user],
+    [accessToken, sessionStatus, user],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

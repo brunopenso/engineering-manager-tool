@@ -1,0 +1,214 @@
+import { In } from 'typeorm';
+import { AppDataSource } from '../database/connection.js';
+import { Deliverable } from '../database/entities/Deliverable.js';
+import { DeliverableLink } from '../database/entities/DeliverableLink.js';
+import { DeliverableSystemTag } from '../database/entities/DeliverableSystemTag.js';
+import { DeliverableUserTag } from '../database/entities/DeliverableUserTag.js';
+import { Tag } from '../database/entities/Tag.js';
+import {
+  DeliverableValidationError,
+  InvalidSystemTagError,
+  validateDeliverableWriteInput,
+  type DeliverableWriteInput,
+} from './deliverableValidation.js';
+
+export type TagSummaryDto = {
+  id: string;
+  name: string;
+  color: string;
+};
+
+export type DeliverableSummaryDto = {
+  id: string;
+  ownerUserId: string;
+  title: string;
+  businessImpact: string;
+  systemTags: TagSummaryDto[];
+  updatedAt: string;
+};
+
+export type DeliverableDetailDto = DeliverableSummaryDto & {
+  description: string;
+  roleInDeliverable: string;
+  improvementPoints: string;
+  technicalDescription: string | null;
+  userTags: string[];
+  links: { url: string; label: string | null }[];
+  createdAt: string;
+};
+
+const deliverableRepository = () => AppDataSource.getRepository(Deliverable);
+
+const DELIVERABLE_RELATIONS = {
+  systemTags: { tag: true },
+  userTags: true,
+  links: true,
+} as const;
+
+function mapTagSummary(tag: Tag): TagSummaryDto {
+  return {
+    id: tag.id,
+    name: tag.name,
+    color: tag.color,
+  };
+}
+
+function mapDeliverableSummary(deliverable: Deliverable): DeliverableSummaryDto {
+  return {
+    id: deliverable.id,
+    ownerUserId: deliverable.userId,
+    title: deliverable.title,
+    businessImpact: deliverable.businessImpact,
+    systemTags: (deliverable.systemTags ?? [])
+      .map((row) => row.tag)
+      .filter((tag): tag is Tag => Boolean(tag))
+      .map(mapTagSummary),
+    updatedAt: deliverable.updatedAt.toISOString(),
+  };
+}
+
+export function mapDeliverableDetail(deliverable: Deliverable): DeliverableDetailDto {
+  return {
+    ...mapDeliverableSummary(deliverable),
+    description: deliverable.description,
+    roleInDeliverable: deliverable.roleInDeliverable,
+    improvementPoints: deliverable.improvementPoints,
+    technicalDescription: deliverable.technicalDescription,
+    userTags: (deliverable.userTags ?? []).map((row) => row.label),
+    links: (deliverable.links ?? []).map((row) => ({
+      url: row.url,
+      label: row.label,
+    })),
+    createdAt: deliverable.createdAt.toISOString(),
+  };
+}
+
+async function assertSystemTagsExist(tagIds: string[]): Promise<void> {
+  const tagRepository = AppDataSource.getRepository(Tag);
+  const found = await tagRepository.find({ where: { id: In(tagIds) } });
+  if (found.length !== tagIds.length) {
+    throw new InvalidSystemTagError('One or more system tags are invalid or no longer available.');
+  }
+}
+
+async function replaceChildRows(
+  manager: typeof AppDataSource.manager,
+  deliverableId: string,
+  validated: ReturnType<typeof validateDeliverableWriteInput>,
+): Promise<void> {
+  await manager.delete(DeliverableSystemTag, { deliverableId });
+  await manager.delete(DeliverableUserTag, { deliverableId });
+  await manager.delete(DeliverableLink, { deliverableId });
+
+  await manager.save(
+    validated.systemTagIds.map((tagId) =>
+      manager.create(DeliverableSystemTag, { deliverableId, tagId }),
+    ),
+  );
+
+  if (validated.userTags.length > 0) {
+    await manager.save(
+      validated.userTags.map((label) =>
+        manager.create(DeliverableUserTag, { deliverableId, label }),
+      ),
+    );
+  }
+
+  if (validated.links.length > 0) {
+    await manager.save(
+      validated.links.map((link) =>
+        manager.create(DeliverableLink, {
+          deliverableId,
+          url: link.url,
+          label: link.label,
+        }),
+      ),
+    );
+  }
+}
+
+export async function listDeliverablesForOwner(ownerUserId: string): Promise<DeliverableSummaryDto[]> {
+  const rows = await deliverableRepository().find({
+    where: { userId: ownerUserId },
+    relations: DELIVERABLE_RELATIONS,
+    order: { updatedAt: 'DESC' },
+  });
+
+  return rows.map(mapDeliverableSummary);
+}
+
+export async function getDeliverableById(deliverableId: string): Promise<Deliverable | null> {
+  return deliverableRepository().findOne({
+    where: { id: deliverableId },
+    relations: DELIVERABLE_RELATIONS,
+  });
+}
+
+export async function createDeliverable(
+  ownerUserId: string,
+  input: DeliverableWriteInput,
+): Promise<DeliverableDetailDto> {
+  const validated = validateDeliverableWriteInput(input);
+  await assertSystemTagsExist(validated.systemTagIds);
+
+  const deliverableId = await AppDataSource.transaction(async (manager) => {
+    const deliverable = manager.create(Deliverable, {
+      userId: ownerUserId,
+      title: validated.title,
+      description: validated.description,
+      roleInDeliverable: validated.roleInDeliverable,
+      businessImpact: validated.businessImpact,
+      improvementPoints: validated.improvementPoints,
+      technicalDescription: validated.technicalDescription,
+    });
+
+    const saved = await manager.save(deliverable);
+    await replaceChildRows(manager, saved.id, validated);
+    return saved.id;
+  });
+
+  const loaded = await getDeliverableById(deliverableId);
+  if (!loaded) {
+    throw new DeliverableValidationError('Failed to load created deliverable.');
+  }
+
+  return mapDeliverableDetail(loaded);
+}
+
+export async function updateDeliverable(
+  deliverableId: string,
+  input: DeliverableWriteInput,
+): Promise<DeliverableDetailDto | null> {
+  const current = await deliverableRepository().findOne({ where: { id: deliverableId } });
+  if (!current) {
+    return null;
+  }
+
+  const validated = validateDeliverableWriteInput(input);
+  await assertSystemTagsExist(validated.systemTagIds);
+
+  await AppDataSource.transaction(async (manager) => {
+    current.title = validated.title;
+    current.description = validated.description;
+    current.roleInDeliverable = validated.roleInDeliverable;
+    current.businessImpact = validated.businessImpact;
+    current.improvementPoints = validated.improvementPoints;
+    current.technicalDescription = validated.technicalDescription;
+
+    await manager.save(current);
+    await replaceChildRows(manager, deliverableId, validated);
+  });
+
+  const loaded = await getDeliverableById(deliverableId);
+  return loaded ? mapDeliverableDetail(loaded) : null;
+}
+
+export async function deleteDeliverable(deliverableId: string): Promise<boolean> {
+  const current = await deliverableRepository().findOne({ where: { id: deliverableId } });
+  if (!current) {
+    return false;
+  }
+
+  await deliverableRepository().remove(current);
+  return true;
+}

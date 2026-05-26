@@ -9,7 +9,7 @@ declare module 'fastify' {
   }
 }
 
-const DEFAULT_TOKEN_TTL = '1h';
+const DEFAULT_TOKEN_TTL = '48h';
 
 export async function registerAuthPlugin(app: FastifyInstance): Promise<void> {
   const secret = process.env.APP_AUTH_SECRET;

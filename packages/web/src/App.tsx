@@ -8,13 +8,19 @@ import UpdatesPage from './pages/UpdatesPage.js';
 import ProfilePage from './pages/ProfilePage.js';
 import AdminUsersPage from './pages/AdminUsersPage.js';
 import AdminTagsPage from './pages/AdminTagsPage.js';
+import DeliverablesPage from './pages/DeliverablesPage.js';
+import DeliverablesViewPage from './pages/DeliverablesViewPage.js';
 import { AdminRoute } from './auth/AdminRoute.js';
 import { DEFAULT_APP_ROUTE, LOGIN_ROUTE } from './routes/shellOptions.js';
 import { useAuth } from './auth/AuthProvider.js';
 
 function DefaultRouteRedirect() {
-  const { accessToken, user } = useAuth();
+  const { accessToken, user, sessionStatus } = useAuth();
   const canAccessApp = Boolean(accessToken && user?.email);
+
+  if (sessionStatus === 'loading') {
+    return null;
+  }
 
   if (canAccessApp) {
     return <Navigate to={DEFAULT_APP_ROUTE} replace />;
@@ -38,6 +44,8 @@ export default function App() {
       >
         <Route index element={<WelcomePage />} />
         <Route path="profile" element={<ProfilePage />} />
+        <Route path="deliverables" element={<DeliverablesPage />} />
+        <Route path="deliverables/view/:userId" element={<DeliverablesViewPage />} />
         <Route
           path="admin/users"
           element={

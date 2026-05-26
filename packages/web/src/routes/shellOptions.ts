@@ -7,6 +7,8 @@ export const DEFAULT_APP_ROUTE = '/app';
 export const PROFILE_ROUTE = '/app/profile';
 export const ADMIN_USERS_ROUTE = '/app/admin/users';
 export const ADMIN_TAGS_ROUTE = '/app/admin/tags';
+export const DELIVERABLES_ROUTE = '/app/deliverables';
+export const DELIVERABLES_VIEW_ROUTE = '/app/deliverables/view';
 
 export type ShellMenuOption = {
   id: string;
@@ -26,6 +28,12 @@ const BASE_SHELL_MENU_OPTIONS: ShellMenuOption[] = [
     id: 'profile',
     label: 'Profile',
     route: PROFILE_ROUTE,
+    available: true,
+  },
+  {
+    id: 'deliverables',
+    label: 'Deliverables',
+    route: DELIVERABLES_ROUTE,
     available: true,
   },
   {

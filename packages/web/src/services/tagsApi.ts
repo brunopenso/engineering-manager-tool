@@ -53,6 +53,19 @@ async function parseError(response: Response): Promise<TagsApiError> {
   return new TagsApiError(payload?.code ?? 'FORBIDDEN', payload?.message ?? 'Request failed.');
 }
 
+export async function fetchTagCatalog(accessToken: string): Promise<Tag[]> {
+  const response = await fetch(`${API_BASE_URL}/tags/catalog`, {
+    headers: { Authorization: `Bearer ${accessToken}` },
+  });
+
+  if (!response.ok) {
+    throw await parseError(response);
+  }
+
+  const payload = (await response.json()) as { tags: Tag[] };
+  return payload.tags;
+}
+
 export async function listTags(accessToken: string): Promise<Tag[]> {
   const response = await fetch(`${API_BASE_URL}/tags`, {
     headers: { Authorization: `Bearer ${accessToken}` },

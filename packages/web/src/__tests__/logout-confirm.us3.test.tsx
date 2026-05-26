@@ -4,6 +4,7 @@ import { getIdentityButton, LOGIN_HEADING } from '../test/testHelpers.js';
 import { screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it } from 'vitest';
+import { AUTH_STORAGE_KEY } from '../auth/sessionStorage.js';
 
 describe('US3 logout confirmation', () => {
   it('shows inline confirmation on first identity click', async () => {
@@ -21,12 +22,17 @@ describe('US3 logout confirmation', () => {
 
   it('clears session and redirects to login on confirm', async () => {
     const user = userEvent.setup();
+    window.localStorage.setItem(
+      AUTH_STORAGE_KEY,
+      JSON.stringify({ accessToken: 'token-123' }),
+    );
     renderWithProviders(<App />, { initialPath: '/app', isAuthenticated: true });
 
     await user.click(getIdentityButton());
     await user.click(screen.getByRole('button', { name: 'Log Out' }));
 
     expect(screen.getByRole('heading', { name: LOGIN_HEADING })).toBeInTheDocument();
+    expect(window.localStorage.getItem(AUTH_STORAGE_KEY)).toBeNull();
   });
 
   it('keeps session active when logout is canceled', async () => {
