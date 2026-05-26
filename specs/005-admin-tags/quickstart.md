@@ -107,3 +107,12 @@ npm run build
 npm run lint
 npm test
 ```
+
+## 9. UI verification references
+
+- Admin Tags screen path: `/app/admin/tags`
+- Expected states to capture in manual QA evidence:
+  - Empty catalog state
+  - Successful create with color swatch preview
+  - Successful inline update
+  - Delete confirmation dialog and post-delete empty/list refresh

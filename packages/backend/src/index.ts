@@ -9,6 +9,7 @@ import { registerAuthMiddleware } from './middleware/auth.js';
 import { registerAuthPlugin } from './plugins/auth.js';
 import { registerAuthRoutes } from './routes/auth.js';
 import { registerHealthcheckRoutes } from './routes/healthcheck.js';
+import { registerTagsRoutes } from './routes/tags.js';
 import { registerUsersRoutes } from './routes/users.js';
 
 
@@ -20,6 +21,7 @@ await registerAuthMiddleware(app);
 await registerHealthcheckRoutes(app);
 await registerAuthRoutes(app);
 await registerUsersRoutes(app);
+await registerTagsRoutes(app);
 
 try {
   try {

@@ -7,6 +7,7 @@ import OptionUnavailablePage from './pages/OptionUnavailablePage.js';
 import UpdatesPage from './pages/UpdatesPage.js';
 import ProfilePage from './pages/ProfilePage.js';
 import AdminUsersPage from './pages/AdminUsersPage.js';
+import AdminTagsPage from './pages/AdminTagsPage.js';
 import { AdminRoute } from './auth/AdminRoute.js';
 import { DEFAULT_APP_ROUTE, LOGIN_ROUTE } from './routes/shellOptions.js';
 import { useAuth } from './auth/AuthProvider.js';
@@ -42,6 +43,14 @@ export default function App() {
           element={
             <AdminRoute>
               <AdminUsersPage />
+            </AdminRoute>
+          }
+        />
+        <Route
+          path="admin/tags"
+          element={
+            <AdminRoute>
+              <AdminTagsPage />
             </AdminRoute>
           }
         />

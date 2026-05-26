@@ -89,3 +89,10 @@ packages/
 ## Complexity Tracking
 
 No constitutional violations requiring justification.
+
+## End-to-End Regression Notes
+
+- Verify administrator can complete CRUD in `/app/admin/tags` without page reload issues.
+- Verify collaborator-only users are redirected away from `/app/admin/tags` and receive `403` on `/tags` API calls.
+- Verify duplicate names (`Platform` vs `platform`) are rejected consistently in create and update flows.
+- Verify invalid colors are rejected server-side and surfaced in UI error messaging.

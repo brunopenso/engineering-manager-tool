@@ -6,6 +6,7 @@ export const ROOT_LOGIN_ROUTE = '/';
 export const DEFAULT_APP_ROUTE = '/app';
 export const PROFILE_ROUTE = '/app/profile';
 export const ADMIN_USERS_ROUTE = '/app/admin/users';
+export const ADMIN_TAGS_ROUTE = '/app/admin/tags';
 
 export type ShellMenuOption = {
   id: string;
@@ -41,18 +42,26 @@ const BASE_SHELL_MENU_OPTIONS: ShellMenuOption[] = [
   },
 ];
 
-const ADMIN_SHELL_MENU_OPTION: ShellMenuOption = {
-  id: 'admin-users',
-  label: 'User roles',
-  route: ADMIN_USERS_ROUTE,
-  available: true,
-};
+const ADMIN_SHELL_MENU_OPTIONS: ShellMenuOption[] = [
+  {
+    id: 'admin-users',
+    label: 'User roles',
+    route: ADMIN_USERS_ROUTE,
+    available: true,
+  },
+  {
+    id: 'admin-tags',
+    label: 'Tags',
+    route: ADMIN_TAGS_ROUTE,
+    available: true,
+  },
+];
 
 export function getVisibleShellMenuOptions(user: AuthUser | null): ShellMenuOption[] {
   const options = [...BASE_SHELL_MENU_OPTIONS];
 
   if (isAdministrator(user)) {
-    options.push(ADMIN_SHELL_MENU_OPTION);
+    options.push(...ADMIN_SHELL_MENU_OPTIONS);
   }
 
   return options;
