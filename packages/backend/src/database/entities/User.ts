@@ -2,12 +2,15 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
+  ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import { LoginAuditEvent } from './LoginAuditEvent.js';
 import { UserRole } from './UserRole.js';
+import { UserCreationAudit } from './UserCreationAudit.js';
 
 @Entity({ name: 'users' })
 export class User {
@@ -26,6 +29,16 @@ export class User {
   @Column({ type: 'timestamptz', name: 'last_login_at' })
   lastLoginAt!: Date;
 
+  @Column({ type: 'uuid', name: 'leader_id', nullable: true })
+  leaderId!: string | null;
+
+  @ManyToOne(() => User, (user) => user.directReports, { onDelete: 'SET NULL' })
+  @JoinColumn({ name: 'leader_id' })
+  leader!: User | null;
+
+  @OneToMany(() => User, (user) => user.leader)
+  directReports!: User[];
+
   @CreateDateColumn({ type: 'timestamptz', name: 'created_at' })
   createdAt!: Date;
 
@@ -37,4 +50,10 @@ export class User {
 
   @OneToMany(() => UserRole, (userRole) => userRole.user)
   userRoles!: UserRole[];
+
+  @OneToMany(() => UserCreationAudit, (audit) => audit.createdUser)
+  createdUserAudits!: UserCreationAudit[];
+
+  @OneToMany(() => UserCreationAudit, (audit) => audit.creatorLeader)
+  creatorLeaderAudits!: UserCreationAudit[];
 }

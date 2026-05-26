@@ -11,8 +11,10 @@ import AdminTagsPage from './pages/AdminTagsPage.js';
 import DeliverablesPage from './pages/DeliverablesPage.js';
 import DeliverablesViewPage from './pages/DeliverablesViewPage.js';
 import { AdminRoute } from './auth/AdminRoute.js';
+import { LeaderRoute } from './auth/LeaderRoute.js';
 import { DEFAULT_APP_ROUTE, LOGIN_ROUTE } from './routes/shellOptions.js';
 import { useAuth } from './auth/AuthProvider.js';
+import LeaderCreateUserPage from './pages/LeaderCreateUserPage.js';
 
 function DefaultRouteRedirect() {
   const { accessToken, user, sessionStatus } = useAuth();
@@ -46,6 +48,14 @@ export default function App() {
         <Route path="profile" element={<ProfilePage />} />
         <Route path="deliverables" element={<DeliverablesPage />} />
         <Route path="deliverables/view/:userId" element={<DeliverablesViewPage />} />
+        <Route
+          path="leader/users/new"
+          element={
+            <LeaderRoute>
+              <LeaderCreateUserPage />
+            </LeaderRoute>
+          }
+        />
         <Route
           path="admin/users"
           element={

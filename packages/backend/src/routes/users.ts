@@ -8,17 +8,30 @@ import {
 } from '../auth/types.js';
 import {
   assertAdministrator,
+  assertLeaderRole,
   hasAdministratorRole,
   hasLeaderRole,
   rejectCollaboratorRoleChange,
 } from '../services/authorizationService.js';
 import { mapUserToAuthResponse } from '../services/authUserMapper.js';
 import { applyRoleChange } from '../services/roleService.js';
-import { findAllUsers, findUserById } from '../services/userService.js';
+import {
+  createUserByLeader,
+  findAllUsers,
+  findUserById,
+} from '../services/userService.js';
+import { UserCreateValidationError } from '../services/userCreateValidation.js';
 
 type RoleChangeBody = {
   role?: string;
   action?: string;
+};
+
+type LeaderCreateUserBody = {
+  fullName?: string;
+  email?: string;
+  role?: string;
+  leaderId?: string | null;
 };
 
 function forbidden(reply: FastifyReply) {
@@ -55,6 +68,41 @@ function requireAuth(request: FastifyRequest, reply: FastifyReply) {
 }
 
 export async function registerUsersRoutes(app: FastifyInstance): Promise<void> {
+  app.post<{ Body: LeaderCreateUserBody }>('/users', async (request, reply) => {
+    const auth = requireAuth(request, reply);
+    if (!auth) {
+      return {
+        code: AUTH_ERROR_CODES.MISSING_APP_TOKEN,
+        message: 'Authentication token is missing.',
+      };
+    }
+
+    try {
+      assertLeaderRole(auth.roles);
+    } catch {
+      reply.code(403);
+      return {
+        code: AUTH_ERROR_CODES.USER_CREATE_FORBIDDEN,
+        message: 'Only leaders can create users.',
+      };
+    }
+
+    try {
+      const user = await createUserByLeader(auth.userId, request.body ?? {});
+      reply.code(201);
+      return { user };
+    } catch (error) {
+      if (
+        error instanceof UserCreateValidationError ||
+        (error instanceof Error && error.name === AUTH_ERROR_CODES.VALIDATION_ERROR)
+      ) {
+        return validationError(reply, error.message);
+      }
+
+      throw error;
+    }
+  });
+
   app.get('/users', async (request, reply) => {
     const auth = requireAuth(request, reply);
     if (!auth) {

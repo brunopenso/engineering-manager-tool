@@ -30,6 +30,14 @@ export function assertLeader(roles: UserRoleType[]): boolean {
   return hasLeaderRole(roles);
 }
 
+export function assertLeaderRole(roles: UserRoleType[]): void {
+  if (!hasLeaderRole(roles)) {
+    const error = new Error('Leader role is required');
+    error.name = AUTH_ERROR_CODES.LEADER_REQUIRED;
+    throw error;
+  }
+}
+
 /**
  * Extension point for constitution VII hierarchical visibility.
  * When reporting relationships exist, resolve descendant user IDs here and
