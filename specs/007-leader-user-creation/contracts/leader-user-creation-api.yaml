@@ -1,0 +1,106 @@
+openapi: 3.0.3
+info:
+  title: Engineering Manager Tool Leader User Creation API
+  version: 0.1.0
+  description: Leader-only user creation with automatic creator-as-leader assignment.
+servers:
+  - url: http://localhost:3001
+paths:
+  /users:
+    post:
+      summary: Create a new user (leader only)
+      tags: [Users]
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LeaderCreateUserRequest'
+      responses:
+        '201':
+          description: User created with creator assigned as leader
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [user]
+                properties:
+                  user:
+                    $ref: '#/components/schemas/UserSummary'
+        '400':
+          description: Validation failure
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Missing or invalid authentication token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Authenticated actor is not a leader
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    ErrorResponse:
+      type: object
+      required: [code, message]
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+    LeaderCreateUserRequest:
+      type: object
+      required: [name, email, role]
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 120
+        email:
+          type: string
+          format: email
+        role:
+          type: string
+          description: Role assigned to the new user.
+        leaderId:
+          type: string
+          format: uuid
+          nullable: true
+          description: Client-provided value is ignored or rejected; leader assignment is always creator leader.
+    UserSummary:
+      type: object
+      required: [id, name, email, role, leaderId, createdByUserId, createdAt]
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        email:
+          type: string
+          format: email
+        role:
+          type: string
+        leaderId:
+          type: string
+          format: uuid
+        createdByUserId:
+          type: string
+          format: uuid
+        createdAt:
+          type: string
+          format: date-time
