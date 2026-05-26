@@ -1,0 +1,452 @@
+openapi: 3.0.3
+info:
+  title: Engineering Manager Tool Deliverables API
+  version: 0.1.0
+  description: Collaborator-owned deliverables with hierarchical read access and owner-only mutations.
+servers:
+  - url: http://localhost:3001
+paths:
+  /tags/catalog:
+    get:
+      summary: List tag catalog for deliverable system tag picker (authenticated)
+      tags: [Deliverables]
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Read-only tag catalog
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [tags]
+                properties:
+                  tags:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/TagSummary'
+        '401':
+          description: Missing or invalid application token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /deliverables:
+    get:
+      summary: List deliverables for the authenticated user (owner portfolio)
+      tags: [Deliverables]
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Owner deliverable list
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [deliverables]
+                properties:
+                  deliverables:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/DeliverableSummary'
+        '401':
+          description: Missing or invalid application token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    post:
+      summary: Create a deliverable (owner only; owner is authenticated user)
+      tags: [Deliverables]
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeliverableCreateRequest'
+      responses:
+        '201':
+          description: Deliverable created
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [deliverable]
+                properties:
+                  deliverable:
+                    $ref: '#/components/schemas/DeliverableDetail'
+        '400':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Missing or invalid application token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /users/{userId}/deliverables:
+    get:
+      summary: List deliverables for another user when hierarchical read access allows
+      tags: [Deliverables]
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Deliverable list for target owner
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [deliverables, ownerUserId, readOnly]
+                properties:
+                  ownerUserId:
+                    type: string
+                    format: uuid
+                  readOnly:
+                    type: boolean
+                    description: True when caller is not the owner (superior read)
+                  deliverables:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/DeliverableSummary'
+        '401':
+          description: Missing or invalid application token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Caller cannot read this user's deliverables (peer, superior, or unrelated)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /deliverables/{deliverableId}:
+    get:
+      summary: Get deliverable detail when read access allows
+      tags: [Deliverables]
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: deliverableId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Deliverable detail
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [deliverable, readOnly]
+                properties:
+                  readOnly:
+                    type: boolean
+                  deliverable:
+                    $ref: '#/components/schemas/DeliverableDetail'
+        '401':
+          description: Missing or invalid application token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Caller cannot read this deliverable
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Deliverable not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    patch:
+      summary: Update a deliverable (owner only)
+      tags: [Deliverables]
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: deliverableId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeliverableUpdateRequest'
+      responses:
+        '200':
+          description: Deliverable updated
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [deliverable]
+                properties:
+                  deliverable:
+                    $ref: '#/components/schemas/DeliverableDetail'
+        '400':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Missing or invalid application token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Caller is not the owner
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Deliverable not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    delete:
+      summary: Delete a deliverable (owner only)
+      tags: [Deliverables]
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: deliverableId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: Deliverable deleted
+        '401':
+          description: Missing or invalid application token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Caller is not the owner
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Deliverable not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    ErrorResponse:
+      type: object
+      required: [code, message]
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+    TagSummary:
+      type: object
+      required: [id, name, color]
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        color:
+          type: string
+          pattern: '^#[0-9A-Fa-f]{6}$'
+    BusinessImpact:
+      type: string
+      enum: [LOW, MEDIUM, HIGH, TRANSFORMATIONAL]
+    ReferenceLink:
+      type: object
+      required: [url]
+      properties:
+        url:
+          type: string
+          format: uri
+        label:
+          type: string
+          maxLength: 120
+    DeliverableSummary:
+      type: object
+      required: [id, ownerUserId, title, businessImpact, systemTags, updatedAt]
+      properties:
+        id:
+          type: string
+          format: uuid
+        ownerUserId:
+          type: string
+          format: uuid
+        title:
+          type: string
+        businessImpact:
+          $ref: '#/components/schemas/BusinessImpact'
+        systemTags:
+          type: array
+          items:
+            $ref: '#/components/schemas/TagSummary'
+        updatedAt:
+          type: string
+          format: date-time
+    DeliverableDetail:
+      allOf:
+        - $ref: '#/components/schemas/DeliverableSummary'
+        - type: object
+          required:
+            - description
+            - roleInDeliverable
+            - improvementPoints
+            - userTags
+            - links
+            - createdAt
+          properties:
+            description:
+              type: string
+            roleInDeliverable:
+              type: string
+            improvementPoints:
+              type: string
+            technicalDescription:
+              type: string
+              nullable: true
+            userTags:
+              type: array
+              items:
+                type: string
+            links:
+              type: array
+              items:
+                $ref: '#/components/schemas/ReferenceLink'
+            createdAt:
+              type: string
+              format: date-time
+    DeliverableCreateRequest:
+      type: object
+      required:
+        - title
+        - description
+        - roleInDeliverable
+        - systemTagIds
+        - businessImpact
+        - improvementPoints
+      properties:
+        title:
+          type: string
+          maxLength: 200
+        description:
+          type: string
+          maxLength: 5000
+        roleInDeliverable:
+          type: string
+          maxLength: 500
+        systemTagIds:
+          type: array
+          minItems: 1
+          maxItems: 20
+          items:
+            type: string
+            format: uuid
+        businessImpact:
+          $ref: '#/components/schemas/BusinessImpact'
+        improvementPoints:
+          type: string
+          maxLength: 5000
+        technicalDescription:
+          type: string
+          maxLength: 5000
+        userTags:
+          type: array
+          maxItems: 20
+          items:
+            type: string
+            maxLength: 64
+        links:
+          type: array
+          maxItems: 20
+          items:
+            $ref: '#/components/schemas/ReferenceLink'
+    DeliverableUpdateRequest:
+      type: object
+      required:
+        - title
+        - description
+        - roleInDeliverable
+        - systemTagIds
+        - businessImpact
+        - improvementPoints
+        - userTags
+        - links
+      properties:
+        title:
+          type: string
+          maxLength: 200
+        description:
+          type: string
+          maxLength: 5000
+        roleInDeliverable:
+          type: string
+          maxLength: 500
+        systemTagIds:
+          type: array
+          minItems: 1
+          maxItems: 20
+          items:
+            type: string
+            format: uuid
+        businessImpact:
+          $ref: '#/components/schemas/BusinessImpact'
+        improvementPoints:
+          type: string
+          maxLength: 5000
+        technicalDescription:
+          type: string
+          maxLength: 5000
+          nullable: true
+        userTags:
+          type: array
+          maxItems: 20
+          items:
+            type: string
+            maxLength: 64
+        links:
+          type: array
+          maxItems: 20
+          items:
+            $ref: '#/components/schemas/ReferenceLink'
