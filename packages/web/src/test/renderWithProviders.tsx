@@ -3,6 +3,7 @@ import { MemoryRouter } from 'react-router-dom';
 import type { ReactElement } from 'react';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import { AuthProvider, type AuthUser } from '../auth/AuthProvider.js';
+import { AppThemeProvider } from '../theme/AppThemeProvider.js';
 
 export const testUser: AuthUser = {
   id: 'user-1',
@@ -43,10 +44,12 @@ export function renderWithProviders(
     : undefined;
 
   return render(
-    <GoogleOAuthProvider clientId="test-client-id">
-      <MemoryRouter initialEntries={[initialPath]}>
-        <AuthProvider initialSession={initialSession}>{ui}</AuthProvider>
-      </MemoryRouter>
-    </GoogleOAuthProvider>,
+    <AppThemeProvider>
+      <GoogleOAuthProvider clientId="test-client-id">
+        <MemoryRouter initialEntries={[initialPath]}>
+          <AuthProvider initialSession={initialSession}>{ui}</AuthProvider>
+        </MemoryRouter>
+      </GoogleOAuthProvider>
+    </AppThemeProvider>,
   );
 }
