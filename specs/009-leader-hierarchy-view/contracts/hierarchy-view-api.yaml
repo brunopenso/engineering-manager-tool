@@ -1,0 +1,86 @@
+openapi: 3.0.3
+info:
+  title: Engineering Manager Tool Leader Hierarchy View API
+  version: 0.1.0
+  description: Leader-only read-only organizational hierarchy around the authenticated leader.
+servers:
+  - url: http://localhost:3001
+paths:
+  /users/leader/hierarchy-view:
+    get:
+      summary: Get hierarchy view for logged-in leader
+      tags: [Users]
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Scoped hierarchy tree (manager, self, descendant subtree)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LeaderHierarchyViewResponse'
+        '401':
+          description: Missing or invalid authentication token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Authenticated actor is not a leader
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    ErrorResponse:
+      type: object
+      required: [code, message]
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+    HierarchyViewNode:
+      type: object
+      required: [id, displayName, email]
+      properties:
+        id:
+          type: string
+          format: uuid
+        displayName:
+          type: string
+          description: fullName when present, otherwise email
+        email:
+          type: string
+          format: email
+        isCurrentPosition:
+          type: boolean
+          default: false
+        children:
+          type: array
+          items:
+            $ref: '#/components/schemas/HierarchyViewNode'
+    LeaderHierarchyViewResponse:
+      type: object
+      required: [self, reports]
+      properties:
+        manager:
+          allOf:
+            - $ref: '#/components/schemas/HierarchyViewNode'
+          nullable: true
+          description: Direct manager only; null when actor has no leaderId
+        self:
+          allOf:
+            - $ref: '#/components/schemas/HierarchyViewNode'
+          description: Authenticated leader; isCurrentPosition must be true
+        reports:
+          type: array
+          description: Direct reports of self, each with nested children for indirect reports
+          items:
+            $ref: '#/components/schemas/HierarchyViewNode'
