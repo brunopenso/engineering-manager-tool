@@ -34,6 +34,8 @@
 All features and changes MUST include automated tests covering all acceptance criteria
 and critical paths. No implementation may proceed or be merged without a test plan and
 passing tests for all affected areas. This is a constitutional requirement.
+Test plans and resulting test files MUST be organized in `tests/` using feature-based
+subdirectories (for example `tests/<feature-name>/...`).
 
 If the feature exposes collaborator or organizational data, the plan MUST define a
 downward-only hierarchical visibility model (self + direct/indirect subordinates),
@@ -43,6 +45,10 @@ validation scenarios across APIs, reports, and UI visualizations.
 If the feature includes any screen, page, form, or dashboard creation, the frontend
 implementation MUST use the `frontend-design` skill with Material UI best practices
 for responsive design, accessibility, and consistent visual hierarchy.
+
+Dependency choices in the plan MUST target the latest stable versions available at
+planning/implementation time, provided all selected versions remain mutually compatible
+and pass repository build/lint/test validation.
 
 ## Project Structure
 
@@ -75,9 +81,10 @@ src/
 └── lib/
 
 tests/
-├── contract/
-├── integration/
-└── unit/
+└── <feature-name>/
+    ├── contract/
+    ├── integration/
+    └── unit/
 
 # [REMOVE IF UNUSED] Option 2: Web application (when "frontend" + "backend" detected)
 backend/
@@ -86,6 +93,7 @@ backend/
 │   ├── services/
 │   └── api/
 └── tests/
+    └── <feature-name>/
 
 frontend/
 ├── src/
@@ -93,6 +101,7 @@ frontend/
 │   ├── pages/
 │   └── services/
 └── tests/
+    └── <feature-name>/
 
 # [REMOVE IF UNUSED] Option 3: Mobile + API (when "iOS/Android" detected)
 api/

@@ -26,7 +26,7 @@
 
 **Why this priority**: [Explain the value and why it has this priority level]
 
-**Automated Test Requirement**: [Describe the automated test(s) that will verify this story. All user stories MUST have automated tests covering acceptance criteria.]
+**Automated Test Requirement**: [Describe the automated test(s) and exact file path(s) that will verify this story. Tests MUST live under `tests/<feature-name>/...` and cover all acceptance criteria.]
 
 **Frontend Design**: [If this story includes screen, page, form, or dashboard creation, the implementation MUST use the `frontend-design` skill with Material UI best practices.]
 
