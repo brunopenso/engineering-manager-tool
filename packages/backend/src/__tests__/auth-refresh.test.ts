@@ -1,6 +1,6 @@
 import Fastify from 'fastify';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { AUTH_ERROR_CODES } from '../auth/types.js';
+import { AUTH_ERROR_CODES, type AppTokenPayload } from '../auth/types.js';
 import { registerAuthRoutes } from '../routes/auth.js';
 import * as userService from '../services/userService.js';
 import * as authUserMapper from '../services/authUserMapper.js';
@@ -19,6 +19,15 @@ describe('POST /auth/refresh', () => {
     vi.clearAllMocks();
   });
 
+  const decorateAuthHelpers = (app: ReturnType<typeof Fastify>, accessToken: string) => {
+    app.decorate('issueAccessToken', (_payload: AppTokenPayload) => accessToken);
+    app.decorate('verifyAccessToken', async (_token: string) => ({
+      sub: 'user-1',
+      email: 'user@example.com',
+      fullName: 'Test User',
+    }));
+  };
+
   it('returns refreshed session for authenticated users', async () => {
     const app = Fastify();
     app.addHook('onRequest', (request, _reply, done) => {
@@ -30,8 +39,7 @@ describe('POST /auth/refresh', () => {
       };
       done();
     });
-    app.decorate('issueAccessToken', vi.fn().mockReturnValue('refreshed-token'));
-    app.decorate('verifyAccessToken', vi.fn());
+    decorateAuthHelpers(app, 'refreshed-token');
     await registerAuthRoutes(app);
 
     vi.mocked(userService.findUserById).mockResolvedValue({
@@ -62,8 +70,7 @@ describe('POST /auth/refresh', () => {
 
   it('rejects refresh when authentication context is missing', async () => {
     const app = Fastify();
-    app.decorate('issueAccessToken', vi.fn().mockReturnValue('unused-token'));
-    app.decorate('verifyAccessToken', vi.fn());
+    decorateAuthHelpers(app, 'unused-token');
     await registerAuthRoutes(app);
 
     const response = await app.inject({ method: 'POST', url: '/auth/refresh' });
@@ -87,8 +94,7 @@ describe('POST /auth/refresh', () => {
       };
       done();
     });
-    app.decorate('issueAccessToken', vi.fn().mockReturnValue('unused-token'));
-    app.decorate('verifyAccessToken', vi.fn());
+    decorateAuthHelpers(app, 'unused-token');
     await registerAuthRoutes(app);
 
     vi.mocked(userService.findUserById).mockResolvedValue(null);
