@@ -2,16 +2,17 @@
 Sync Impact Report
 Version change: 1.2.0 -> 1.3.0
 Modified principles:
-- None
+- VI. Mandatory Automated Testing -> VI. Mandatory Automated Testing and Feature-Based Test Organization
 Added sections:
-- VIII. Consistent Frontend Design Standards (new principle)
+- None
 Removed sections:
 - None
 Templates requiring updates:
-- ✅ .specify/templates/plan-template.md (Technical Context now includes frontend-design skill requirement)
-- ✅ .specify/templates/spec-template.md (User scenarios now include frontend-design skill reference for screen creation)
-- ✅ .specify/templates/tasks-template.md (Phase 3+ tasks for UI screens now include frontend-design skill requirement)
-- ✅ README.md (no updates needed, governance reference remains aligned)
+- ✅ .specify/templates/plan-template.md (Project structure and Constitution Check now require tests/ feature grouping)
+- ✅ .specify/templates/spec-template.md (Story-level test requirement now mandates tests/ path by feature)
+- ✅ .specify/templates/tasks-template.md (Path conventions and sample tasks now enforce tests/<feature>/ structure)
+- ⚠ pending .specify/templates/commands/*.md (directory not present in repository; no command templates to update)
+- ✅ README.md (no constitution-reference updates required)
 Follow-up TODOs:
 - None
 -->
@@ -67,11 +68,16 @@ automated tests MUST be present for all new or changed functionality.
 Rationale: Incremental delivery reduces risk and ensures each release adds validated
 value. Automated tests guarantee that each increment is verifiable and regression-free.
 
-### VI. Mandatory Automated Testing
+### VI. Mandatory Automated Testing and Feature-Based Test Organization
 All new features and changes MUST include automated tests that cover all acceptance
 criteria and critical paths. No code may be merged without passing tests for all
 affected areas. Test coverage MUST be enforced at the pull request level, and test
 failures MUST block merges.
+
+Automated tests MUST be stored under a `tests/` directory and organized by feature
+folder (for example `tests/<feature-name>/...`). Flat test layouts that mix unrelated
+features in a single directory are not allowed. Refactors that move tests to
+feature-scoped directories are explicitly compliant and encouraged.
 
 Rationale: Automated tests are essential for preventing regressions, ensuring
 requirements are met, and enabling safe, rapid iteration. Mandatory testing discipline
@@ -127,7 +133,7 @@ across all frontend surfaces.
 This constitution overrides conflicting local conventions and guidance files for feature
 delivery decisions. Amendments require:
 
-1. A documented3.0 | **Ratified**: 2026-05-13 | **Last Amended**: 2026-05-20
+1. A documented proposal describing the amendment and its impact on delivery workflow.
 2. Synchronization of affected templates and operational guidance files.
 3. A semantic version update using this policy:
 	 - MAJOR: Principle removal/redefinition or governance breaking change.
@@ -138,4 +144,4 @@ Compliance review is required during planning and before merge for feature branc
 Any temporary exception MUST be logged in the feature plan Complexity Tracking section
 with rationale and explicit expiration criteria.
 
-**Version**: 1.2.0 | **Ratified**: 2026-05-13 | **Last Amended**: 2026-05-13
+**Version**: 1.3.0 | **Ratified**: 2026-05-13 | **Last Amended**: 2026-05-27

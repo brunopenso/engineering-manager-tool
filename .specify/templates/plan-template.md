@@ -34,6 +34,8 @@
 All features and changes MUST include automated tests covering all acceptance criteria
 and critical paths. No implementation may proceed or be merged without a test plan and
 passing tests for all affected areas. This is a constitutional requirement.
+Test plans and resulting test files MUST be organized in `tests/` using feature-based
+subdirectories (for example `tests/<feature-name>/...`).
 
 If the feature exposes collaborator or organizational data, the plan MUST define a
 downward-only hierarchical visibility model (self + direct/indirect subordinates),
@@ -75,9 +77,10 @@ src/
 └── lib/
 
 tests/
-├── contract/
-├── integration/
-└── unit/
+└── <feature-name>/
+    ├── contract/
+    ├── integration/
+    └── unit/
 
 # [REMOVE IF UNUSED] Option 2: Web application (when "frontend" + "backend" detected)
 backend/
@@ -86,6 +89,7 @@ backend/
 │   ├── services/
 │   └── api/
 └── tests/
+    └── <feature-name>/
 
 frontend/
 ├── src/
@@ -93,6 +97,7 @@ frontend/
 │   ├── pages/
 │   └── services/
 └── tests/
+    └── <feature-name>/
 
 # [REMOVE IF UNUSED] Option 3: Mobile + API (when "iOS/Android" detected)
 api/

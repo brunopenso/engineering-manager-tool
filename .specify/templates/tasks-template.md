@@ -20,9 +20,9 @@ description: "Task list template for feature implementation"
 
 ## Path Conventions
 
-- **Single project**: `src/`, `tests/` at repository root
-- **Web app**: `backend/src/`, `frontend/src/`
-- **Mobile**: `api/src/`, `ios/src/` or `android/src/`
+- **Single project**: `src/`, `tests/<feature-name>/` at repository root
+- **Web app**: `backend/src/`, `frontend/src/`, plus `backend/tests/<feature-name>/` and/or `frontend/tests/<feature-name>/`
+- **Mobile**: `api/src/`, `ios/src/` or `android/src/`, plus feature-scoped `tests/<feature-name>/` where applicable
 - Paths shown below assume single project - adjust based on plan.md structure
 
 ## Frontend Design Standards
@@ -95,9 +95,9 @@ Examples of foundational tasks (adjust based on your project):
 
 > **NOTE: Write these tests FIRST, ensure they FAIL before implementation. Automated tests are required for all user stories and requirements.**
 
-- [ ] T011 [P] [US1] Contract test for [endpoint] in tests/contract/test_[name].py
-- [ ] T012 [P] [US1] Integration test for [user journey] in tests/integration/test_[name].py
-- [ ] T013 [P] [US1] DAC allow/deny test set (self, descendants, peers, superiors) in tests/integration/test_[name].py
+- [ ] T011 [P] [US1] Contract test for [endpoint] in tests/[feature-name]/contract/test_[name].py
+- [ ] T012 [P] [US1] Integration test for [user journey] in tests/[feature-name]/integration/test_[name].py
+- [ ] T013 [P] [US1] DAC allow/deny test set (self, descendants, peers, superiors) in tests/[feature-name]/integration/test_[name].py
 
 ### Implementation for User Story 1
 
@@ -120,9 +120,9 @@ Examples of foundational tasks (adjust based on your project):
 
 ### Tests for User Story 2 (MANDATORY)
 
-- [ ] T020 [P] [US2] Contract test for [endpoint] in tests/contract/test_[name].py
-- [ ] T021 [P] [US2] Integration test for [user journey] in tests/integration/test_[name].py
-- [ ] T022 [P] [US2] DAC allow/deny test set (self, descendants, peers, superiors) in tests/integration/test_[name].py
+- [ ] T020 [P] [US2] Contract test for [endpoint] in tests/[feature-name]/contract/test_[name].py
+- [ ] T021 [P] [US2] Integration test for [user journey] in tests/[feature-name]/integration/test_[name].py
+- [ ] T022 [P] [US2] DAC allow/deny test set (self, descendants, peers, superiors) in tests/[feature-name]/integration/test_[name].py
 
 ### Implementation for User Story 2
 
@@ -143,9 +143,9 @@ Examples of foundational tasks (adjust based on your project):
 
 ### Tests for User Story 3 (MANDATORY)
 
-- [ ] T027 [P] [US3] Contract test for [endpoint] in tests/contract/test_[name].py
-- [ ] T028 [P] [US3] Integration test for [user journey] in tests/integration/test_[name].py
-- [ ] T029 [P] [US3] DAC allow/deny test set (self, descendants, peers, superiors) in tests/integration/test_[name].py
+- [ ] T027 [P] [US3] Contract test for [endpoint] in tests/[feature-name]/contract/test_[name].py
+- [ ] T028 [P] [US3] Integration test for [user journey] in tests/[feature-name]/integration/test_[name].py
+- [ ] T029 [P] [US3] DAC allow/deny test set (self, descendants, peers, superiors) in tests/[feature-name]/integration/test_[name].py
 
 ### Implementation for User Story 3
 
@@ -168,7 +168,7 @@ Examples of foundational tasks (adjust based on your project):
 - [ ] TXXX [P] Documentation updates in docs/
 - [ ] TXXX Code cleanup and refactoring
 - [ ] TXXX Performance optimization across all stories
-- [ ] TXXX [P] Additional unit tests for cross-story coverage in tests/unit/
+- [ ] TXXX [P] Additional unit tests for cross-story coverage in tests/[feature-name]/unit/
 - [ ] TXXX Security hardening
 - [ ] TXXX Run quickstart.md validation
 
@@ -214,8 +214,8 @@ Examples of foundational tasks (adjust based on your project):
 
 ```bash
 # Launch all tests for User Story 1 together:
-Task: "Contract test for [endpoint] in tests/contract/test_[name].py"
-Task: "Integration test for [user journey] in tests/integration/test_[name].py"
+Task: "Contract test for [endpoint] in tests/[feature-name]/contract/test_[name].py"
+Task: "Integration test for [user journey] in tests/[feature-name]/integration/test_[name].py"
 
 # Launch all models for User Story 1 together:
 Task: "Create [Entity1] model in src/models/[entity1].py"
