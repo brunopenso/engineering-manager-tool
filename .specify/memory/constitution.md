@@ -1,16 +1,16 @@
 <!--
 Sync Impact Report
-Version change: 1.2.0 -> 1.3.0
+Version change: 1.3.0 -> 1.4.0
 Modified principles:
-- VI. Mandatory Automated Testing -> VI. Mandatory Automated Testing and Feature-Based Test Organization
+- None
 Added sections:
 - None
 Removed sections:
 - None
 Templates requiring updates:
-- ✅ .specify/templates/plan-template.md (Project structure and Constitution Check now require tests/ feature grouping)
-- ✅ .specify/templates/spec-template.md (Story-level test requirement now mandates tests/ path by feature)
-- ✅ .specify/templates/tasks-template.md (Path conventions and sample tasks now enforce tests/<feature>/ structure)
+- ✅ .specify/templates/plan-template.md (Constitution Check now requires latest compatible stable dependency versions)
+- ✅ .specify/templates/spec-template.md (no changes required; existing requirement structure remains aligned)
+- ✅ .specify/templates/tasks-template.md (setup guidance now specifies latest compatible stable dependency versions)
 - ⚠ pending .specify/templates/commands/*.md (directory not present in repository; no command templates to update)
 - ✅ README.md (no constitution-reference updates required)
 Follow-up TODOs:
@@ -116,8 +116,11 @@ across all frontend surfaces.
 - PostgreSQL via TypeORM is the authoritative persistence stack for backend features.
 - Operational endpoints used for health monitoring MUST be documented when exempt from
 	product authentication behavior.
-- New dependencies MUST be justified by feature need and reviewed for maintenance and
-	security impact.
+- Dependencies MUST target the latest stable versions available at implementation time,
+	provided compatibility across the repository is preserved. Version selection MUST be
+	validated against peer dependencies, runtime constraints, and build/test outcomes.
+- New dependencies MUST be justified by feature need and reviewed for maintenance,
+	security impact, and compatibility with existing stack constraints.
 
 ## Delivery Workflow
 
@@ -144,4 +147,4 @@ Compliance review is required during planning and before merge for feature branc
 Any temporary exception MUST be logged in the feature plan Complexity Tracking section
 with rationale and explicit expiration criteria.
 
-**Version**: 1.3.0 | **Ratified**: 2026-05-13 | **Last Amended**: 2026-05-27
+**Version**: 1.4.0 | **Ratified**: 2026-05-13 | **Last Amended**: 2026-05-27

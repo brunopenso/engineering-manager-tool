@@ -60,7 +60,7 @@ Example task: `Create Dashboard UI in packages/web/src/pages/DashboardPage.tsx u
 **Purpose**: Project initialization and basic structure
 
 - [ ] T001 Create project structure per implementation plan
-- [ ] T002 Initialize [language] project with [framework] dependencies
+- [ ] T002 Initialize [language] project with [framework] dependencies using latest stable mutually compatible versions
 - [ ] T003 [P] Configure linting and formatting tools
 
 ---

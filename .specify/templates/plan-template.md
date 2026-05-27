@@ -46,6 +46,10 @@ If the feature includes any screen, page, form, or dashboard creation, the front
 implementation MUST use the `frontend-design` skill with Material UI best practices
 for responsive design, accessibility, and consistent visual hierarchy.
 
+Dependency choices in the plan MUST target the latest stable versions available at
+planning/implementation time, provided all selected versions remain mutually compatible
+and pass repository build/lint/test validation.
+
 ## Project Structure
 
 ### Documentation (this feature)
