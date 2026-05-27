@@ -47,6 +47,6 @@ npm run db:migration:run --workspace @em-tool/backend
 ### Expected Auth Behavior
 
 - `/login` is the only public web page.
-- `/welcome` and other non-login web routes require authentication.
+- `/app` and other non-login web routes require authentication.
 - `/healthcheck` and `/healthcheck/complete` remain public for operational checks.
 - Successful login redirects to `Welcome to the system`.
