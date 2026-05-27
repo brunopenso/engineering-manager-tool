@@ -9,6 +9,7 @@ import ProfilePage from './pages/ProfilePage.js';
 import AdminUsersPage from './pages/AdminUsersPage.js';
 import AdminTagsPage from './pages/AdminTagsPage.js';
 import DeliverablesPage from './pages/DeliverablesPage.js';
+import DeliverableFormPage from './pages/DeliverableFormPage.js';
 import DeliverablesViewPage from './pages/DeliverablesViewPage.js';
 import { AdminRoute } from './auth/AdminRoute.js';
 import { LeaderRoute } from './auth/LeaderRoute.js';
@@ -47,6 +48,8 @@ export default function App() {
         <Route index element={<WelcomePage />} />
         <Route path="profile" element={<ProfilePage />} />
         <Route path="deliverables" element={<DeliverablesPage />} />
+        <Route path="deliverables/new" element={<DeliverableFormPage mode="create" />} />
+        <Route path="deliverables/:deliverableId/edit" element={<DeliverableFormPage mode="edit" />} />
         <Route path="deliverables/view/:userId" element={<DeliverablesViewPage />} />
         <Route
           path="leader/users/new"

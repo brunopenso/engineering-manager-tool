@@ -1,7 +1,6 @@
 import { screen, waitFor } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import DeliverablesPage from '../pages/DeliverablesPage.js';
+import App from '../App.js';
 import { renderWithProviders } from '../test/renderWithProviders.js';
 
 describe('US1 deliverable create validation', () => {
@@ -16,24 +15,21 @@ describe('US1 deliverable create validation', () => {
         .fn()
         .mockResolvedValueOnce({
           ok: true,
-          json: async () => ({ deliverables: [] }),
-        })
-        .mockResolvedValueOnce({
-          ok: true,
           json: async () => ({ tags: [] }),
         }),
     );
 
-    renderWithProviders(<DeliverablesPage />, { isAuthenticated: true });
-
-    await waitFor(() => {
-      expect(screen.queryByText('Loading deliverables…')).not.toBeInTheDocument();
+    renderWithProviders(<App />, {
+      initialPath: '/app/deliverables/new',
+      isAuthenticated: true,
     });
 
-    await userEvent.click(screen.getByRole('button', { name: 'Add deliverable' }));
-
     await waitFor(() => {
-      expect(screen.getByRole('button', { name: 'Save' })).toBeDisabled();
+      expect(screen.queryByText('Loading deliverable form...')).not.toBeInTheDocument();
     });
+
+    expect(screen.getByRole('heading', { name: 'Add deliverable' })).toBeInTheDocument();
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Save' })).toBeDisabled();
   });
 });

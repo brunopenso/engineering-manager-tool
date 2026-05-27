@@ -1,7 +1,7 @@
 import { fireEvent, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import DeliverablesPage from '../pages/DeliverablesPage.js';
+import App from '../App.js';
 import { renderWithProviders } from '../test/renderWithProviders.js';
 
 describe('US1 deliverable creation', () => {
@@ -14,10 +14,6 @@ describe('US1 deliverable creation', () => {
     async () => {
       const fetchMock = vi
         .fn()
-        .mockResolvedValueOnce({
-          ok: true,
-          json: async () => ({ deliverables: [] }),
-        })
         .mockResolvedValueOnce({
           ok: true,
           json: async () => ({ tags: [{ id: 'tag-1', name: 'Platform', color: '#1976D2' }] }),
@@ -63,39 +59,38 @@ describe('US1 deliverable creation', () => {
         });
       vi.stubGlobal('fetch', fetchMock);
 
-      renderWithProviders(<DeliverablesPage />, { isAuthenticated: true });
-
-      await waitFor(() => {
-        expect(screen.queryByText('Loading deliverables…')).not.toBeInTheDocument();
+      renderWithProviders(<App />, {
+        initialPath: '/app/deliverables/new',
+        isAuthenticated: true,
       });
 
-      await userEvent.click(screen.getByRole('button', { name: 'Add deliverable' }));
-      const createDialog = await screen.findByRole('dialog');
+      await screen.findByRole('heading', { name: 'Add deliverable' });
 
-      fireEvent.change(within(createDialog).getByRole('textbox', { name: 'Title' }), {
+      fireEvent.change(screen.getByRole('textbox', { name: 'Title' }), {
         target: { value: 'API redesign' },
       });
-      fireEvent.change(within(createDialog).getByRole('textbox', { name: 'Description' }), {
+      fireEvent.change(screen.getByRole('textbox', { name: 'Description' }), {
         target: { value: 'Shipped new API' },
       });
       fireEvent.change(
-        within(createDialog).getByRole('textbox', { name: 'Your role in this deliverable' }),
+        screen.getByRole('textbox', { name: 'Your role in this deliverable' }),
         { target: { value: 'Tech lead' } },
       );
       fireEvent.change(
-        within(createDialog).getByRole('textbox', {
+        screen.getByRole('textbox', {
           name: 'Personal performance improvement points',
         }),
         { target: { value: 'Write more docs' } },
       );
 
-      fireEvent.mouseDown(within(createDialog).getByRole('combobox', { name: 'Tags' }));
+      fireEvent.mouseDown(screen.getByRole('combobox', { name: 'Tags' }));
       const listbox = await screen.findByRole('listbox');
       await userEvent.click(within(listbox).getByRole('option', { name: 'Platform' }));
       await userEvent.keyboard('{Escape}');
-      await userEvent.click(within(createDialog).getByRole('button', { name: 'Save' }));
+      await userEvent.click(screen.getByRole('button', { name: 'Save' }));
 
       await waitFor(() => {
+        expect(screen.getByRole('heading', { name: 'Deliverables' })).toBeInTheDocument();
         expect(screen.getByText('API redesign')).toBeInTheDocument();
       });
     },
