@@ -37,7 +37,10 @@ describe('US1 GET /users/orphans', () => {
     });
 
     expect(response.statusCode).toBe(200);
-    expect(userService.searchOrphanUsers).toHaveBeenCalledWith({ query: 'ali' });
+    expect(userService.searchOrphanUsers).toHaveBeenCalledWith({
+      query: 'ali',
+      excludeUserId: 'leader-1',
+    });
     expect(response.json()).toEqual({
       users: [{ id: 'user-1', fullName: 'Alice Example', email: 'alice@example.com' }],
     });

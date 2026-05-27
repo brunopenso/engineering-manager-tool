@@ -6,6 +6,7 @@ export type HierarchyOrphanUserSummary = {
 
 export type HierarchySearchInput = {
   query?: string;
+  excludeUserId?: string;
 };
 
 export type HierarchyAssignResult = {

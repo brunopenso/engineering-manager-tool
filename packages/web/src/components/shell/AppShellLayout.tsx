@@ -93,6 +93,7 @@ export default function AppShellLayout() {
             Engineering Manager Tool
           </Typography>
           <HeaderIdentityAction
+            fullName={user?.fullName ?? ''}
             email={user?.email ?? ''}
             isConfirmingLogout={isConfirmingLogout}
             onIdentityClick={requestLogoutConfirmation}

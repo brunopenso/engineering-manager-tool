@@ -125,7 +125,10 @@ export async function registerUsersRoutes(app: FastifyInstance): Promise<void> {
       return forbidden(reply);
     }
 
-    const users = await searchOrphanUsers({ query: request.query?.query });
+    const users = await searchOrphanUsers({
+      query: request.query?.query,
+      excludeUserId: auth.userId,
+    });
     return { users };
   });
 

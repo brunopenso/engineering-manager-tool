@@ -136,6 +136,10 @@ export async function searchOrphanUsers(
     .where('user.leaderId IS NULL')
     .orderBy('user.fullName', 'ASC');
 
+  if (input.excludeUserId) {
+    qb.andWhere('user.id != :excludeUserId', { excludeUserId: input.excludeUserId });
+  }
+
   if (normalizedQuery) {
     qb.andWhere('(LOWER(user.fullName) LIKE :query OR LOWER(user.email) LIKE :query)', {
       query: `%${normalizedQuery}%`,
@@ -170,6 +174,12 @@ export async function assignLeaderToOrphanUser(
   if (!targetUser) {
     const error = new Error('User not found.');
     error.name = AUTH_ERROR_CODES.NOT_FOUND;
+    throw error;
+  }
+
+  if (targetUser.id === actorLeaderUserId) {
+    const error = new Error('You cannot assign yourself as your own leader.');
+    error.name = AUTH_ERROR_CODES.VALIDATION_ERROR;
     throw error;
   }
 

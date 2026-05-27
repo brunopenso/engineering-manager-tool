@@ -31,7 +31,10 @@ describe('hierarchy orphan search endpoint', () => {
     });
 
     expect(response.statusCode).toBe(200);
-    expect(userService.searchOrphanUsers).toHaveBeenCalledWith({ query: 'exa' });
+    expect(userService.searchOrphanUsers).toHaveBeenCalledWith({
+      query: 'exa',
+      excludeUserId: 'leader-1',
+    });
     await app.close();
   });
 
@@ -56,7 +59,10 @@ describe('hierarchy orphan search endpoint', () => {
     });
 
     expect(response.statusCode).toBe(200);
-    expect(userService.searchOrphanUsers).toHaveBeenCalledWith({ query: undefined });
+    expect(userService.searchOrphanUsers).toHaveBeenCalledWith({
+      query: undefined,
+      excludeUserId: 'leader-1',
+    });
     expect(response.json().users).toHaveLength(1);
     await app.close();
   });

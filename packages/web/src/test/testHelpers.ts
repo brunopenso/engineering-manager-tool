@@ -3,8 +3,8 @@ import { testUser } from './renderWithProviders.js';
 
 export const LOGIN_HEADING = 'Engineering Manager Tool';
 
-export function getIdentityButton(email: string = testUser.email) {
-  return screen.getByRole('button', { name: new RegExp(email) });
+export function getIdentityButton(label: string = testUser.fullName) {
+  return screen.getByRole('button', { name: new RegExp(label) });
 }
 
 export function getMenuToggleButton() {
