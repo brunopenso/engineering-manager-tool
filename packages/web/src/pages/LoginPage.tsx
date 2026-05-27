@@ -10,6 +10,7 @@ import {
   CircularProgress,
   Stack,
 } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
 import { useAuth } from '../auth/AuthProvider.js';
 import { AuthApiError, loginWithGoogle } from '../services/authApi.js';
 import { DEFAULT_APP_ROUTE } from '../routes/shellOptions.js';
@@ -33,9 +34,11 @@ function mapErrorMessage(error: AuthApiError): string {
 
 export default function LoginPage() {
   const navigate = useNavigate();
+  const theme = useTheme();
   const { setSession } = useAuth();
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const googleButtonTheme = theme.palette.mode === 'dark' ? 'filled_black' : 'outline';
 
   async function handleGoogleSuccess(response: CredentialResponse): Promise<void> {
     if (!response.credential) {
@@ -124,6 +127,7 @@ export default function LoginPage() {
                 />
               )}
               <GoogleLogin
+                theme={googleButtonTheme}
                 onSuccess={handleGoogleSuccess}
                 onError={() => setErrorMessage(FALLBACK_ERROR)}
               />
