@@ -38,6 +38,10 @@ export function assertLeaderRole(roles: UserRoleType[]): void {
   }
 }
 
+export function assertLeaderForHierarchyManagement(roles: UserRoleType[]): void {
+  assertLeaderRole(roles);
+}
+
 /**
  * Extension point for constitution VII hierarchical visibility.
  * When reporting relationships exist, resolve descendant user IDs here and

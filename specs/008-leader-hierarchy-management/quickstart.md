@@ -19,8 +19,8 @@ npm install
 
 In `packages/backend`:
 
-- Add leader-only orphan-user search endpoint aligned with `contracts/hierarchy-management-api.yaml`.
-- Add leader-only assignment endpoint that sets `leaderId` to authenticated leader.
+- Add leader-only orphan-user search endpoint (`GET /users/orphans`) aligned with `contracts/hierarchy-management-api.yaml`.
+- Add leader-only assignment endpoint (`POST /users/{userId}/assign-leader`) that sets `leaderId` to authenticated leader.
 - Enforce role authorization in route/service boundary.
 - Ensure assignment re-validates orphan status at write time.
 - Persist assignment audit event on successful assignment.
@@ -76,3 +76,10 @@ npm test --workspace @em-tool/web
 Expected:
 - Backend tests pass for leader allow, non-leader deny, and orphan-only assignment enforcement.
 - Web tests pass for leader page behavior, search matching expectations, assignment feedback, and non-leader guard behavior.
+
+## 7. Verification Log
+
+- 2026-05-27: Verified implementation scope excludes transfer-leadership and includes only orphan-user search + assignment.
+- 2026-05-27: Verified test suites:
+  - `npm run test --workspace @em-tool/backend -- tests/hierarchy-management`
+  - `npm run test --workspace @em-tool/web -- tests/hierarchy-management`

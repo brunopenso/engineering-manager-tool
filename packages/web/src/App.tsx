@@ -16,6 +16,7 @@ import { LeaderRoute } from './auth/LeaderRoute.js';
 import { DEFAULT_APP_ROUTE, LOGIN_ROUTE } from './routes/shellOptions.js';
 import { useAuth } from './auth/AuthProvider.js';
 import LeaderCreateUserPage from './pages/LeaderCreateUserPage.js';
+import LeaderHierarchyManagementPage from './pages/LeaderHierarchyManagementPage.js';
 
 function DefaultRouteRedirect() {
   const { accessToken, user, sessionStatus } = useAuth();
@@ -51,6 +52,14 @@ export default function App() {
         <Route path="deliverables/new" element={<DeliverableFormPage mode="create" />} />
         <Route path="deliverables/:deliverableId/edit" element={<DeliverableFormPage mode="edit" />} />
         <Route path="deliverables/view/:userId" element={<DeliverablesViewPage />} />
+        <Route
+          path="leader/hierarchy"
+          element={
+            <LeaderRoute>
+              <LeaderHierarchyManagementPage />
+            </LeaderRoute>
+          }
+        />
         <Route
           path="leader/users/new"
           element={

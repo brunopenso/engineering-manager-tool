@@ -11,6 +11,7 @@
 
 - Q: How should orphan-user search matching work? -> A: Search by name or email, with partial or full match.
 - Q: Should transfer-leadership remain in scope? -> A: No, remove transfer-leadership from requirements.
+- Q: Are contracts/plan aligned with clarified scope? -> A: Yes, contracts and plan include only orphan search and assignment.
 
 ## User Scenarios & Testing *(mandatory, with required automated tests)*
 

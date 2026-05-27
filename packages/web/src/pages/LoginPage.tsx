@@ -98,7 +98,7 @@ export default function LoginPage() {
               Engineering Manager Tool
             </Typography>
             <Typography variant="body1" color="text.secondary">
-              Sign in with Google to access your dashboard
+              Sign in with Google to access
             </Typography>
           </Box>
 

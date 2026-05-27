@@ -7,6 +7,12 @@ import {
   normalizeLeaderCreateInput,
   type LeaderCreateUserInput,
 } from './userCreateValidation.js';
+import type {
+  HierarchyAssignResult,
+  HierarchyAssignmentAuditEvent,
+  HierarchyOrphanUserSummary,
+  HierarchySearchInput,
+} from '../types/hierarchyManagement.js';
 
 type GoogleIdentity = {
   email: string;
@@ -107,5 +113,87 @@ export async function createUserByLeader(
     leaderId: actorUserId,
     createdByUserId: actorUserId,
     createdAt: savedUser.createdAt.toISOString(),
+  };
+}
+
+function normalizeHierarchySearchQuery(input: HierarchySearchInput): string | null {
+  const raw = input.query?.trim();
+  if (!raw) {
+    return null;
+  }
+
+  return raw.toLowerCase();
+}
+
+export async function searchOrphanUsers(
+  input: HierarchySearchInput = {},
+): Promise<HierarchyOrphanUserSummary[]> {
+  const normalizedQuery = normalizeHierarchySearchQuery(input);
+  const repository = userRepository();
+  const qb = repository
+    .createQueryBuilder('user')
+    .select(['user.id', 'user.fullName', 'user.email'])
+    .where('user.leaderId IS NULL')
+    .orderBy('user.fullName', 'ASC');
+
+  if (normalizedQuery) {
+    qb.andWhere('(LOWER(user.fullName) LIKE :query OR LOWER(user.email) LIKE :query)', {
+      query: `%${normalizedQuery}%`,
+    });
+  }
+
+  const users = await qb.getMany();
+  return users.map((user) => ({
+    id: user.id,
+    fullName: user.fullName,
+    email: user.email,
+  }));
+}
+
+export async function recordHierarchyAssignmentAuditEvent(
+  event: HierarchyAssignmentAuditEvent,
+): Promise<void> {
+  // v1 audit trail is persisted in structured backend logs.
+  // A dedicated DB audit table can be added in a follow-up migration if needed.
+  console.info('[hierarchy-assignment-audit]', JSON.stringify(event));
+}
+
+export async function assignLeaderToOrphanUser(
+  actorLeaderUserId: string,
+  targetUserId: string,
+): Promise<HierarchyAssignResult> {
+  const repository = userRepository();
+  const targetUser = await repository.findOne({
+    where: { id: targetUserId },
+  });
+
+  if (!targetUser) {
+    const error = new Error('User not found.');
+    error.name = AUTH_ERROR_CODES.NOT_FOUND;
+    throw error;
+  }
+
+  if (targetUser.leaderId) {
+    const error = new Error('Selected user is no longer eligible for assignment.');
+    error.name = AUTH_ERROR_CODES.VALIDATION_ERROR;
+    throw error;
+  }
+
+  const previousLeaderId = targetUser.leaderId;
+  targetUser.leaderId = actorLeaderUserId;
+  const savedUser = await repository.save(targetUser);
+
+  await recordHierarchyAssignmentAuditEvent({
+    actorLeaderUserId,
+    targetUserId: savedUser.id,
+    previousLeaderId,
+    newLeaderId: actorLeaderUserId,
+    assignedAt: savedUser.updatedAt.toISOString(),
+  });
+
+  return {
+    userId: savedUser.id,
+    leaderId: actorLeaderUserId,
+    updatedAt: savedUser.updatedAt.toISOString(),
   };
 }
