@@ -29,18 +29,10 @@ describe('US4 deliverable delete', () => {
             ],
           }),
         })
-        .mockResolvedValueOnce({
-          ok: true,
-          json: async () => ({ tags: [] }),
-        })
         .mockResolvedValueOnce({ ok: true, status: 204 })
         .mockResolvedValueOnce({
           ok: true,
           json: async () => ({ deliverables: [] }),
-        })
-        .mockResolvedValueOnce({
-          ok: true,
-          json: async () => ({ tags: [] }),
         }),
     );
 
