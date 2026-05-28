@@ -20,6 +20,20 @@ import { useHeaderIdentityAction } from './useHeaderIdentityAction.js';
 
 const DRAWER_WIDTH = 280;
 
+const APP_BAR_HEIGHT = { xs: 56, sm: 64 };
+
+function getDrawerPaperSx() {
+  return {
+    width: DRAWER_WIDTH,
+    boxSizing: 'border-box',
+    top: APP_BAR_HEIGHT,
+    height: {
+      xs: `calc(100% - ${APP_BAR_HEIGHT.xs}px)`,
+      sm: `calc(100% - ${APP_BAR_HEIGHT.sm}px)`,
+    },
+  };
+}
+
 export default function AppShellLayout() {
   const navigate = useNavigate();
   const location = useLocation();
@@ -71,7 +85,11 @@ export default function AppShellLayout() {
       }}
     >
       {/* Header */}
-      <AppBar position="sticky" elevation={1}>
+      <AppBar
+        position="sticky"
+        elevation={1}
+        sx={{ zIndex: (muiTheme) => muiTheme.zIndex.drawer + 1 }}
+      >
         <Toolbar>
           <IconButton
             color="inherit"
@@ -115,10 +133,7 @@ export default function AppShellLayout() {
           sx={{
             width: isDrawerOpen && !isMobile ? DRAWER_WIDTH : 0,
             flexShrink: 0,
-            '& .MuiDrawer-paper': {
-              width: DRAWER_WIDTH,
-              boxSizing: 'border-box',
-            },
+            '& .MuiDrawer-paper': getDrawerPaperSx(),
           }}
         >
           {navigationContent}
