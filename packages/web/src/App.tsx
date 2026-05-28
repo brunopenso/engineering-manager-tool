@@ -4,7 +4,6 @@ import LoginPage from './pages/LoginPage.js';
 import WelcomePage from './pages/WelcomePage.js';
 import AppShellLayout from './components/shell/AppShellLayout.js';
 import OptionUnavailablePage from './pages/OptionUnavailablePage.js';
-import UpdatesPage from './pages/UpdatesPage.js';
 import ProfilePage from './pages/ProfilePage.js';
 import AdminUsersPage from './pages/AdminUsersPage.js';
 import AdminTagsPage from './pages/AdminTagsPage.js';
@@ -16,6 +15,8 @@ import { LeaderRoute } from './auth/LeaderRoute.js';
 import { DEFAULT_APP_ROUTE, LOGIN_ROUTE } from './routes/shellOptions.js';
 import { useAuth } from './auth/AuthProvider.js';
 import LeaderCreateUserPage from './pages/LeaderCreateUserPage.js';
+import LeaderHierarchyManagementPage from './pages/LeaderHierarchyManagementPage.js';
+import LeaderHierarchyViewPage from './pages/LeaderHierarchyViewPage.js';
 
 function DefaultRouteRedirect() {
   const { accessToken, user, sessionStatus } = useAuth();
@@ -52,6 +53,22 @@ export default function App() {
         <Route path="deliverables/:deliverableId/edit" element={<DeliverableFormPage mode="edit" />} />
         <Route path="deliverables/view/:userId" element={<DeliverablesViewPage />} />
         <Route
+          path="leader/hierarchy"
+          element={
+            <LeaderRoute>
+              <LeaderHierarchyManagementPage />
+            </LeaderRoute>
+          }
+        />
+        <Route
+          path="leader/hierarchy/view"
+          element={
+            <LeaderRoute>
+              <LeaderHierarchyViewPage />
+            </LeaderRoute>
+          }
+        />
+        <Route
           path="leader/users/new"
           element={
             <LeaderRoute>
@@ -75,7 +92,6 @@ export default function App() {
             </AdminRoute>
           }
         />
-        <Route path="updates" element={<UpdatesPage />} />
         <Route path="unavailable" element={<OptionUnavailablePage />} />
         <Route path="*" element={<Navigate to={DEFAULT_APP_ROUTE} replace />} />
       </Route>

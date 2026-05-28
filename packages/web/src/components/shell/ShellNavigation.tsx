@@ -4,20 +4,69 @@ import {
   ListItem,
   ListItemButton,
   ListItemText,
+  ListSubheader,
   Box,
   Divider,
 } from '@mui/material';
-import type { ShellMenuOption } from '../../routes/shellOptions.js';
+import type { ShellMenuOption, ShellMenuSection } from '../../routes/shellOptions.js';
 
 type ShellNavigationProps = {
-  options: ShellMenuOption[];
+  sections: ShellMenuSection[];
   onOptionSelected: () => void;
 };
 
+function getExactMatchRoutes(sections: ShellMenuSection[]): Set<string> {
+  const routes = sections.flatMap((section) => section.options.map((option) => option.route));
+  const exactMatchRoutes = new Set<string>();
+
+  for (const route of routes) {
+    const hasMoreSpecificMenuRoute = routes.some(
+      (other) => other !== route && other.startsWith(`${route}/`),
+    );
+    if (hasMoreSpecificMenuRoute) {
+      exactMatchRoutes.add(route);
+    }
+  }
+
+  return exactMatchRoutes;
+}
+
+type ShellNavItemProps = {
+  option: ShellMenuOption;
+  matchEnd: boolean;
+  onOptionSelected: () => void;
+};
+
+function ShellNavItem({ option, matchEnd, onOptionSelected }: ShellNavItemProps) {
+  return (
+    <ListItem disablePadding>
+      <ListItemButton
+        component={NavLink}
+        to={option.route}
+        end={matchEnd}
+        onClick={onOptionSelected}
+        disabled={!option.available}
+        sx={{
+          '&.active': {
+            backgroundColor: 'action.selected',
+            '&:hover': {
+              backgroundColor: 'action.selected',
+            },
+          },
+        }}
+      >
+        <ListItemText primary={option.label} />
+      </ListItemButton>
+    </ListItem>
+  );
+}
+
 export default function ShellNavigation({
-  options,
+  sections,
   onOptionSelected,
 }: ShellNavigationProps) {
+  const exactMatchRoutes = getExactMatchRoutes(sections);
+
   return (
     <Box
       sx={{
@@ -30,27 +79,31 @@ export default function ShellNavigation({
       <Divider />
       <nav aria-label="App navigation" style={{ flex: 1 }}>
         <List disablePadding>
-          {options.map((option, index) => (
-            <Box key={option.id}>
-              {index > 0 && <Divider />}
-              <ListItem disablePadding>
-                <ListItemButton
-                  component={NavLink}
-                  to={option.route}
-                  onClick={onOptionSelected}
-                  disabled={!option.available}
-                  sx={{
-                    '&.active': {
-                      backgroundColor: 'action.selected',
-                      '&:hover': {
-                        backgroundColor: 'action.selected',
-                      },
-                    },
-                  }}
-                >
-                  <ListItemText primary={option.label} />
-                </ListItemButton>
-              </ListItem>
+          {sections.map((section, sectionIndex) => (
+            <Box key={section.id}>
+              {sectionIndex > 0 && <Divider />}
+              {section.title ? (
+                <Box role="group" aria-label={section.title}>
+                  <ListSubheader disableSticky>{section.title}</ListSubheader>
+                  {section.options.map((option) => (
+                    <ShellNavItem
+                      key={option.id}
+                      option={option}
+                      matchEnd={exactMatchRoutes.has(option.route)}
+                      onOptionSelected={onOptionSelected}
+                    />
+                  ))}
+                </Box>
+              ) : (
+                section.options.map((option) => (
+                  <ShellNavItem
+                    key={option.id}
+                    option={option}
+                    matchEnd={exactMatchRoutes.has(option.route)}
+                    onOptionSelected={onOptionSelected}
+                  />
+                ))
+              )}
             </Box>
           ))}
         </List>

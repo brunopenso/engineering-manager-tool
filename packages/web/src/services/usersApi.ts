@@ -46,6 +46,32 @@ export type LeaderCreatedUser = {
   createdAt: string;
 };
 
+export type OrphanUserSummary = {
+  id: string;
+  fullName: string;
+  email: string;
+};
+
+export type AssignLeaderResponse = {
+  userId: string;
+  leaderId: string;
+  updatedAt: string;
+};
+
+export type HierarchyViewNode = {
+  id: string;
+  displayName: string;
+  email: string;
+  isCurrentPosition?: boolean;
+  children?: HierarchyViewNode[];
+};
+
+export type LeaderHierarchyViewResponse = {
+  manager: HierarchyViewNode | null;
+  self: HierarchyViewNode;
+  reports: HierarchyViewNode[];
+};
+
 async function parseError(response: Response): Promise<UsersApiError> {
   let payload: ErrorResponse | null = null;
 
@@ -115,4 +141,56 @@ export async function createUser(
 
   const payload = (await response.json()) as { user: LeaderCreatedUser };
   return payload.user;
+}
+
+export async function searchOrphanUsers(
+  accessToken: string,
+  query?: string,
+): Promise<OrphanUserSummary[]> {
+  const params = new URLSearchParams();
+  if (query?.trim()) {
+    params.set('query', query.trim());
+  }
+
+  const suffix = params.toString() ? `?${params.toString()}` : '';
+  const response = await fetch(`${API_BASE_URL}/users/orphans${suffix}`, {
+    headers: { Authorization: `Bearer ${accessToken}` },
+  });
+
+  if (!response.ok) {
+    throw await parseError(response);
+  }
+
+  const payload = (await response.json()) as { users: OrphanUserSummary[] };
+  return payload.users;
+}
+
+export async function fetchLeaderHierarchyView(
+  accessToken: string,
+): Promise<LeaderHierarchyViewResponse> {
+  const response = await fetch(`${API_BASE_URL}/users/leader/hierarchy-view`, {
+    headers: { Authorization: `Bearer ${accessToken}` },
+  });
+
+  if (!response.ok) {
+    throw await parseError(response);
+  }
+
+  return (await response.json()) as LeaderHierarchyViewResponse;
+}
+
+export async function assignLeaderToUser(
+  accessToken: string,
+  userId: string,
+): Promise<AssignLeaderResponse> {
+  const response = await fetch(`${API_BASE_URL}/users/${userId}/assign-leader`, {
+    method: 'POST',
+    headers: { Authorization: `Bearer ${accessToken}` },
+  });
+
+  if (!response.ok) {
+    throw await parseError(response);
+  }
+
+  return (await response.json()) as AssignLeaderResponse;
 }

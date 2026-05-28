@@ -8,6 +8,7 @@ import {
 } from '../auth/types.js';
 import {
   assertAdministrator,
+  assertLeaderForHierarchyManagement,
   assertLeaderRole,
   hasAdministratorRole,
   hasLeaderRole,
@@ -16,9 +17,12 @@ import {
 import { mapUserToAuthResponse } from '../services/authUserMapper.js';
 import { applyRoleChange } from '../services/roleService.js';
 import {
+  assignLeaderToOrphanUser,
   createUserByLeader,
   findAllUsers,
   findUserById,
+  getLeaderHierarchyView,
+  searchOrphanUsers,
 } from '../services/userService.js';
 import { UserCreateValidationError } from '../services/userCreateValidation.js';
 
@@ -32,6 +36,10 @@ type LeaderCreateUserBody = {
   email?: string;
   role?: string;
   leaderId?: string | null;
+};
+
+type OrphanSearchQuery = {
+  query?: string;
 };
 
 function forbidden(reply: FastifyReply) {
@@ -96,6 +104,59 @@ export async function registerUsersRoutes(app: FastifyInstance): Promise<void> {
         error instanceof UserCreateValidationError ||
         (error instanceof Error && error.name === AUTH_ERROR_CODES.VALIDATION_ERROR)
       ) {
+        return validationError(reply, error.message);
+      }
+
+      throw error;
+    }
+  });
+
+  app.get<{ Querystring: OrphanSearchQuery }>('/users/orphans', async (request, reply) => {
+    const auth = requireAuth(request, reply);
+    if (!auth) {
+      return {
+        code: AUTH_ERROR_CODES.MISSING_APP_TOKEN,
+        message: 'Authentication token is missing.',
+      };
+    }
+
+    try {
+      assertLeaderForHierarchyManagement(auth.roles);
+    } catch {
+      return forbidden(reply);
+    }
+
+    const users = await searchOrphanUsers({
+      query: request.query?.query,
+      excludeUserId: auth.userId,
+    });
+    return { users };
+  });
+
+  app.post<{ Params: { userId: string } }>('/users/:userId/assign-leader', async (request, reply) => {
+    const auth = requireAuth(request, reply);
+    if (!auth) {
+      return {
+        code: AUTH_ERROR_CODES.MISSING_APP_TOKEN,
+        message: 'Authentication token is missing.',
+      };
+    }
+
+    try {
+      assertLeaderForHierarchyManagement(auth.roles);
+    } catch {
+      return forbidden(reply);
+    }
+
+    try {
+      const assignment = await assignLeaderToOrphanUser(auth.userId, request.params.userId);
+      return assignment;
+    } catch (error) {
+      if (error instanceof Error && error.name === AUTH_ERROR_CODES.NOT_FOUND) {
+        return notFound(reply);
+      }
+
+      if (error instanceof Error && error.name === AUTH_ERROR_CODES.VALIDATION_ERROR) {
         return validationError(reply, error.message);
       }
 
@@ -206,6 +267,32 @@ export async function registerUsersRoutes(app: FastifyInstance): Promise<void> {
       };
     },
   );
+
+  app.get('/users/leader/hierarchy-view', async (request, reply) => {
+    const auth = requireAuth(request, reply);
+    if (!auth) {
+      return {
+        code: AUTH_ERROR_CODES.MISSING_APP_TOKEN,
+        message: 'Authentication token is missing.',
+      };
+    }
+
+    try {
+      assertLeaderForHierarchyManagement(auth.roles);
+    } catch {
+      return forbidden(reply);
+    }
+
+    try {
+      return await getLeaderHierarchyView(auth.userId);
+    } catch (error) {
+      if (error instanceof Error && error.name === AUTH_ERROR_CODES.NOT_FOUND) {
+        return notFound(reply);
+      }
+
+      throw error;
+    }
+  });
 
   app.get('/users/leader/scope-check', async (request, reply) => {
     const auth = requireAuth(request, reply);

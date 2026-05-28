@@ -12,10 +12,10 @@ describe('US2 menu selection', () => {
 
     const menuButton = getMenuToggleButton();
     await user.click(menuButton);
-    await user.click(screen.getByRole('link', { name: 'Team Updates' }));
+    await user.click(screen.getByRole('link', { name: 'Profile' }));
 
     await waitFor(() => {
-      expect(screen.getByRole('heading', { name: 'Team Updates' })).toBeInTheDocument();
+      expect(screen.getByRole('heading', { name: 'Your profile' })).toBeInTheDocument();
       expect(menuButton).toHaveAttribute('aria-expanded', 'false');
     });
   });

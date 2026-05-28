@@ -1,5 +1,5 @@
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   AppBar,
   Toolbar,
@@ -13,12 +13,26 @@ import {
 } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import { useAuth } from '../../auth/AuthProvider.js';
-import { getVisibleShellMenuOptions, LOGIN_ROUTE } from '../../routes/shellOptions.js';
+import { getVisibleShellMenuSections, LOGIN_ROUTE } from '../../routes/shellOptions.js';
 import ShellNavigation from './ShellNavigation.js';
 import HeaderIdentityAction from './HeaderIdentityAction.js';
 import { useHeaderIdentityAction } from './useHeaderIdentityAction.js';
 
 const DRAWER_WIDTH = 280;
+
+const APP_BAR_HEIGHT = { xs: 56, sm: 64 };
+
+function getDrawerPaperSx() {
+  return {
+    width: DRAWER_WIDTH,
+    boxSizing: 'border-box',
+    top: APP_BAR_HEIGHT,
+    height: {
+      xs: `calc(100% - ${APP_BAR_HEIGHT.xs}px)`,
+      sm: `calc(100% - ${APP_BAR_HEIGHT.sm}px)`,
+    },
+  };
+}
 
 export default function AppShellLayout() {
   const navigate = useNavigate();
@@ -26,7 +40,7 @@ export default function AppShellLayout() {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const { user, clearSession, accessToken } = useAuth();
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [isDrawerOpen, setIsDrawerOpen] = useState(!isMobile);
   const {
     isConfirmingLogout,
     requestLogoutConfirmation,
@@ -35,6 +49,10 @@ export default function AppShellLayout() {
     pathname: location.pathname,
     isSessionActive: Boolean(accessToken && user?.email),
   });
+
+  useEffect(() => {
+    setIsDrawerOpen(!isMobile);
+  }, [isMobile]);
 
   function toggleDrawer() {
     setIsDrawerOpen((currentState) => !currentState);
@@ -49,11 +67,11 @@ export default function AppShellLayout() {
     navigate(LOGIN_ROUTE, { replace: true });
   }
 
-  const menuOptions = getVisibleShellMenuOptions(user);
+  const menuSections = getVisibleShellMenuSections(user);
 
   const navigationContent = (
     <ShellNavigation
-      options={menuOptions}
+      sections={menuSections}
       onOptionSelected={closeDrawer}
     />
   );
@@ -67,20 +85,22 @@ export default function AppShellLayout() {
       }}
     >
       {/* Header */}
-      <AppBar position="sticky" elevation={1}>
+      <AppBar
+        position="sticky"
+        elevation={1}
+        sx={{ zIndex: (muiTheme) => muiTheme.zIndex.drawer + 1 }}
+      >
         <Toolbar>
-          {isMobile && (
-            <IconButton
-              color="inherit"
-              aria-label="open drawer"
-              aria-expanded={isDrawerOpen}
-              onClick={toggleDrawer}
-              edge="start"
-              sx={{ mr: 2 }}
-            >
-              <MenuIcon />
-            </IconButton>
-          )}
+          <IconButton
+            color="inherit"
+            aria-label="open drawer"
+            aria-expanded={isDrawerOpen}
+            onClick={toggleDrawer}
+            edge="start"
+            sx={{ mr: 2 }}
+          >
+            <MenuIcon />
+          </IconButton>
           <Typography
             variant="h6"
             component="div"
@@ -93,6 +113,7 @@ export default function AppShellLayout() {
             Engineering Manager Tool
           </Typography>
           <HeaderIdentityAction
+            fullName={user?.fullName ?? ''}
             email={user?.email ?? ''}
             isConfirmingLogout={isConfirmingLogout}
             onIdentityClick={requestLogoutConfirmation}
@@ -104,36 +125,19 @@ export default function AppShellLayout() {
 
       {/* Main content area */}
       <Box sx={{ display: 'flex', flex: 1 }}>
-        {/* Desktop Navigation */}
-        {!isMobile && (
-          <Box
-            component="nav"
-            sx={{
-              width: DRAWER_WIDTH,
-              flexShrink: 0,
-              borderRight: '1px solid',
-              borderColor: 'divider',
-            }}
-          >
-            {navigationContent}
-          </Box>
-        )}
-
-        {/* Mobile Navigation Drawer */}
-        {isMobile && (
-          <Drawer
-            anchor="left"
-            open={isDrawerOpen}
-            onClose={closeDrawer}
-            sx={{
-              '& .MuiDrawer-paper': {
-                width: DRAWER_WIDTH,
-              },
-            }}
-          >
-            {navigationContent}
-          </Drawer>
-        )}
+        <Drawer
+          anchor="left"
+          variant={isMobile ? 'temporary' : 'persistent'}
+          open={isDrawerOpen}
+          onClose={closeDrawer}
+          sx={{
+            width: isDrawerOpen && !isMobile ? DRAWER_WIDTH : 0,
+            flexShrink: 0,
+            '& .MuiDrawer-paper': getDrawerPaperSx(),
+          }}
+        >
+          {navigationContent}
+        </Drawer>
 
         {/* Page Content */}
         <Box
@@ -142,6 +146,11 @@ export default function AppShellLayout() {
             flex: 1,
             display: 'flex',
             flexDirection: 'column',
+            transition: theme.transitions.create('margin', {
+              easing: theme.transitions.easing.sharp,
+              duration: theme.transitions.duration.leavingScreen,
+            }),
+            marginLeft: isDrawerOpen && !isMobile ? `${DRAWER_WIDTH}px` : 0,
           }}
         >
           <Container maxWidth="lg" sx={{ py: 3, flex: 1 }}>
