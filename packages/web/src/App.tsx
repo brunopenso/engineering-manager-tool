@@ -4,7 +4,6 @@ import LoginPage from './pages/LoginPage.js';
 import WelcomePage from './pages/WelcomePage.js';
 import AppShellLayout from './components/shell/AppShellLayout.js';
 import OptionUnavailablePage from './pages/OptionUnavailablePage.js';
-import UpdatesPage from './pages/UpdatesPage.js';
 import ProfilePage from './pages/ProfilePage.js';
 import AdminUsersPage from './pages/AdminUsersPage.js';
 import AdminTagsPage from './pages/AdminTagsPage.js';
@@ -93,7 +92,6 @@ export default function App() {
             </AdminRoute>
           }
         />
-        <Route path="updates" element={<UpdatesPage />} />
         <Route path="unavailable" element={<OptionUnavailablePage />} />
         <Route path="*" element={<Navigate to={DEFAULT_APP_ROUTE} replace />} />
       </Route>

@@ -45,12 +45,6 @@ const BASE_SHELL_MENU_OPTIONS: ShellMenuOption[] = [
     route: DELIVERABLES_ROUTE,
     available: true,
   },
-  {
-    id: 'updates',
-    label: 'Team Updates',
-    route: '/app/updates',
-    available: true,
-  },
 ];
 
 const ADMIN_SHELL_MENU_OPTIONS: ShellMenuOption[] = [
