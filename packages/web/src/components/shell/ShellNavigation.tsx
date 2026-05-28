@@ -4,18 +4,19 @@ import {
   ListItem,
   ListItemButton,
   ListItemText,
+  ListSubheader,
   Box,
   Divider,
 } from '@mui/material';
-import type { ShellMenuOption } from '../../routes/shellOptions.js';
+import type { ShellMenuSection } from '../../routes/shellOptions.js';
 
 type ShellNavigationProps = {
-  options: ShellMenuOption[];
+  sections: ShellMenuSection[];
   onOptionSelected: () => void;
 };
 
 export default function ShellNavigation({
-  options,
+  sections,
   onOptionSelected,
 }: ShellNavigationProps) {
   return (
@@ -30,27 +31,55 @@ export default function ShellNavigation({
       <Divider />
       <nav aria-label="App navigation" style={{ flex: 1 }}>
         <List disablePadding>
-          {options.map((option, index) => (
-            <Box key={option.id}>
-              {index > 0 && <Divider />}
-              <ListItem disablePadding>
-                <ListItemButton
-                  component={NavLink}
-                  to={option.route}
-                  onClick={onOptionSelected}
-                  disabled={!option.available}
-                  sx={{
-                    '&.active': {
-                      backgroundColor: 'action.selected',
-                      '&:hover': {
-                        backgroundColor: 'action.selected',
-                      },
-                    },
-                  }}
-                >
-                  <ListItemText primary={option.label} />
-                </ListItemButton>
-              </ListItem>
+          {sections.map((section, sectionIndex) => (
+            <Box key={section.id}>
+              {sectionIndex > 0 && <Divider />}
+              {section.title ? (
+                <Box role="group" aria-label={section.title}>
+                  <ListSubheader disableSticky>{section.title}</ListSubheader>
+                  {section.options.map((option) => (
+                    <ListItem key={option.id} disablePadding>
+                      <ListItemButton
+                        component={NavLink}
+                        to={option.route}
+                        onClick={onOptionSelected}
+                        disabled={!option.available}
+                        sx={{
+                          '&.active': {
+                            backgroundColor: 'action.selected',
+                            '&:hover': {
+                              backgroundColor: 'action.selected',
+                            },
+                          },
+                        }}
+                      >
+                        <ListItemText primary={option.label} />
+                      </ListItemButton>
+                    </ListItem>
+                  ))}
+                </Box>
+              ) : (
+                section.options.map((option) => (
+                  <ListItem key={option.id} disablePadding>
+                    <ListItemButton
+                      component={NavLink}
+                      to={option.route}
+                      onClick={onOptionSelected}
+                      disabled={!option.available}
+                      sx={{
+                        '&.active': {
+                          backgroundColor: 'action.selected',
+                          '&:hover': {
+                            backgroundColor: 'action.selected',
+                          },
+                        },
+                      }}
+                    >
+                      <ListItemText primary={option.label} />
+                    </ListItemButton>
+                  </ListItem>
+                ))
+              )}
             </Box>
           ))}
         </List>

@@ -20,6 +20,12 @@ export type ShellMenuOption = {
   available: boolean;
 };
 
+export type ShellMenuSection = {
+  id: string;
+  title?: string;
+  options: ShellMenuOption[];
+};
+
 const BASE_SHELL_MENU_OPTIONS: ShellMenuOption[] = [
   {
     id: 'home',
@@ -44,12 +50,6 @@ const BASE_SHELL_MENU_OPTIONS: ShellMenuOption[] = [
     label: 'Team Updates',
     route: '/app/updates',
     available: true,
-  },
-  {
-    id: 'reports',
-    label: 'Reports',
-    route: '/app/unavailable',
-    available: false,
   },
 ];
 
@@ -89,22 +89,33 @@ const LEADER_SHELL_MENU_OPTIONS: ShellMenuOption[] = [
   },
 ];
 
-export function getVisibleShellMenuOptions(user: AuthUser | null): ShellMenuOption[] {
-  const options = [...BASE_SHELL_MENU_OPTIONS];
+export function getVisibleShellMenuSections(user: AuthUser | null): ShellMenuSection[] {
+  const sections: ShellMenuSection[] = [
+    { id: 'collaborator', options: [...BASE_SHELL_MENU_OPTIONS] },
+  ];
 
-  // Leader tools sit near the top (after Profile) so they are easy to find.
   if (isLeader(user)) {
-    const profileIndex = options.findIndex((option) => option.id === 'profile');
-    const insertAt = profileIndex >= 0 ? profileIndex + 1 : options.length;
-    options.splice(insertAt, 0, ...LEADER_SHELL_MENU_OPTIONS);
+    sections.push({
+      id: 'leader',
+      title: 'Leader',
+      options: [...LEADER_SHELL_MENU_OPTIONS],
+    });
   }
 
   if (isAdministrator(user)) {
-    options.push(...ADMIN_SHELL_MENU_OPTIONS);
+    sections.push({
+      id: 'administration',
+      title: 'Administration',
+      options: [...ADMIN_SHELL_MENU_OPTIONS],
+    });
   }
 
-  return options;
+  return sections;
 }
 
-/** @deprecated Use getVisibleShellMenuOptions(user) for role-aware navigation */
+export function getVisibleShellMenuOptions(user: AuthUser | null): ShellMenuOption[] {
+  return getVisibleShellMenuSections(user).flatMap((section) => section.options);
+}
+
+/** @deprecated Use getVisibleShellMenuSections(user) for role-aware navigation */
 export const SHELL_MENU_OPTIONS = BASE_SHELL_MENU_OPTIONS;

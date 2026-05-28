@@ -13,7 +13,7 @@ import {
 } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import { useAuth } from '../../auth/AuthProvider.js';
-import { getVisibleShellMenuOptions, LOGIN_ROUTE } from '../../routes/shellOptions.js';
+import { getVisibleShellMenuSections, LOGIN_ROUTE } from '../../routes/shellOptions.js';
 import ShellNavigation from './ShellNavigation.js';
 import HeaderIdentityAction from './HeaderIdentityAction.js';
 import { useHeaderIdentityAction } from './useHeaderIdentityAction.js';
@@ -49,11 +49,11 @@ export default function AppShellLayout() {
     navigate(LOGIN_ROUTE, { replace: true });
   }
 
-  const menuOptions = getVisibleShellMenuOptions(user);
+  const menuSections = getVisibleShellMenuSections(user);
 
   const navigationContent = (
     <ShellNavigation
-      options={menuOptions}
+      sections={menuSections}
       onOptionSelected={closeDrawer}
     />
   );

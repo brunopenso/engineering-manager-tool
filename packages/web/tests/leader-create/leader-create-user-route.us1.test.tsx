@@ -3,7 +3,7 @@ import { getVisibleShellMenuOptions } from '../../src/routes/shellOptions.js';
 import { testLeaderUser, testUser } from '../../src/test/renderWithProviders.js';
 
 describe('US1 leader create route visibility', () => {
-  it('shows create user route for leaders near profile', () => {
+  it('shows create user route for leaders after collaborator items', () => {
     const options = getVisibleShellMenuOptions(testLeaderUser);
     const routes = options.map((option) => option.route);
     expect(routes).toContain('/app/leader/users/new');
@@ -11,7 +11,7 @@ describe('US1 leader create route visibility', () => {
     const createIndex = routes.indexOf('/app/leader/users/new');
     const deliverablesIndex = routes.indexOf('/app/deliverables');
     expect(createIndex).toBeGreaterThan(-1);
-    expect(createIndex).toBeLessThan(deliverablesIndex);
+    expect(createIndex).toBeGreaterThan(deliverablesIndex);
   });
 
   it('hides create user route for non-leaders', () => {
