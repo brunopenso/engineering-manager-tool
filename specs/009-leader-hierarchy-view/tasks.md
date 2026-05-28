@@ -13,10 +13,10 @@
 
 **Purpose**: Prepare feature scaffolding, dependencies, and test directories.
 
-- [ ] T001 Create feature test directory structure in `tests/009-leader-hierarchy-view/` with `hierarchy-tree-display.test.md`, `hierarchy-tree-interaction.test.md`, and `hierarchy-view-access-control.test.md`
-- [ ] T002 Create backend test directory and bootstrap in `packages/backend/tests/hierarchy-view/hierarchy-view.setup.ts`
-- [ ] T003 [P] Create web test directory and bootstrap in `packages/web/tests/hierarchy-view/hierarchy-view.setup.test.tsx`
-- [ ] T004 [P] Add `@mui/x-tree-view` dependency (latest stable compatible with `@mui/material@^6.4.2`) in `packages/web/package.json` and verify `npm run build --workspace @em-tool/web`
+- [X] T001 Create feature test directory structure in `tests/009-leader-hierarchy-view/` with `hierarchy-tree-display.test.md`, `hierarchy-tree-interaction.test.md`, and `hierarchy-view-access-control.test.md`
+- [X] T002 Create backend test directory and bootstrap in `packages/backend/tests/hierarchy-view/hierarchy-view.setup.ts`
+- [X] T003 [P] Create web test directory and bootstrap in `packages/web/tests/hierarchy-view/hierarchy-view.setup.test.tsx`
+- [X] T004 [P] Add `@mui/x-tree-view` dependency (latest stable compatible with `@mui/material@^6.4.2`) in `packages/web/package.json` and verify `npm run build --workspace @em-tool/web`
 
 ---
 
@@ -26,10 +26,10 @@
 
 **⚠️ CRITICAL**: No user story work starts until this phase is complete.
 
-- [ ] T005 Define hierarchy view DTO types (`HierarchyViewNode`, `LeaderHierarchyViewResponse`) in `packages/backend/src/types/hierarchyView.ts`
-- [ ] T006 [P] Add `displayName` helper (`fullName` trim or `email` fallback) in `packages/backend/src/services/userService.ts`
-- [ ] T007 [P] Add `fetchLeaderHierarchyView` client method and response types in `packages/web/src/services/usersApi.ts`
-- [ ] T008 [P] Add `LEADER_HIERARCHY_VIEW_ROUTE` constant and placeholder nav id in `packages/web/src/routes/shellOptions.ts`
+- [X] T005 Define hierarchy view DTO types (`HierarchyViewNode`, `LeaderHierarchyViewResponse`) in `packages/backend/src/types/hierarchyView.ts`
+- [X] T006 [P] Add `displayName` helper (`fullName` trim or `email` fallback) in `packages/backend/src/services/userService.ts`
+- [X] T007 [P] Add `fetchLeaderHierarchyView` client method and response types in `packages/web/src/services/usersApi.ts`
+- [X] T008 [P] Add `LEADER_HIERARCHY_VIEW_ROUTE` constant and placeholder nav id in `packages/web/src/routes/shellOptions.ts`
 
 **Checkpoint**: Foundation complete — user stories can proceed.
 
@@ -43,20 +43,20 @@
 
 ### Tests for User Story 1 (MANDATORY)
 
-- [ ] T009 [P] [US1] Add contract test plan for `GET /users/leader/hierarchy-view` in `tests/009-leader-hierarchy-view/hierarchy-tree-display.test.md` aligned with `specs/009-leader-hierarchy-view/contracts/hierarchy-view-api.yaml`
-- [ ] T010 [P] [US1] Add backend integration test for scoped tree payload (manager hop, full subtree, `displayName` on nodes, no peers/other branches) in `packages/backend/tests/hierarchy-view/hierarchy-view-tree.us1.test.ts`
-- [ ] T011 [P] [US1] Add backend integration test for leader with no manager (`manager: null`) in `packages/backend/tests/hierarchy-view/hierarchy-view-no-manager.us1.test.ts`
-- [ ] T012 [P] [US1] Add web integration test for hierarchy view page rendering manager section and report names in `packages/web/tests/hierarchy-view/leader-hierarchy-view-page.us1.test.tsx`
+- [X] T009 [P] [US1] Add contract test plan for `GET /users/leader/hierarchy-view` in `tests/009-leader-hierarchy-view/hierarchy-tree-display.test.md` aligned with `specs/009-leader-hierarchy-view/contracts/hierarchy-view-api.yaml`
+- [X] T010 [P] [US1] Add backend integration test for scoped tree payload (manager hop, full subtree, `displayName` on nodes, no peers/other branches) in `packages/backend/tests/hierarchy-view/hierarchy-view-tree.us1.test.ts`
+- [X] T011 [P] [US1] Add backend integration test for leader with no manager (`manager: null`) in `packages/backend/tests/hierarchy-view/hierarchy-view-no-manager.us1.test.ts`
+- [X] T012 [P] [US1] Add web integration test for hierarchy view page rendering manager section and report names in `packages/web/tests/hierarchy-view/leader-hierarchy-view-page.us1.test.tsx`
 
 ### Implementation for User Story 1
 
-- [ ] T013 [US1] Implement `getLeaderHierarchyView(actorUserId)` with recursive descendant CTE and tree assembly in `packages/backend/src/services/userService.ts`
-- [ ] T014 [US1] Register `GET /users/leader/hierarchy-view` with `assertLeaderForHierarchyManagement` in `packages/backend/src/routes/users.ts`
-- [ ] T015 [US1] Create `HierarchyTree.tsx` with `SimpleTreeView`, nodes built from `reports`, and `displayName` labels in `packages/web/src/components/hierarchy/HierarchyTree.tsx`
-- [ ] T016 [US1] Create `LeaderHierarchyViewPage.tsx` using `frontend-design` skill (manager summary + tree, loading/error states) in `packages/web/src/pages/LeaderHierarchyViewPage.tsx`
-- [ ] T017 [US1] Wire page data load via `fetchLeaderHierarchyView` in `packages/web/src/pages/LeaderHierarchyViewPage.tsx`
-- [ ] T018 [US1] Register `/app/leader/hierarchy/view` route behind `LeaderRoute` in `packages/web/src/App.tsx`
-- [ ] T019 [US1] Add leader-only shell menu entry **Hierarchy view** pointing to `LEADER_HIERARCHY_VIEW_ROUTE` in `packages/web/src/routes/shellOptions.ts`
+- [X] T013 [US1] Implement `getLeaderHierarchyView(actorUserId)` with recursive descendant CTE and tree assembly in `packages/backend/src/services/userService.ts`
+- [X] T014 [US1] Register `GET /users/leader/hierarchy-view` with `assertLeaderForHierarchyManagement` in `packages/backend/src/routes/users.ts`
+- [X] T015 [US1] Create `HierarchyTree.tsx` with `SimpleTreeView`, nodes built from `reports`, and `displayName` labels in `packages/web/src/components/hierarchy/HierarchyTree.tsx`
+- [X] T016 [US1] Create `LeaderHierarchyViewPage.tsx` using `frontend-design` skill (manager summary + tree, loading/error states) in `packages/web/src/pages/LeaderHierarchyViewPage.tsx`
+- [X] T017 [US1] Wire page data load via `fetchLeaderHierarchyView` in `packages/web/src/pages/LeaderHierarchyViewPage.tsx`
+- [X] T018 [US1] Register `/app/leader/hierarchy/view` route behind `LeaderRoute` in `packages/web/src/App.tsx`
+- [X] T019 [US1] Add leader-only shell menu entry **Hierarchy view** pointing to `LEADER_HIERARCHY_VIEW_ROUTE` in `packages/web/src/routes/shellOptions.ts`
 
 **Checkpoint**: User Story 1 is independently functional and testable.
 
@@ -70,16 +70,16 @@
 
 ### Tests for User Story 2 (MANDATORY)
 
-- [ ] T020 [P] [US2] Add interaction test plan in `tests/009-leader-hierarchy-view/hierarchy-tree-interaction.test.md`
-- [ ] T021 [P] [US2] Add web test for initial `expandedItems` containing only self id in `packages/web/tests/hierarchy-view/hierarchy-tree-expand.us2.test.tsx`
-- [ ] T022 [P] [US2] Add web test for current-position visual marker and expand/collapse of nested report in `packages/web/tests/hierarchy-view/hierarchy-tree-interaction.us2.test.tsx`
+- [X] T020 [P] [US2] Add interaction test plan in `tests/009-leader-hierarchy-view/hierarchy-tree-interaction.test.md`
+- [X] T021 [P] [US2] Add web test for initial `expandedItems` containing only self id in `packages/web/tests/hierarchy-view/hierarchy-tree-expand.us2.test.tsx`
+- [X] T022 [P] [US2] Add web test for current-position visual marker and expand/collapse of nested report in `packages/web/tests/hierarchy-view/hierarchy-tree-interaction.us2.test.tsx`
 
 ### Implementation for User Story 2
 
-- [ ] T023 [US2] Implement controlled `expandedItems` state (default `[self.id]` only) in `packages/web/src/components/hierarchy/HierarchyTree.tsx`
-- [ ] T024 [US2] Apply current-position styling when `isCurrentPosition` is true in `packages/web/src/components/hierarchy/HierarchyTree.tsx`
-- [ ] T025 [US2] Render optional **Your manager** section above tree when `manager` is present in `packages/web/src/pages/LeaderHierarchyViewPage.tsx`
-- [ ] T026 [US2] Ensure read-only page has no orphan search or assign controls (FR-009) in `packages/web/src/pages/LeaderHierarchyViewPage.tsx`
+- [X] T023 [US2] Implement controlled `expandedItems` state (default `[self.id]` only) in `packages/web/src/components/hierarchy/HierarchyTree.tsx`
+- [X] T024 [US2] Apply current-position styling when `isCurrentPosition` is true in `packages/web/src/components/hierarchy/HierarchyTree.tsx`
+- [X] T025 [US2] Render optional **Your manager** section above tree when `manager` is present in `packages/web/src/pages/LeaderHierarchyViewPage.tsx`
+- [X] T026 [US2] Ensure read-only page has no orphan search or assign controls (FR-009) in `packages/web/src/pages/LeaderHierarchyViewPage.tsx`
 
 **Checkpoint**: User Story 2 is independently functional and testable.
 
@@ -93,14 +93,14 @@
 
 ### Tests for User Story 3 (MANDATORY)
 
-- [ ] T027 [P] [US3] Add access-control test plan in `tests/009-leader-hierarchy-view/hierarchy-view-access-control.test.md`
-- [ ] T028 [P] [US3] Add backend deny tests (401 unauthenticated, 403 non-leader) for `GET /users/leader/hierarchy-view` in `packages/backend/tests/hierarchy-view/hierarchy-view-access.us3.test.ts`
-- [ ] T029 [P] [US3] Add web route-guard tests (non-leader redirect, unauthenticated login redirect) in `packages/web/tests/hierarchy-view/leader-hierarchy-view-guard.us3.test.tsx`
+- [X] T027 [P] [US3] Add access-control test plan in `tests/009-leader-hierarchy-view/hierarchy-view-access-control.test.md`
+- [X] T028 [P] [US3] Add backend deny tests (401 unauthenticated, 403 non-leader) for `GET /users/leader/hierarchy-view` in `packages/backend/tests/hierarchy-view/hierarchy-view-access.us3.test.ts`
+- [X] T029 [P] [US3] Add web route-guard tests (non-leader redirect, unauthenticated login redirect) in `packages/web/tests/hierarchy-view/leader-hierarchy-view-guard.us3.test.tsx`
 
 ### Implementation for User Story 3
 
-- [ ] T030 [US3] Verify leader-only guard and consistent 401/403 error payloads on `GET /users/leader/hierarchy-view` in `packages/backend/src/routes/users.ts`
-- [ ] T031 [US3] Confirm `LeaderRoute` wraps hierarchy view page and blocks data fetch for non-leaders in `packages/web/src/App.tsx` and `packages/web/src/pages/LeaderHierarchyViewPage.tsx`
+- [X] T030 [US3] Verify leader-only guard and consistent 401/403 error payloads on `GET /users/leader/hierarchy-view` in `packages/backend/src/routes/users.ts`
+- [X] T031 [US3] Confirm `LeaderRoute` wraps hierarchy view page and blocks data fetch for non-leaders in `packages/web/src/App.tsx` and `packages/web/src/pages/LeaderHierarchyViewPage.tsx`
 
 **Checkpoint**: User Story 3 is independently functional and testable.
 
@@ -110,10 +110,10 @@
 
 **Purpose**: Edge cases, DAC evidence, documentation, and full verification.
 
-- [ ] T032 [P] Add backend test for `displayName` email fallback when `fullName` is blank in `packages/backend/tests/hierarchy-view/hierarchy-view-display-name.test.ts`
-- [ ] T033 [P] Add backend DAC test proving second-level manager and peer users are excluded from payload in `packages/backend/tests/hierarchy-view/hierarchy-view-dac.test.ts`
-- [ ] T034 Validate contract/spec/plan alignment for `GET /users/leader/hierarchy-view` in `specs/009-leader-hierarchy-view/contracts/hierarchy-view-api.yaml`
-- [ ] T035 Run full feature verification (`npm test` backend/web hierarchy-view suites) and record outcomes in `specs/009-leader-hierarchy-view/quickstart.md`
+- [X] T032 [P] Add backend test for `displayName` email fallback when `fullName` is blank in `packages/backend/tests/hierarchy-view/hierarchy-view-display-name.test.ts`
+- [X] T033 [P] Add backend DAC test proving second-level manager and peer users are excluded from payload in `packages/backend/tests/hierarchy-view/hierarchy-view-dac.test.ts`
+- [X] T034 Validate contract/spec/plan alignment for `GET /users/leader/hierarchy-view` in `specs/009-leader-hierarchy-view/contracts/hierarchy-view-api.yaml`
+- [X] T035 Run full feature verification (`npm test` backend/web hierarchy-view suites) and record outcomes in `specs/009-leader-hierarchy-view/quickstart.md`
 
 ---
 

@@ -21,6 +21,7 @@ import {
   createUserByLeader,
   findAllUsers,
   findUserById,
+  getLeaderHierarchyView,
   searchOrphanUsers,
 } from '../services/userService.js';
 import { UserCreateValidationError } from '../services/userCreateValidation.js';
@@ -266,6 +267,32 @@ export async function registerUsersRoutes(app: FastifyInstance): Promise<void> {
       };
     },
   );
+
+  app.get('/users/leader/hierarchy-view', async (request, reply) => {
+    const auth = requireAuth(request, reply);
+    if (!auth) {
+      return {
+        code: AUTH_ERROR_CODES.MISSING_APP_TOKEN,
+        message: 'Authentication token is missing.',
+      };
+    }
+
+    try {
+      assertLeaderForHierarchyManagement(auth.roles);
+    } catch {
+      return forbidden(reply);
+    }
+
+    try {
+      return await getLeaderHierarchyView(auth.userId);
+    } catch (error) {
+      if (error instanceof Error && error.name === AUTH_ERROR_CODES.NOT_FOUND) {
+        return notFound(reply);
+      }
+
+      throw error;
+    }
+  });
 
   app.get('/users/leader/scope-check', async (request, reply) => {
     const auth = requireAuth(request, reply);

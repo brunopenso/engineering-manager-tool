@@ -13,6 +13,16 @@ import type {
   HierarchyOrphanUserSummary,
   HierarchySearchInput,
 } from '../types/hierarchyManagement.js';
+import type {
+  HierarchyDescendantRow,
+  LeaderHierarchyViewResponse,
+} from '../types/hierarchyView.js';
+import {
+  buildHierarchyTreeFromRows,
+  toHierarchyViewNode,
+} from './hierarchyViewBuilder.js';
+
+export { toHierarchyDisplayName } from './hierarchyViewBuilder.js';
 
 type GoogleIdentity = {
   email: string;
@@ -206,4 +216,42 @@ export async function assignLeaderToOrphanUser(
     leaderId: actorLeaderUserId,
     updatedAt: savedUser.updatedAt.toISOString(),
   };
+}
+
+export async function getLeaderHierarchyView(
+  actorUserId: string,
+): Promise<LeaderHierarchyViewResponse> {
+  const actor = await userRepository().findOne({
+    where: { id: actorUserId },
+    relations: ['leader'],
+  });
+
+  if (!actor) {
+    const error = new Error('User not found.');
+    error.name = AUTH_ERROR_CODES.NOT_FOUND;
+    throw error;
+  }
+
+  const descendantRows = await userRepository().query<HierarchyDescendantRow[]>(
+    `
+    WITH RECURSIVE subtree AS (
+      SELECT id, full_name, email, leader_id
+      FROM users
+      WHERE leader_id = $1
+      UNION ALL
+      SELECT u.id, u.full_name, u.email, u.leader_id
+      FROM users u
+      INNER JOIN subtree s ON u.leader_id = s.id
+    )
+    SELECT id, full_name, email, leader_id FROM subtree
+    ORDER BY full_name ASC
+    `,
+    [actorUserId],
+  );
+
+  const manager = actor.leader ? toHierarchyViewNode(actor.leader) : null;
+  const self = toHierarchyViewNode(actor, true);
+  const reports = buildHierarchyTreeFromRows(descendantRows, actorUserId);
+
+  return { manager, self, reports };
 }

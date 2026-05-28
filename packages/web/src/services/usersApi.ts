@@ -58,6 +58,20 @@ export type AssignLeaderResponse = {
   updatedAt: string;
 };
 
+export type HierarchyViewNode = {
+  id: string;
+  displayName: string;
+  email: string;
+  isCurrentPosition?: boolean;
+  children?: HierarchyViewNode[];
+};
+
+export type LeaderHierarchyViewResponse = {
+  manager: HierarchyViewNode | null;
+  self: HierarchyViewNode;
+  reports: HierarchyViewNode[];
+};
+
 async function parseError(response: Response): Promise<UsersApiError> {
   let payload: ErrorResponse | null = null;
 
@@ -149,6 +163,20 @@ export async function searchOrphanUsers(
 
   const payload = (await response.json()) as { users: OrphanUserSummary[] };
   return payload.users;
+}
+
+export async function fetchLeaderHierarchyView(
+  accessToken: string,
+): Promise<LeaderHierarchyViewResponse> {
+  const response = await fetch(`${API_BASE_URL}/users/leader/hierarchy-view`, {
+    headers: { Authorization: `Bearer ${accessToken}` },
+  });
+
+  if (!response.ok) {
+    throw await parseError(response);
+  }
+
+  return (await response.json()) as LeaderHierarchyViewResponse;
 }
 
 export async function assignLeaderToUser(

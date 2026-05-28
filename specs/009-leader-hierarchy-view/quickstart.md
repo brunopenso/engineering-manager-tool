@@ -15,13 +15,7 @@ From repository root:
 npm install
 ```
 
-During implementation, add tree dependency in `packages/web`:
-
-```bash
-npm install @mui/x-tree-view --workspace @em-tool/web
-```
-
-Use the latest stable version compatible with `@mui/material@^6.4.2`; confirm with `npm run build --workspace @em-tool/web`.
+Tree UI uses Material UI `Collapse` + `List` (no `@mui/x-tree-view` dependency; peer resolution conflict with workspace MUI versions).
 
 ## 2. Backend checklist
 
@@ -100,3 +94,7 @@ Expected coverage:
 ## 7. Verification log
 
 - 2026-05-27: Plan aligned to spec FR-001–FR-009; constitution exception documented for single-level manager visibility.
+- 2026-05-27: Automated tests passed:
+  - `npm test --workspace @em-tool/backend -- tests/hierarchy-view` (7 tests)
+  - `npm test --workspace @em-tool/web -- tests/hierarchy-view` (6 tests)
+  - `npm run build --workspace @em-tool/web`
