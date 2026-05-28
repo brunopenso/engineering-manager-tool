@@ -223,7 +223,7 @@ export async function getLeaderHierarchyView(
 ): Promise<LeaderHierarchyViewResponse> {
   const actor = await userRepository().findOne({
     where: { id: actorUserId },
-    relations: ['leader'],
+    relations: { leader: true },
   });
 
   if (!actor) {
