@@ -1,5 +1,5 @@
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   AppBar,
   Toolbar,
@@ -26,7 +26,7 @@ export default function AppShellLayout() {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const { user, clearSession, accessToken } = useAuth();
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [isDrawerOpen, setIsDrawerOpen] = useState(!isMobile);
   const {
     isConfirmingLogout,
     requestLogoutConfirmation,
@@ -35,6 +35,10 @@ export default function AppShellLayout() {
     pathname: location.pathname,
     isSessionActive: Boolean(accessToken && user?.email),
   });
+
+  useEffect(() => {
+    setIsDrawerOpen(!isMobile);
+  }, [isMobile]);
 
   function toggleDrawer() {
     setIsDrawerOpen((currentState) => !currentState);
@@ -69,18 +73,16 @@ export default function AppShellLayout() {
       {/* Header */}
       <AppBar position="sticky" elevation={1}>
         <Toolbar>
-          {isMobile && (
-            <IconButton
-              color="inherit"
-              aria-label="open drawer"
-              aria-expanded={isDrawerOpen}
-              onClick={toggleDrawer}
-              edge="start"
-              sx={{ mr: 2 }}
-            >
-              <MenuIcon />
-            </IconButton>
-          )}
+          <IconButton
+            color="inherit"
+            aria-label="open drawer"
+            aria-expanded={isDrawerOpen}
+            onClick={toggleDrawer}
+            edge="start"
+            sx={{ mr: 2 }}
+          >
+            <MenuIcon />
+          </IconButton>
           <Typography
             variant="h6"
             component="div"
@@ -105,36 +107,22 @@ export default function AppShellLayout() {
 
       {/* Main content area */}
       <Box sx={{ display: 'flex', flex: 1 }}>
-        {/* Desktop Navigation */}
-        {!isMobile && (
-          <Box
-            component="nav"
-            sx={{
+        <Drawer
+          anchor="left"
+          variant={isMobile ? 'temporary' : 'persistent'}
+          open={isDrawerOpen}
+          onClose={closeDrawer}
+          sx={{
+            width: isDrawerOpen && !isMobile ? DRAWER_WIDTH : 0,
+            flexShrink: 0,
+            '& .MuiDrawer-paper': {
               width: DRAWER_WIDTH,
-              flexShrink: 0,
-              borderRight: '1px solid',
-              borderColor: 'divider',
-            }}
-          >
-            {navigationContent}
-          </Box>
-        )}
-
-        {/* Mobile Navigation Drawer */}
-        {isMobile && (
-          <Drawer
-            anchor="left"
-            open={isDrawerOpen}
-            onClose={closeDrawer}
-            sx={{
-              '& .MuiDrawer-paper': {
-                width: DRAWER_WIDTH,
-              },
-            }}
-          >
-            {navigationContent}
-          </Drawer>
-        )}
+              boxSizing: 'border-box',
+            },
+          }}
+        >
+          {navigationContent}
+        </Drawer>
 
         {/* Page Content */}
         <Box
@@ -143,6 +131,11 @@ export default function AppShellLayout() {
             flex: 1,
             display: 'flex',
             flexDirection: 'column',
+            transition: theme.transitions.create('margin', {
+              easing: theme.transitions.easing.sharp,
+              duration: theme.transitions.duration.leavingScreen,
+            }),
+            marginLeft: isDrawerOpen && !isMobile ? `${DRAWER_WIDTH}px` : 0,
           }}
         >
           <Container maxWidth="lg" sx={{ py: 3, flex: 1 }}>
