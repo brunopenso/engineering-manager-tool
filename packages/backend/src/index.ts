@@ -14,6 +14,8 @@ import { registerHealthcheckRoutes } from './routes/healthcheck.js';
 import { registerDeliverablesRoutes } from './routes/deliverables.js';
 import { registerTagsRoutes } from './routes/tags.js';
 import { registerUsersRoutes } from './routes/users.js';
+import { registerOrganizationalHierarchyResolver } from './services/organizationalHierarchy.js';
+import { databaseOrganizationalHierarchyResolver } from './services/databaseOrganizationalHierarchyResolver.js';
 
 
 const app = Fastify({ logger: true });
@@ -31,6 +33,7 @@ await registerDeliverablesRoutes(app);
 try {
   try {
     await initializeDatabase();
+    registerOrganizationalHierarchyResolver(databaseOrganizationalHierarchyResolver);
   } catch (error) {
     app.log.error(error, 'Database initialization failed, continuing in degraded mode');
   }

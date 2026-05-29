@@ -393,7 +393,7 @@ export async function registerUsersRoutes(app: FastifyInstance): Promise<void> {
 
     return {
       allowed: true,
-      message: 'Leader role is active. Organizational hierarchy resolver is not configured yet.',
+      message: 'Leader role is active. Organizational hierarchy access is available for this session.',
     };
   });
 

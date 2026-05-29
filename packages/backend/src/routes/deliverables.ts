@@ -123,7 +123,7 @@ export async function registerDeliverablesRoutes(app: FastifyInstance): Promise<
     const ownerUserId = request.params.userId;
 
     try {
-      assertCanReadDeliverables(auth.userId, ownerUserId);
+      await assertCanReadDeliverables(auth.userId, ownerUserId);
     } catch {
       return forbidden(reply);
     }
@@ -153,7 +153,7 @@ export async function registerDeliverablesRoutes(app: FastifyInstance): Promise<
       }
 
       try {
-        assertCanReadDeliverables(auth.userId, deliverable.userId);
+        await assertCanReadDeliverables(auth.userId, deliverable.userId);
       } catch {
         return forbidden(reply);
       }

@@ -56,7 +56,10 @@ export function canAccessOrganizationalDataForTarget(
   return false;
 }
 
-export function canReadDeliverablesForOwner(actorUserId: string, ownerUserId: string): boolean {
+export async function canReadDeliverablesForOwner(
+  actorUserId: string,
+  ownerUserId: string,
+): Promise<boolean> {
   if (actorUserId === ownerUserId) {
     return true;
   }
@@ -72,8 +75,11 @@ export function assertCanMutateDeliverable(actorUserId: string, ownerUserId: str
   }
 }
 
-export function assertCanReadDeliverables(actorUserId: string, ownerUserId: string): void {
-  if (!canReadDeliverablesForOwner(actorUserId, ownerUserId)) {
+export async function assertCanReadDeliverables(
+  actorUserId: string,
+  ownerUserId: string,
+): Promise<void> {
+  if (!(await canReadDeliverablesForOwner(actorUserId, ownerUserId))) {
     const error = new Error('You do not have permission to view these deliverables.');
     error.name = AUTH_ERROR_CODES.DELIVERABLE_FORBIDDEN;
     throw error;
