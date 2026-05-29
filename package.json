@@ -9,6 +9,7 @@
     "build": "lerna run build",
     "test": "lerna run test --stream",
     "lint": "lerna run lint --parallel",
+    "lint:fix": "lerna run lint --parallel --fix",
     "clean": "lerna run clean --parallel && rm -rf node_modules",
     "lerna:repair": "lerna repair"
   },
