@@ -1,6 +1,6 @@
 import { GoogleLogin, type CredentialResponse } from '@react-oauth/google';
 import { useNavigate } from 'react-router-dom';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   Container,
   Box,
@@ -9,10 +9,24 @@ import {
   Alert,
   CircularProgress,
   Stack,
+  Divider,
+  Button,
+  TextField,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
 } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { useAuth } from '../auth/AuthProvider.js';
-import { AuthApiError, loginWithGoogle } from '../services/authApi.js';
+import {
+  AuthApiError,
+  isDevAuthEnabledInWeb,
+  listDevUsers,
+  loginWithDevUser,
+  loginWithGoogle,
+  type DevAuthUser,
+} from '../services/authApi.js';
 import { DEFAULT_APP_ROUTE } from '../routes/shellOptions.js';
 
 const FALLBACK_ERROR = 'Authentication failed. Please try again.';
@@ -32,6 +46,123 @@ function mapErrorMessage(error: AuthApiError): string {
   }
 }
 
+function DevLoginSection() {
+  const navigate = useNavigate();
+  const { setSession } = useAuth();
+  const [devUsers, setDevUsers] = useState<DevAuthUser[]>([]);
+  const [selectedUserId, setSelectedUserId] = useState('');
+  const [devEmail, setDevEmail] = useState('');
+  const [devFullName, setDevFullName] = useState('');
+  const [devError, setDevError] = useState<string | null>(null);
+  const [devLoading, setDevLoading] = useState(false);
+
+  useEffect(() => {
+    void listDevUsers()
+      .then((users) => {
+        setDevUsers(users);
+        if (users.length > 0) {
+          setSelectedUserId(users[0].id);
+        }
+      })
+      .catch(() => {
+        setDevError('Failed to load development users.');
+      });
+  }, []);
+
+  async function handleDevLogin(input: {
+    userId?: string;
+    email?: string;
+    fullName?: string;
+  }): Promise<void> {
+    setDevLoading(true);
+    setDevError(null);
+
+    try {
+      const result = await loginWithDevUser(input);
+      setSession({ accessToken: result.accessToken, user: result.user });
+      navigate(DEFAULT_APP_ROUTE, { replace: true });
+    } catch (error) {
+      if (error instanceof AuthApiError) {
+        setDevError(error.message);
+      } else {
+        setDevError(FALLBACK_ERROR);
+      }
+    } finally {
+      setDevLoading(false);
+    }
+  }
+
+  return (
+    <Stack spacing={2} sx={{ width: '100%' }}>
+      <Divider>Development login</Divider>
+      <Alert severity="warning">
+        Development-only login. Do not enable in production.
+      </Alert>
+
+      {devError && (
+        <Alert severity="error" onClose={() => setDevError(null)}>
+          {devError}
+        </Alert>
+      )}
+
+      {devUsers.length > 0 && (
+        <FormControl fullWidth disabled={devLoading}>
+          <InputLabel id="dev-user-select-label">Existing user</InputLabel>
+          <Select
+            labelId="dev-user-select-label"
+            label="Existing user"
+            value={selectedUserId}
+            onChange={(event) => setSelectedUserId(event.target.value)}
+          >
+            {devUsers.map((user) => (
+              <MenuItem key={user.id} value={user.id}>
+                {user.fullName} ({user.email}) — {user.roles.join(', ')}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+      )}
+
+      {devUsers.length > 0 && (
+        <Button
+          variant="outlined"
+          disabled={devLoading || !selectedUserId}
+          onClick={() => void handleDevLogin({ userId: selectedUserId })}
+        >
+          Sign in as selected user
+        </Button>
+      )}
+
+      <TextField
+        label="Email"
+        value={devEmail}
+        onChange={(event) => setDevEmail(event.target.value)}
+        disabled={devLoading}
+        fullWidth
+      />
+      <TextField
+        label="Full name"
+        value={devFullName}
+        onChange={(event) => setDevFullName(event.target.value)}
+        disabled={devLoading}
+        fullWidth
+      />
+      <Button
+        variant="outlined"
+        disabled={devLoading || !devEmail.trim()}
+        onClick={() =>
+          void handleDevLogin({
+            email: devEmail.trim(),
+            fullName: devFullName.trim() || undefined,
+          })
+        }
+      >
+        Sign in with email
+      </Button>
+    </Stack>
+  );
+}
+
 export default function LoginPage() {
   const navigate = useNavigate();
   const theme = useTheme();
@@ -39,6 +170,7 @@ export default function LoginPage() {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const googleButtonTheme = theme.palette.mode === 'dark' ? 'filled_black' : 'outline';
+  const devAuthEnabled = isDevAuthEnabledInWeb();
 
   async function handleGoogleSuccess(response: CredentialResponse): Promise<void> {
     if (!response.credential) {
@@ -132,6 +264,8 @@ export default function LoginPage() {
                 onError={() => setErrorMessage(FALLBACK_ERROR)}
               />
             </Box>
+
+            {devAuthEnabled && <DevLoginSection />}
           </Stack>
         </Paper>
       </Box>

@@ -1,12 +1,21 @@
 import type { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify';
+import { getDevAuthPublicRoutes, isDevAuthEnabled } from '../auth/devAuthConfig.js';
 import { AUTH_ERROR_CODES } from '../auth/types.js';
 import { loadRolesForUser } from '../services/roleService.js';
 
-const PUBLIC_ROUTES = new Set([
+const BASE_PUBLIC_ROUTES = new Set([
   '/healthcheck',
   '/healthcheck/complete',
   '/auth/google/login',
 ]);
+
+function isPublicRoute(pathname: string): boolean {
+  if (BASE_PUBLIC_ROUTES.has(pathname)) {
+    return true;
+  }
+
+  return isDevAuthEnabled() && getDevAuthPublicRoutes().includes(pathname);
+}
 
 function getPathname(request: FastifyRequest): string {
   const rawUrl = request.raw.url ?? '/';
@@ -32,7 +41,7 @@ export async function registerAuthMiddleware(app: FastifyInstance): Promise<void
   app.addHook('onRequest', async (request: FastifyRequest, reply: FastifyReply) => {
     const pathname = getPathname(request);
 
-    if (PUBLIC_ROUTES.has(pathname)) {
+    if (isPublicRoute(pathname)) {
       return;
     }
 
