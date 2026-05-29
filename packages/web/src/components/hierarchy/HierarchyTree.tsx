@@ -3,6 +3,7 @@ import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
 import { Box, Chip, Collapse, List, ListItemButton, Typography } from '@mui/material';
 import type { HierarchyViewNode } from '../../services/usersApi.js';
+import HierarchyRoleChips from './HierarchyRoleChips.js';
 
 type HierarchyTreeProps = {
   self: HierarchyViewNode;
@@ -20,6 +21,7 @@ function HierarchyNode({ node, depth, expandedItems, onToggle }: HierarchyNodePr
   const children = node.children ?? [];
   const hasChildren = children.length > 0;
   const isExpanded = expandedItems.includes(node.id);
+  const isCollaboratorOnly = !node.isLeader;
 
   return (
     <>
@@ -29,7 +31,14 @@ function HierarchyNode({ node, depth, expandedItems, onToggle }: HierarchyNodePr
             onToggle(node.id);
           }
         }}
-        sx={{ pl: 2 + depth * 2 }}
+        sx={{
+          pl: 2 + depth * 2,
+          ...(isCollaboratorOnly &&
+            !hasChildren && {
+              '&.Mui-disabled': { opacity: 1 },
+              '&.Mui-disabled .MuiTypography-root': { color: 'text.primary' },
+            }),
+        }}
         disabled={!hasChildren}
         aria-expanded={hasChildren ? isExpanded : undefined}
       >
@@ -40,13 +49,17 @@ function HierarchyNode({ node, depth, expandedItems, onToggle }: HierarchyNodePr
           <Typography
             component="span"
             variant="body2"
-            sx={{ fontWeight: node.isCurrentPosition ? 700 : 400 }}
+            sx={{
+              fontWeight: node.isCurrentPosition ? 700 : 400,
+              ...(isCollaboratorOnly ? { color: 'text.primary' } : {}),
+            }}
           >
             {node.displayName}
           </Typography>
           {node.isCurrentPosition && (
             <Chip size="small" label="You" color="primary" data-testid="current-position-marker" />
           )}
+          <HierarchyRoleChips isLeader={node.isLeader} />
         </Box>
       </ListItemButton>
       {hasChildren && (

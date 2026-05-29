@@ -18,18 +18,21 @@ describe('US1 leader hierarchy view page', () => {
             id: 'manager-1',
             displayName: 'Director Example',
             email: 'director@example.com',
+            isLeader: true,
           },
           self: {
             id: testLeaderUser.id,
             displayName: testLeaderUser.fullName,
             email: testLeaderUser.email,
             isCurrentPosition: true,
+            isLeader: true,
           },
           reports: [
             {
               id: 'report-1',
               displayName: 'Alice Report',
               email: 'alice@example.com',
+              isLeader: false,
             },
           ],
         }),

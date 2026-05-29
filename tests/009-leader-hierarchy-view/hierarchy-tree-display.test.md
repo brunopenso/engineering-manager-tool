@@ -7,7 +7,7 @@
 
 - 200 response includes `self` (required) and `reports` (array).
 - `manager` is null or a single node without nested superior chain.
-- Every node has `id`, `displayName`, and `email`.
+- Every node has `id`, `displayName`, `email`, and `isLeader`.
 - `self.isCurrentPosition` is true.
 - Leader role required (403 for collaborator).
 - Unauthenticated requests return 401.

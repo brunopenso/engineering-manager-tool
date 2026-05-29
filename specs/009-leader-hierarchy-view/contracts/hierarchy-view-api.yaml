@@ -48,7 +48,7 @@ components:
           type: string
     HierarchyViewNode:
       type: object
-      required: [id, displayName, email]
+      required: [id, displayName, email, isLeader]
       properties:
         id:
           type: string
@@ -59,6 +59,9 @@ components:
         email:
           type: string
           format: email
+        isLeader:
+          type: boolean
+          description: true when user has the LEADER role
         isCurrentPosition:
           type: boolean
           default: false
