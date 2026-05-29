@@ -8,6 +8,8 @@ import { initializeDatabase, closeDatabase } from './database/connection.js';
 import { registerAuthMiddleware } from './middleware/auth.js';
 import { registerAuthPlugin } from './plugins/auth.js';
 import { registerAuthRoutes } from './routes/auth.js';
+import { registerDevAuthRoutes } from './routes/devAuth.js';
+import { isDevAuthEnabled } from './auth/devAuthConfig.js';
 import { registerHealthcheckRoutes } from './routes/healthcheck.js';
 import { registerDeliverablesRoutes } from './routes/deliverables.js';
 import { registerTagsRoutes } from './routes/tags.js';
@@ -21,6 +23,7 @@ await registerAuthPlugin(app);
 await registerAuthMiddleware(app);
 await registerHealthcheckRoutes(app);
 await registerAuthRoutes(app);
+await registerDevAuthRoutes(app);
 await registerUsersRoutes(app);
 await registerTagsRoutes(app);
 await registerDeliverablesRoutes(app);
@@ -34,6 +37,9 @@ try {
 
   await app.listen({ port: PORT, host: '0.0.0.0' });
   console.log(`Backend running on http://localhost:${PORT}`);
+  if (isDevAuthEnabled()) {
+    app.log.warn('DEV AUTH ENABLED — do not use in production');
+  }
 } catch (error) {
   app.log.error(error);
   process.exit(1);

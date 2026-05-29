@@ -1,8 +1,8 @@
 import type { FastifyInstance } from 'fastify';
 import { AUTH_ERROR_CODES } from '../auth/types.js';
 import { mapUserToAuthResponse } from '../services/authUserMapper.js';
-import { createSuccessfulLoginAuditEvent } from '../services/loginAuditService.js';
 import { validateGoogleIdToken } from '../services/googleTokenValidator.js';
+import { completeLoginForUser } from '../services/loginSessionService.js';
 import { findUserById, upsertUserFromGoogleIdentity } from '../services/userService.js';
 
 type GoogleLoginBody = {
@@ -38,20 +38,7 @@ export async function registerAuthRoutes(app: FastifyInstance): Promise<void> {
       fullName: validation.identity.fullName,
     });
 
-    await createSuccessfulLoginAuditEvent(user.id);
-
-    const accessToken = app.issueAccessToken({
-      sub: user.id,
-      email: user.email,
-      fullName: user.fullName,
-    });
-
-    return {
-      accessToken,
-      redirectPath: '/app',
-      welcomeMessage: 'Welcome to the system',
-      user: await mapUserToAuthResponse(user),
-    };
+    return completeLoginForUser(app, user);
   });
 
   app.get('/auth/me', async (request, reply) => {
