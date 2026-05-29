@@ -30,6 +30,7 @@ describe('US1 hierarchy view without manager', () => {
         displayName: 'Top Leader',
         email: 'top@example.com',
         isCurrentPosition: true,
+        isLeader: true,
       },
       reports: [],
     });

@@ -12,17 +12,20 @@ describe('US2 hierarchy tree initial expansion', () => {
           displayName: 'Team Leader',
           email: 'leader@example.com',
           isCurrentPosition: true,
+          isLeader: true,
         }}
         reports={[
           {
             id: 'report-1',
             displayName: 'Nested Report',
             email: 'nested@example.com',
+            isLeader: false,
             children: [
               {
                 id: 'report-2',
                 displayName: 'Deep Report',
                 email: 'deep@example.com',
+                isLeader: false,
               },
             ],
           },

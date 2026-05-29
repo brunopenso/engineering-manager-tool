@@ -62,6 +62,7 @@ export type HierarchyViewNode = {
   id: string;
   displayName: string;
   email: string;
+  isLeader: boolean;
   isCurrentPosition?: boolean;
   children?: HierarchyViewNode[];
 };

@@ -1,3 +1,4 @@
+import { In } from 'typeorm';
 import { AppDataSource } from '../database/connection.js';
 import { RoleAssignmentEvent } from '../database/entities/RoleAssignmentEvent.js';
 import { UserRole } from '../database/entities/UserRole.js';
@@ -41,6 +42,19 @@ export async function loadRolesForUser(userId: string): Promise<UserRoleType[]> 
   }
 
   return sortRoles(roles);
+}
+
+export async function loadLeaderUserIds(userIds: string[]): Promise<Set<string>> {
+  if (userIds.length === 0) {
+    return new Set();
+  }
+
+  const rows = await userRoleRepository().find({
+    where: { userId: In(userIds), role: USER_ROLE_TYPES.LEADER },
+    select: { userId: true },
+  });
+
+  return new Set(rows.map((row) => row.userId));
 }
 
 export async function ensureCollaboratorRole(userId: string): Promise<void> {

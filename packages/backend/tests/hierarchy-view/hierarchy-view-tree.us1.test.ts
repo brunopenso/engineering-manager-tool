@@ -28,23 +28,27 @@ describe('US1 GET /users/leader/hierarchy-view', () => {
         id: 'manager-1',
         displayName: 'Director Example',
         email: 'director@example.com',
+        isLeader: true,
       },
       self: {
         id: 'leader-1',
         displayName: 'Team Leader',
         email: 'leader@example.com',
         isCurrentPosition: true,
+        isLeader: true,
       },
       reports: [
         {
           id: 'report-1',
           displayName: 'Alice Report',
           email: 'alice@example.com',
+          isLeader: false,
           children: [
             {
               id: 'report-2',
               displayName: 'Bob Report',
               email: 'bob@example.com',
+              isLeader: true,
             },
           ],
         },
@@ -63,23 +67,27 @@ describe('US1 GET /users/leader/hierarchy-view', () => {
         id: 'manager-1',
         displayName: 'Director Example',
         email: 'director@example.com',
+        isLeader: true,
       },
       self: {
         id: 'leader-1',
         displayName: 'Team Leader',
         email: 'leader@example.com',
         isCurrentPosition: true,
+        isLeader: true,
       },
       reports: [
         {
           id: 'report-1',
           displayName: 'Alice Report',
           email: 'alice@example.com',
+          isLeader: false,
           children: [
             {
               id: 'report-2',
               displayName: 'Bob Report',
               email: 'bob@example.com',
+              isLeader: true,
             },
           ],
         },

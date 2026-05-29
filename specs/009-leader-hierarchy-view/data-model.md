@@ -20,6 +20,7 @@
   - `id`: UUID
   - `displayName`: string ( `fullName` if non-empty, else `email` )
   - `email`: string (for fallback verification and optional screen-reader context)
+  - `isLeader`: boolean (true when user has the LEADER role)
   - `isCurrentPosition`: boolean (true only on `self`)
   - `children`: `HierarchyViewNode[]` (only on nodes in the downward tree; manager has empty/absent children)
 

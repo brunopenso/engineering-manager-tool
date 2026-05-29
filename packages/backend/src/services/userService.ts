@@ -2,7 +2,7 @@ import { AppDataSource } from '../database/connection.js';
 import { User } from '../database/entities/User.js';
 import { UserCreationAudit } from '../database/entities/UserCreationAudit.js';
 import { AUTH_ERROR_CODES } from '../auth/types.js';
-import { ensureCollaboratorRole } from './roleService.js';
+import { ensureCollaboratorRole, loadLeaderUserIds } from './roleService.js';
 import {
   normalizeLeaderCreateInput,
   type LeaderCreateUserInput,
@@ -19,6 +19,8 @@ import type {
 } from '../types/hierarchyView.js';
 import {
   buildHierarchyTreeFromRows,
+  collectHierarchyNodeIds,
+  enrichHierarchyNodeWithLeaderFlag,
   toHierarchyViewNode,
 } from './hierarchyViewBuilder.js';
 
@@ -253,5 +255,16 @@ export async function getLeaderHierarchyView(
   const self = toHierarchyViewNode(actor, true);
   const reports = buildHierarchyTreeFromRows(descendantRows, actorUserId);
 
-  return { manager, self, reports };
+  const nodeIds = [
+    ...collectHierarchyNodeIds(reports),
+    self.id,
+    ...(manager ? [manager.id] : []),
+  ];
+  const leaderIds = await loadLeaderUserIds(nodeIds);
+
+  return {
+    manager: manager ? enrichHierarchyNodeWithLeaderFlag(manager, leaderIds) : null,
+    self: enrichHierarchyNodeWithLeaderFlag(self, leaderIds),
+    reports: reports.map((node) => enrichHierarchyNodeWithLeaderFlag(node, leaderIds)),
+  };
 }
