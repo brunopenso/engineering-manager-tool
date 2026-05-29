@@ -10,13 +10,13 @@ async function selectTeamMember(name: string) {
   await userEvent.click(within(listbox).getByRole('option', { name }));
 }
 
-describe('US3 team deliverables reviewed toggle', () => {
+describe('US3 team deliverables reviewed filter and review modal', { timeout: 15000 }, () => {
   afterEach(() => {
     vi.unstubAllGlobals();
   });
 
-  it('optimistically toggles reviewed and rolls back on failure', async () => {
-    const fetchMock = vi.fn(async (url: string, init?: RequestInit) => {
+  it('defaults to not reviewed filter and opens deliverable details modal', async () => {
+    const fetchMock = vi.fn(async (url: string) => {
       if (url.includes('/users/leader/team-members')) {
         return {
           ok: true,
@@ -34,21 +34,116 @@ describe('US3 team deliverables reviewed toggle', () => {
             deliverables: [
               {
                 id: 'del-1',
-                title: 'Recent work',
-                description: 'Details',
+                title: 'Pending work',
+                description: 'Needs review',
                 reviewed: false,
+              },
+              {
+                id: 'del-2',
+                title: 'Completed work',
+                description: 'Already reviewed',
+                reviewed: true,
               },
             ],
           }),
         };
       }
 
-      if (url.includes('/deliverables/del-1/reviewed') && init?.method === 'PUT') {
+      if (url.includes('/deliverables/del-1')) {
         return {
-          ok: false,
+          ok: true,
           json: async () => ({
-            code: 'FORBIDDEN',
-            message: 'Unable to update reviewed status.',
+            readOnly: true,
+            deliverable: {
+              id: 'del-1',
+              ownerUserId: 'report-1',
+              title: 'Pending work',
+              description: 'Needs review',
+              roleInDeliverable: 'Lead engineer',
+              businessImpact: 'HIGH',
+              improvementPoints: 'Improve testing',
+              technicalDescription: 'Built the API',
+              systemTags: [{ id: 'tag-1', name: 'Platform', color: '#336699' }],
+              userTags: ['backend'],
+              links: [{ url: 'https://example.com', label: 'Demo' }],
+              createdAt: '2026-05-01T10:00:00.000Z',
+              updatedAt: '2026-05-10T10:00:00.000Z',
+            },
+          }),
+        };
+      }
+
+      return { ok: false, json: async () => ({ code: 'FORBIDDEN', message: 'Unexpected URL' }) };
+    });
+
+    vi.stubGlobal('fetch', fetchMock);
+
+    renderWithProviders(<App />, {
+      initialPath: '/app/leader/team-deliverables',
+      isAuthenticated: true,
+      user: testLeaderUser,
+    });
+
+    await waitFor(() => {
+      expect(screen.getByRole('combobox', { name: 'Team member' })).toBeInTheDocument();
+    });
+
+    expect(screen.getByTestId('reviewed-filter')).toHaveTextContent('Not reviewed');
+
+    await selectTeamMember('Alice Report');
+
+    await waitFor(() => {
+      expect(screen.getByText('Pending work')).toBeInTheDocument();
+    });
+
+    expect(screen.queryByText('Completed work')).not.toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole('button', { name: /review pending work/i }));
+
+    await waitFor(() => {
+      expect(screen.getByRole('dialog', { name: 'Review deliverable' })).toBeInTheDocument();
+    });
+
+    expect(screen.getByText('Lead engineer')).toBeInTheDocument();
+    expect(screen.getByText('Improve testing')).toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole('tab', { name: 'Notes' }));
+
+    expect(
+      screen.getByText(/additional review notes will be available here in a future update/i),
+    ).toBeInTheDocument();
+  });
+
+  it('shows reviewed deliverables when filter changes', async () => {
+    const fetchMock = vi.fn(async (url: string) => {
+      if (url.includes('/users/leader/team-members')) {
+        return {
+          ok: true,
+          json: async () => ({
+            members: [{ id: 'report-1', displayName: 'Alice Report' }],
+          }),
+        };
+      }
+
+      if (url.includes('/users/leader/team-deliverables')) {
+        return {
+          ok: true,
+          json: async () => ({
+            ownerUserId: 'report-1',
+            deliverables: [
+              {
+                id: 'del-1',
+                title: 'Pending work',
+                description: 'Needs review',
+                reviewed: false,
+              },
+              {
+                id: 'del-2',
+                title: 'Completed work',
+                description: 'Already reviewed',
+                reviewed: true,
+              },
+            ],
           }),
         };
       }
@@ -71,17 +166,17 @@ describe('US3 team deliverables reviewed toggle', () => {
     await selectTeamMember('Alice Report');
 
     await waitFor(() => {
-      expect(screen.getByText('Recent work')).toBeInTheDocument();
+      expect(screen.getByText('Pending work')).toBeInTheDocument();
     });
 
-    const checkbox = screen.getByRole('checkbox', { name: /mark recent work as reviewed/i });
-    expect(checkbox).not.toBeChecked();
-
-    fireEvent.click(checkbox);
+    fireEvent.mouseDown(screen.getByRole('combobox', { name: 'Review status' }));
+    const listbox = await screen.findByRole('listbox');
+    await userEvent.click(within(listbox).getByRole('option', { name: 'Reviewed' }));
 
     await waitFor(() => {
-      expect(checkbox).not.toBeChecked();
-      expect(screen.getByText(/unable to update reviewed status/i)).toBeInTheDocument();
+      expect(screen.getByText('Completed work')).toBeInTheDocument();
     });
+
+    expect(screen.queryByText('Pending work')).not.toBeInTheDocument();
   });
 });

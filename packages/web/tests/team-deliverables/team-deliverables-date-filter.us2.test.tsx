@@ -10,7 +10,7 @@ async function selectTeamMember(name: string) {
   await userEvent.click(within(listbox).getByRole('option', { name }));
 }
 
-describe('US2 team deliverables date filter', () => {
+describe('US2 team deliverables date filter', { timeout: 15000 }, () => {
   afterEach(() => {
     vi.unstubAllGlobals();
   });

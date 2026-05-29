@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   Alert,
   Box,
-  Checkbox,
+  Button,
   CircularProgress,
   Container,
   FormControl,
@@ -19,6 +19,7 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
+import TeamDeliverableReviewModal from '../components/team-deliverables/TeamDeliverableReviewModal.js';
 import { useAuth } from '../auth/AuthProvider.js';
 import { isLeader } from '../auth/roleGuards.js';
 import {
@@ -26,11 +27,12 @@ import {
   fetchTeamMembers,
   isValidDateRange,
   searchTeamDeliverables,
-  setDeliverableReviewed,
   type TeamDeliverableRow,
   type TeamMemberOption,
   TeamDeliverablesApiError,
 } from '../services/teamDeliverablesApi.js';
+
+type ReviewedFilter = 'not_reviewed' | 'reviewed' | 'all';
 
 export default function LeaderTeamDeliverablesPage() {
   const { accessToken, user } = useAuth();
@@ -44,9 +46,23 @@ export default function LeaderTeamDeliverablesPage() {
   const [isSearching, setIsSearching] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [dateRangeError, setDateRangeError] = useState<string | null>(null);
+  const [reviewedFilter, setReviewedFilter] = useState<ReviewedFilter>('not_reviewed');
+  const [selectedDeliverableId, setSelectedDeliverableId] = useState<string | null>(null);
   const searchRequestId = useRef(0);
 
   const dateRangeIsValid = isValidDateRange(startDate, endDate);
+
+  const filteredDeliverables = useMemo(() => {
+    if (reviewedFilter === 'reviewed') {
+      return deliverables.filter((item) => item.reviewed);
+    }
+
+    if (reviewedFilter === 'not_reviewed') {
+      return deliverables.filter((item) => !item.reviewed);
+    }
+
+    return deliverables;
+  }, [deliverables, reviewedFilter]);
 
   useEffect(() => {
     if (!accessToken || !isLeader(user)) {
@@ -139,30 +155,6 @@ export default function LeaderTeamDeliverablesPage() {
     void runSearch();
   }, [selectedUserId, startDate, endDate, dateRangeIsValid, runSearch]);
 
-  async function handleReviewedToggle(deliverableId: string, nextReviewed: boolean) {
-    if (!accessToken) {
-      return;
-    }
-
-    const previous = deliverables;
-    setDeliverables((current) =>
-      current.map((row) =>
-        row.id === deliverableId ? { ...row, reviewed: nextReviewed } : row,
-      ),
-    );
-
-    try {
-      await setDeliverableReviewed(accessToken, deliverableId, nextReviewed);
-    } catch (error) {
-      setDeliverables(previous);
-      setErrorMessage(
-        error instanceof TeamDeliverablesApiError
-          ? error.message
-          : 'Unable to update reviewed status.',
-      );
-    }
-  }
-
   if (!isLeader(user)) {
     return null;
   }
@@ -227,6 +219,21 @@ export default function LeaderTeamDeliverablesPage() {
                 htmlInput: { 'data-testid': 'end-date-input' },
               }}
             />
+
+            <FormControl sx={{ minWidth: 180 }}>
+              <InputLabel id="reviewed-filter-label">Review status</InputLabel>
+              <Select
+                labelId="reviewed-filter-label"
+                label="Review status"
+                value={reviewedFilter}
+                onChange={(event) => setReviewedFilter(event.target.value as ReviewedFilter)}
+                data-testid="reviewed-filter"
+              >
+                <MenuItem value="not_reviewed">Not reviewed</MenuItem>
+                <MenuItem value="reviewed">Reviewed</MenuItem>
+                <MenuItem value="all">All</MenuItem>
+              </Select>
+            </FormControl>
           </Stack>
 
           {dateRangeError ? (
@@ -256,7 +263,7 @@ export default function LeaderTeamDeliverablesPage() {
               <Box sx={{ p: 3, display: 'flex', justifyContent: 'center' }}>
                 <CircularProgress aria-label="Searching deliverables" size={28} />
               </Box>
-            ) : deliverables.length === 0 ? (
+            ) : filteredDeliverables.length === 0 ? (
               <Box sx={{ p: 3 }}>
                 <Typography color="text.secondary">
                   No deliverables match the current filters.
@@ -268,28 +275,25 @@ export default function LeaderTeamDeliverablesPage() {
                   <TableRow>
                     <TableCell>Title</TableCell>
                     <TableCell>Description</TableCell>
-                    <TableCell align="center">Reviewed</TableCell>
+                    <TableCell align="right">Actions</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {deliverables.map((item) => (
+                  {filteredDeliverables.map((item) => (
                     <TableRow key={item.id}>
                       <TableCell>{item.title}</TableCell>
                       <TableCell sx={{ whiteSpace: 'normal', maxWidth: 480 }}>
                         {item.description}
                       </TableCell>
-                      <TableCell align="center">
-                        <Checkbox
-                          checked={item.reviewed}
-                          onChange={(event) =>
-                            void handleReviewedToggle(item.id, event.target.checked)
-                          }
-                          slotProps={{
-                            input: {
-                              'aria-label': `Mark ${item.title} as reviewed`,
-                            },
-                          }}
-                        />
+                      <TableCell align="right">
+                        <Button
+                          size="small"
+                          variant="outlined"
+                          onClick={() => setSelectedDeliverableId(item.id)}
+                          aria-label={`Review ${item.title}`}
+                        >
+                          Review
+                        </Button>
                       </TableCell>
                     </TableRow>
                   ))}
@@ -298,6 +302,13 @@ export default function LeaderTeamDeliverablesPage() {
             )}
           </Paper>
         ) : null}
+
+        <TeamDeliverableReviewModal
+          open={selectedDeliverableId !== null}
+          deliverableId={selectedDeliverableId}
+          accessToken={accessToken}
+          onClose={() => setSelectedDeliverableId(null)}
+        />
       </Stack>
     </Container>
   );

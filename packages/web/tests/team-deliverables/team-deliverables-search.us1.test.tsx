@@ -32,6 +32,7 @@ describe('US1 leader team deliverables page', () => {
     expect(screen.getByTestId('team-member-select')).toBeInTheDocument();
     expect(screen.getByTestId('start-date-input')).toHaveValue(defaultRange.startDate);
     expect(screen.getByTestId('end-date-input')).toHaveValue(defaultRange.endDate);
+    expect(screen.getByTestId('reviewed-filter')).toHaveTextContent('Not reviewed');
     expect(screen.getByText(/select a team member to search deliverables/i)).toBeInTheDocument();
     expect(fetchMock).toHaveBeenCalledWith(
       expect.stringContaining('/users/leader/team-members'),
