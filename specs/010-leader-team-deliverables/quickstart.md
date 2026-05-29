@@ -115,3 +115,13 @@ tests/010-leader-team-deliverables/
 ## 8. Contract reference
 
 OpenAPI: [contracts/team-deliverables-api.yaml](./contracts/team-deliverables-api.yaml)
+
+## 9. Verification outcomes (2026-05-29)
+
+```bash
+npm test --workspace @em-tool/backend -- tests/team-deliverables   # 13 passed
+npm test --workspace @em-tool/web -- tests/team-deliverables       # 6 passed
+npm run lint --workspace @em-tool/web                              # pass
+```
+
+Migration `1779766000000-AddDeliverableReviews.ts` adds `deliverable_reviews` with unique `(deliverable_id, reviewer_user_id)`.

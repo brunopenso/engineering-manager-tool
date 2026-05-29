@@ -1,10 +1,13 @@
-import { In } from 'typeorm';
+import { Between, In } from 'typeorm';
 import { AppDataSource } from '../database/connection.js';
 import { Deliverable } from '../database/entities/Deliverable.js';
 import { DeliverableLink } from '../database/entities/DeliverableLink.js';
+import { DeliverableReview } from '../database/entities/DeliverableReview.js';
 import { DeliverableSystemTag } from '../database/entities/DeliverableSystemTag.js';
 import { DeliverableUserTag } from '../database/entities/DeliverableUserTag.js';
 import { Tag } from '../database/entities/Tag.js';
+import type { TeamDeliverableRow } from '../types/teamDeliverables.js';
+import { validateDateRange } from './teamDeliverablesDate.js';
 import {
   DeliverableValidationError,
   InvalidSystemTagError,
@@ -135,6 +138,46 @@ export async function listDeliverablesForOwner(ownerUserId: string): Promise<Del
   });
 
   return rows.map(mapDeliverableSummary);
+}
+
+export async function listTeamDeliverablesForReview(
+  ownerUserId: string,
+  reviewerUserId: string,
+  startDate: string,
+  endDate: string,
+): Promise<TeamDeliverableRow[]> {
+  const { start, end } = validateDateRange(startDate, endDate);
+
+  const rows = await deliverableRepository().find({
+    where: {
+      userId: ownerUserId,
+      updatedAt: Between(start, end),
+    },
+    order: { updatedAt: 'DESC' },
+  });
+
+  if (rows.length === 0) {
+    return [];
+  }
+
+  const deliverableIds = rows.map((row) => row.id);
+  const reviewRepository = AppDataSource.getRepository(DeliverableReview);
+  const reviews = await reviewRepository.find({
+    where: {
+      reviewerUserId,
+      deliverableId: In(deliverableIds),
+      reviewed: true,
+    },
+  });
+
+  const reviewedIds = new Set(reviews.map((review) => review.deliverableId));
+
+  return rows.map((row) => ({
+    id: row.id,
+    title: row.title,
+    description: row.description,
+    reviewed: reviewedIds.has(row.id),
+  }));
 }
 
 export async function getDeliverableById(deliverableId: string): Promise<Deliverable | null> {

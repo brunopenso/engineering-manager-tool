@@ -17,6 +17,7 @@ import { useAuth } from './auth/AuthProvider.js';
 import LeaderCreateUserPage from './pages/LeaderCreateUserPage.js';
 import LeaderHierarchyManagementPage from './pages/LeaderHierarchyManagementPage.js';
 import LeaderHierarchyViewPage from './pages/LeaderHierarchyViewPage.js';
+import LeaderTeamDeliverablesPage from './pages/LeaderTeamDeliverablesPage.js';
 
 function DefaultRouteRedirect() {
   const { accessToken, user, sessionStatus } = useAuth();
@@ -52,6 +53,14 @@ export default function App() {
         <Route path="deliverables/new" element={<DeliverableFormPage mode="create" />} />
         <Route path="deliverables/:deliverableId/edit" element={<DeliverableFormPage mode="edit" />} />
         <Route path="deliverables/view/:userId" element={<DeliverablesViewPage />} />
+        <Route
+          path="leader/team-deliverables"
+          element={
+            <LeaderRoute>
+              <LeaderTeamDeliverablesPage />
+            </LeaderRoute>
+          }
+        />
         <Route
           path="leader/hierarchy"
           element={

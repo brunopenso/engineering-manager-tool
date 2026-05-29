@@ -3,6 +3,7 @@ import { AUTH_ERROR_CODES } from '../auth/types.js';
 import {
   assertCanMutateDeliverable,
   assertCanReadDeliverables,
+  assertLeaderRole,
 } from '../services/authorizationService.js';
 import {
   createDeliverable,
@@ -12,6 +13,8 @@ import {
   mapDeliverableDetail,
   updateDeliverable,
 } from '../services/deliverableService.js';
+import { setDeliverableReviewed } from '../services/deliverableReviewService.js';
+import { assertUserInLeaderSubtree } from '../services/userService.js';
 import {
   DeliverableValidationError,
   InvalidSystemTagError,
@@ -27,6 +30,10 @@ type DeliverableBody = {
   technicalDescription?: string | null;
   userTags?: string[];
   links?: { url: string; label?: string | null }[];
+};
+
+type ReviewedBody = {
+  reviewed?: boolean;
 };
 
 function requireAuth(request: FastifyRequest, reply: FastifyReply) {
@@ -205,6 +212,48 @@ export async function registerDeliverablesRoutes(app: FastifyInstance): Promise<
       } catch (error) {
         return handleDeliverableError(error, reply);
       }
+    },
+  );
+
+  app.put<{ Params: { deliverableId: string }; Body: ReviewedBody }>(
+    '/deliverables/:deliverableId/reviewed',
+    async (request, reply) => {
+      const auth = requireAuth(request, reply);
+      if (!auth) {
+        return {
+          code: AUTH_ERROR_CODES.MISSING_APP_TOKEN,
+          message: 'Authentication token is missing.',
+        };
+      }
+
+      try {
+        assertLeaderRole(auth.roles);
+      } catch {
+        return forbidden(reply, AUTH_ERROR_CODES.LEADER_REQUIRED);
+      }
+
+      const deliverable = await getDeliverableById(request.params.deliverableId);
+      if (!deliverable) {
+        return notFound(reply);
+      }
+
+      try {
+        await assertUserInLeaderSubtree(auth.userId, deliverable.userId);
+      } catch {
+        return forbidden(reply);
+      }
+
+      if (typeof request.body?.reviewed !== 'boolean') {
+        return validationError(reply, 'reviewed must be a boolean value.');
+      }
+
+      const result = await setDeliverableReviewed(
+        request.params.deliverableId,
+        auth.userId,
+        request.body.reviewed,
+      );
+
+      return result;
     },
   );
 

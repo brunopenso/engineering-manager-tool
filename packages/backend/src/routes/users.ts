@@ -18,12 +18,16 @@ import { mapUserToAuthResponse } from '../services/authUserMapper.js';
 import { applyRoleChange } from '../services/roleService.js';
 import {
   assignLeaderToOrphanUser,
+  assertUserInLeaderSubtree,
   createUserByLeader,
   findAllUsers,
   findUserById,
   getLeaderHierarchyView,
+  getLeaderTeamMembers,
   searchOrphanUsers,
 } from '../services/userService.js';
+import { listTeamDeliverablesForReview } from '../services/deliverableService.js';
+import { TeamDeliverablesDateError } from '../services/teamDeliverablesDate.js';
 import { UserCreateValidationError } from '../services/userCreateValidation.js';
 
 type RoleChangeBody = {
@@ -40,6 +44,12 @@ type LeaderCreateUserBody = {
 
 type OrphanSearchQuery = {
   query?: string;
+};
+
+type TeamDeliverablesQuery = {
+  userId?: string;
+  startDate?: string;
+  endDate?: string;
 };
 
 function forbidden(reply: FastifyReply) {
@@ -265,6 +275,80 @@ export async function registerUsersRoutes(app: FastifyInstance): Promise<void> {
       return {
         user: await mapUserToAuthResponse(targetUser),
       };
+    },
+  );
+
+  app.get('/users/leader/team-members', async (request, reply) => {
+    const auth = requireAuth(request, reply);
+    if (!auth) {
+      return {
+        code: AUTH_ERROR_CODES.MISSING_APP_TOKEN,
+        message: 'Authentication token is missing.',
+      };
+    }
+
+    try {
+      assertLeaderForHierarchyManagement(auth.roles);
+    } catch {
+      return forbidden(reply);
+    }
+
+    return getLeaderTeamMembers(auth.userId);
+  });
+
+  app.get<{ Querystring: TeamDeliverablesQuery }>(
+    '/users/leader/team-deliverables',
+    async (request, reply) => {
+      const auth = requireAuth(request, reply);
+      if (!auth) {
+        return {
+          code: AUTH_ERROR_CODES.MISSING_APP_TOKEN,
+          message: 'Authentication token is missing.',
+        };
+      }
+
+      try {
+        assertLeaderForHierarchyManagement(auth.roles);
+      } catch {
+        return forbidden(reply);
+      }
+
+      const ownerUserId = request.query.userId?.trim();
+      const startDate = request.query.startDate?.trim();
+      const endDate = request.query.endDate?.trim();
+
+      if (!ownerUserId || !startDate || !endDate) {
+        return validationError(
+          reply,
+          'userId, startDate, and endDate query parameters are required.',
+        );
+      }
+
+      try {
+        await assertUserInLeaderSubtree(auth.userId, ownerUserId);
+      } catch {
+        return forbidden(reply);
+      }
+
+      try {
+        const deliverables = await listTeamDeliverablesForReview(
+          ownerUserId,
+          auth.userId,
+          startDate,
+          endDate,
+        );
+
+        return {
+          ownerUserId,
+          deliverables,
+        };
+      } catch (error) {
+        if (error instanceof TeamDeliverablesDateError) {
+          return validationError(reply, error.message);
+        }
+
+        throw error;
+      }
     },
   );
 
