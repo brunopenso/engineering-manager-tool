@@ -37,12 +37,14 @@ describe('US3 team deliverables reviewed filter and review modal', { timeout: 15
                 title: 'Pending work',
                 description: 'Needs review',
                 reviewed: false,
+                systemTags: [{ id: 'tag-1', name: 'Platform', color: '#336699' }],
               },
               {
                 id: 'del-2',
                 title: 'Completed work',
                 description: 'Already reviewed',
                 reviewed: true,
+                systemTags: [],
               },
             ],
           }),
@@ -97,6 +99,7 @@ describe('US3 team deliverables reviewed filter and review modal', { timeout: 15
     });
 
     expect(screen.queryByText('Completed work')).not.toBeInTheDocument();
+    expect(screen.getByText('Platform')).toBeInTheDocument();
 
     fireEvent.click(screen.getByRole('button', { name: /review pending work/i }));
 
@@ -136,12 +139,14 @@ describe('US3 team deliverables reviewed filter and review modal', { timeout: 15
                 title: 'Pending work',
                 description: 'Needs review',
                 reviewed: false,
+                systemTags: [{ id: 'tag-1', name: 'Platform', color: '#336699' }],
               },
               {
                 id: 'del-2',
                 title: 'Completed work',
                 description: 'Already reviewed',
                 reviewed: true,
+                systemTags: [],
               },
             ],
           }),

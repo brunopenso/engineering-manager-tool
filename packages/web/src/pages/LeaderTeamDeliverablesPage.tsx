@@ -3,6 +3,7 @@ import {
   Alert,
   Box,
   Button,
+  Chip,
   CircularProgress,
   Container,
   FormControl,
@@ -275,6 +276,7 @@ export default function LeaderTeamDeliverablesPage() {
                   <TableRow>
                     <TableCell>Title</TableCell>
                     <TableCell>Description</TableCell>
+                    <TableCell>System tags</TableCell>
                     <TableCell align="right">Actions</TableCell>
                   </TableRow>
                 </TableHead>
@@ -284,6 +286,18 @@ export default function LeaderTeamDeliverablesPage() {
                       <TableCell>{item.title}</TableCell>
                       <TableCell sx={{ whiteSpace: 'normal', maxWidth: 480 }}>
                         {item.description}
+                      </TableCell>
+                      <TableCell>
+                        <Stack direction="row" spacing={0.5} useFlexGap sx={{ flexWrap: 'wrap' }}>
+                          {item.systemTags.map((tag) => (
+                            <Chip
+                              key={tag.id}
+                              size="small"
+                              label={tag.name}
+                              sx={{ bgcolor: tag.color, color: '#fff' }}
+                            />
+                          ))}
+                        </Stack>
                       </TableCell>
                       <TableCell align="right">
                         <Button

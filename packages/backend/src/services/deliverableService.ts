@@ -153,6 +153,7 @@ export async function listTeamDeliverablesForReview(
       userId: ownerUserId,
       updatedAt: Between(start, end),
     },
+    relations: { systemTags: { tag: true } },
     order: { updatedAt: 'DESC' },
   });
 
@@ -177,6 +178,10 @@ export async function listTeamDeliverablesForReview(
     title: row.title,
     description: row.description,
     reviewed: reviewedIds.has(row.id),
+    systemTags: (row.systemTags ?? [])
+      .map((systemTag) => systemTag.tag)
+      .filter((tag): tag is Tag => Boolean(tag))
+      .map(mapTagSummary),
   }));
 }
 

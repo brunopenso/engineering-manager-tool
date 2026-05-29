@@ -42,6 +42,7 @@ describe('US2 team deliverables date filter', { timeout: 15000 }, () => {
                       title: 'Recent work',
                       description: 'Details',
                       reviewed: false,
+                      systemTags: [],
                     },
                   ],
           }),

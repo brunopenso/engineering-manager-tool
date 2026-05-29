@@ -74,6 +74,7 @@ describe('US1 team deliverables search', () => {
         title: 'API redesign',
         description: 'Improved platform APIs',
         reviewed: false,
+        systemTags: [],
       },
     ]);
 
