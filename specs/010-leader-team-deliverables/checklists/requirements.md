@@ -31,5 +31,5 @@
 
 ## Notes
 
-- Validation passed on first review (2026-05-29). Spec is ready for `/speckit-plan` or `/speckit-clarify`.
-- Assumption documented: person selector lists descendant subtree (team below the leader), interpreting "Team Deliverables" and existing deliverables DAC; "above" in the user prompt is treated as top-of-screen UI placement. Clarify with product owner if superiors were intended instead.
+- Validation passed after clarification session (2026-05-29). Spec is ready for `/speckit-plan`.
+- Clarifications applied: changeable date range defaulting to last 30 days; reviewed field as per-leader toggle with persistence.
