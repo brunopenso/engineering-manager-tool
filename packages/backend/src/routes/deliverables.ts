@@ -1,5 +1,5 @@
 import type { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify';
-import { AUTH_ERROR_CODES } from '../auth/types.js';
+import { AUTH_ERROR_CODES, type AuthErrorCode } from '../auth/types.js';
 import {
   assertCanMutateDeliverable,
   assertCanReadDeliverables,
@@ -45,7 +45,10 @@ function requireAuth(request: FastifyRequest, reply: FastifyReply) {
   return request.auth;
 }
 
-function forbidden(reply: FastifyReply, code = AUTH_ERROR_CODES.DELIVERABLE_FORBIDDEN) {
+function forbidden(
+  reply: FastifyReply,
+  code: AuthErrorCode = AUTH_ERROR_CODES.DELIVERABLE_FORBIDDEN,
+) {
   reply.code(403);
   return {
     code,
