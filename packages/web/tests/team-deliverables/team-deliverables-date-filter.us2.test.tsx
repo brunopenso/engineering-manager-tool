@@ -5,7 +5,7 @@ import App from '../../src/App.js';
 import { renderWithProviders, testLeaderUser } from '../../src/test/renderWithProviders.js';
 
 async function selectTeamMember(name: string) {
-  await userEvent.click(screen.getByRole('button', { name: /select a team member/i }));
+  await userEvent.click(screen.getByRole('button', { name: /team member: select a team member/i }));
   await userEvent.click(await screen.findByRole('button', { name: `Select ${name}` }));
 }
 
@@ -74,7 +74,9 @@ describe('US2 team deliverables date filter', { timeout: 15000 }, () => {
     });
 
     await waitFor(() => {
-      expect(screen.getByRole('button', { name: /select a team member/i })).toBeInTheDocument();
+      expect(
+        screen.getByRole('button', { name: /team member: select a team member/i }),
+      ).toBeInTheDocument();
     });
 
     await selectTeamMember('Alice Report');

@@ -108,7 +108,9 @@ describe('US1 leader team deliverables page', () => {
       user: testLeaderUser,
     });
 
-    await userEvent.click(await screen.findByRole('button', { name: /select a team member/i }));
+    await userEvent.click(
+      await screen.findByRole('button', { name: /team member: select a team member/i }),
+    );
 
     expect(screen.getByRole('button', { name: 'Select Alice Lead' })).toBeInTheDocument();
     expect(screen.queryByRole('button', { name: 'Select Bob Nested' })).not.toBeInTheDocument();

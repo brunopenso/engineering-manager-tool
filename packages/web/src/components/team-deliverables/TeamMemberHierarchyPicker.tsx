@@ -154,6 +154,7 @@ export default function TeamMemberHierarchyPicker({
         disabled={disabled}
         onClick={handleOpen}
         data-testid="team-member-select"
+        aria-label={`Team member: ${selectedMember?.displayName ?? 'Select a team member'}`}
         aria-haspopup="dialog"
         aria-expanded={open ? 'true' : undefined}
         sx={{
