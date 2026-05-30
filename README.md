@@ -45,6 +45,36 @@ npm run dev
 npm run db:migration:run --workspace @em-tool/backend
 ```
 
+### Seeds
+
+Seed files live in `packages/backend/database/seeds` and are executed in
+filename order. The first seed, `000-clear-database.seed.ts`, truncates all
+application tables on every run. Schema and migration history are preserved, but
+all row data is deleted before subsequent seeds run. Use this for local/dev
+reset only; do not run `db:seed` against production databases with real data.
+
+Create a seed with the `*.seed.ts` suffix:
+
+```ts
+import { defineSeed } from '../../src/database/seeds.js';
+
+export default defineSeed({
+  name: 'example-seed',
+  async run(dataSource) {
+    await dataSource.transaction(async (manager) => {
+      // Insert or update seed data here. Keep seeds idempotent.
+      // Example pattern: await manager.upsert(Entity, records, conflictPaths);
+    });
+  },
+});
+```
+
+Run all seeds:
+
+```bash
+npm run db:seed --workspace @em-tool/backend
+```
+
 ### Expected Auth Behavior
 
 - `/login` is the only public web page.
