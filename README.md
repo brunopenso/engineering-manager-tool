@@ -48,8 +48,10 @@ npm run db:migration:run --workspace @em-tool/backend
 ### Seeds
 
 Seed files live in `packages/backend/database/seeds` and are executed in
-filename order. This repository includes the runner and directory structure, but
-does not include seed data.
+filename order. The first seed, `000-clear-database.seed.ts`, truncates all
+application tables on every run. Schema and migration history are preserved, but
+all row data is deleted before subsequent seeds run. Use this for local/dev
+reset only; do not run `db:seed` against production databases with real data.
 
 Create a seed with the `*.seed.ts` suffix:
 
