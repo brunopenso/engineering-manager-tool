@@ -188,6 +188,10 @@ export default function TeamMemberHierarchyPicker({
               width: anchorEl?.clientWidth ?? 360,
               maxWidth: 420,
               maxHeight: 420,
+              border: '1px solid',
+              borderColor: 'divider',
+              borderRadius: 1.5,
+              boxShadow: 8,
               overflowY: 'auto',
             }}
           >
