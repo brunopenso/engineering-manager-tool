@@ -5,7 +5,6 @@ import {
   Box,
   Button,
   Chip,
-  Collapse,
   IconButton,
   List,
   ListItemButton,
@@ -81,22 +80,20 @@ function HierarchyOption({
         </Stack>
       </ListItemButton>
 
-      {hasChildren ? (
-        <Collapse in={isExpanded} timeout="auto" unmountOnExit>
-          <List disablePadding>
-            {children.map((child) => (
-              <HierarchyOption
-                key={child.id}
-                node={child}
-                depth={depth + 1}
-                selectedUserId={selectedUserId}
-                expandedItems={expandedItems}
-                onToggle={onToggle}
-                onSelect={onSelect}
-              />
-            ))}
-          </List>
-        </Collapse>
+      {hasChildren && isExpanded ? (
+        <List disablePadding>
+          {children.map((child) => (
+            <HierarchyOption
+              key={child.id}
+              node={child}
+              depth={depth + 1}
+              selectedUserId={selectedUserId}
+              expandedItems={expandedItems}
+              onToggle={onToggle}
+              onSelect={onSelect}
+            />
+          ))}
+        </List>
       ) : null}
     </>
   );
