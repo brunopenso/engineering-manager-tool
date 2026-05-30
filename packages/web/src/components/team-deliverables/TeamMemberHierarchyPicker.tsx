@@ -5,10 +5,12 @@ import {
   Box,
   Button,
   Chip,
+  ClickAwayListener,
   IconButton,
   List,
   ListItemButton,
-  Popover,
+  Paper,
+  Popper,
   Stack,
   Typography,
 } from '@mui/material';
@@ -172,44 +174,45 @@ export default function TeamMemberHierarchyPicker({
         <ExpandMore fontSize="small" />
       </Button>
 
-      <Popover
+      <Popper
         open={open}
         anchorEl={anchorEl}
-        onClose={handleClose}
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
-        transformOrigin={{ vertical: 'top', horizontal: 'left' }}
-        slotProps={{
-          paper: {
-            sx: {
+        placement="bottom-start"
+        sx={{ zIndex: (theme) => theme.zIndex.modal }}
+      >
+        <ClickAwayListener onClickAway={handleClose}>
+          <Paper
+            elevation={8}
+            sx={{
               mt: 1,
               width: anchorEl?.clientWidth ?? 360,
               maxWidth: 420,
               maxHeight: 420,
-              overflow: 'auto',
-            },
-          },
-        }}
-      >
-        <Box sx={{ p: 1.5, pb: 0.5 }}>
-          <Typography variant="subtitle2">Select collaborator</Typography>
-          <Typography variant="caption" color="text.secondary">
-            Expand leaders to see their reports.
-          </Typography>
-        </Box>
-        <List aria-label="Team member hierarchy" dense sx={{ pb: 1 }}>
-          {reports.map((report) => (
-            <HierarchyOption
-              key={report.id}
-              node={report}
-              depth={0}
-              selectedUserId={selectedUserId}
-              expandedItems={expandedItems}
-              onToggle={handleToggle}
-              onSelect={handleSelect}
-            />
-          ))}
-        </List>
-      </Popover>
+              overflowY: 'auto',
+            }}
+          >
+            <Box sx={{ p: 1.5, pb: 0.5 }}>
+              <Typography variant="subtitle2">Select collaborator</Typography>
+              <Typography variant="caption" color="text.secondary">
+                Expand leaders to see their reports.
+              </Typography>
+            </Box>
+            <List aria-label="Team member hierarchy" dense sx={{ pb: 1 }}>
+              {reports.map((report) => (
+                <HierarchyOption
+                  key={report.id}
+                  node={report}
+                  depth={0}
+                  selectedUserId={selectedUserId}
+                  expandedItems={expandedItems}
+                  onToggle={handleToggle}
+                  onSelect={handleSelect}
+                />
+              ))}
+            </List>
+          </Paper>
+        </ClickAwayListener>
+      </Popper>
     </Box>
   );
 }
