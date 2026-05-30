@@ -1,5 +1,5 @@
 import { useMemo, useState, type MouseEvent } from 'react';
-import ExpandLess from '@mui/icons-material/ExpandLess';
+import ChevronRight from '@mui/icons-material/ChevronRight';
 import ExpandMore from '@mui/icons-material/ExpandMore';
 import {
   Box,
@@ -67,7 +67,7 @@ function HierarchyOption({
                 onToggle(node.id);
               }}
             >
-              {isExpanded ? <ExpandLess fontSize="small" /> : <ExpandMore fontSize="small" />}
+              {isExpanded ? <ExpandMore fontSize="small" /> : <ChevronRight fontSize="small" />}
             </IconButton>
           ) : null}
         </Box>
