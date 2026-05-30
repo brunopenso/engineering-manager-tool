@@ -1,8 +1,9 @@
-import { useEffect, useState } from 'react';
+import { type ReactNode, useEffect, useState } from 'react';
 import {
   Alert,
   Box,
   Button,
+  Chip,
   CircularProgress,
   Dialog,
   DialogActions,
@@ -26,8 +27,46 @@ type TeamDeliverableReviewModalProps = {
   onClose: () => void;
 };
 
+type DeliverableField = {
+  label: string;
+  value: ReactNode;
+};
+
+function TagFieldValue({
+  tags,
+  variant,
+}: {
+  tags: { key: string; label: string; color?: string }[];
+  variant: 'filled' | 'outlined';
+}) {
+  if (tags.length === 0) {
+    return <Typography>—</Typography>;
+  }
+
+  return (
+    <Stack direction="row" spacing={0.75} useFlexGap sx={{ flexWrap: 'wrap', pt: 0.5 }}>
+      {tags.map((tag) => (
+        <Chip
+          key={tag.key}
+          size="small"
+          label={tag.label}
+          variant={variant}
+          sx={
+            tag.color
+              ? {
+                  bgcolor: tag.color,
+                  color: '#fff',
+                }
+              : undefined
+          }
+        />
+      ))}
+    </Stack>
+  );
+}
+
 function DeliverableFieldsPanel({ deliverable }: { deliverable: DeliverableDetail }) {
-  const fields: { label: string; value: string }[] = [
+  const fields: DeliverableField[] = [
     { label: 'Title', value: deliverable.title },
     { label: 'Description', value: deliverable.description },
     { label: 'Role in deliverable', value: deliverable.roleInDeliverable },
@@ -39,11 +78,28 @@ function DeliverableFieldsPanel({ deliverable }: { deliverable: DeliverableDetai
     },
     {
       label: 'System tags',
-      value: deliverable.systemTags.map((tag) => tag.name).join(', ') || '—',
+      value: (
+        <TagFieldValue
+          tags={deliverable.systemTags.map((tag) => ({
+            key: tag.id,
+            label: tag.name,
+            color: tag.color,
+          }))}
+          variant="filled"
+        />
+      ),
     },
     {
       label: 'User tags',
-      value: deliverable.userTags.join(', ') || '—',
+      value: (
+        <TagFieldValue
+          tags={deliverable.userTags.map((tag, index) => ({
+            key: `${tag}-${index}`,
+            label: tag,
+          }))}
+          variant="outlined"
+        />
+      ),
     },
     {
       label: 'Links',
@@ -63,7 +119,11 @@ function DeliverableFieldsPanel({ deliverable }: { deliverable: DeliverableDetai
           <Typography variant="overline" color="text.secondary" sx={{ display: 'block' }}>
             {field.label}
           </Typography>
-          <Typography sx={{ whiteSpace: 'pre-wrap' }}>{field.value}</Typography>
+          {typeof field.value === 'string' ? (
+            <Typography sx={{ whiteSpace: 'pre-wrap' }}>{field.value}</Typography>
+          ) : (
+            field.value
+          )}
         </Box>
       ))}
     </Stack>

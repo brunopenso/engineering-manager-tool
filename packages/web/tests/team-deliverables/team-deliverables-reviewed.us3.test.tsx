@@ -109,6 +109,13 @@ describe('US3 team deliverables reviewed filter and review modal', { timeout: 15
 
     expect(screen.getByText('Lead engineer')).toBeInTheDocument();
     expect(screen.getByText('Improve testing')).toBeInTheDocument();
+    const dialog = screen.getByRole('dialog', { name: 'Review deliverable' });
+    expect(within(dialog).getByText('Platform').closest('.MuiChip-root')).toHaveClass(
+      'MuiChip-filled',
+    );
+    expect(within(dialog).getByText('backend').closest('.MuiChip-root')).toHaveClass(
+      'MuiChip-outlined',
+    );
 
     fireEvent.click(screen.getByRole('tab', { name: 'Notes' }));
 
