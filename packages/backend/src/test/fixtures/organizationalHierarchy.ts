@@ -25,7 +25,7 @@ const DESCENDANTS_BY_ANCESTOR: Record<string, Set<string>> = {
 };
 
 export const sampleOrganizationalHierarchyResolver: OrganizationalHierarchyResolver = {
-  isDescendantOf(descendantUserId, ancestorUserId) {
+  async isDescendantOf(descendantUserId, ancestorUserId) {
     const descendants = DESCENDANTS_BY_ANCESTOR[ancestorUserId];
     if (!descendants) {
       return false;

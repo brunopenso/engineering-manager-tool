@@ -1,8 +1,14 @@
 export type OrganizationalHierarchyResolver = {
-  isDescendantOf(descendantUserId: string, ancestorUserId: string): boolean;
+  isDescendantOf(descendantUserId: string, ancestorUserId: string): Promise<boolean>;
 };
 
 let hierarchyResolver: OrganizationalHierarchyResolver | null = null;
+
+export function registerOrganizationalHierarchyResolver(
+  resolver: OrganizationalHierarchyResolver,
+): void {
+  hierarchyResolver = resolver;
+}
 
 export function setOrganizationalHierarchyResolverForTests(
   resolver: OrganizationalHierarchyResolver | null,
@@ -10,10 +16,10 @@ export function setOrganizationalHierarchyResolverForTests(
   hierarchyResolver = resolver;
 }
 
-export function isOrganizationalDescendantOf(
+export async function isOrganizationalDescendantOf(
   descendantUserId: string,
   ancestorUserId: string,
-): boolean {
+): Promise<boolean> {
   if (!hierarchyResolver) {
     return false;
   }

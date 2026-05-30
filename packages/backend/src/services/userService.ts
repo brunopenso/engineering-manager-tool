@@ -17,10 +17,12 @@ import type {
   HierarchyDescendantRow,
   LeaderHierarchyViewResponse,
 } from '../types/hierarchyView.js';
+import type { TeamMemberOption, TeamMembersResponse } from '../types/teamDeliverables.js';
 import {
   buildHierarchyTreeFromRows,
   collectHierarchyNodeIds,
   enrichHierarchyNodeWithLeaderFlag,
+  toHierarchyDisplayName,
   toHierarchyViewNode,
 } from './hierarchyViewBuilder.js';
 
@@ -220,21 +222,8 @@ export async function assignLeaderToOrphanUser(
   };
 }
 
-export async function getLeaderHierarchyView(
-  actorUserId: string,
-): Promise<LeaderHierarchyViewResponse> {
-  const actor = await userRepository().findOne({
-    where: { id: actorUserId },
-    relations: { leader: true },
-  });
-
-  if (!actor) {
-    const error = new Error('User not found.');
-    error.name = AUTH_ERROR_CODES.NOT_FOUND;
-    throw error;
-  }
-
-  const descendantRows = await userRepository().query<HierarchyDescendantRow[]>(
+async function fetchLeaderDescendantRows(actorUserId: string): Promise<HierarchyDescendantRow[]> {
+  return userRepository().query<HierarchyDescendantRow[]>(
     `
     WITH RECURSIVE subtree AS (
       SELECT id, full_name, email, leader_id
@@ -250,6 +239,57 @@ export async function getLeaderHierarchyView(
     `,
     [actorUserId],
   );
+}
+
+export async function isUserInLeaderSubtree(
+  actorUserId: string,
+  targetUserId: string,
+): Promise<boolean> {
+  if (actorUserId === targetUserId) {
+    return false;
+  }
+
+  const rows = await fetchLeaderDescendantRows(actorUserId);
+  return rows.some((row) => row.id === targetUserId);
+}
+
+export async function assertUserInLeaderSubtree(
+  actorUserId: string,
+  targetUserId: string,
+): Promise<void> {
+  const allowed = await isUserInLeaderSubtree(actorUserId, targetUserId);
+  if (!allowed) {
+    const error = new Error('You do not have permission to access this team member.');
+    error.name = AUTH_ERROR_CODES.FORBIDDEN;
+    throw error;
+  }
+}
+
+export async function getLeaderTeamMembers(actorUserId: string): Promise<TeamMembersResponse> {
+  const rows = await fetchLeaderDescendantRows(actorUserId);
+  const members: TeamMemberOption[] = rows.map((row) => ({
+    id: row.id,
+    displayName: toHierarchyDisplayName(row.full_name, row.email),
+  }));
+
+  return { members };
+}
+
+export async function getLeaderHierarchyView(
+  actorUserId: string,
+): Promise<LeaderHierarchyViewResponse> {
+  const actor = await userRepository().findOne({
+    where: { id: actorUserId },
+    relations: { leader: true },
+  });
+
+  if (!actor) {
+    const error = new Error('User not found.');
+    error.name = AUTH_ERROR_CODES.NOT_FOUND;
+    throw error;
+  }
+
+  const descendantRows = await fetchLeaderDescendantRows(actorUserId);
 
   const manager = actor.leader ? toHierarchyViewNode(actor.leader) : null;
   const self = toHierarchyViewNode(actor, true);

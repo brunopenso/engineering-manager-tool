@@ -1,8 +1,9 @@
 import type { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify';
-import { AUTH_ERROR_CODES } from '../auth/types.js';
+import { AUTH_ERROR_CODES, type AuthErrorCode } from '../auth/types.js';
 import {
   assertCanMutateDeliverable,
   assertCanReadDeliverables,
+  assertLeaderRole,
 } from '../services/authorizationService.js';
 import {
   createDeliverable,
@@ -12,6 +13,8 @@ import {
   mapDeliverableDetail,
   updateDeliverable,
 } from '../services/deliverableService.js';
+import { setDeliverableReviewed } from '../services/deliverableReviewService.js';
+import { assertUserInLeaderSubtree } from '../services/userService.js';
 import {
   DeliverableValidationError,
   InvalidSystemTagError,
@@ -29,6 +32,10 @@ type DeliverableBody = {
   links?: { url: string; label?: string | null }[];
 };
 
+type ReviewedBody = {
+  reviewed?: boolean;
+};
+
 function requireAuth(request: FastifyRequest, reply: FastifyReply) {
   if (!request.auth) {
     reply.code(401);
@@ -38,7 +45,10 @@ function requireAuth(request: FastifyRequest, reply: FastifyReply) {
   return request.auth;
 }
 
-function forbidden(reply: FastifyReply, code = AUTH_ERROR_CODES.DELIVERABLE_FORBIDDEN) {
+function forbidden(
+  reply: FastifyReply,
+  code: AuthErrorCode = AUTH_ERROR_CODES.DELIVERABLE_FORBIDDEN,
+) {
   reply.code(403);
   return {
     code,
@@ -116,7 +126,7 @@ export async function registerDeliverablesRoutes(app: FastifyInstance): Promise<
     const ownerUserId = request.params.userId;
 
     try {
-      assertCanReadDeliverables(auth.userId, ownerUserId);
+      await assertCanReadDeliverables(auth.userId, ownerUserId);
     } catch {
       return forbidden(reply);
     }
@@ -146,7 +156,7 @@ export async function registerDeliverablesRoutes(app: FastifyInstance): Promise<
       }
 
       try {
-        assertCanReadDeliverables(auth.userId, deliverable.userId);
+        await assertCanReadDeliverables(auth.userId, deliverable.userId);
       } catch {
         return forbidden(reply);
       }
@@ -205,6 +215,48 @@ export async function registerDeliverablesRoutes(app: FastifyInstance): Promise<
       } catch (error) {
         return handleDeliverableError(error, reply);
       }
+    },
+  );
+
+  app.put<{ Params: { deliverableId: string }; Body: ReviewedBody }>(
+    '/deliverables/:deliverableId/reviewed',
+    async (request, reply) => {
+      const auth = requireAuth(request, reply);
+      if (!auth) {
+        return {
+          code: AUTH_ERROR_CODES.MISSING_APP_TOKEN,
+          message: 'Authentication token is missing.',
+        };
+      }
+
+      try {
+        assertLeaderRole(auth.roles);
+      } catch {
+        return forbidden(reply, AUTH_ERROR_CODES.LEADER_REQUIRED);
+      }
+
+      const deliverable = await getDeliverableById(request.params.deliverableId);
+      if (!deliverable) {
+        return notFound(reply);
+      }
+
+      try {
+        await assertUserInLeaderSubtree(auth.userId, deliverable.userId);
+      } catch {
+        return forbidden(reply);
+      }
+
+      if (typeof request.body?.reviewed !== 'boolean') {
+        return validationError(reply, 'reviewed must be a boolean value.');
+      }
+
+      const result = await setDeliverableReviewed(
+        request.params.deliverableId,
+        auth.userId,
+        request.body.reviewed,
+      );
+
+      return result;
     },
   );
 

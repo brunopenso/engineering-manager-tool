@@ -1,0 +1,202 @@
+openapi: 3.0.3
+info:
+  title: Engineering Manager Tool Leader Team Deliverables API
+  version: 0.1.0
+  description: Leader-only team deliverable search with date filtering and per-leader reviewed state.
+servers:
+  - url: http://localhost:3001
+paths:
+  /users/leader/team-members:
+    get:
+      summary: List direct and indirect reports for the logged-in leader (team picker)
+      tags: [LeaderTeamDeliverables]
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Flat team member list (descendants only, excludes actor)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TeamMembersResponse'
+        '401':
+          description: Missing or invalid application token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Leader role required
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /users/leader/team-deliverables:
+    get:
+      summary: Search a team member's deliverables within a date range with reviewed state
+      tags: [LeaderTeamDeliverables]
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: userId
+          in: query
+          required: true
+          schema:
+            type: string
+            format: uuid
+          description: Team member (must be in leader's descendant subtree)
+        - name: startDate
+          in: query
+          required: true
+          schema:
+            type: string
+            format: date
+          description: Inclusive start date (YYYY-MM-DD)
+        - name: endDate
+          in: query
+          required: true
+          schema:
+            type: string
+            format: date
+          description: Inclusive end date (YYYY-MM-DD)
+      responses:
+        '200':
+          description: Filtered deliverable rows for the team deliverables table
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TeamDeliverablesSearchResponse'
+        '400':
+          description: Invalid date range (e.g. end before start)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Missing or invalid application token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Leader role required or userId outside subtree
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /deliverables/{deliverableId}/reviewed:
+    put:
+      summary: Set reviewed state for a deliverable (logged-in leader, per-leader state)
+      tags: [LeaderTeamDeliverables]
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: deliverableId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SetDeliverableReviewedRequest'
+      responses:
+        '200':
+          description: Reviewed state updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SetDeliverableReviewedResponse'
+        '401':
+          description: Missing or invalid application token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Not authorized to review this deliverable
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Deliverable not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    ErrorResponse:
+      type: object
+      required: [code, message]
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+    TeamMemberOption:
+      type: object
+      required: [id, displayName]
+      properties:
+        id:
+          type: string
+          format: uuid
+        displayName:
+          type: string
+    TeamMembersResponse:
+      type: object
+      required: [members]
+      properties:
+        members:
+          type: array
+          items:
+            $ref: '#/components/schemas/TeamMemberOption'
+    TeamDeliverableRow:
+      type: object
+      required: [id, title, description, reviewed]
+      properties:
+        id:
+          type: string
+          format: uuid
+        title:
+          type: string
+        description:
+          type: string
+        reviewed:
+          type: boolean
+          description: Whether the logged-in leader has marked this deliverable reviewed
+    TeamDeliverablesSearchResponse:
+      type: object
+      required: [ownerUserId, deliverables]
+      properties:
+        ownerUserId:
+          type: string
+          format: uuid
+        deliverables:
+          type: array
+          items:
+            $ref: '#/components/schemas/TeamDeliverableRow'
+    SetDeliverableReviewedRequest:
+      type: object
+      required: [reviewed]
+      properties:
+        reviewed:
+          type: boolean
+    SetDeliverableReviewedResponse:
+      type: object
+      required: [deliverableId, reviewed]
+      properties:
+        deliverableId:
+          type: string
+          format: uuid
+        reviewed:
+          type: boolean
