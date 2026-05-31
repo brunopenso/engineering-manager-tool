@@ -5,7 +5,7 @@ import App from '../../src/App.js';
 import { renderWithProviders, testLeaderUser } from '../../src/test/renderWithProviders.js';
 
 async function selectTeamMember(name: string) {
-  await userEvent.click(screen.getByRole('button', { name: /team member: select a team member/i }));
+  await userEvent.click(screen.getByTestId('team-member-select'));
   await userEvent.click(await screen.findByRole('button', { name: `Select ${name}` }));
 }
 
@@ -100,9 +100,7 @@ describe('US3 team deliverables reviewed filter and review modal', { timeout: 15
     });
 
     await waitFor(() => {
-      expect(
-        screen.getByRole('button', { name: /team member: select a team member/i }),
-      ).toBeInTheDocument();
+      expect(screen.getByTestId('team-member-select')).toBeInTheDocument();
     });
 
     expect(screen.getByTestId('reviewed-filter')).toHaveTextContent('Not reviewed');
@@ -194,9 +192,7 @@ describe('US3 team deliverables reviewed filter and review modal', { timeout: 15
     });
 
     await waitFor(() => {
-      expect(
-        screen.getByRole('button', { name: /team member: select a team member/i }),
-      ).toBeInTheDocument();
+      expect(screen.getByTestId('team-member-select')).toBeInTheDocument();
     });
 
     await selectTeamMember('Alice Report');

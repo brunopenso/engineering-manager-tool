@@ -1,16 +1,18 @@
-import { useMemo, useState, type MouseEvent } from 'react';
-import ChevronRight from '@mui/icons-material/ChevronRight';
+import { useMemo, useRef, useState } from 'react';
+import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
 import {
   Box,
-  Button,
   Chip,
-  ClickAwayListener,
+  Collapse,
+  FormControl,
   IconButton,
+  InputAdornment,
+  InputLabel,
   List,
   ListItemButton,
-  Paper,
-  Popper,
+  OutlinedInput,
+  Popover,
   Stack,
   Typography,
 } from '@mui/material';
@@ -53,7 +55,7 @@ function HierarchyOption({
       <ListItemButton
         selected={selectedUserId === node.id}
         onClick={() => onSelect(node)}
-        sx={{ alignItems: 'flex-start', gap: 1, pl: 1 + depth * 2 }}
+        sx={{ alignItems: 'center', gap: 1, pl: 1 + depth * 2 }}
         aria-label={`Select ${node.displayName}`}
       >
         <Box sx={{ width: 32, display: 'flex', justifyContent: 'center' }}>
@@ -67,35 +69,32 @@ function HierarchyOption({
                 onToggle(node.id);
               }}
             >
-              {isExpanded ? <ExpandMore fontSize="small" /> : <ChevronRight fontSize="small" />}
+              {isExpanded ? <ExpandLess fontSize="small" /> : <ExpandMore fontSize="small" />}
             </IconButton>
           ) : null}
         </Box>
-        <Stack spacing={0.25}>
-          <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
-            <Typography variant="body2">{node.displayName}</Typography>
-            {node.isLeader ? <Chip size="small" label="Leader" color="error" /> : null}
-          </Stack>
-          <Typography variant="caption" color="text.secondary">
-            {node.email}
-          </Typography>
+        <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+          <Typography variant="body2">{node.displayName}</Typography>
+          {node.isLeader ? <Chip size="small" label="Leader" color="error" /> : null}
         </Stack>
       </ListItemButton>
 
-      {hasChildren && isExpanded ? (
-        <List disablePadding>
-          {children.map((child) => (
-            <HierarchyOption
-              key={child.id}
-              node={child}
-              depth={depth + 1}
-              selectedUserId={selectedUserId}
-              expandedItems={expandedItems}
-              onToggle={onToggle}
-              onSelect={onSelect}
-            />
-          ))}
-        </List>
+      {hasChildren ? (
+        <Collapse in={isExpanded} timeout="auto" unmountOnExit>
+          <List disablePadding>
+            {children.map((child) => (
+              <HierarchyOption
+                key={child.id}
+                node={child}
+                depth={depth + 1}
+                selectedUserId={selectedUserId}
+                expandedItems={expandedItems}
+                onToggle={onToggle}
+                onSelect={onSelect}
+              />
+            ))}
+          </List>
+        </Collapse>
       ) : null}
     </>
   );
@@ -107,16 +106,22 @@ export default function TeamMemberHierarchyPicker({
   disabled = false,
   onChange,
 }: TeamMemberHierarchyPickerProps) {
-  const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
+  const inputRef = useRef<HTMLDivElement>(null);
+  const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const [expandedItems, setExpandedItems] = useState<string[]>([]);
   const selectedMember = useMemo(
     () => flattenNodes(reports).find((member) => member.id === selectedUserId) ?? null,
     [reports, selectedUserId],
   );
   const open = Boolean(anchorEl);
+  const labelShrunk = Boolean(selectedMember) || open;
 
-  function handleOpen(event: MouseEvent<HTMLButtonElement>) {
-    setAnchorEl(event.currentTarget);
+  function handleOpen() {
+    if (disabled || !inputRef.current) {
+      return;
+    }
+
+    setAnchorEl(inputRef.current);
   }
 
   function handleClose() {
@@ -135,55 +140,47 @@ export default function TeamMemberHierarchyPicker({
   }
 
   return (
-    <Box sx={{ minWidth: 280 }}>
-      <Typography
-        component="label"
-        htmlFor="team-member-picker-button"
-        variant="caption"
-        color="text.secondary"
-        sx={{ display: 'block', mb: 0.5 }}
-      >
+    <FormControl disabled={disabled} fullWidth>
+      <InputLabel htmlFor="team-member-picker-input" shrink={labelShrunk}>
         Team member
-      </Typography>
-      <Button
-        id="team-member-picker-button"
-        variant="outlined"
-        color="inherit"
-        fullWidth
-        disabled={disabled}
+      </InputLabel>
+      <OutlinedInput
+        ref={inputRef}
+        id="team-member-picker-input"
+        readOnly
+        notched={labelShrunk}
+        label="Team member"
+        value={selectedMember?.displayName ?? ''}
         onClick={handleOpen}
-        data-testid="team-member-select"
-        aria-label={`Team member: ${selectedMember?.displayName ?? 'Select a team member'}`}
-        aria-haspopup="dialog"
-        aria-expanded={open ? 'true' : undefined}
-        sx={{
-          height: 56,
-          justifyContent: 'space-between',
-          px: 1.75,
-          textAlign: 'left',
-          textTransform: 'none',
+        inputProps={{
+          'data-testid': 'team-member-select',
+          readOnly: true,
+          'aria-label': `Team member: ${selectedMember?.displayName ?? 'Select a team member'}`,
+          'aria-haspopup': 'dialog',
+          'aria-expanded': open ? 'true' : undefined,
         }}
-      >
-        <Typography
-          component="span"
-          color={selectedMember ? 'text.primary' : 'text.secondary'}
-          noWrap
-        >
-          {selectedMember?.displayName ?? 'Select a team member'}
-        </Typography>
-        <ExpandMore fontSize="small" />
-      </Button>
+        sx={{
+          cursor: disabled ? 'default' : 'pointer',
+          '& .MuiOutlinedInput-input': {
+            cursor: disabled ? 'default' : 'pointer',
+          },
+        }}
+        endAdornment={
+          <InputAdornment position="end">
+            <ExpandMore fontSize="small" />
+          </InputAdornment>
+        }
+      />
 
-      <Popper
+      <Popover
         open={open}
         anchorEl={anchorEl}
-        placement="bottom-start"
-        sx={{ zIndex: (theme) => theme.zIndex.modal }}
-      >
-        <ClickAwayListener onClickAway={handleClose}>
-          <Paper
-            elevation={8}
-            sx={{
+        onClose={handleClose}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+        transformOrigin={{ vertical: 'top', horizontal: 'left' }}
+        slotProps={{
+          paper: {
+            sx: {
               mt: 1,
               width: anchorEl?.clientWidth ?? 360,
               maxWidth: 420,
@@ -192,31 +189,31 @@ export default function TeamMemberHierarchyPicker({
               borderColor: 'divider',
               borderRadius: 1.5,
               boxShadow: 8,
-              overflowY: 'auto',
-            }}
-          >
-            <Box sx={{ p: 1.5, pb: 0.5 }}>
-              <Typography variant="subtitle2">Select collaborator</Typography>
-              <Typography variant="caption" color="text.secondary">
-                Expand leaders to see their reports.
-              </Typography>
-            </Box>
-            <List aria-label="Team member hierarchy" dense sx={{ pb: 1 }}>
-              {reports.map((report) => (
-                <HierarchyOption
-                  key={report.id}
-                  node={report}
-                  depth={0}
-                  selectedUserId={selectedUserId}
-                  expandedItems={expandedItems}
-                  onToggle={handleToggle}
-                  onSelect={handleSelect}
-                />
-              ))}
-            </List>
-          </Paper>
-        </ClickAwayListener>
-      </Popper>
-    </Box>
+              overflow: 'auto',
+            },
+          },
+        }}
+      >
+        <Box sx={{ p: 1.5, pb: 0.5 }}>
+          <Typography variant="subtitle2">Select collaborator</Typography>
+          <Typography variant="caption" color="text.secondary">
+            Expand leaders to see their reports.
+          </Typography>
+        </Box>
+        <List aria-label="Team member hierarchy" dense sx={{ pb: 1 }}>
+          {reports.map((report) => (
+            <HierarchyOption
+              key={report.id}
+              node={report}
+              depth={0}
+              selectedUserId={selectedUserId}
+              expandedItems={expandedItems}
+              onToggle={handleToggle}
+              onSelect={handleSelect}
+            />
+          ))}
+        </List>
+      </Popover>
+    </FormControl>
   );
 }

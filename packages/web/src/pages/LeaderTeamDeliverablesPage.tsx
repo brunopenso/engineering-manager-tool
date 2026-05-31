@@ -177,11 +177,16 @@ export default function LeaderTeamDeliverablesPage() {
         </Box>
 
         <Paper variant="outlined" sx={{ p: 3 }}>
-          <Stack
-            direction={{ xs: 'column', md: 'row' }}
-            spacing={2}
-            useFlexGap
-            sx={{ flexWrap: 'wrap' }}
+          <Box
+            sx={{
+              display: 'grid',
+              gap: 2,
+              alignItems: 'start',
+              gridTemplateColumns: {
+                xs: '1fr',
+                md: 'minmax(220px, 1fr) repeat(2, minmax(160px, auto)) minmax(180px, auto)',
+              },
+            }}
           >
             <TeamMemberHierarchyPicker
               reports={hierarchy?.reports ?? []}
@@ -212,8 +217,10 @@ export default function LeaderTeamDeliverablesPage() {
               }}
             />
 
-            <FormControl sx={{ minWidth: 180 }}>
-              <InputLabel id="reviewed-filter-label">Review status</InputLabel>
+            <FormControl>
+              <InputLabel id="reviewed-filter-label" shrink>
+                Review status
+              </InputLabel>
               <Select
                 labelId="reviewed-filter-label"
                 label="Review status"
@@ -226,7 +233,7 @@ export default function LeaderTeamDeliverablesPage() {
                 <MenuItem value="all">All</MenuItem>
               </Select>
             </FormControl>
-          </Stack>
+          </Box>
 
           {dateRangeError ? (
             <Alert severity="warning" sx={{ mt: 2 }}>

@@ -44,7 +44,8 @@ describe('US1 leader team deliverables page', () => {
       expect(screen.getByText('Team Deliverables')).toBeInTheDocument();
     });
 
-    expect(screen.getByTestId('team-member-select')).toHaveTextContent('Select a team member');
+    expect(screen.getByLabelText('Team member')).toBeInTheDocument();
+    expect(screen.getByTestId('team-member-select')).toHaveValue('');
     expect(screen.getByTestId('start-date-input')).toHaveValue(defaultRange.startDate);
     expect(screen.getByTestId('end-date-input')).toHaveValue(defaultRange.endDate);
     expect(screen.getByTestId('reviewed-filter')).toHaveTextContent('Not reviewed');
@@ -108,9 +109,7 @@ describe('US1 leader team deliverables page', () => {
       user: testLeaderUser,
     });
 
-    await userEvent.click(
-      await screen.findByRole('button', { name: /team member: select a team member/i }),
-    );
+    await userEvent.click(await screen.findByTestId('team-member-select'));
 
     expect(screen.getByRole('button', { name: 'Select Alice Lead' })).toBeInTheDocument();
     expect(screen.queryByRole('button', { name: 'Select Bob Nested' })).not.toBeInTheDocument();
@@ -119,7 +118,7 @@ describe('US1 leader team deliverables page', () => {
     await userEvent.click(await screen.findByRole('button', { name: 'Select Bob Nested' }));
 
     await waitFor(() => {
-      expect(screen.getByTestId('team-member-select')).toHaveTextContent('Bob Nested');
+      expect(screen.getByTestId('team-member-select')).toHaveValue('Bob Nested');
       expect(searchCalls[0]).toContain('userId=report-2');
     });
   });
