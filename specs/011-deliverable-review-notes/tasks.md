@@ -13,9 +13,9 @@
 
 **Purpose**: Prepare feature scaffolding, acceptance mapping docs, and test directories.
 
-- [ ] T001 Create acceptance test plan files in `tests/011-deliverable-review-notes/` (`deliverable-review-notes-save.us1.test.md`, `deliverable-review-notes-load.us2.test.md`, `deliverable-review-notes-isolation.us3.test.md`, `deliverable-review-notes-dac.us4.test.md`)
-- [ ] T002 Create backend test directory and shared bootstrap in `packages/backend/tests/deliverable-review-notes/deliverable-review-notes.setup.ts`
-- [ ] T003 [P] Create web test directory and shared bootstrap in `packages/web/tests/deliverable-review-notes/deliverable-review-notes.setup.test.tsx`
+- [X] T001 Create acceptance test plan files in `tests/011-deliverable-review-notes/` (`deliverable-review-notes-save.us1.test.md`, `deliverable-review-notes-load.us2.test.md`, `deliverable-review-notes-isolation.us3.test.md`, `deliverable-review-notes-dac.us4.test.md`)
+- [X] T002 Create backend test directory and shared bootstrap in `packages/backend/tests/deliverable-review-notes/deliverable-review-notes.setup.ts`
+- [X] T003 [P] Create web test directory and shared bootstrap in `packages/web/tests/deliverable-review-notes/deliverable-review-notes.setup.test.tsx`
 
 ---
 
@@ -25,13 +25,13 @@
 
 **⚠️ CRITICAL**: No user story work starts until this phase is complete.
 
-- [ ] T004 Add TypeORM migration adding nullable `notes` column to `deliverable_reviews` in `packages/backend/database/migrations/*-AddDeliverableReviewNotes.ts`
-- [ ] T005 [P] Extend `DeliverableReview` entity with optional `notes` text column in `packages/backend/src/database/entities/DeliverableReview.ts`
-- [ ] T006 [P] Define review notes DTO types in `packages/backend/src/types/deliverableReviewNotes.ts`
-- [ ] T007 Implement `getReviewNotes(deliverableId, reviewerUserId)` in `packages/backend/src/services/deliverableReviewService.ts`
-- [ ] T008 Implement `saveReviewNotes(deliverableId, reviewerUserId, notes)` with trim, 8000-char validation, upsert, and auto-reviewed on non-empty save in `packages/backend/src/services/deliverableReviewService.ts`
-- [ ] T009 Refactor `setDeliverableReviewed(false)` to preserve `notes` (set `reviewed = false` when notes present; delete row only when notes empty) in `packages/backend/src/services/deliverableReviewService.ts`
-- [ ] T010 [P] Add `deliverableReviewNotesApi.ts` client module skeleton with typed request/response shapes in `packages/web/src/services/deliverableReviewNotesApi.ts`
+- [X] T004 Add TypeORM migration adding nullable `notes` column to `deliverable_reviews` in `packages/backend/database/migrations/*-AddDeliverableReviewNotes.ts`
+- [X] T005 [P] Extend `DeliverableReview` entity with optional `notes` text column in `packages/backend/src/database/entities/DeliverableReview.ts`
+- [X] T006 [P] Define review notes DTO types in `packages/backend/src/types/deliverableReviewNotes.ts`
+- [X] T007 Implement `getReviewNotes(deliverableId, reviewerUserId)` in `packages/backend/src/services/deliverableReviewService.ts`
+- [X] T008 Implement `saveReviewNotes(deliverableId, reviewerUserId, notes)` with trim, 8000-char validation, upsert, and auto-reviewed on non-empty save in `packages/backend/src/services/deliverableReviewService.ts`
+- [X] T009 Refactor `setDeliverableReviewed(false)` to preserve `notes` (set `reviewed = false` when notes present; delete row only when notes empty) in `packages/backend/src/services/deliverableReviewService.ts`
+- [X] T010 [P] Add `deliverableReviewNotesApi.ts` client module skeleton with typed request/response shapes in `packages/web/src/services/deliverableReviewNotesApi.ts`
 
 **Checkpoint**: Foundation complete — user stories can proceed.
 
@@ -45,20 +45,20 @@
 
 ### Tests for User Story 1 (MANDATORY)
 
-- [ ] T011 [P] [US1] Align acceptance test plan with contract in `tests/011-deliverable-review-notes/deliverable-review-notes-save.us1.test.md` and `specs/011-deliverable-review-notes/contracts/deliverable-review-notes-api.yaml`
-- [ ] T012 [P] [US1] Add backend integration test for `PUT /deliverables/:id/review-notes` (persist notes, auto-reviewed on non-empty save, validation over 8000 chars) in `packages/backend/tests/deliverable-review-notes/deliverable-review-notes-save.us1.test.ts`
-- [ ] T013 [P] [US1] Add backend test that empty save clears notes without changing reviewed in `packages/backend/tests/deliverable-review-notes/deliverable-review-notes-save.us1.test.ts`
-- [ ] T014 [P] [US1] Add web test for Notes tab save flow with success feedback and reviewed table sync in `packages/web/tests/deliverable-review-notes/deliverable-review-notes-save.us1.test.tsx`
+- [X] T011 [P] [US1] Align acceptance test plan with contract in `tests/011-deliverable-review-notes/deliverable-review-notes-save.us1.test.md` and `specs/011-deliverable-review-notes/contracts/deliverable-review-notes-api.yaml`
+- [X] T012 [P] [US1] Add backend integration test for `PUT /deliverables/:id/review-notes` (persist notes, auto-reviewed on non-empty save, validation over 8000 chars) in `packages/backend/tests/deliverable-review-notes/deliverable-review-notes-save.us1.test.ts`
+- [X] T013 [P] [US1] Add backend test that empty save clears notes without changing reviewed in `packages/backend/tests/deliverable-review-notes/deliverable-review-notes-save.us1.test.ts`
+- [X] T014 [P] [US1] Add web test for Notes tab save flow with success feedback and reviewed table sync in `packages/web/tests/deliverable-review-notes/deliverable-review-notes-save.us1.test.tsx`
 
 ### Implementation for User Story 1
 
-- [ ] T015 [US1] Register `PUT /deliverables/:deliverableId/review-notes` with bearer auth, leader guard, and `assertCanReadDeliverables` in `packages/backend/src/routes/deliverables.ts`
-- [ ] T016 [US1] Implement `saveReviewNotes` client method in `packages/web/src/services/deliverableReviewNotesApi.ts`
-- [ ] T017 [US1] Create `DeliverableReviewNotesPanel.tsx` using `frontend-design` skill (multiline TextField max 8000, Save button, saving/disabled states, success/error Alert) in `packages/web/src/components/team-deliverables/DeliverableReviewNotesPanel.tsx`
-- [ ] T018 [US1] Wire Save action to call `saveReviewNotes` and surface confirmation in `packages/web/src/components/team-deliverables/DeliverableReviewNotesPanel.tsx`
-- [ ] T019 [US1] Replace Notes tab placeholder with `DeliverableReviewNotesPanel` in `packages/web/src/components/team-deliverables/TeamDeliverableReviewModal.tsx`
-- [ ] T020 [US1] Add optional `onReviewedChange(deliverableId, reviewed)` prop to `TeamDeliverableReviewModal.tsx` and invoke after successful save when `reviewed === true`
-- [ ] T021 [US1] Pass `onReviewedChange` from `LeaderTeamDeliverablesPage.tsx` to update local `deliverables` reviewed state without full re-search in `packages/web/src/pages/LeaderTeamDeliverablesPage.tsx`
+- [X] T015 [US1] Register `PUT /deliverables/:deliverableId/review-notes` with bearer auth, leader guard, and `assertCanReadDeliverables` in `packages/backend/src/routes/deliverables.ts`
+- [X] T016 [US1] Implement `saveReviewNotes` client method in `packages/web/src/services/deliverableReviewNotesApi.ts`
+- [X] T017 [US1] Create `DeliverableReviewNotesPanel.tsx` using `frontend-design` skill (multiline TextField max 8000, Save button, saving/disabled states, success/error Alert) in `packages/web/src/components/team-deliverables/DeliverableReviewNotesPanel.tsx`
+- [X] T018 [US1] Wire Save action to call `saveReviewNotes` and surface confirmation in `packages/web/src/components/team-deliverables/DeliverableReviewNotesPanel.tsx`
+- [X] T019 [US1] Replace Notes tab placeholder with `DeliverableReviewNotesPanel` in `packages/web/src/components/team-deliverables/TeamDeliverableReviewModal.tsx`
+- [X] T020 [US1] Add optional `onReviewedChange(deliverableId, reviewed)` prop to `TeamDeliverableReviewModal.tsx` and invoke after successful save when `reviewed === true`
+- [X] T021 [US1] Pass `onReviewedChange` from `LeaderTeamDeliverablesPage.tsx` to update local `deliverables` reviewed state without full re-search in `packages/web/src/pages/LeaderTeamDeliverablesPage.tsx`
 
 **Checkpoint**: User Story 1 is independently functional and testable.
 
@@ -72,17 +72,17 @@
 
 ### Tests for User Story 2 (MANDATORY)
 
-- [ ] T022 [P] [US2] Add load acceptance mapping in `tests/011-deliverable-review-notes/deliverable-review-notes-load.us2.test.md`
-- [ ] T023 [P] [US2] Add backend integration test for `GET /deliverables/:id/review-notes` (returns own notes, defaults when no row) in `packages/backend/tests/deliverable-review-notes/deliverable-review-notes-load.us2.test.ts`
-- [ ] T024 [P] [US2] Add web test for lazy load on tab switch, empty state, and load error with retry in `packages/web/tests/deliverable-review-notes/deliverable-review-notes-load.us2.test.tsx`
+- [X] T022 [P] [US2] Add load acceptance mapping in `tests/011-deliverable-review-notes/deliverable-review-notes-load.us2.test.md`
+- [X] T023 [P] [US2] Add backend integration test for `GET /deliverables/:id/review-notes` (returns own notes, defaults when no row) in `packages/backend/tests/deliverable-review-notes/deliverable-review-notes-load.us2.test.ts`
+- [X] T024 [P] [US2] Add web test for lazy load on tab switch, empty state, and load error with retry in `packages/web/tests/deliverable-review-notes/deliverable-review-notes-load.us2.test.tsx`
 
 ### Implementation for User Story 2
 
-- [ ] T025 [US2] Register `GET /deliverables/:deliverableId/review-notes` with bearer auth, leader guard, and `assertCanReadDeliverables` in `packages/backend/src/routes/deliverables.ts`
-- [ ] T026 [US2] Implement `getReviewNotes` client method in `packages/web/src/services/deliverableReviewNotesApi.ts`
-- [ ] T027 [US2] Lazy-load notes when Notes tab becomes active (`activeTab === 1`) with loading spinner in `packages/web/src/components/team-deliverables/DeliverableReviewNotesPanel.tsx`
-- [ ] T028 [US2] Add empty-state guidance when no notes exist in `packages/web/src/components/team-deliverables/DeliverableReviewNotesPanel.tsx`
-- [ ] T029 [US2] Add load error Alert with retry that preserves unsaved draft text in `packages/web/src/components/team-deliverables/DeliverableReviewNotesPanel.tsx`
+- [X] T025 [US2] Register `GET /deliverables/:deliverableId/review-notes` with bearer auth, leader guard, and `assertCanReadDeliverables` in `packages/backend/src/routes/deliverables.ts`
+- [X] T026 [US2] Implement `getReviewNotes` client method in `packages/web/src/services/deliverableReviewNotesApi.ts`
+- [X] T027 [US2] Lazy-load notes when Notes tab becomes active (`activeTab === 1`) with loading spinner in `packages/web/src/components/team-deliverables/DeliverableReviewNotesPanel.tsx`
+- [X] T028 [US2] Add empty-state guidance when no notes exist in `packages/web/src/components/team-deliverables/DeliverableReviewNotesPanel.tsx`
+- [X] T029 [US2] Add load error Alert with retry that preserves unsaved draft text in `packages/web/src/components/team-deliverables/DeliverableReviewNotesPanel.tsx`
 
 **Checkpoint**: User Stories 1 and 2 are independently functional and testable.
 
@@ -96,14 +96,14 @@
 
 ### Tests for User Story 3 (MANDATORY)
 
-- [ ] T030 [P] [US3] Add isolation acceptance mapping in `tests/011-deliverable-review-notes/deliverable-review-notes-isolation.us3.test.md`
-- [ ] T031 [P] [US3] Add backend tests for two leaders with distinct notes and independent reviewed state in `packages/backend/tests/deliverable-review-notes/deliverable-review-notes-isolation.us3.test.ts`
-- [ ] T032 [P] [US3] Add web test confirming notes panel loads only the logged-in leader's content in `packages/web/tests/deliverable-review-notes/deliverable-review-notes-isolation.us3.test.tsx`
+- [X] T030 [P] [US3] Add isolation acceptance mapping in `tests/011-deliverable-review-notes/deliverable-review-notes-isolation.us3.test.md`
+- [X] T031 [P] [US3] Add backend tests for two leaders with distinct notes and independent reviewed state in `packages/backend/tests/deliverable-review-notes/deliverable-review-notes-isolation.us3.test.ts`
+- [X] T032 [P] [US3] Add web test confirming notes panel loads only the logged-in leader's content in `packages/web/tests/deliverable-review-notes/deliverable-review-notes-isolation.us3.test.tsx`
 
 ### Implementation for User Story 3
 
-- [ ] T033 [US3] Verify service queries always scope `reviewer_user_id = actor` (document in code comment if already enforced) in `packages/backend/src/services/deliverableReviewService.ts`
-- [ ] T034 [US3] Add backend test asserting Leader A save does not mutate Leader B review row in `packages/backend/tests/deliverable-review-notes/deliverable-review-notes-isolation.us3.test.ts`
+- [X] T033 [US3] Verify service queries always scope `reviewer_user_id = actor` (document in code comment if already enforced) in `packages/backend/src/services/deliverableReviewService.ts`
+- [X] T034 [US3] Add backend test asserting Leader A save does not mutate Leader B review row in `packages/backend/tests/deliverable-review-notes/deliverable-review-notes-isolation.us3.test.ts`
 
 **Checkpoint**: User Story 3 is independently functional and testable.
 
@@ -117,14 +117,14 @@
 
 ### Tests for User Story 4 (MANDATORY)
 
-- [ ] T035 [P] [US4] Add DAC acceptance mapping in `tests/011-deliverable-review-notes/deliverable-review-notes-dac.us4.test.md`
-- [ ] T036 [P] [US4] Add backend DAC deny tests (peer, subordinate-upward, non-leader, unauthenticated) for GET and PUT in `packages/backend/tests/deliverable-review-notes/deliverable-review-notes-dac.us4.test.ts`
-- [ ] T037 [P] [US4] Add backend DAC allow test for authorized superior in chain in `packages/backend/tests/deliverable-review-notes/deliverable-review-notes-dac.us4.test.ts`
+- [X] T035 [P] [US4] Add DAC acceptance mapping in `tests/011-deliverable-review-notes/deliverable-review-notes-dac.us4.test.md`
+- [X] T036 [P] [US4] Add backend DAC deny tests (peer, subordinate-upward, non-leader, unauthenticated) for GET and PUT in `packages/backend/tests/deliverable-review-notes/deliverable-review-notes-dac.us4.test.ts`
+- [X] T037 [P] [US4] Add backend DAC allow test for authorized superior in chain in `packages/backend/tests/deliverable-review-notes/deliverable-review-notes-dac.us4.test.ts`
 
 ### Implementation for User Story 4
 
-- [ ] T038 [US4] Ensure consistent 403/401 error payloads without note content leakage on deny paths in `packages/backend/src/routes/deliverables.ts`
-- [ ] T039 [US4] Add web test for error state when notes API returns 403 in `packages/web/tests/deliverable-review-notes/deliverable-review-notes-dac.us4.test.tsx`
+- [X] T038 [US4] Ensure consistent 403/401 error payloads without note content leakage on deny paths in `packages/backend/src/routes/deliverables.ts`
+- [X] T039 [US4] Add web test for error state when notes API returns 403 in `packages/web/tests/deliverable-review-notes/deliverable-review-notes-dac.us4.test.tsx`
 
 **Checkpoint**: User Story 4 is independently functional and testable.
 
@@ -134,11 +134,11 @@
 
 **Purpose**: Reviewed-toggle compatibility, regression coverage, and full verification.
 
-- [ ] T040 [P] Add backend test that `PUT /deliverables/:id/reviewed` with `reviewed: false` preserves existing notes in `packages/backend/tests/deliverable-review-notes/deliverable-review-notes-reviewed-toggle.test.ts`
-- [ ] T041 [P] Update existing team-deliverables reviewed tests if `setDeliverableReviewed` behavior changed in `packages/backend/tests/team-deliverables/team-deliverables-reviewed.us3.test.ts`
-- [ ] T042 [P] Update web test that asserted Notes placeholder text in `packages/web/tests/team-deliverables/team-deliverables-reviewed.us3.test.tsx`
-- [ ] T043 Run full test suite from repository root per `specs/011-deliverable-review-notes/quickstart.md` and fix regressions
-- [ ] T044 [P] Verify OpenAPI contract matches implemented routes in `specs/011-deliverable-review-notes/contracts/deliverable-review-notes-api.yaml`
+- [X] T040 [P] Add backend test that `PUT /deliverables/:id/reviewed` with `reviewed: false` preserves existing notes in `packages/backend/tests/deliverable-review-notes/deliverable-review-notes-reviewed-toggle.test.ts`
+- [X] T041 [P] Update existing team-deliverables reviewed tests if `setDeliverableReviewed` behavior changed in `packages/backend/tests/team-deliverables/team-deliverables-reviewed.us3.test.ts`
+- [X] T042 [P] Update web test that asserted Notes placeholder text in `packages/web/tests/team-deliverables/team-deliverables-reviewed.us3.test.tsx`
+- [X] T043 Run full test suite from repository root per `specs/011-deliverable-review-notes/quickstart.md` and fix regressions
+- [X] T044 [P] Verify OpenAPI contract matches implemented routes in `specs/011-deliverable-review-notes/contracts/deliverable-review-notes-api.yaml`
 
 ---
 

@@ -13,7 +13,12 @@ import {
   mapDeliverableDetail,
   updateDeliverable,
 } from '../services/deliverableService.js';
-import { setDeliverableReviewed } from '../services/deliverableReviewService.js';
+import {
+  getReviewNotes,
+  ReviewNotesValidationError,
+  saveReviewNotes,
+  setDeliverableReviewed,
+} from '../services/deliverableReviewService.js';
 import { assertUserInLeaderSubtree } from '../services/userService.js';
 import {
   DeliverableValidationError,
@@ -34,6 +39,10 @@ type DeliverableBody = {
 
 type ReviewedBody = {
   reviewed?: boolean;
+};
+
+type ReviewNotesBody = {
+  notes?: string;
 };
 
 function requireAuth(request: FastifyRequest, reply: FastifyReply) {
@@ -257,6 +266,86 @@ export async function registerDeliverablesRoutes(app: FastifyInstance): Promise<
       );
 
       return result;
+    },
+  );
+
+  app.get<{ Params: { deliverableId: string } }>(
+    '/deliverables/:deliverableId/review-notes',
+    async (request, reply) => {
+      const auth = requireAuth(request, reply);
+      if (!auth) {
+        return {
+          code: AUTH_ERROR_CODES.MISSING_APP_TOKEN,
+          message: 'Authentication token is missing.',
+        };
+      }
+
+      try {
+        assertLeaderRole(auth.roles);
+      } catch {
+        return forbidden(reply, AUTH_ERROR_CODES.LEADER_REQUIRED);
+      }
+
+      const deliverable = await getDeliverableById(request.params.deliverableId);
+      if (!deliverable) {
+        return notFound(reply);
+      }
+
+      try {
+        await assertCanReadDeliverables(auth.userId, deliverable.userId);
+      } catch {
+        return forbidden(reply);
+      }
+
+      return getReviewNotes(request.params.deliverableId, auth.userId);
+    },
+  );
+
+  app.put<{ Params: { deliverableId: string }; Body: ReviewNotesBody }>(
+    '/deliverables/:deliverableId/review-notes',
+    async (request, reply) => {
+      const auth = requireAuth(request, reply);
+      if (!auth) {
+        return {
+          code: AUTH_ERROR_CODES.MISSING_APP_TOKEN,
+          message: 'Authentication token is missing.',
+        };
+      }
+
+      try {
+        assertLeaderRole(auth.roles);
+      } catch {
+        return forbidden(reply, AUTH_ERROR_CODES.LEADER_REQUIRED);
+      }
+
+      const deliverable = await getDeliverableById(request.params.deliverableId);
+      if (!deliverable) {
+        return notFound(reply);
+      }
+
+      try {
+        await assertCanReadDeliverables(auth.userId, deliverable.userId);
+      } catch {
+        return forbidden(reply);
+      }
+
+      if (typeof request.body?.notes !== 'string') {
+        return validationError(reply, 'notes must be a string value.');
+      }
+
+      try {
+        return await saveReviewNotes(
+          request.params.deliverableId,
+          auth.userId,
+          request.body.notes,
+        );
+      } catch (error) {
+        if (error instanceof ReviewNotesValidationError) {
+          return validationError(reply, error.message);
+        }
+
+        throw error;
+      }
     },
   );
 

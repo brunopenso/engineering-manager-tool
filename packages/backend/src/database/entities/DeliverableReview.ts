@@ -31,6 +31,9 @@ export class DeliverableReview {
   @Column({ type: 'boolean', default: true })
   reviewed!: boolean;
 
+  @Column({ type: 'text', nullable: true })
+  notes!: string | null;
+
   @UpdateDateColumn({ type: 'timestamptz', name: 'updated_at' })
   updatedAt!: Date;
 }
