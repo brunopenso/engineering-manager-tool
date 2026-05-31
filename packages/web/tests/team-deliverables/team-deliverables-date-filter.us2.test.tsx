@@ -1,13 +1,12 @@
-import { fireEvent, screen, waitFor, within } from '@testing-library/react';
+import { fireEvent, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import App from '../../src/App.js';
 import { renderWithProviders, testLeaderUser } from '../../src/test/renderWithProviders.js';
 
 async function selectTeamMember(name: string) {
-  fireEvent.mouseDown(screen.getByRole('combobox', { name: 'Team member' }));
-  const listbox = await screen.findByRole('listbox');
-  await userEvent.click(within(listbox).getByRole('option', { name }));
+  await userEvent.click(screen.getByTestId('team-member-select'));
+  await userEvent.click(await screen.findByRole('button', { name: `Select ${name}` }));
 }
 
 describe('US2 team deliverables date filter', { timeout: 15000 }, () => {
@@ -18,11 +17,25 @@ describe('US2 team deliverables date filter', { timeout: 15000 }, () => {
   it('searches again when date range changes for selected member', async () => {
     const searchCalls: string[] = [];
     const fetchMock = vi.fn(async (url: string) => {
-      if (url.includes('/users/leader/team-members')) {
+      if (url.includes('/users/leader/hierarchy-view')) {
         return {
           ok: true,
           json: async () => ({
-            members: [{ id: 'report-1', displayName: 'Alice Report' }],
+            manager: null,
+            self: {
+              id: 'leader-1',
+              displayName: 'Team Leader',
+              email: 'leader@example.com',
+              isLeader: true,
+            },
+            reports: [
+              {
+                id: 'report-1',
+                displayName: 'Alice Report',
+                email: 'alice@example.com',
+                isLeader: false,
+              },
+            ],
           }),
         };
       }
@@ -61,7 +74,7 @@ describe('US2 team deliverables date filter', { timeout: 15000 }, () => {
     });
 
     await waitFor(() => {
-      expect(screen.getByRole('combobox', { name: 'Team member' })).toBeInTheDocument();
+      expect(screen.getByTestId('team-member-select')).toBeInTheDocument();
     });
 
     await selectTeamMember('Alice Report');

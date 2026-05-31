@@ -21,24 +21,28 @@ import {
   Typography,
 } from '@mui/material';
 import TeamDeliverableReviewModal from '../components/team-deliverables/TeamDeliverableReviewModal.js';
+import TeamMemberHierarchyPicker from '../components/team-deliverables/TeamMemberHierarchyPicker.js';
 import { useAuth } from '../auth/AuthProvider.js';
 import { isLeader } from '../auth/roleGuards.js';
 import {
   defaultLast30DayRange,
-  fetchTeamMembers,
   isValidDateRange,
   searchTeamDeliverables,
   type TeamDeliverableRow,
-  type TeamMemberOption,
   TeamDeliverablesApiError,
 } from '../services/teamDeliverablesApi.js';
+import {
+  fetchLeaderHierarchyView,
+  type LeaderHierarchyViewResponse,
+  UsersApiError,
+} from '../services/usersApi.js';
 
 type ReviewedFilter = 'not_reviewed' | 'reviewed' | 'all';
 
 export default function LeaderTeamDeliverablesPage() {
   const { accessToken, user } = useAuth();
   const defaultRange = useMemo(() => defaultLast30DayRange(), []);
-  const [teamMembers, setTeamMembers] = useState<TeamMemberOption[]>([]);
+  const [hierarchy, setHierarchy] = useState<LeaderHierarchyViewResponse | null>(null);
   const [selectedUserId, setSelectedUserId] = useState('');
   const [startDate, setStartDate] = useState(defaultRange.startDate);
   const [endDate, setEndDate] = useState(defaultRange.endDate);
@@ -73,23 +77,23 @@ export default function LeaderTeamDeliverablesPage() {
 
     let cancelled = false;
 
-    async function loadMembers() {
+    async function loadHierarchy() {
       setIsLoadingMembers(true);
       setErrorMessage(null);
 
       try {
-        const members = await fetchTeamMembers(accessToken!);
+        const data = await fetchLeaderHierarchyView(accessToken!);
         if (!cancelled) {
-          setTeamMembers(members);
+          setHierarchy(data);
         }
       } catch (error) {
         if (!cancelled) {
           setErrorMessage(
-            error instanceof TeamDeliverablesApiError
+            error instanceof UsersApiError
               ? error.message
-              : 'Unable to load team members.',
+              : 'Unable to load team hierarchy.',
           );
-          setTeamMembers([]);
+          setHierarchy(null);
         }
       } finally {
         if (!cancelled) {
@@ -98,7 +102,7 @@ export default function LeaderTeamDeliverablesPage() {
       }
     }
 
-    void loadMembers();
+    void loadHierarchy();
 
     return () => {
       cancelled = true;
@@ -173,31 +177,23 @@ export default function LeaderTeamDeliverablesPage() {
         </Box>
 
         <Paper variant="outlined" sx={{ p: 3 }}>
-          <Stack
-            direction={{ xs: 'column', md: 'row' }}
-            spacing={2}
-            useFlexGap
-            sx={{ flexWrap: 'wrap' }}
+          <Box
+            sx={{
+              display: 'grid',
+              gap: 2,
+              alignItems: 'start',
+              gridTemplateColumns: {
+                xs: '1fr',
+                md: 'minmax(220px, 1fr) repeat(2, minmax(160px, auto)) minmax(180px, auto)',
+              },
+            }}
           >
-            <FormControl sx={{ minWidth: 240 }} disabled={isLoadingMembers}>
-              <InputLabel id="team-member-select-label">Team member</InputLabel>
-              <Select
-                labelId="team-member-select-label"
-                label="Team member"
-                value={selectedUserId}
-                onChange={(event) => setSelectedUserId(event.target.value)}
-                data-testid="team-member-select"
-              >
-                <MenuItem value="">
-                  <em>Select a team member</em>
-                </MenuItem>
-                {teamMembers.map((member) => (
-                  <MenuItem key={member.id} value={member.id}>
-                    {member.displayName}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
+            <TeamMemberHierarchyPicker
+              reports={hierarchy?.reports ?? []}
+              selectedUserId={selectedUserId}
+              disabled={isLoadingMembers}
+              onChange={setSelectedUserId}
+            />
 
             <TextField
               label="Start date"
@@ -221,8 +217,10 @@ export default function LeaderTeamDeliverablesPage() {
               }}
             />
 
-            <FormControl sx={{ minWidth: 180 }}>
-              <InputLabel id="reviewed-filter-label">Review status</InputLabel>
+            <FormControl>
+              <InputLabel id="reviewed-filter-label" shrink>
+                Review status
+              </InputLabel>
               <Select
                 labelId="reviewed-filter-label"
                 label="Review status"
@@ -235,7 +233,7 @@ export default function LeaderTeamDeliverablesPage() {
                 <MenuItem value="all">All</MenuItem>
               </Select>
             </FormControl>
-          </Stack>
+          </Box>
 
           {dateRangeError ? (
             <Alert severity="warning" sx={{ mt: 2 }}>
@@ -250,7 +248,7 @@ export default function LeaderTeamDeliverablesPage() {
           <Box sx={{ display: 'flex', justifyContent: 'center', py: 4 }}>
             <CircularProgress aria-label="Loading team members" />
           </Box>
-        ) : teamMembers.length === 0 ? (
+        ) : (hierarchy?.reports.length ?? 0) === 0 ? (
           <Alert severity="info">You have no team members available to review.</Alert>
         ) : null}
 
