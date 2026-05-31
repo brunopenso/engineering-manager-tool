@@ -1,0 +1,144 @@
+openapi: 3.0.3
+info:
+  title: Engineering Manager Tool Deliverable Review Notes API
+  version: 0.1.0
+  description: Leader-private review notes on deliverables with per-leader reviewed auto-update on save.
+servers:
+  - url: http://localhost:3001
+paths:
+  /deliverables/{deliverableId}/review-notes:
+    get:
+      summary: Get review notes for the logged-in leader on a deliverable
+      tags: [DeliverableReviewNotes]
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: deliverableId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Review notes for the authenticated reviewer
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeliverableReviewNotesResponse'
+        '401':
+          description: Missing or invalid application token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Leader role required or not authorized to read deliverable
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Deliverable not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    put:
+      summary: Save review notes for the logged-in leader (auto-marks reviewed when notes non-empty)
+      tags: [DeliverableReviewNotes]
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: deliverableId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SaveDeliverableReviewNotesRequest'
+      responses:
+        '200':
+          description: Notes saved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeliverableReviewNotesResponse'
+        '400':
+          description: Validation error (e.g. notes exceed max length)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Missing or invalid application token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Leader role required or not authorized to read deliverable
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Deliverable not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    DeliverableReviewNotesResponse:
+      type: object
+      required:
+        - deliverableId
+        - notes
+        - reviewed
+        - updatedAt
+      properties:
+        deliverableId:
+          type: string
+          format: uuid
+        notes:
+          type: string
+          nullable: true
+          description: Trimmed note text for the logged-in reviewer; null when none
+        reviewed:
+          type: boolean
+          description: Reviewed state for the logged-in reviewer
+        updatedAt:
+          type: string
+          format: date-time
+          nullable: true
+          description: Last update timestamp; null when no review row exists
+    SaveDeliverableReviewNotesRequest:
+      type: object
+      required:
+        - notes
+      properties:
+        notes:
+          type: string
+          description: Raw note text (server trims; empty clears note text)
+          maxLength: 8000
+    ErrorResponse:
+      type: object
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: string
+        message:
+          type: string
