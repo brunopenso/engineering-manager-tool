@@ -6,6 +6,6 @@ vi.mock('@mui/material', async (importOriginal) => {
 
   return {
     ...actual,
-    useMediaQuery: () => true,
+    useMediaQuery: () => false,
   };
 });
