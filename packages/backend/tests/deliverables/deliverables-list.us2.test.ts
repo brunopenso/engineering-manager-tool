@@ -8,6 +8,7 @@ import {
 vi.mock('../../src/services/deliverableService.js', () => ({
   createDeliverable: vi.fn(),
   listDeliverablesForOwner: vi.fn(),
+  countDeliverablesForOwner: vi.fn(),
   getDeliverableById: vi.fn(),
   updateDeliverable: vi.fn(),
   deleteDeliverable: vi.fn(),
@@ -30,15 +31,24 @@ describe('US2 GET /deliverables', () => {
         title: 'API redesign',
         businessImpact: 'HIGH',
         systemTags: [{ id: 'tag-1', name: 'Platform', color: '#1976D2' }],
+        createdAt: '2026-05-26T00:00:00.000Z',
         updatedAt: '2026-05-26T00:00:00.000Z',
       },
     ]);
+    vi.mocked(deliverableService.countDeliverablesForOwner).mockResolvedValue(1);
 
     const response = await app.inject({ method: 'GET', url: '/deliverables' });
 
     expect(response.statusCode).toBe(200);
-    expect(deliverableService.listDeliverablesForOwner).toHaveBeenCalledWith('owner-1');
+    expect(deliverableService.listDeliverablesForOwner).toHaveBeenCalledWith(
+      'owner-1',
+      expect.objectContaining({
+        startDate: expect.any(String),
+        endDate: expect.any(String),
+      }),
+    );
     expect(response.json().deliverables).toHaveLength(1);
+    expect(response.json().hasAnyDeliverables).toBe(true);
     await app.close();
   });
 });

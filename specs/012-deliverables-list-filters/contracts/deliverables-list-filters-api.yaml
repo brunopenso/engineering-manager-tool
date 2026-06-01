@@ -1,0 +1,161 @@
+openapi: 3.0.3
+info:
+  title: Deliverables Portfolio Filters API Delta
+  version: 0.2.0
+  description: |
+    Contract delta for feature 012-deliverables-list-filters.
+    Server-side filtering on GET /deliverables. Default date window: last 30 days.
+servers:
+  - url: http://localhost:3001
+paths:
+  /deliverables:
+    get:
+      summary: List deliverables for the authenticated user (filtered owner portfolio)
+      description: |
+        Returns deliverables owned by the authenticated user matching optional filters.
+        When startDate/endDate are omitted, the server applies a default of the last 30
+        calendar days ending today (UTC day bounds on created_at). Impact and tag filters
+        use OR within each dimension and AND across dimensions.
+      tags: [Deliverables]
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: startDate
+          in: query
+          required: false
+          schema:
+            type: string
+            format: date
+          description: Inclusive start of creation-date range (YYYY-MM-DD). Defaults to today minus 29 days.
+        - name: endDate
+          in: query
+          required: false
+          schema:
+            type: string
+            format: date
+          description: Inclusive end of creation-date range (YYYY-MM-DD). Defaults to today.
+        - name: businessImpact
+          in: query
+          required: false
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/BusinessImpact'
+          style: form
+          explode: true
+          description: When provided, return only deliverables with matching impact (OR if multiple).
+        - name: systemTagIds
+          in: query
+          required: false
+          schema:
+            type: array
+            items:
+              type: string
+              format: uuid
+          style: form
+          explode: true
+          description: When provided, return deliverables having at least one tag id (OR if multiple).
+      responses:
+        '200':
+          description: Filtered owner deliverable list
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [deliverables]
+                properties:
+                  deliverables:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/DeliverableSummary'
+        '400':
+          description: Invalid date range or tag identifiers
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Missing or invalid application token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /tags/catalog:
+    get:
+      summary: Tag catalog for system tag filter options (unchanged)
+      tags: [Deliverables]
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Read-only tag catalog for filter multi-select
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [tags]
+                properties:
+                  tags:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/TagSummary'
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    ErrorResponse:
+      type: object
+      required: [code, message]
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+    BusinessImpact:
+      type: string
+      enum: [LOW, MEDIUM, HIGH, TRANSFORMATIONAL]
+    TagSummary:
+      type: object
+      required: [id, name, color]
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        color:
+          type: string
+    DeliverableSummary:
+      type: object
+      required:
+        - id
+        - ownerUserId
+        - title
+        - businessImpact
+        - systemTags
+        - createdAt
+        - updatedAt
+      properties:
+        id:
+          type: string
+          format: uuid
+        ownerUserId:
+          type: string
+          format: uuid
+        title:
+          type: string
+        businessImpact:
+          $ref: '#/components/schemas/BusinessImpact'
+        systemTags:
+          type: array
+          items:
+            $ref: '#/components/schemas/TagSummary'
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time

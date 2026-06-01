@@ -8,7 +8,20 @@ export type DeliverableSummary = {
   title: string;
   businessImpact: BusinessImpact;
   systemTags: Tag[];
+  createdAt: string;
   updatedAt: string;
+};
+
+export type DeliverableListFilters = {
+  startDate: string;
+  endDate: string;
+  businessImpacts?: BusinessImpact[];
+  systemTagIds?: string[];
+};
+
+export type DeliverableListResponse = {
+  deliverables: DeliverableSummary[];
+  hasAnyDeliverables: boolean;
 };
 
 export type DeliverableDetail = DeliverableSummary & {
@@ -74,8 +87,28 @@ async function parseError(response: Response): Promise<DeliverablesApiError> {
   );
 }
 
-export async function listMyDeliverables(accessToken: string): Promise<DeliverableSummary[]> {
-  const response = await fetch(`${API_BASE_URL}/deliverables`, {
+function buildDeliverableListQuery(filters: DeliverableListFilters): string {
+  const params = new URLSearchParams();
+  params.set('startDate', filters.startDate);
+  params.set('endDate', filters.endDate);
+
+  for (const impact of filters.businessImpacts ?? []) {
+    params.append('businessImpact', impact);
+  }
+
+  for (const tagId of filters.systemTagIds ?? []) {
+    params.append('systemTagIds', tagId);
+  }
+
+  return params.toString();
+}
+
+export async function listMyDeliverables(
+  accessToken: string,
+  filters: DeliverableListFilters,
+): Promise<DeliverableListResponse> {
+  const query = buildDeliverableListQuery(filters);
+  const response = await fetch(`${API_BASE_URL}/deliverables?${query}`, {
     headers: { Authorization: `Bearer ${accessToken}` },
   });
 
@@ -83,8 +116,7 @@ export async function listMyDeliverables(accessToken: string): Promise<Deliverab
     throw await parseError(response);
   }
 
-  const payload = (await response.json()) as { deliverables: DeliverableSummary[] };
-  return payload.deliverables;
+  return (await response.json()) as DeliverableListResponse;
 }
 
 export async function listUserDeliverables(

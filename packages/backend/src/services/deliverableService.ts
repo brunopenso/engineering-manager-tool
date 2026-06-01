@@ -1,4 +1,4 @@
-import { Between, In } from 'typeorm';
+import { Between, In, type FindOptionsWhere } from 'typeorm';
 import { AppDataSource } from '../database/connection.js';
 import { Deliverable } from '../database/entities/Deliverable.js';
 import { DeliverableLink } from '../database/entities/DeliverableLink.js';
@@ -6,7 +6,9 @@ import { DeliverableReview } from '../database/entities/DeliverableReview.js';
 import { DeliverableSystemTag } from '../database/entities/DeliverableSystemTag.js';
 import { DeliverableUserTag } from '../database/entities/DeliverableUserTag.js';
 import { Tag } from '../database/entities/Tag.js';
+import type { DeliverableListFilters } from '../types/deliverableListFilters.js';
 import type { TeamDeliverableRow } from '../types/teamDeliverables.js';
+import { resolveCreatedAtBounds } from './deliverableListQuery.js';
 import { validateDateRange } from './teamDeliverablesDate.js';
 import {
   DeliverableValidationError,
@@ -27,6 +29,7 @@ export type DeliverableSummaryDto = {
   title: string;
   businessImpact: string;
   systemTags: TagSummaryDto[];
+  createdAt: string;
   updatedAt: string;
 };
 
@@ -66,6 +69,7 @@ function mapDeliverableSummary(deliverable: Deliverable): DeliverableSummaryDto 
       .map((row) => row.tag)
       .filter((tag): tag is Tag => Boolean(tag))
       .map(mapTagSummary),
+    createdAt: deliverable.createdAt.toISOString(),
     updatedAt: deliverable.updatedAt.toISOString(),
   };
 }
@@ -130,9 +134,67 @@ async function replaceChildRows(
   }
 }
 
-export async function listDeliverablesForOwner(ownerUserId: string): Promise<DeliverableSummaryDto[]> {
+export async function countDeliverablesForOwner(ownerUserId: string): Promise<number> {
+  return deliverableRepository().count({ where: { userId: ownerUserId } });
+}
+
+export async function listDeliverablesForOwner(
+  ownerUserId: string,
+  filters?: DeliverableListFilters,
+): Promise<DeliverableSummaryDto[]> {
+  if (!filters) {
+    const rows = await deliverableRepository().find({
+      where: { userId: ownerUserId },
+      relations: DELIVERABLE_RELATIONS,
+      order: { updatedAt: 'DESC' },
+    });
+
+    return rows.map(mapDeliverableSummary);
+  }
+
+  if (filters.systemTagIds?.length) {
+    await assertSystemTagsExist(filters.systemTagIds);
+  }
+
+  const { start, end } = resolveCreatedAtBounds(filters);
+
+  if (filters.systemTagIds?.length) {
+    const qb = deliverableRepository()
+      .createQueryBuilder('deliverable')
+      .leftJoinAndSelect('deliverable.systemTags', 'systemTagRow')
+      .leftJoinAndSelect('systemTagRow.tag', 'tag')
+      .where('deliverable.userId = :ownerUserId', { ownerUserId })
+      .andWhere('deliverable.createdAt BETWEEN :start AND :end', { start, end })
+      .innerJoin(
+        'deliverable.systemTags',
+        'filterTag',
+        'filterTag.tagId IN (:...systemTagIds)',
+        { systemTagIds: filters.systemTagIds },
+      )
+      .distinct(true)
+      .orderBy('deliverable.updatedAt', 'DESC');
+
+    if (filters.businessImpacts?.length) {
+      qb.andWhere('deliverable.businessImpact IN (:...businessImpacts)', {
+        businessImpacts: filters.businessImpacts,
+      });
+    }
+
+    const rows = await qb.getMany();
+    return rows.map(mapDeliverableSummary);
+  }
+
+  const where: FindOptionsWhere<Deliverable> = {
+    userId: ownerUserId,
+    createdAt: Between(start, end),
+  };
+
+  if (filters.businessImpacts?.length) {
+    where.businessImpact = In(filters.businessImpacts);
+  }
+
   const rows = await deliverableRepository().find({
-    where: { userId: ownerUserId },
+    where,
     relations: DELIVERABLE_RELATIONS,
     order: { updatedAt: 'DESC' },
   });
