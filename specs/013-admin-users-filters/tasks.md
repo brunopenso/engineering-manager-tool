@@ -13,9 +13,9 @@
 
 **Purpose**: Feature test scaffolding and directories.
 
-- [ ] T001 Create acceptance test plan files in `tests/013-admin-users-filters/` (`admin-users-filters-name.us1.test.md`, `admin-users-filters-email.us2.test.md`, `admin-users-filters-role.us3.test.md`, `admin-users-filters-combined.us4.test.md`)
-- [ ] T002 [P] Create backend test scaffold `packages/backend/tests/admin-users-filters/admin-users-filters.setup.ts` (reuse patterns from `packages/backend/tests/` auth and user fixtures)
-- [ ] T003 [P] Create web test directory `packages/web/tests/admin-users-filters/` with render/auth helpers aligned to `packages/web/src/test/renderWithProviders.ts`
+- [X] T001 Create acceptance test plan files in `tests/013-admin-users-filters/` (`admin-users-filters-name.us1.test.md`, `admin-users-filters-email.us2.test.md`, `admin-users-filters-role.us3.test.md`, `admin-users-filters-combined.us4.test.md`)
+- [X] T002 [P] Create backend test scaffold `packages/backend/tests/admin-users-filters/admin-users-filters.setup.ts` (reuse patterns from `packages/backend/tests/` auth and user fixtures)
+- [X] T003 [P] Create web test directory `packages/web/tests/admin-users-filters/` with render/auth helpers aligned to `packages/web/src/test/renderWithProviders.ts`
 
 ---
 
@@ -25,13 +25,13 @@
 
 **⚠️ CRITICAL**: No user story work starts until this phase is complete.
 
-- [ ] T004 Add `AdminUserListFilters` type (`name?`, `email?`, `roles?`) in `packages/backend/src/types/adminUserListFilters.ts`
-- [ ] T005 Implement `parseAdminUserListFilters(query)` with trim, role enum validation, and validation error type in `packages/backend/src/services/adminUserListQuery.ts`
-- [ ] T006 Implement `findUsersForAdmin(filters)` with `LOWER(fullName) LIKE`, `LOWER(email) LIKE`, and `EXISTS` on `user_roles` for role OR filter in `packages/backend/src/services/userService.ts`
-- [ ] T007 Update `GET /users` in `packages/backend/src/routes/users.ts` to parse query params, return `400` on invalid roles, call `findUsersForAdmin`, and map with `mapUserToAuthResponse`
-- [ ] T008 [P] Add `AdminUserListFilters` type and extend `listUsers(accessToken, filters?)` to build `URLSearchParams` (`name`, `email`, repeated `roles`) in `packages/web/src/services/usersApi.ts`
-- [ ] T009 [P] Add `useDebouncedValue<T>(value, delayMs)` hook in `packages/web/src/hooks/useDebouncedValue.ts` for 300ms name/email debounce
-- [ ] T010 Add backend smoke test that unfiltered `GET /users` still returns all users for administrator in `packages/backend/tests/admin-users-filters/admin-users-list-filters.setup.test.ts`
+- [X] T004 Add `AdminUserListFilters` type (`name?`, `email?`, `roles?`) in `packages/backend/src/types/adminUserListFilters.ts`
+- [X] T005 Implement `parseAdminUserListFilters(query)` with trim, role enum validation, and validation error type in `packages/backend/src/services/adminUserListQuery.ts`
+- [X] T006 Implement `findUsersForAdmin(filters)` with `LOWER(fullName) LIKE`, `LOWER(email) LIKE`, and `EXISTS` on `user_roles` for role OR filter in `packages/backend/src/services/userService.ts`
+- [X] T007 Update `GET /users` in `packages/backend/src/routes/users.ts` to parse query params, return `400` on invalid roles, call `findUsersForAdmin`, and map with `mapUserToAuthResponse`
+- [X] T008 [P] Add `AdminUserListFilters` type and extend `listUsers(accessToken, filters?)` to build `URLSearchParams` (`name`, `email`, repeated `roles`) in `packages/web/src/services/usersApi.ts`
+- [X] T009 [P] Add `useDebouncedValue<T>(value, delayMs)` hook in `packages/web/src/hooks/useDebouncedValue.ts` for 300ms name/email debounce
+- [X] T010 Add backend smoke test that unfiltered `GET /users` still returns all users for administrator in `packages/backend/tests/admin-users-filters/admin-users-list-filters.setup.test.ts`
 
 **Checkpoint**: `GET /users` accepts optional filter query params; administrator receives filtered or full list from server only.
 
@@ -45,16 +45,16 @@
 
 ### Tests for User Story 1 (MANDATORY)
 
-- [ ] T011 [P] [US1] Align acceptance scenarios in `tests/013-admin-users-filters/admin-users-filters-name.us1.test.md` with `specs/013-admin-users-filters/contracts/admin-users-filters-api.yaml`
-- [ ] T012 [P] [US1] Add backend test for full and partial name match (case-insensitive) in `packages/backend/tests/admin-users-filters/admin-users-list-filters-name.us1.test.ts`
-- [ ] T013 [P] [US1] Add backend test that whitespace-only `name` is ignored in `packages/backend/tests/admin-users-filters/admin-users-list-filters-name.us1.test.ts`
-- [ ] T014 [P] [US1] Add web test for name field debounced fetch with `name` query param in `packages/web/tests/admin-users-filters/admin-users-page-filters-name.us1.test.tsx`
+- [X] T011 [P] [US1] Align acceptance scenarios in `tests/013-admin-users-filters/admin-users-filters-name.us1.test.md` with `specs/013-admin-users-filters/contracts/admin-users-filters-api.yaml`
+- [X] T012 [P] [US1] Add backend test for full and partial name match (case-insensitive) in `packages/backend/tests/admin-users-filters/admin-users-list-filters-name.us1.test.ts`
+- [X] T013 [P] [US1] Add backend test that whitespace-only `name` is ignored in `packages/backend/tests/admin-users-filters/admin-users-list-filters-name.us1.test.ts`
+- [X] T014 [P] [US1] Add web test for name field debounced fetch with `name` query param in `packages/web/tests/admin-users-filters/admin-users-page-filters-name.us1.test.tsx`
 
 ### Implementation for User Story 1
 
-- [ ] T015 [US1] Add filter `Stack`/`Paper` above table using `frontend-design` skill in `packages/web/src/pages/AdminUsersPage.tsx`
-- [ ] T016 [US1] Add labeled name `TextField` with partial-search placeholder in `packages/web/src/pages/AdminUsersPage.tsx`
-- [ ] T017 [US1] Wire `useDebouncedValue` for name and `useEffect` to call `listUsers(accessToken, { name })` in `packages/web/src/pages/AdminUsersPage.tsx`
+- [X] T015 [US1] Add filter `Stack`/`Paper` above table using `frontend-design` skill in `packages/web/src/pages/AdminUsersPage.tsx`
+- [X] T016 [US1] Add labeled name `TextField` with partial-search placeholder in `packages/web/src/pages/AdminUsersPage.tsx`
+- [X] T017 [US1] Wire `useDebouncedValue` for name and `useEffect` to call `listUsers(accessToken, { name })` in `packages/web/src/pages/AdminUsersPage.tsx`
 
 **Checkpoint**: User Story 1 independently functional — name-filtered admin user list.
 
@@ -68,14 +68,14 @@
 
 ### Tests for User Story 2 (MANDATORY)
 
-- [ ] T018 [P] [US2] Update acceptance scenarios in `tests/013-admin-users-filters/admin-users-filters-email.us2.test.md`
-- [ ] T019 [P] [US2] Add backend tests for full/partial email and name+email AND in `packages/backend/tests/admin-users-filters/admin-users-list-filters-email.us2.test.ts`
-- [ ] T020 [P] [US2] Add web test for email field debounced fetch with `email` query param in `packages/web/tests/admin-users-filters/admin-users-page-filters-email.us2.test.tsx`
+- [X] T018 [P] [US2] Update acceptance scenarios in `tests/013-admin-users-filters/admin-users-filters-email.us2.test.md`
+- [X] T019 [P] [US2] Add backend tests for full/partial email and name+email AND in `packages/backend/tests/admin-users-filters/admin-users-list-filters-email.us2.test.ts`
+- [X] T020 [P] [US2] Add web test for email field debounced fetch with `email` query param in `packages/web/tests/admin-users-filters/admin-users-page-filters-email.us2.test.tsx`
 
 ### Implementation for User Story 2
 
-- [ ] T021 [US2] Add labeled email `TextField` to filter bar in `packages/web/src/pages/AdminUsersPage.tsx` using `frontend-design` skill
-- [ ] T022 [US2] Debounce email and include `email` in `listUsers` filter params alongside debounced name in `packages/web/src/pages/AdminUsersPage.tsx`
+- [X] T021 [US2] Add labeled email `TextField` to filter bar in `packages/web/src/pages/AdminUsersPage.tsx` using `frontend-design` skill
+- [X] T022 [US2] Debounce email and include `email` in `listUsers` filter params alongside debounced name in `packages/web/src/pages/AdminUsersPage.tsx`
 
 **Checkpoint**: User Stories 1 and 2 work together (name AND email on server).
 
@@ -89,15 +89,15 @@
 
 ### Tests for User Story 3 (MANDATORY)
 
-- [ ] T023 [P] [US3] Update acceptance scenarios in `tests/013-admin-users-filters/admin-users-filters-role.us3.test.md`
-- [ ] T024 [P] [US3] Add backend tests for single role, multi-role OR, and omitted roles in `packages/backend/tests/admin-users-filters/admin-users-list-filters-role.us3.test.ts`
-- [ ] T025 [P] [US3] Add backend test returning `400` for invalid `roles` value in `packages/backend/tests/admin-users-filters/admin-users-list-filters-role.us3.test.ts`
-- [ ] T026 [P] [US3] Add web test for role multi-select immediate refetch with `roles` query params in `packages/web/tests/admin-users-filters/admin-users-page-filters-role.us3.test.tsx`
+- [X] T023 [P] [US3] Update acceptance scenarios in `tests/013-admin-users-filters/admin-users-filters-role.us3.test.md`
+- [X] T024 [P] [US3] Add backend tests for single role, multi-role OR, and omitted roles in `packages/backend/tests/admin-users-filters/admin-users-list-filters-role.us3.test.ts`
+- [X] T025 [P] [US3] Add backend test returning `400` for invalid `roles` value in `packages/backend/tests/admin-users-filters/admin-users-list-filters-role.us3.test.ts`
+- [X] T026 [P] [US3] Add web test for role multi-select immediate refetch with `roles` query params in `packages/web/tests/admin-users-filters/admin-users-page-filters-role.us3.test.tsx`
 
 ### Implementation for User Story 3
 
-- [ ] T027 [US3] Add role multi-select `FormControl`/`Select` multiple with Collaborator, Leader, Administrator labels in `packages/web/src/pages/AdminUsersPage.tsx` using `frontend-design` skill
-- [ ] T028 [US3] Include repeatable `roles` in `listUsers` calls on role change (no debounce) in `packages/web/src/pages/AdminUsersPage.tsx`
+- [X] T027 [US3] Add role multi-select `FormControl`/`Select` multiple with Collaborator, Leader, Administrator labels in `packages/web/src/pages/AdminUsersPage.tsx` using `frontend-design` skill
+- [X] T028 [US3] Include repeatable `roles` in `listUsers` calls on role change (no debounce) in `packages/web/src/pages/AdminUsersPage.tsx`
 
 **Checkpoint**: User Stories 1–3 independently testable with full server-side AND across dimensions.
 
@@ -111,19 +111,19 @@
 
 ### Tests for User Story 4 (MANDATORY)
 
-- [ ] T029 [P] [US4] Update acceptance scenarios in `tests/013-admin-users-filters/admin-users-filters-combined.us4.test.md`
-- [ ] T030 [P] [US4] Add backend integration test for name+email+roles AND combination in `packages/backend/tests/admin-users-filters/admin-users-list-filters-combined.us4.test.ts`
-- [ ] T031 [P] [US4] Add backend regression test: non-administrator `GET /users` with filters returns `403` in `packages/backend/tests/admin-users-filters/admin-users-list-filters-auth.us4.test.ts`
-- [ ] T032 [P] [US4] Add web test for filtered empty vs unfiltered empty messaging in `packages/web/tests/admin-users-filters/admin-users-page-filters-combined.us4.test.tsx`
-- [ ] T033 [P] [US4] Add web test that **Clear all filters** removes query params and restores full list in `packages/web/tests/admin-users-filters/admin-users-page-filters-combined.us4.test.tsx`
-- [ ] T034 [P] [US4] Add web test that grant/revoke role refetches with active filter params in `packages/web/tests/admin-users-filters/admin-users-page-filters-combined.us4.test.tsx`
+- [X] T029 [P] [US4] Update acceptance scenarios in `tests/013-admin-users-filters/admin-users-filters-combined.us4.test.md`
+- [X] T030 [P] [US4] Add backend integration test for name+email+roles AND combination in `packages/backend/tests/admin-users-filters/admin-users-list-filters-combined.us4.test.ts`
+- [X] T031 [P] [US4] Add backend regression test: non-administrator `GET /users` with filters returns `403` in `packages/backend/tests/admin-users-filters/admin-users-list-filters-auth.us4.test.ts`
+- [X] T032 [P] [US4] Add web test for filtered empty vs unfiltered empty messaging in `packages/web/tests/admin-users-filters/admin-users-page-filters-combined.us4.test.tsx`
+- [X] T033 [P] [US4] Add web test that **Clear all filters** removes query params and restores full list in `packages/web/tests/admin-users-filters/admin-users-page-filters-combined.us4.test.tsx`
+- [X] T034 [P] [US4] Add web test that grant/revoke role refetches with active filter params in `packages/web/tests/admin-users-filters/admin-users-page-filters-combined.us4.test.tsx`
 
 ### Implementation for User Story 4
 
-- [ ] T035 [US4] Implement **Clear all filters** button (visible when any filter active) resetting name, email, and roles in `packages/web/src/pages/AdminUsersPage.tsx`
-- [ ] T036 [US4] Distinguish **no users match your filters** vs **no users in the organization** empty states in `packages/web/src/pages/AdminUsersPage.tsx`
-- [ ] T037 [US4] Ensure `refreshUsers()` after `updateUserRole` passes current filter state to `listUsers` in `packages/web/src/pages/AdminUsersPage.tsx`
-- [ ] T038 [US4] Show loading state during fetch without flashing stale unfiltered results as final state in `packages/web/src/pages/AdminUsersPage.tsx`
+- [X] T035 [US4] Implement **Clear all filters** button (visible when any filter active) resetting name, email, and roles in `packages/web/src/pages/AdminUsersPage.tsx`
+- [X] T036 [US4] Distinguish **no users match your filters** vs **no users in the organization** empty states in `packages/web/src/pages/AdminUsersPage.tsx`
+- [X] T037 [US4] Ensure `refreshUsers()` after `updateUserRole` passes current filter state to `listUsers` in `packages/web/src/pages/AdminUsersPage.tsx`
+- [X] T038 [US4] Show loading state during fetch without flashing stale unfiltered results as final state in `packages/web/src/pages/AdminUsersPage.tsx`
 
 **Checkpoint**: Full filter bar complete per spec FR-001–FR-013.
 
@@ -133,11 +133,11 @@
 
 **Purpose**: Contract alignment, auth regression, validation.
 
-- [ ] T039 [P] Merge `GET /users` query parameters into `specs/004-user-role-profiles/contracts/user-roles-api.yaml` per `specs/013-admin-users-filters/contracts/admin-users-filters-api.yaml`
-- [ ] T040 [P] Update `packages/web/tests/admin-users.us3.test.tsx` to assert initial unfiltered `GET /users` call (no filter params)
-- [ ] T041 Run `npm run test --workspace @em-tool/backend -- --run admin-users-filters` and `npm run test --workspace @em-tool/web -- --run admin-users-filters` from repo root; fix failures
-- [ ] T042 Run `npm run lint` from repo root; fix failures in touched packages
-- [ ] T043 Record verification steps and outcomes in `specs/013-admin-users-filters/quickstart.md`
+- [X] T039 [P] Merge `GET /users` query parameters into `specs/004-user-role-profiles/contracts/user-roles-api.yaml` per `specs/013-admin-users-filters/contracts/admin-users-filters-api.yaml`
+- [X] T040 [P] Update `packages/web/tests/admin-users.us3.test.tsx` to assert initial unfiltered `GET /users` call (no filter params)
+- [X] T041 Run `npm run test --workspace @em-tool/backend -- --run admin-users-filters` and `npm run test --workspace @em-tool/web -- --run admin-users-filters` from repo root; fix failures
+- [X] T042 Run `npm run lint` from repo root; fix failures in touched packages
+- [X] T043 Record verification steps and outcomes in `specs/013-admin-users-filters/quickstart.md`
 
 ---
 

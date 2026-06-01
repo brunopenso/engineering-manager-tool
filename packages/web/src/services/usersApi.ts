@@ -46,6 +46,38 @@ export type LeaderCreatedUser = {
   createdAt: string;
 };
 
+export type AdminUserListFilters = {
+  name?: string;
+  email?: string;
+  roles?: Array<'COLLABORATOR' | 'LEADER' | 'ADMINISTRATOR'>;
+};
+
+function buildAdminUserListQuery(filters?: AdminUserListFilters): string {
+  if (!filters) {
+    return '';
+  }
+
+  const params = new URLSearchParams();
+  const name = filters.name?.trim();
+  if (name && name.length >= 3) {
+    params.set('name', name);
+  }
+
+  const email = filters.email?.trim();
+  if (email && email.length >= 3) {
+    params.set('email', email);
+  }
+
+  if (filters.roles?.length) {
+    for (const role of filters.roles) {
+      params.append('roles', role);
+    }
+  }
+
+  const queryString = params.toString();
+  return queryString ? `?${queryString}` : '';
+}
+
 export type OrphanUserSummary = {
   id: string;
   fullName: string;
@@ -88,8 +120,12 @@ async function parseError(response: Response): Promise<UsersApiError> {
   );
 }
 
-export async function listUsers(accessToken: string): Promise<AuthUser[]> {
-  const response = await fetch(`${API_BASE_URL}/users`, {
+export async function listUsers(
+  accessToken: string,
+  filters?: AdminUserListFilters,
+): Promise<AuthUser[]> {
+  const querySuffix = buildAdminUserListQuery(filters);
+  const response = await fetch(`${API_BASE_URL}/users${querySuffix}`, {
     headers: { Authorization: `Bearer ${accessToken}` },
   });
 

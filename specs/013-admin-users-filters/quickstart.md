@@ -43,10 +43,13 @@ In `packages/web`:
 ## 4. Verify
 
 ```bash
-npm run test --workspace @em-tool/backend -- --run admin-users-list-filters
+npm run test --workspace @em-tool/backend -- --run admin-users-filters
 npm run test --workspace @em-tool/web -- --run admin-users-filters
+npm run test --workspace @em-tool/web -- --run admin-users.us3
 npm run lint
 ```
+
+**Verified 2026-06-01**: Backend `admin-users-filters` suites (13 tests) and web `admin-users-filters` + `admin-users.us3` suites passing.
 
 Manual: sign in as administrator; open `/app/admin/users`; filter by partial name, email, and role; clear all; grant/revoke a role and confirm list respects active filters. Confirm network tab shows query params and no full-list client-side filtering.
 
