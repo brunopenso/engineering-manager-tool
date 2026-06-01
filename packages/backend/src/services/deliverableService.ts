@@ -91,6 +91,10 @@ export function mapDeliverableDetail(deliverable: Deliverable): DeliverableDetai
 }
 
 async function assertSystemTagsExist(tagIds: string[]): Promise<void> {
+  if (tagIds.length === 0) {
+    return;
+  }
+
   const tagRepository = AppDataSource.getRepository(Tag);
   const found = await tagRepository.find({ where: { id: In(tagIds) } });
   if (found.length !== tagIds.length) {

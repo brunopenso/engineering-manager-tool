@@ -113,7 +113,6 @@ function isDeliverableFormInvalid(form: FormState): boolean {
     !form.title.trim() ||
     !form.description.trim() ||
     !form.roleInDeliverable.trim() ||
-    form.systemTagIds.length === 0 ||
     !form.improvementPoints.trim()
   );
 }
@@ -164,7 +163,7 @@ function DeliverableFormFields({
         value={form.roleInDeliverable}
         onChange={(event) => onChange({ ...form, roleInDeliverable: event.target.value })}
       />
-      <FormControl required>
+      <FormControl>
         <InputLabel id="deliverable-tags-label">Tags</InputLabel>
         <Select
           labelId="deliverable-tags-label"
@@ -190,7 +189,7 @@ function DeliverableFormFields({
             </MenuItem>
           ))}
         </Select>
-        <FormHelperText>Select at least one catalog tag</FormHelperText>
+        <FormHelperText>Optional — select catalog tags that apply</FormHelperText>
       </FormControl>
       <FormControl required>
         <InputLabel id="deliverable-business-impact-label">Business impact</InputLabel>
