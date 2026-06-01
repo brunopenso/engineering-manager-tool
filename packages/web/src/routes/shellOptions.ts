@@ -7,7 +7,6 @@ export const DEFAULT_APP_ROUTE = '/app';
 export const PROFILE_ROUTE = '/app/profile';
 export const ADMIN_USERS_ROUTE = '/app/admin/users';
 export const ADMIN_TAGS_ROUTE = '/app/admin/tags';
-export const LEADER_CREATE_USER_ROUTE = '/app/leader/users/new';
 export const LEADER_HIERARCHY_ROUTE = '/app/leader/hierarchy';
 export const LEADER_HIERARCHY_VIEW_ROUTE = '/app/leader/hierarchy/view';
 export const LEADER_TEAM_DELIVERABLES_ROUTE = '/app/leader/team-deliverables';
@@ -80,12 +79,6 @@ const LEADER_SHELL_MENU_OPTIONS: ShellMenuOption[] = [
     id: 'leader-hierarchy',
     label: 'Hierarchy Management',
     route: LEADER_HIERARCHY_ROUTE,
-    available: true,
-  },
-  {
-    id: 'leader-create-user',
-    label: 'Create user',
-    route: LEADER_CREATE_USER_ROUTE,
     available: true,
   },
 ];

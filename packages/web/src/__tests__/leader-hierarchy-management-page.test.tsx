@@ -39,6 +39,9 @@ describe('leader hierarchy management page', () => {
       user: testLeaderUser,
     });
 
+    expect(screen.getByRole('tab', { name: 'Assign users' })).toBeInTheDocument();
+    expect(screen.getByRole('tab', { name: 'Create User' })).toBeInTheDocument();
+
     fireEvent.click(screen.getByRole('button', { name: 'Search' }));
 
     await waitFor(() => {

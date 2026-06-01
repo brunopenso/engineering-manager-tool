@@ -39,6 +39,9 @@ describe('US1 leader hierarchy management page', () => {
       user: testLeaderUser,
     });
 
+    expect(screen.getByRole('tab', { name: 'Assign users' })).toBeInTheDocument();
+    expect(screen.getByRole('tab', { name: 'Create User' })).toBeInTheDocument();
+
     fireEvent.change(screen.getByRole('textbox', { name: /search by name or email/i }), {
       target: { value: 'ali' },
     });

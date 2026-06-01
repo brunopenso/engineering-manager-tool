@@ -28,10 +28,12 @@ describe('US1 leader create user form', () => {
     );
 
     renderWithProviders(<App />, {
-      initialPath: '/app/leader/users/new',
+      initialPath: '/app/leader/hierarchy',
       isAuthenticated: true,
       user: testLeaderUser,
     });
+
+    fireEvent.click(screen.getByRole('tab', { name: 'Create User' }));
 
     fireEvent.change(screen.getByRole('textbox', { name: /full name/i }), {
       target: { value: 'New Person' },
