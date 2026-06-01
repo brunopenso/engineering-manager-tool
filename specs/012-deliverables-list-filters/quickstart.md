@@ -41,9 +41,12 @@ In `packages/web`:
 ## 4. Verify
 
 ```bash
-npm run test
+npm run test --workspace @em-tool/backend -- --run deliverables-list
+npm run test --workspace @em-tool/web -- --run tests/deliverables tests/deliverables-portfolio-filters
 npm run lint
 ```
+
+**Verified 2026-06-01**: Backend deliverables-list filter suites and web deliverables/portfolio-filter suites passing.
 
 Manual: load `/app/deliverables` (30-day default), change filters, clear all, confirm network requests include query params and server returns filtered rows only.
 

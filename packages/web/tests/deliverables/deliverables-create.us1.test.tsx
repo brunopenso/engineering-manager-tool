@@ -12,52 +12,62 @@ describe('US1 deliverable creation', () => {
   it(
     'submits create form and refreshes list',
     async () => {
-      const fetchMock = vi
-        .fn()
-        .mockResolvedValueOnce({
-          ok: true,
-          json: async () => ({ tags: [{ id: 'tag-1', name: 'Platform', color: '#1976D2' }] }),
-        })
-        .mockResolvedValueOnce({
-          ok: true,
-          json: async () => ({
-            deliverable: {
-              id: 'del-1',
-              ownerUserId: 'user-1',
-              title: 'API redesign',
-              businessImpact: 'HIGH',
-              systemTags: [{ id: 'tag-1', name: 'Platform', color: '#1976D2' }],
-              updatedAt: '2026-05-26T00:00:00.000Z',
-              description: 'Desc',
-              roleInDeliverable: 'Lead',
-              improvementPoints: 'Docs',
-              technicalDescription: null,
-              userTags: [],
-              links: [],
-              createdAt: '2026-05-26T00:00:00.000Z',
-            },
-          }),
-        })
-        .mockResolvedValueOnce({
-          ok: true,
-          json: async () => ({
-            deliverables: [
-              {
-                id: 'del-1',
-                ownerUserId: 'user-1',
-                title: 'API redesign',
-                businessImpact: 'HIGH',
-                systemTags: [{ id: 'tag-1', name: 'Platform', color: '#1976D2' }],
-                updatedAt: '2026-05-26T00:00:00.000Z',
-              },
-            ],
-          }),
-        })
-        .mockResolvedValueOnce({
-          ok: true,
-          json: async () => ({ tags: [{ id: 'tag-1', name: 'Platform', color: '#1976D2' }] }),
-        });
-      vi.stubGlobal('fetch', fetchMock);
+      vi.stubGlobal(
+        'fetch',
+        vi.fn(async (url: string, init?: RequestInit) => {
+          if (url.includes('/tags/catalog')) {
+            return {
+              ok: true,
+              json: async () => ({ tags: [{ id: 'tag-1', name: 'Platform', color: '#1976D2' }] }),
+            };
+          }
+
+          if (url.includes('/deliverables') && init?.method === 'POST') {
+            return {
+              ok: true,
+              json: async () => ({
+                deliverable: {
+                  id: 'del-1',
+                  ownerUserId: 'user-1',
+                  title: 'API redesign',
+                  businessImpact: 'HIGH',
+                  systemTags: [{ id: 'tag-1', name: 'Platform', color: '#1976D2' }],
+                  updatedAt: '2026-05-26T00:00:00.000Z',
+                  description: 'Desc',
+                  roleInDeliverable: 'Lead',
+                  improvementPoints: 'Docs',
+                  technicalDescription: null,
+                  userTags: [],
+                  links: [],
+                  createdAt: '2026-05-26T00:00:00.000Z',
+                },
+              }),
+            };
+          }
+
+          if (url.includes('/deliverables?')) {
+            return {
+              ok: true,
+              json: async () => ({
+                deliverables: [
+                  {
+                    id: 'del-1',
+                    ownerUserId: 'user-1',
+                    title: 'API redesign',
+                    businessImpact: 'HIGH',
+                    systemTags: [{ id: 'tag-1', name: 'Platform', color: '#1976D2' }],
+                    createdAt: '2026-05-26T00:00:00.000Z',
+                    updatedAt: '2026-05-26T00:00:00.000Z',
+                  },
+                ],
+                hasAnyDeliverables: true,
+              }),
+            };
+          }
+
+          return { ok: false, json: async () => ({ code: 'FORBIDDEN', message: 'Unexpected URL' }) };
+        }),
+      );
 
       renderWithProviders(<App />, {
         initialPath: '/app/deliverables/new',

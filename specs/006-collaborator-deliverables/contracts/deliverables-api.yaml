@@ -34,22 +34,66 @@ paths:
   /deliverables:
     get:
       summary: List deliverables for the authenticated user (owner portfolio)
+      description: |
+        Returns deliverables owned by the authenticated user with optional server-side filters.
+        Defaults to the last 30 calendar days on created_at when dates are omitted.
       tags: [Deliverables]
       security:
         - bearerAuth: []
+      parameters:
+        - name: startDate
+          in: query
+          required: false
+          schema:
+            type: string
+            format: date
+        - name: endDate
+          in: query
+          required: false
+          schema:
+            type: string
+            format: date
+        - name: businessImpact
+          in: query
+          required: false
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/BusinessImpact'
+          style: form
+          explode: true
+        - name: systemTagIds
+          in: query
+          required: false
+          schema:
+            type: array
+            items:
+              type: string
+              format: uuid
+          style: form
+          explode: true
       responses:
         '200':
-          description: Owner deliverable list
+          description: Filtered owner deliverable list
           content:
             application/json:
               schema:
                 type: object
-                required: [deliverables]
+                required: [deliverables, hasAnyDeliverables]
                 properties:
                   deliverables:
                     type: array
                     items:
                       $ref: '#/components/schemas/DeliverableSummary'
+                  hasAnyDeliverables:
+                    type: boolean
+                    description: True when the owner has any deliverable regardless of active filters
+        '400':
+          description: Invalid date range or system tag identifiers
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
         '401':
           description: Missing or invalid application token
           content:
@@ -306,7 +350,7 @@ components:
           maxLength: 120
     DeliverableSummary:
       type: object
-      required: [id, ownerUserId, title, businessImpact, systemTags, updatedAt]
+      required: [id, ownerUserId, title, businessImpact, systemTags, createdAt, updatedAt]
       properties:
         id:
           type: string
@@ -322,6 +366,9 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/TagSummary'
+        createdAt:
+          type: string
+          format: date-time
         updatedAt:
           type: string
           format: date-time
