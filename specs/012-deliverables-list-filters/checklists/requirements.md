@@ -31,6 +31,6 @@
 
 ## Notes
 
-- Validation passed on first iteration (2026-06-01). Screen route `/app/deliverables` retained as user-facing location identifier consistent with prior specs in this repository.
-- Scope explicitly excludes Team Deliverables leader screen filters.
-- Ready for `/speckit-plan`.
+- Validation passed on first iteration (2026-06-01).
+- **Clarification 2026-06-01**: Backend filtering + default last 30 days — spec, plan, research, contract, and data-model updated accordingly.
+- Re-run `/speckit-tasks` if tasks.md already exists from prior plan version.
