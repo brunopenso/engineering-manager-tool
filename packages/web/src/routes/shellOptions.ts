@@ -72,13 +72,13 @@ const LEADER_SHELL_MENU_OPTIONS: ShellMenuOption[] = [
   },
   {
     id: 'leader-hierarchy-view',
-    label: 'Hierarchy view',
+    label: 'Hierarchy View',
     route: LEADER_HIERARCHY_VIEW_ROUTE,
     available: true,
   },
   {
     id: 'leader-hierarchy',
-    label: 'Hierarchy',
+    label: 'Hierarchy Management',
     route: LEADER_HIERARCHY_ROUTE,
     available: true,
   },
