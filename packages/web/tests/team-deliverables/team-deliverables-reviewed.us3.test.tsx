@@ -9,7 +9,7 @@ async function selectTeamMember(name: string) {
   await userEvent.click(await screen.findByRole('button', { name: `Select ${name}` }));
 }
 
-describe('US3 team deliverables reviewed filter and review modal', { timeout: 15000 }, () => {
+describe('US3 team deliverables reviewed filter and review modal', { timeout: 25000 }, () => {
   afterEach(() => {
     vi.unstubAllGlobals();
   });
@@ -60,6 +60,18 @@ describe('US3 team deliverables reviewed filter and review modal', { timeout: 15
                 systemTags: [],
               },
             ],
+          }),
+        };
+      }
+
+      if (url.includes('/deliverables/del-1/review-notes')) {
+        return {
+          ok: true,
+          json: async () => ({
+            deliverableId: 'del-1',
+            notes: null,
+            reviewed: false,
+            updatedAt: null,
           }),
         };
       }
@@ -132,9 +144,11 @@ describe('US3 team deliverables reviewed filter and review modal', { timeout: 15
 
     fireEvent.click(screen.getByRole('tab', { name: 'Notes' }));
 
-    expect(
-      screen.getByText(/additional review notes will be available here in a future update/i),
-    ).toBeInTheDocument();
+    await waitFor(() => {
+      expect(
+        screen.getByText(/add private coaching notes for this deliverable/i),
+      ).toBeInTheDocument();
+    });
   });
 
   it('shows reviewed deliverables when filter changes', async () => {

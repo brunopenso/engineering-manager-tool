@@ -320,6 +320,13 @@ export default function LeaderTeamDeliverablesPage() {
           deliverableId={selectedDeliverableId}
           accessToken={accessToken}
           onClose={() => setSelectedDeliverableId(null)}
+          onReviewedChange={(deliverableId, reviewed) => {
+            setDeliverables((current) =>
+              current.map((item) =>
+                item.id === deliverableId ? { ...item, reviewed } : item,
+              ),
+            );
+          }}
         />
       </Stack>
     </Container>

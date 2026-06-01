@@ -19,12 +19,14 @@ import {
   getDeliverable,
   type DeliverableDetail,
 } from '../../services/deliverablesApi.js';
+import DeliverableReviewNotesPanel from './DeliverableReviewNotesPanel.js';
 
 type TeamDeliverableReviewModalProps = {
   open: boolean;
   deliverableId: string | null;
   accessToken: string | null;
   onClose: () => void;
+  onReviewedChange?: (deliverableId: string, reviewed: boolean) => void;
 };
 
 type DeliverableField = {
@@ -135,6 +137,7 @@ export default function TeamDeliverableReviewModal({
   deliverableId,
   accessToken,
   onClose,
+  onReviewedChange,
 }: TeamDeliverableReviewModalProps) {
   const [activeTab, setActiveTab] = useState(0);
   const [deliverable, setDeliverable] = useState<DeliverableDetail | null>(null);
@@ -211,11 +214,14 @@ export default function TeamDeliverableReviewModal({
             ) : deliverable ? (
               <DeliverableFieldsPanel deliverable={deliverable} />
             ) : null
-          ) : (
-            <Typography color="text.secondary" sx={{ py: 2 }}>
-              Additional review notes will be available here in a future update.
-            </Typography>
-          )}
+          ) : accessToken && deliverableId ? (
+            <DeliverableReviewNotesPanel
+              deliverableId={deliverableId}
+              accessToken={accessToken}
+              active={activeTab === 1}
+              onReviewedChange={onReviewedChange}
+            />
+          ) : null}
         </Box>
       </DialogContent>
       <DialogActions>
