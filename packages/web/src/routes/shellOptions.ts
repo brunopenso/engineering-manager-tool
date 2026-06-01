@@ -8,7 +8,6 @@ export const PROFILE_ROUTE = '/app/profile';
 export const ADMIN_USERS_ROUTE = '/app/admin/users';
 export const ADMIN_TAGS_ROUTE = '/app/admin/tags';
 export const LEADER_HIERARCHY_ROUTE = '/app/leader/hierarchy';
-export const LEADER_HIERARCHY_VIEW_ROUTE = '/app/leader/hierarchy/view';
 export const LEADER_TEAM_DELIVERABLES_ROUTE = '/app/leader/team-deliverables';
 export const DELIVERABLES_ROUTE = '/app/deliverables';
 export const DELIVERABLES_VIEW_ROUTE = '/app/deliverables/view';
@@ -67,12 +66,6 @@ const LEADER_SHELL_MENU_OPTIONS: ShellMenuOption[] = [
     id: 'leader-team-deliverables',
     label: 'Team Deliverables',
     route: LEADER_TEAM_DELIVERABLES_ROUTE,
-    available: true,
-  },
-  {
-    id: 'leader-hierarchy-view',
-    label: 'Hierarchy View',
-    route: LEADER_HIERARCHY_VIEW_ROUTE,
     available: true,
   },
   {

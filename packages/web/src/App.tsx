@@ -15,7 +15,6 @@ import { LeaderRoute } from './auth/LeaderRoute.js';
 import { DEFAULT_APP_ROUTE, LOGIN_ROUTE } from './routes/shellOptions.js';
 import { useAuth } from './auth/AuthProvider.js';
 import LeaderHierarchyManagementPage from './pages/LeaderHierarchyManagementPage.js';
-import LeaderHierarchyViewPage from './pages/LeaderHierarchyViewPage.js';
 import LeaderTeamDeliverablesPage from './pages/LeaderTeamDeliverablesPage.js';
 
 function DefaultRouteRedirect() {
@@ -65,14 +64,6 @@ export default function App() {
           element={
             <LeaderRoute>
               <LeaderHierarchyManagementPage />
-            </LeaderRoute>
-          }
-        />
-        <Route
-          path="leader/hierarchy/view"
-          element={
-            <LeaderRoute>
-              <LeaderHierarchyViewPage />
             </LeaderRoute>
           }
         />

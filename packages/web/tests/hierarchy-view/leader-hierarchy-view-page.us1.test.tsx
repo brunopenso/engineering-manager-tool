@@ -40,7 +40,7 @@ describe('US1 leader hierarchy view page', () => {
     );
 
     renderWithProviders(<App />, {
-      initialPath: '/app/leader/hierarchy/view',
+      initialPath: '/app/leader/hierarchy',
       isAuthenticated: true,
       user: testLeaderUser,
     });

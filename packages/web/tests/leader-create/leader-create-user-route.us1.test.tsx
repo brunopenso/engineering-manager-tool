@@ -8,11 +8,13 @@ describe('US1 leader hierarchy route visibility', () => {
     const routes = options.map((option) => option.route);
     expect(routes).toContain('/app/leader/hierarchy');
     expect(routes).not.toContain('/app/leader/users/new');
+    expect(routes).not.toContain('/app/leader/hierarchy/view');
   });
 
   it('hides hierarchy management route for non-leaders', () => {
     const routes = getVisibleShellMenuOptions(testUser).map((option) => option.route);
     expect(routes).not.toContain('/app/leader/hierarchy');
     expect(routes).not.toContain('/app/leader/users/new');
+    expect(routes).not.toContain('/app/leader/hierarchy/view');
   });
 });

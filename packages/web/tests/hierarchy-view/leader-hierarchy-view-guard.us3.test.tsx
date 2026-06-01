@@ -6,7 +6,7 @@ import { renderWithProviders, testUser } from '../../src/test/renderWithProvider
 describe('US3 hierarchy view route guards', () => {
   it('redirects non-leader users away from hierarchy view', async () => {
     renderWithProviders(<App />, {
-      initialPath: '/app/leader/hierarchy/view',
+      initialPath: '/app/leader/hierarchy',
       isAuthenticated: true,
       user: testUser,
     });
@@ -16,7 +16,7 @@ describe('US3 hierarchy view route guards', () => {
 
   it('redirects unauthenticated users to login', async () => {
     renderWithProviders(<App />, {
-      initialPath: '/app/leader/hierarchy/view',
+      initialPath: '/app/leader/hierarchy',
       isAuthenticated: false,
     });
 
