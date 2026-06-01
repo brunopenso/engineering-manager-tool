@@ -1,5 +1,5 @@
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import {
   AppBar,
   Toolbar,
@@ -8,8 +8,6 @@ import {
   Typography,
   IconButton,
   Drawer,
-  useTheme,
-  useMediaQuery,
 } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import { useAuth } from '../../auth/AuthProvider.js';
@@ -37,10 +35,8 @@ function getDrawerPaperSx() {
 export default function AppShellLayout() {
   const navigate = useNavigate();
   const location = useLocation();
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const { user, clearSession, accessToken } = useAuth();
-  const [isDrawerOpen, setIsDrawerOpen] = useState(!isMobile);
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const {
     isConfirmingLogout,
     requestLogoutConfirmation,
@@ -49,10 +45,6 @@ export default function AppShellLayout() {
     pathname: location.pathname,
     isSessionActive: Boolean(accessToken && user?.email),
   });
-
-  useEffect(() => {
-    setIsDrawerOpen(!isMobile);
-  }, [isMobile]);
 
   function toggleDrawer() {
     setIsDrawerOpen((currentState) => !currentState);
@@ -127,12 +119,10 @@ export default function AppShellLayout() {
       <Box sx={{ display: 'flex', flex: 1 }}>
         <Drawer
           anchor="left"
-          variant={isMobile ? 'temporary' : 'persistent'}
+          variant="temporary"
           open={isDrawerOpen}
           onClose={closeDrawer}
           sx={{
-            width: isDrawerOpen && !isMobile ? DRAWER_WIDTH : 0,
-            flexShrink: 0,
             '& .MuiDrawer-paper': getDrawerPaperSx(),
           }}
         >
@@ -146,11 +136,6 @@ export default function AppShellLayout() {
             flex: 1,
             display: 'flex',
             flexDirection: 'column',
-            transition: theme.transitions.create('margin', {
-              easing: theme.transitions.easing.sharp,
-              duration: theme.transitions.duration.leavingScreen,
-            }),
-            marginLeft: isDrawerOpen && !isMobile ? `${DRAWER_WIDTH}px` : 0,
           }}
         >
           <Container maxWidth="lg" sx={{ py: 3, flex: 1 }}>

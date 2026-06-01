@@ -125,8 +125,8 @@ export function validateDeliverableWriteInput(input: DeliverableWriteInput): {
   );
   const businessImpact = validateBusinessImpact(input.businessImpact);
 
-  if (!Array.isArray(input.systemTagIds) || input.systemTagIds.length === 0) {
-    throw new DeliverableValidationError('At least one system tag is required.');
+  if (!Array.isArray(input.systemTagIds)) {
+    throw new DeliverableValidationError('System tags must be an array.');
   }
 
   if (input.systemTagIds.length > MAX_SYSTEM_TAGS) {
@@ -134,9 +134,6 @@ export function validateDeliverableWriteInput(input: DeliverableWriteInput): {
   }
 
   const systemTagIds = [...new Set(input.systemTagIds.map((id) => id.trim()).filter(Boolean))];
-  if (systemTagIds.length === 0) {
-    throw new DeliverableValidationError('At least one system tag is required.');
-  }
 
   const userTagsInput = input.userTags ?? [];
   if (userTagsInput.length > MAX_USER_TAGS) {

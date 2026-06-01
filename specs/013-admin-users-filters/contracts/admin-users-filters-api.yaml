@@ -1,0 +1,129 @@
+openapi: 3.0.3
+info:
+  title: Admin Users List Filters API Delta
+  version: 0.1.0
+  description: |
+    Contract delta for feature 013-admin-users-filters.
+    Server-side filtering on GET /users (administrator only).
+    AND across name, email, and roles; OR within roles array.
+servers:
+  - url: http://localhost:3001
+paths:
+  /users:
+    get:
+      summary: List users with role profiles (administrator only, filterable)
+      description: |
+        Returns organization users matching optional filters. Name and email use
+        case-insensitive substring match after trim. Roles use OR when multiple
+        values are supplied. Dimensions combine with AND.
+      tags: [User Administration]
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: name
+          in: query
+          required: false
+          schema:
+            type: string
+          description: |
+            When provided (non-empty after trim), return only users whose display
+            name contains this text (case-insensitive).
+        - name: email
+          in: query
+          required: false
+          schema:
+            type: string
+          description: |
+            When provided (non-empty after trim), return only users whose email
+            contains this text (case-insensitive).
+        - name: roles
+          in: query
+          required: false
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/UserRoleType'
+          style: form
+          explode: true
+          description: |
+            When provided, return users who hold at least one of the listed roles (OR).
+            Omit or leave empty to not filter by role.
+      responses:
+        '200':
+          description: Filtered user directory for administration
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [users]
+                properties:
+                  users:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/UserProfile'
+        '400':
+          description: Invalid role filter value
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Caller lacks administrator role
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Missing or invalid application token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    UserRoleType:
+      type: string
+      enum:
+        - COLLABORATOR
+        - LEADER
+        - ADMINISTRATOR
+    UserProfile:
+      type: object
+      required: [id, email, fullName, firstLoginAt, lastLoginAt, roles]
+      properties:
+        id:
+          type: string
+          format: uuid
+        email:
+          type: string
+          format: email
+        fullName:
+          type: string
+        firstLoginAt:
+          type: string
+          format: date-time
+        lastLoginAt:
+          type: string
+          format: date-time
+        roles:
+          type: array
+          items:
+            $ref: '#/components/schemas/UserRoleType'
+    ErrorResponse:
+      type: object
+      required: [code, message]
+      properties:
+        code:
+          type: string
+          enum:
+            - VALIDATION_ERROR
+            - FORBIDDEN
+            - MISSING_APP_TOKEN
+            - INVALID_APP_TOKEN
+        message:
+          type: string

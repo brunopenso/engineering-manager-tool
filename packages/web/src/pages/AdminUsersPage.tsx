@@ -1,32 +1,103 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import {
   Alert,
   Box,
   Button,
+  Chip,
   Container,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  OutlinedInput,
   Paper,
+  Select,
   Stack,
   Table,
   TableBody,
   TableCell,
   TableHead,
   TableRow,
+  TextField,
   Typography,
+  type SelectChangeEvent,
 } from '@mui/material';
 import { useAuth } from '../auth/AuthProvider.js';
-import RoleBadgeList from '../components/profile/RoleBadgeList.js';
-import { listUsers, updateUserRole, UsersApiError } from '../services/usersApi.js';
 import type { AuthUser } from '../auth/AuthProvider.js';
+import RoleBadgeList from '../components/profile/RoleBadgeList.js';
+import { useDebouncedValue } from '../hooks/useDebouncedValue.js';
+import {
+  listUsers,
+  updateUserRole,
+  UsersApiError,
+  type AdminUserListFilters,
+} from '../services/usersApi.js';
 
 type ElevatedRole = 'LEADER' | 'ADMINISTRATOR';
+
+const ROLE_FILTER_OPTIONS = ['COLLABORATOR', 'LEADER', 'ADMINISTRATOR'] as const;
+
+type RoleFilterOption = (typeof ROLE_FILTER_OPTIONS)[number];
+
+const MIN_SEARCH_LENGTH = 3;
+
+const ROLE_FILTER_LABELS: Record<RoleFilterOption, string> = {
+  COLLABORATOR: 'Collaborator',
+  LEADER: 'Leader',
+  ADMINISTRATOR: 'Administrator',
+};
 
 export default function AdminUsersPage() {
   const { accessToken, user: currentUser, setSession } = useAuth();
   const [users, setUsers] = useState<AuthUser[]>([]);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [nameFilter, setNameFilter] = useState('');
+  const [emailFilter, setEmailFilter] = useState('');
+  const [selectedRoles, setSelectedRoles] = useState<RoleFilterOption[]>([]);
 
-  async function refreshUsers() {
+  const debouncedName = useDebouncedValue(nameFilter, 300);
+  const debouncedEmail = useDebouncedValue(emailFilter, 300);
+
+  const listFilters = useMemo<AdminUserListFilters>(() => {
+    const filters: AdminUserListFilters = {};
+    const name = debouncedName.trim();
+    const email = debouncedEmail.trim();
+
+    if (name.length >= MIN_SEARCH_LENGTH) {
+      filters.name = name;
+    }
+
+    if (email.length >= MIN_SEARCH_LENGTH) {
+      filters.email = email;
+    }
+
+    if (selectedRoles.length > 0) {
+      filters.roles = selectedRoles;
+    }
+
+    return filters;
+  }, [debouncedName, debouncedEmail, selectedRoles]);
+
+  const hasAppliedFilters =
+    selectedRoles.length > 0 ||
+    debouncedName.trim().length >= MIN_SEARCH_LENGTH ||
+    debouncedEmail.trim().length >= MIN_SEARCH_LENGTH;
+
+  const hasActiveFilters =
+    nameFilter.trim().length > 0 ||
+    emailFilter.trim().length > 0 ||
+    selectedRoles.length > 0;
+
+  function searchHelperText(value: string): string | undefined {
+    const length = value.trim().length;
+    if (length > 0 && length < MIN_SEARCH_LENGTH) {
+      return `Enter at least ${MIN_SEARCH_LENGTH} characters to search`;
+    }
+
+    return undefined;
+  }
+
+  const refreshUsers = useCallback(async () => {
     if (!accessToken) {
       return;
     }
@@ -35,7 +106,7 @@ export default function AdminUsersPage() {
     setErrorMessage(null);
 
     try {
-      const nextUsers = await listUsers(accessToken);
+      const nextUsers = await listUsers(accessToken, listFilters);
       setUsers(nextUsers);
     } catch (error) {
       const message =
@@ -46,11 +117,11 @@ export default function AdminUsersPage() {
     } finally {
       setIsLoading(false);
     }
-  }
+  }, [accessToken, listFilters]);
 
   useEffect(() => {
     void refreshUsers();
-  }, [accessToken]);
+  }, [refreshUsers]);
 
   async function handleRoleChange(
     userId: string,
@@ -83,6 +154,21 @@ export default function AdminUsersPage() {
     return user.roles.includes(role);
   }
 
+  function handleRoleFilterChange(event: SelectChangeEvent<string[]>) {
+    const value = event.target.value;
+    setSelectedRoles(
+      typeof value === 'string'
+        ? (value.split(',') as RoleFilterOption[])
+        : (value as RoleFilterOption[]),
+    );
+  }
+
+  function handleClearFilters() {
+    setNameFilter('');
+    setEmailFilter('');
+    setSelectedRoles([]);
+  }
+
   return (
     <Container maxWidth="lg">
       <Box sx={{ py: 4 }}>
@@ -91,9 +177,103 @@ export default function AdminUsersPage() {
             <Typography variant="h4" component="h1">
               User role management
             </Typography>
+
+            <Paper variant="outlined" sx={{ p: 2 }}>
+              <Box
+                sx={{
+                  display: 'flex',
+                  flexWrap: 'wrap',
+                  gap: 2,
+                  alignItems: 'flex-start',
+                }}
+              >
+                <TextField
+                  label="Name"
+                  placeholder="At least 3 characters"
+                  value={nameFilter}
+                  onChange={(event) => setNameFilter(event.target.value)}
+                  size="small"
+                  sx={{ minWidth: 220, flex: '1 1 220px' }}
+                  helperText={searchHelperText(nameFilter)}
+                  slotProps={{ htmlInput: { 'data-testid': 'admin-users-name-filter' } }}
+                />
+                <TextField
+                  label="Email"
+                  placeholder="At least 3 characters"
+                  value={emailFilter}
+                  onChange={(event) => setEmailFilter(event.target.value)}
+                  size="small"
+                  sx={{ minWidth: 220, flex: '1 1 220px' }}
+                  helperText={searchHelperText(emailFilter)}
+                  slotProps={{ htmlInput: { 'data-testid': 'admin-users-email-filter' } }}
+                />
+                <FormControl size="small" sx={{ minWidth: 240, flex: '1 1 240px' }}>
+                  <InputLabel id="admin-users-role-filter-label" shrink>
+                    Roles
+                  </InputLabel>
+                  <Select
+                    labelId="admin-users-role-filter-label"
+                    multiple
+                    value={selectedRoles}
+                    onChange={handleRoleFilterChange}
+                    input={<OutlinedInput label="Roles" />}
+                    renderValue={(selected) => (
+                      <Stack direction="row" spacing={0.5} useFlexGap sx={{ flexWrap: 'wrap' }}>
+                        {selected.map((role) => (
+                          <Chip key={role} size="small" label={ROLE_FILTER_LABELS[role]} />
+                        ))}
+                      </Stack>
+                    )}
+                    data-testid="admin-users-role-filter"
+                  >
+                    {ROLE_FILTER_OPTIONS.map((role) => (
+                      <MenuItem key={role} value={role}>
+                        {ROLE_FILTER_LABELS[role]}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+                {hasActiveFilters ? (
+                  <Button
+                    variant="outlined"
+                    onClick={handleClearFilters}
+                    data-testid="admin-users-clear-filters"
+                    sx={{ alignSelf: 'center' }}
+                  >
+                    Clear all filters
+                  </Button>
+                ) : null}
+              </Box>
+            </Paper>
+
             {errorMessage && <Alert severity="error">{errorMessage}</Alert>}
+
             {isLoading ? (
-              <Typography color="text.secondary">Loading users...</Typography>
+              <Typography color="text.secondary" data-testid="admin-users-loading">
+                Loading users...
+              </Typography>
+            ) : users.length === 0 ? (
+              <Box data-testid="admin-users-empty-state">
+                {hasAppliedFilters ? (
+                  <>
+                    <Typography variant="h6" gutterBottom>
+                      No users match your filters
+                    </Typography>
+                    <Typography color="text.secondary">
+                      Try adjusting your search or clear all filters to see the full user list.
+                    </Typography>
+                  </>
+                ) : (
+                  <>
+                    <Typography variant="h6" gutterBottom>
+                      No users in the organization
+                    </Typography>
+                    <Typography color="text.secondary">
+                      There are no user accounts to manage yet.
+                    </Typography>
+                  </>
+                )}
+              </Box>
             ) : (
               <Table>
                 <TableHead>
