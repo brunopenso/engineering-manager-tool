@@ -34,6 +34,7 @@ govern organization-wide settings.
 
 ## Documentation
 
+- [Technical documentation](doc/README.md) — doc index and fast-path setup commands
 - [Getting started](doc/getting-started.md) — prerequisites, environment setup, migrations, and dev servers
 - [Database](doc/database.md) — creating migrations and seed files
 - [Architecture](doc/architecture.md) — monorepo layout, components, and request flow

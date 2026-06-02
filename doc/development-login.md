@@ -10,23 +10,16 @@ and org hierarchy still come from PostgreSQL, same as in production.
 
 ## Enable dev login
 
-1. Copy the example env files if you have not already:
+Complete [getting-started.md](getting-started.md) first (env files copied,
+migrations applied). The example env files already enable dev login with matching
+secrets.
 
-   ```bash
-   cp packages/backend/.env.example packages/backend/.env
-   cp packages/web/.env.example packages/web/.env
-   ```
-
-2. Add these variables to `packages/backend/.env`:
+1. Confirm these variables are set in `packages/backend/.env` and
+   `packages/web/.env` (enabled by default in `.env.example`):
 
    ```env
    DEV_AUTH_ENABLED=true
    DEV_AUTH_SECRET=local-dev-only-change-me
-   ```
-
-3. Add matching variables to `packages/web/.env`:
-
-   ```env
    VITE_DEV_AUTH_ENABLED=true
    VITE_DEV_AUTH_SECRET=local-dev-only-change-me
    ```
@@ -34,13 +27,13 @@ and org hierarchy still come from PostgreSQL, same as in production.
    The secret in both files **must match**. Change it to any value you like for
    local use.
 
-4. Restart the dev servers:
+2. Start or restart dev servers:
 
    ```bash
    npm run dev
    ```
 
-5. Confirm the backend logs `DEV AUTH ENABLED — do not use in production` at
+3. Confirm the backend logs `DEV AUTH ENABLED — do not use in production` at
    startup.
 
 ## Use dev login in the browser

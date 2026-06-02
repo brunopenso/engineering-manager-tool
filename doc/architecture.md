@@ -97,5 +97,6 @@ PostgreSQL; the web app only exposes menu routes allowed for the signed-in user.
 
 ## Related docs
 
-- [Getting started](getting-started.md) — run the stack locally
+- [Getting started](getting-started.md) — first-time setup (run the stack locally)
+- [Lerna](lerna.md) — day-to-day commands
 - [Development login](development-login.md) — local auth bypass

@@ -4,8 +4,9 @@ Migrations and seeds are managed in `@em-tool/backend` under
 `packages/backend/database/`. Configure `packages/backend/.env` and ensure
 PostgreSQL is running before using these workflows.
 
-To run or roll back migrations and execute seeds, see [getting-started.md](getting-started.md)
-and [lerna.md](lerna.md).
+First-time apply/run workflow: [getting-started.md](getting-started.md). To run,
+roll back, or re-run seeds anytime, see
+[lerna.md — Database migrations and seeds](lerna.md#database-migrations-and-seeds).
 
 ## Create a new migration
 
@@ -44,5 +45,5 @@ databases with real data.
 
 ## Related docs
 
-- [Getting started](getting-started.md) — apply migrations and run seeds
-- [Lerna](lerna.md) — database commands with workspace or Lerna scope
+- [Getting started](getting-started.md) — first-time setup including migrations
+- [Lerna](lerna.md) — run, roll back, and seed commands (canonical reference)

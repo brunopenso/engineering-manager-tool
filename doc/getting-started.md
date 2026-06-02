@@ -1,24 +1,26 @@
 # Getting started
 
-## Authentication overview
-
-This project uses Google authentication with a web login flow and a backend token
-validation endpoint. For local development, an optional **dev login** bypass lets
-you sign in as any user in the database without a Google account. See
-[development-login.md](development-login.md) for setup and usage.
+First-time setup for running the stack locally. For a minimal command checklist,
+see the [fast path](README.md#fast-path) in [doc/README.md](README.md).
 
 ## Prerequisites
 
 - Node.js 24+ (see [`.nvmrc`](../.nvmrc) at the repo root)
-- PostgreSQL instance
-- Google OAuth Client ID (required for production; optional locally if dev login is enabled)
+- PostgreSQL instance (running and reachable from your machine)
+- Google OAuth Client ID (required for production; optional locally if [dev login](development-login.md) is enabled)
 
 ## Environment files
 
-Create local environment files from examples:
+From the repository root, copy the example files:
 
-- `packages/backend/.env.example`
-- `packages/web/.env.example`
+```bash
+cp packages/backend/.env.example packages/backend/.env
+cp packages/web/.env.example packages/web/.env
+```
+
+Edit `packages/backend/.env` for your PostgreSQL connection and secrets. The
+example defaults (`DB_USER` / `DB_PASS` of `postgres` / `postgres`, database
+`engineering_manager_tool`) match a typical local install — adjust as needed.
 
 Required backend values:
 
@@ -29,41 +31,65 @@ Required backend values:
 
 Required web values:
 
-- `VITE_API_BASE_URL`
+- `VITE_API_BASE_URL` — use `/api` in local dev so the Vite dev server (port 3000) proxies API requests to the backend
 - `VITE_GOOGLE_CLIENT_ID`
 
-## Install and run
+## PostgreSQL
+
+Create the database named in `DB_NAME` if it does not exist yet, for example:
+
+```bash
+createdb engineering_manager_tool
+```
+
+Ensure the PostgreSQL service is running before the steps below.
+
+## Install dependencies
 
 From the repository root:
 
 ```bash
 npm install
-npm run dev
 ```
-
-This starts the web app on port 3000 (proxies `/api` to the backend) and the API on port 3001.
 
 ## Migrations and seeds
 
-After PostgreSQL is configured in `packages/backend/.env` and PostgreSQL is
-running, use these commands from the repository root.
-
-### Run migrations
-
-Apply pending migrations:
+With PostgreSQL running and `packages/backend/.env` configured, apply pending
+migrations (required before the first dev run):
 
 ```bash
 npm run db:migration:run --workspace @em-tool/backend
 ```
 
-### Run seeds
+Optional: load local sample data (truncates application tables first — see
+[database.md](database.md)):
 
 ```bash
 npm run db:seed --workspace @em-tool/backend
 ```
 
-To create migration or seed files, see [database.md](database.md). For rollback
-and running commands via Lerna scope, see [lerna.md](lerna.md).
+To create migration or seed files, see [database.md](database.md). For rollback,
+Lerna scope, and other database commands, see
+[lerna.md — Database migrations and seeds](lerna.md#database-migrations-and-seeds).
+
+## Start dev servers
+
+From the repository root:
+
+```bash
+npm run dev
+```
+
+This starts the web app on port 3000 (proxies `/api` to the backend) and the API
+on port 3001.
+
+## Authentication
+
+This project uses Google authentication with a web login flow and a backend token
+validation endpoint. For local development, an optional **dev login** bypass lets
+you sign in as any user in the database without a Google account. The example
+env files enable it by default — see [development-login.md](development-login.md)
+for usage, role testing, and security notes.
 
 ## Expected auth behavior
 
@@ -72,13 +98,6 @@ and running commands via Lerna scope, see [lerna.md](lerna.md).
 - `/healthcheck` and `/healthcheck/complete` remain public for operational checks.
 - Successful login redirects to the welcome screen in the app shell.
 
-## Other commands
+## Day-to-day commands
 
-Test, lint, build, and database scripts are documented in [lerna.md](lerna.md).
-Quick reference from the repository root:
-
-| Action | Command |
-|--------|---------|
-| Lint (all packages) | `npm run lint` |
-| Test (all packages) | `npm run test` |
-| Build (all packages) | `npm run build` |
+Test, lint, build, and per-package scripts are documented in [lerna.md](lerna.md).

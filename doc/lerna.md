@@ -106,6 +106,9 @@ npx lerna run lint --scope=@em-tool/web
 
 ## Database migrations and seeds
 
+Canonical reference for running migrations and seeds. First-time setup order is
+in [getting-started.md](getting-started.md).
+
 Migration and seed scripts exist **only** on `@em-tool/backend`. Ensure
 `packages/backend/.env` is configured and PostgreSQL is running before running
 these commands.
