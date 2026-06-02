@@ -35,5 +35,7 @@ govern organization-wide settings.
 ## Documentation
 
 - [Getting started](doc/getting-started.md) — prerequisites, environment setup, migrations, and dev servers
+- [Database](doc/database.md) — creating migrations and seed files
 - [Architecture](doc/architecture.md) — monorepo layout, components, and request flow
+- [Lerna](doc/lerna.md) — test, lint, migrations, and seeds per package or for the whole monorepo
 - [Development login](doc/development-login.md) — local testing without Google accounts

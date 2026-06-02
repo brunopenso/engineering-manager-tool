@@ -43,41 +43,27 @@ npm run dev
 
 This starts the web app on port 3000 (proxies `/api` to the backend) and the API on port 3001.
 
-## Migrations
+## Migrations and seeds
+
+After PostgreSQL is configured in `packages/backend/.env` and PostgreSQL is
+running, use these commands from the repository root.
+
+### Run migrations
+
+Apply pending migrations:
 
 ```bash
 npm run db:migration:run --workspace @em-tool/backend
 ```
 
-## Seeds
-
-Seed files live in `packages/backend/database/seeds` and are executed in
-filename order. The first seed, `000-clear-database.seed.ts`, truncates all
-application tables on every run. Schema and migration history are preserved, but
-all row data is deleted before subsequent seeds run. Use this for local/dev
-reset only; do not run `db:seed` against production databases with real data.
-
-Create a seed with the `*.seed.ts` suffix:
-
-```ts
-import { defineSeed } from '../../src/database/seeds.js';
-
-export default defineSeed({
-  name: 'example-seed',
-  async run(dataSource) {
-    await dataSource.transaction(async (manager) => {
-      // Insert or update seed data here. Keep seeds idempotent.
-      // Example pattern: await manager.upsert(Entity, records, conflictPaths);
-    });
-  },
-});
-```
-
-Run all seeds:
+### Run seeds
 
 ```bash
 npm run db:seed --workspace @em-tool/backend
 ```
+
+To create migration or seed files, see [database.md](database.md). For rollback
+and running commands via Lerna scope, see [lerna.md](lerna.md).
 
 ## Expected auth behavior
 
@@ -88,10 +74,11 @@ npm run db:seed --workspace @em-tool/backend
 
 ## Other commands
 
-From the repository root ([`package.json`](../package.json)):
+Test, lint, build, and database scripts are documented in [lerna.md](lerna.md).
+Quick reference from the repository root:
 
 | Action | Command |
 |--------|---------|
-| Lint | `npm run lint` |
-| Test | `npm run test` |
-| Build | `npm run build` |
+| Lint (all packages) | `npm run lint` |
+| Test (all packages) | `npm run test` |
+| Build (all packages) | `npm run build` |
