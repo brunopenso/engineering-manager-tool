@@ -141,11 +141,12 @@ export default function DeliverablesPage() {
       return;
     }
 
+    const token = accessToken;
     let cancelled = false;
 
     async function loadCatalog() {
       try {
-        const tags = await fetchTagCatalog(accessToken);
+        const tags = await fetchTagCatalog(token);
         if (!cancelled) {
           setCatalogTags(tags);
         }

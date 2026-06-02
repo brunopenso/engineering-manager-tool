@@ -27,6 +27,7 @@ export default function LeaderHierarchyViewPanel() {
       return;
     }
 
+    const token = accessToken;
     let cancelled = false;
 
     async function loadHierarchy() {
@@ -34,7 +35,7 @@ export default function LeaderHierarchyViewPanel() {
       setErrorMessage(null);
 
       try {
-        const data = await fetchLeaderHierarchyView(accessToken);
+        const data = await fetchLeaderHierarchyView(token);
         if (!cancelled) {
           setHierarchy(data);
         }
