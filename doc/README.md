@@ -7,8 +7,6 @@ Setup and development guides for running the Engineering Manager Tool locally.
 
 ## Guides
 
-Same order as the [root README](../README.md#documentation):
-
 - [Getting started](getting-started.md) — prerequisites, environment files, install, migrations/seeds, and dev servers
 - [Database](database.md) — creating migrations and seed files
 - [Architecture](architecture.md) — monorepo layout, system diagram, and request flow
