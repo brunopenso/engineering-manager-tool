@@ -11,10 +11,12 @@
     "lint": "lerna run lint --parallel",
     "lint:fix": "lerna run lint --parallel --fix",
     "clean": "lerna run clean --parallel && rm -rf node_modules",
-    "lerna:repair": "lerna repair"
+    "lerna:repair": "lerna repair",
+    "prepare": "husky"
   },
   "devDependencies": {
     "@types/node": "^24.0.0",
+    "husky": "^9.1.7",
     "jsdom": "^29.1.1",
     "lerna": "^9.0.7",
     "typescript": "^6.0.3",
