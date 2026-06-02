@@ -25,5 +25,7 @@ npm run dev
 ```
 
 Optional sample data: `npm run db:seed --workspace @em-tool/backend` (see
-[database.md](database.md)). For Google-free sign-in, see
+[database.md](database.md)). 
+
+For Google-free sign-in, see
 [development-login.md](development-login.md).
