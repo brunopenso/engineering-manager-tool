@@ -1,4 +1,4 @@
-import { fireEvent, screen, waitFor, within } from '@testing-library/react';
+import { fireEvent, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import App from '../../src/App.js';
@@ -75,6 +75,7 @@ describe('US1 deliverable creation', () => {
       });
 
       await screen.findByRole('heading', { name: 'Add deliverable' });
+      await screen.findByRole('textbox', { name: 'Title' });
 
       fireEvent.change(screen.getByRole('textbox', { name: 'Title' }), {
         target: { value: 'API redesign' },
@@ -97,12 +98,10 @@ describe('US1 deliverable creation', () => {
       const listbox = await screen.findByRole('listbox');
       await userEvent.click(within(listbox).getByRole('option', { name: 'Platform' }));
       await userEvent.keyboard('{Escape}');
-      await userEvent.click(screen.getByRole('button', { name: 'Save' }));
+      await userEvent.click(await screen.findByRole('button', { name: 'Save' }));
 
-      await waitFor(() => {
-        expect(screen.getByRole('heading', { name: 'Deliverables' })).toBeInTheDocument();
-        expect(screen.getByText('API redesign')).toBeInTheDocument();
-      });
+      expect(await screen.findByRole('heading', { name: 'Deliverables' })).toBeInTheDocument();
+      expect(await screen.findByText('API redesign')).toBeInTheDocument();
     },
     15000,
   );
@@ -176,6 +175,7 @@ describe('US1 deliverable creation', () => {
       });
 
       await screen.findByRole('heading', { name: 'Add deliverable' });
+      await screen.findByRole('textbox', { name: 'Title' });
 
       fireEvent.change(screen.getByRole('textbox', { name: 'Title' }), {
         target: { value: 'Untagged deliverable' },
@@ -194,12 +194,10 @@ describe('US1 deliverable creation', () => {
         { target: { value: 'Write more docs' } },
       );
 
-      await userEvent.click(screen.getByRole('button', { name: 'Save' }));
+      await userEvent.click(await screen.findByRole('button', { name: 'Save' }));
 
-      await waitFor(() => {
-        expect(screen.getByRole('heading', { name: 'Deliverables' })).toBeInTheDocument();
-        expect(screen.getByText('Untagged deliverable')).toBeInTheDocument();
-      });
+      expect(await screen.findByRole('heading', { name: 'Deliverables' })).toBeInTheDocument();
+      expect(await screen.findByText('Untagged deliverable')).toBeInTheDocument();
 
       expect(postBody).toMatchObject({ systemTagIds: [] });
     },

@@ -85,7 +85,7 @@ describe('US3 deliverable update', () => {
         expect(titleField).toHaveValue('API redesign');
       });
       fireEvent.change(titleField, { target: { value: 'API redesign v2' } });
-      await userEvent.click(screen.getByRole('button', { name: 'Save changes' }));
+      await userEvent.click(await screen.findByRole('button', { name: 'Save changes' }));
 
       await waitFor(() => {
         expect(screen.getByRole('heading', { name: 'Deliverables' })).toBeInTheDocument();
