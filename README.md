@@ -1,221 +1,42 @@
-# engineering-manager-tool
-Software for managing the day by day of the engineering manager 
+# Engineering Manager Tool
 
-## Authentication Setup
+Software for the day-to-day work of engineering managers and their teams.
 
-This project uses Google authentication with a web login flow and a backend token
-validation endpoint. For local development, an optional **dev login** bypass lets
-you sign in as any user in the database without a Google account.
+## What it does
 
-### Prerequisites
+Engineering managers and their teams use this tool to capture deliverables, track
+impact and growth, and understand team structure in one place.
 
-- Node.js 24+
-- PostgreSQL instance
-- Google OAuth Client ID (required for production; optional locally if dev login is enabled)
+Every user is a **collaborator** who manages their own deliverables and profile.
+**Leaders** additionally review team deliverables and manage the reporting
+hierarchy. **Administrators** configure user roles and the shared tag catalog.
 
-### Environment Files
+You only see menu options and data your role allows. Leaders read subordinate
+deliverables read-only; peers cannot see each other's work; administrators
+govern organization-wide settings.
 
-Create local environment files from examples:
+## Capabilities by role
 
-- `packages/backend/.env.example`
-- `packages/web/.env.example`
+### Collaborator
 
-Required backend values:
+- Home and profile
+- Create, edit, and delete personal deliverables (title, description, role, system tags, business impact, improvement points, and optional metadata)
 
-- `DB_HOST`, `DB_PORT`, `DB_USER`, `DB_PASS`, `DB_NAME`
-- `GOOGLE_CLIENT_ID`
-- `APP_AUTH_SECRET`
-- `APP_AUTH_TOKEN_TTL`
+### Leader
 
-Required web values:
+- View and manage reporting hierarchy
+- Browse team members' deliverables with date filters and reviewed status
 
-- `VITE_API_BASE_URL`
-- `VITE_GOOGLE_CLIENT_ID`
+### Administrator
 
-### Install and Run
+- Manage users and role assignments
+- Maintain the organization-wide system tag catalog
 
-```bash
-npm install
-npm run dev
-```
+## Documentation
 
-### Migrations
-
-```bash
-npm run db:migration:run --workspace @em-tool/backend
-```
-
-### Seeds
-
-Seed files live in `packages/backend/database/seeds` and are executed in
-filename order. The first seed, `000-clear-database.seed.ts`, truncates all
-application tables on every run. Schema and migration history are preserved, but
-all row data is deleted before subsequent seeds run. Use this for local/dev
-reset only; do not run `db:seed` against production databases with real data.
-
-Create a seed with the `*.seed.ts` suffix:
-
-```ts
-import { defineSeed } from '../../src/database/seeds.js';
-
-export default defineSeed({
-  name: 'example-seed',
-  async run(dataSource) {
-    await dataSource.transaction(async (manager) => {
-      // Insert or update seed data here. Keep seeds idempotent.
-      // Example pattern: await manager.upsert(Entity, records, conflictPaths);
-    });
-  },
-});
-```
-
-Run all seeds:
-
-```bash
-npm run db:seed --workspace @em-tool/backend
-```
-
-### Expected Auth Behavior
-
-- `/login` is the only public web page.
-- `/app` and other non-login web routes require authentication.
-- `/healthcheck` and `/healthcheck/complete` remain public for operational checks.
-- Successful login redirects to `Welcome to the system`.
-
-## Development Login (local only)
-
-Use dev login when you need to test the app as different users (collaborator,
-leader, admin, hierarchy views) but do not have Google access to those accounts.
-
-Dev login **does not bypass authorization**. It only skips Google OAuth. Roles
-and org hierarchy still come from PostgreSQL, same as in production.
-
-### Enable dev login
-
-1. Copy the example env files if you have not already:
-
-   ```bash
-   cp packages/backend/.env.example packages/backend/.env
-   cp packages/web/.env.example packages/web/.env
-   ```
-
-2. Add these variables to `packages/backend/.env`:
-
-   ```env
-   DEV_AUTH_ENABLED=true
-   DEV_AUTH_SECRET=local-dev-only-change-me
-   ```
-
-3. Add matching variables to `packages/web/.env`:
-
-   ```env
-   VITE_DEV_AUTH_ENABLED=true
-   VITE_DEV_AUTH_SECRET=local-dev-only-change-me
-   ```
-
-   The secret in both files **must match**. Change it to any value you like for
-   local use.
-
-4. Restart the dev servers:
-
-   ```bash
-   npm run dev
-   ```
-
-5. Confirm the backend logs `DEV AUTH ENABLED — do not use in production` at
-   startup.
-
-### Use dev login in the browser
-
-1. Open [http://localhost:3000/login](http://localhost:3000/login).
-2. Below the Google sign-in button, a **Development login** section appears.
-3. Choose one of these options:
-
-   **Sign in as an existing user**
-
-   - Pick a user from the **Existing user** dropdown (shows name, email, and roles).
-   - Click **Sign in as selected user**.
-
-   **Sign in with a new email**
-
-   - Enter an **Email** and optional **Full name**.
-   - Click **Sign in with email**.
-   - A new user is created with the default `COLLABORATOR` role.
-
-4. You are redirected to `/app` with a normal JWT session, identical to a Google login.
-
-To switch users, sign out and return to `/login`, then pick a different account.
-
-### Prepare users for role and hierarchy testing
-
-Dev login signs you in as a user; it does not grant roles automatically (except
-the default collaborator role for newly created users). To test admin, leader, or
-hierarchy features:
-
-1. Sign in once (via Google or dev login) with an account you control.
-2. Grant roles through the admin UI, or insert rows in `user_roles`:
-
-   ```sql
-   INSERT INTO user_roles (user_id, role)
-   SELECT id, 'ADMINISTRATOR' FROM users WHERE email = 'admin@example.com'
-   ON CONFLICT DO NOTHING;
-
-   INSERT INTO user_roles (user_id, role)
-   SELECT id, 'LEADER' FROM users WHERE email = 'leader@example.com'
-   ON CONFLICT DO NOTHING;
-   ```
-
-3. Create subordinates via leader APIs or set `users.leader_id` in the database.
-4. Use the dev login picker to switch between those users.
-
-Optional: set `BOOTSTRAP_ADMIN_EMAILS=your@email.com` in `packages/backend/.env`
-before running migrations to auto-grant `ADMINISTRATOR` to specific emails on
-first migration backfill.
-
-### Dev login API (optional)
-
-You can also call the backend directly (for scripts or API clients):
-
-```bash
-# List users
-curl -s http://localhost:3001/auth/dev/users \
-  -H "X-Dev-Auth-Secret: local-dev-only-change-me"
-
-# Sign in as an existing user
-curl -s -X POST http://localhost:3001/auth/dev/login \
-  -H "Content-Type: application/json" \
-  -H "X-Dev-Auth-Secret: local-dev-only-change-me" \
-  -d '{"userId":"<user-uuid>"}'
-
-# Sign in with a new email
-curl -s -X POST http://localhost:3001/auth/dev/login \
-  -H "Content-Type: application/json" \
-  -H "X-Dev-Auth-Secret: local-dev-only-change-me" \
-  -d '{"email":"report@example.com","fullName":"Direct Report"}'
-```
-
-Use the returned `accessToken` as `Authorization: Bearer <token>` on protected routes.
-
-### Disable dev login
-
-Remove or set to `false`:
-
-```env
-DEV_AUTH_ENABLED=false
-VITE_DEV_AUTH_ENABLED=false
-```
-
-Restart `npm run dev`. The development login section disappears from the login page.
-
-### Security notes
-
-Dev login is **disabled in production** (`NODE_ENV=production`), even if env vars
-are set. Never enable it in deployed environments.
-
-| Guard | Purpose |
-|-------|---------|
-| `NODE_ENV !== 'production'` | Hard block in production |
-| `DEV_AUTH_ENABLED=true` | Explicit opt-in on the backend |
-| `VITE_DEV_AUTH_ENABLED=true` | Explicit opt-in on the web app |
-| `X-Dev-Auth-Secret` header | Required on every dev auth API request |
-| No role override in login body | Roles remain DB-authoritative |
+- [Technical documentation](doc/README.md) — doc index and fast-path setup commands
+- [Getting started](doc/getting-started.md) — prerequisites, environment setup, migrations, and dev servers
+- [Database](doc/database.md) — creating migrations and seed files
+- [Architecture](doc/architecture.md) — monorepo layout, components, and request flow
+- [Lerna](doc/lerna.md) — test, lint, migrations, and seeds per package or for the whole monorepo
+- [Development login](doc/development-login.md) — local testing without Google accounts

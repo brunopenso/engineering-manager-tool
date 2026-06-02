@@ -9,6 +9,8 @@ This is a TypeScript monorepo (Lerna + npm workspaces) with two packages:
 - **`@em-tool/backend`** — Fastify 5 REST API (port 3001)
 - **`@em-tool/web`** — React 19 + Vite 8 SPA (port 3000, proxies `/api` to backend)
 
+Human-oriented setup: see [`doc/getting-started.md`](doc/getting-started.md).
+
 ### Node.js version
 
 Requires **Node.js 24** (see `.nvmrc`). The Cloud VM's `/exec-daemon/node` shim is v22 and shadows nvm. To use the correct version, ensure `~/.bashrc` exports:
