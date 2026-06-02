@@ -10,12 +10,12 @@ and org hierarchy still come from PostgreSQL, same as in production.
 
 ## Enable dev login
 
-Complete [getting-started.md](getting-started.md) first (env files copied,
-migrations applied). The example env files already enable dev login with matching
-secrets.
+Complete [getting-started.md](getting-started.md) first (env files created,
+migrations applied). The getting-started templates already enable dev login with
+matching secrets.
 
 1. Confirm these variables are set in `packages/backend/.env` and
-   `packages/web/.env` (enabled by default in `.env.example`):
+   `packages/web/.env` (enabled by default in those templates):
 
    ```env
    DEV_AUTH_ENABLED=true

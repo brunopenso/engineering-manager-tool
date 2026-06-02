@@ -20,8 +20,7 @@ Same order as the [root README](../README.md#documentation):
 After [prerequisites](getting-started.md#prerequisites) and PostgreSQL are in place:
 
 ```bash
-cp packages/backend/.env.example packages/backend/.env
-cp packages/web/.env.example packages/web/.env
+# Create packages/backend/.env and packages/web/.env — see getting-started.md
 npm install
 npm run db:migration:run --workspace @em-tool/backend
 npm run dev
