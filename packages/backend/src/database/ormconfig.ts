@@ -23,6 +23,4 @@ const ormConfig: DataSourceOptions = {
   migrationsTableName: 'migrations',
 };
 
-console.log(JSON.stringify(ormConfig, null, 2));
-
 export default ormConfig;

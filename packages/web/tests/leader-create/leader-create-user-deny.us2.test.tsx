@@ -4,13 +4,14 @@ import App from '../../src/App.js';
 import { renderWithProviders, testUser } from '../../src/test/renderWithProviders.js';
 
 describe('US2 non-leader route deny', () => {
-  it('redirects non-leader away from leader create page', () => {
+  it('redirects non-leader away from leader hierarchy page', () => {
     renderWithProviders(<App />, {
-      initialPath: '/app/leader/users/new',
+      initialPath: '/app/leader/hierarchy',
       isAuthenticated: true,
       user: testUser,
     });
 
-    expect(screen.queryByText('Create new user')).not.toBeInTheDocument();
+    expect(screen.queryByRole('tab', { name: 'Create User' })).not.toBeInTheDocument();
+    expect(screen.queryByRole('textbox', { name: /full name/i })).not.toBeInTheDocument();
   });
 });

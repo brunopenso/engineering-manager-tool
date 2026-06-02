@@ -31,7 +31,8 @@ describe('US3 update error handling', () => {
       user: testAdminUser,
     });
 
-    await userEvent.click(await screen.findByRole('button', { name: 'Save' }));
+    await screen.findByDisplayValue('Platform');
+    await userEvent.click(screen.getByRole('button', { name: 'Save' }));
 
     await waitFor(() => {
       expect(screen.getByText('A tag with this name already exists.')).toBeInTheDocument();

@@ -62,10 +62,37 @@ paths:
                 $ref: '#/components/schemas/ErrorResponse'
   /users:
     get:
-      summary: List users with role profiles (administrator only)
+      summary: List users with role profiles (administrator only, filterable)
+      description: |
+        Returns organization users matching optional filters. Name and email use
+        case-insensitive substring match after trim. Roles use OR when multiple
+        values are supplied. Dimensions combine with AND.
       tags: [User Administration]
       security:
         - bearerAuth: []
+      parameters:
+        - name: name
+          in: query
+          required: false
+          schema:
+            type: string
+          description: When provided (non-empty after trim), filter by display name substring.
+        - name: email
+          in: query
+          required: false
+          schema:
+            type: string
+          description: When provided (non-empty after trim), filter by email substring.
+        - name: roles
+          in: query
+          required: false
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/UserRoleType'
+          style: form
+          explode: true
+          description: When provided, return users with at least one listed role (OR).
       responses:
         '200':
           description: User directory for administration
@@ -79,6 +106,12 @@ paths:
                     type: array
                     items:
                       $ref: '#/components/schemas/UserProfile'
+        '400':
+          description: Invalid role filter value
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
         '403':
           description: Caller lacks administrator role
           content:

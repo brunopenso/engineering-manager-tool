@@ -18,6 +18,7 @@ import type {
   LeaderHierarchyViewResponse,
 } from '../types/hierarchyView.js';
 import type { TeamMemberOption, TeamMembersResponse } from '../types/teamDeliverables.js';
+import type { AdminUserListFilters } from '../types/adminUserListFilters.js';
 import {
   buildHierarchyTreeFromRows,
   collectHierarchyNodeIds,
@@ -68,6 +69,35 @@ export async function upsertUserFromGoogleIdentity(
 
 export async function findAllUsers(): Promise<User[]> {
   return userRepository().find({ order: { email: 'ASC' } });
+}
+
+export async function findUsersForAdmin(filters: AdminUserListFilters = {}): Promise<User[]> {
+  const repository = userRepository();
+  const qb = repository.createQueryBuilder('user').orderBy('user.email', 'ASC');
+
+  if (filters.name) {
+    qb.andWhere('LOWER(user.fullName) LIKE :namePattern', {
+      namePattern: `%${filters.name.toLowerCase()}%`,
+    });
+  }
+
+  if (filters.email) {
+    qb.andWhere('LOWER(user.email) LIKE :emailPattern', {
+      emailPattern: `%${filters.email.toLowerCase()}%`,
+    });
+  }
+
+  if (filters.roles && filters.roles.length > 0) {
+    qb.andWhere(
+      `EXISTS (
+        SELECT 1 FROM user_roles ur
+        WHERE ur.user_id = user.id AND ur.role IN (:...roles)
+      )`,
+      { roles: filters.roles },
+    );
+  }
+
+  return qb.getMany();
 }
 
 export async function findUserById(id: string): Promise<User | null> {

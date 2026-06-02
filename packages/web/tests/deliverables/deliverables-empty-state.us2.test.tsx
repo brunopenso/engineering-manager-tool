@@ -2,6 +2,7 @@ import { screen, waitFor } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import DeliverablesPage from '../../src/pages/DeliverablesPage.js';
 import { renderWithProviders } from '../../src/test/renderWithProviders.js';
+import { stubDeliverablesPageFetch } from './deliverables-page-fetch-mock.js';
 
 describe('US2 deliverables empty state', () => {
   afterEach(() => {
@@ -9,19 +10,9 @@ describe('US2 deliverables empty state', () => {
   });
 
   it('shows empty state when no deliverables exist', async () => {
-    vi.stubGlobal(
-      'fetch',
-      vi
-        .fn()
-        .mockResolvedValueOnce({
-          ok: true,
-          json: async () => ({ deliverables: [] }),
-        })
-        .mockResolvedValueOnce({
-          ok: true,
-          json: async () => ({ tags: [] }),
-        }),
-    );
+    stubDeliverablesPageFetch({
+      list: { deliverables: [], hasAnyDeliverables: false },
+    });
 
     renderWithProviders(<DeliverablesPage />, { isAuthenticated: true });
 

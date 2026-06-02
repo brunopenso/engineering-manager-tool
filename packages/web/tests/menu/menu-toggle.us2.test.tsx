@@ -18,5 +18,8 @@ describe('US2 menu toggle', () => {
 
     expect(menuButton).toHaveAttribute('aria-expanded', 'true');
     expect(screen.getByRole('navigation', { name: 'App navigation' })).toBeInTheDocument();
+
+    const main = screen.getByRole('main', { hidden: true });
+    expect(parseFloat(getComputedStyle(main).marginLeft)).toBe(0);
   });
 });

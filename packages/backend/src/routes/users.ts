@@ -21,6 +21,7 @@ import {
   assertUserInLeaderSubtree,
   createUserByLeader,
   findAllUsers,
+  findUsersForAdmin,
   findUserById,
   getLeaderHierarchyView,
   getLeaderTeamMembers,
@@ -29,6 +30,10 @@ import {
 import { listTeamDeliverablesForReview } from '../services/deliverableService.js';
 import { TeamDeliverablesDateError } from '../services/teamDeliverablesDate.js';
 import { UserCreateValidationError } from '../services/userCreateValidation.js';
+import {
+  AdminUserListValidationError,
+  parseAdminUserListFilters,
+} from '../services/adminUserListQuery.js';
 
 type RoleChangeBody = {
   role?: string;
@@ -44,6 +49,12 @@ type LeaderCreateUserBody = {
 
 type OrphanSearchQuery = {
   query?: string;
+};
+
+type AdminUserListQuery = {
+  name?: string;
+  email?: string;
+  roles?: string | string[];
 };
 
 type TeamDeliverablesQuery = {
@@ -174,7 +185,7 @@ export async function registerUsersRoutes(app: FastifyInstance): Promise<void> {
     }
   });
 
-  app.get('/users', async (request, reply) => {
+  app.get<{ Querystring: AdminUserListQuery }>('/users', async (request, reply) => {
     const auth = requireAuth(request, reply);
     if (!auth) {
       return {
@@ -189,7 +200,18 @@ export async function registerUsersRoutes(app: FastifyInstance): Promise<void> {
       return forbidden(reply);
     }
 
-    const users = await findAllUsers();
+    let filters;
+    try {
+      filters = parseAdminUserListFilters(request.query ?? {});
+    } catch (error) {
+      if (error instanceof AdminUserListValidationError) {
+        return validationError(reply, error.message);
+      }
+
+      throw error;
+    }
+
+    const users = await findUsersForAdmin(filters);
     const mappedUsers = await Promise.all(users.map((user) => mapUserToAuthResponse(user)));
 
     return { users: mappedUsers };

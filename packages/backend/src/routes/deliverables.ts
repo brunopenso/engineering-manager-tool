@@ -5,7 +5,9 @@ import {
   assertCanReadDeliverables,
   assertLeaderRole,
 } from '../services/authorizationService.js';
+import { parseDeliverableListFilters } from '../services/deliverableListQuery.js';
 import {
+  countDeliverablesForOwner,
   createDeliverable,
   deleteDeliverable,
   getDeliverableById,
@@ -110,7 +112,14 @@ function handleDeliverableError(error: unknown, reply: FastifyReply) {
 }
 
 export async function registerDeliverablesRoutes(app: FastifyInstance): Promise<void> {
-  app.get('/deliverables', async (request, reply) => {
+  app.get<{
+    Querystring: {
+      startDate?: string;
+      endDate?: string;
+      businessImpact?: string | string[];
+      systemTagIds?: string | string[];
+    };
+  }>('/deliverables', async (request, reply) => {
     const auth = requireAuth(request, reply);
     if (!auth) {
       return {
@@ -119,8 +128,24 @@ export async function registerDeliverablesRoutes(app: FastifyInstance): Promise<
       };
     }
 
-    const deliverables = await listDeliverablesForOwner(auth.userId);
-    return { deliverables };
+    let filters;
+    try {
+      filters = parseDeliverableListFilters(request.query);
+    } catch (error) {
+      return handleDeliverableError(error, reply);
+    }
+
+    try {
+      const deliverables = await listDeliverablesForOwner(auth.userId, filters);
+      let hasAnyDeliverables = deliverables.length > 0;
+      if (!hasAnyDeliverables) {
+        hasAnyDeliverables = (await countDeliverablesForOwner(auth.userId)) > 0;
+      }
+
+      return { deliverables, hasAnyDeliverables };
+    } catch (error) {
+      return handleDeliverableError(error, reply);
+    }
   });
 
   app.get<{ Params: { userId: string } }>('/users/:userId/deliverables', async (request, reply) => {
