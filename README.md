@@ -32,20 +32,8 @@ govern organization-wide settings.
 - Manage users and role assignments
 - Maintain the organization-wide system tag catalog
 
-## Architecture
+## Documentation
 
-TypeScript monorepo (Lerna + npm workspaces):
-
-| Package | Stack | Port |
-|---------|-------|------|
-| `@em-tool/web` | React 19, Vite 8 | 3000 |
-| `@em-tool/backend` | Fastify 5 REST API | 3001 |
-
-PostgreSQL stores application data. Sign-in uses Google OAuth in production; see
-the technical docs for local development options.
-
-## Getting started
-
-See [doc/getting-started.md](doc/getting-started.md) for prerequisites, environment
-setup, migrations, and running the dev servers. The [doc/](doc/) folder also covers
-[development login](doc/development-login.md) for local testing without Google accounts.
+- [Getting started](doc/getting-started.md) — prerequisites, environment setup, migrations, and dev servers
+- [Architecture](doc/architecture.md) — monorepo layout, components, and request flow
+- [Development login](doc/development-login.md) — local testing without Google accounts

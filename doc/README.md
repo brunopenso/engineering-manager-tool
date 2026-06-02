@@ -4,6 +4,7 @@ Setup and development guides for running the Engineering Manager Tool locally.
 
 ## Guides
 
+- [Architecture](architecture.md) — monorepo layout, system diagram, and request flow
 - [Getting started](getting-started.md) — prerequisites, environment files, install, migrations, seeds, and auth behavior
 - [Development login](development-login.md) — local-only sign-in without Google OAuth
 
