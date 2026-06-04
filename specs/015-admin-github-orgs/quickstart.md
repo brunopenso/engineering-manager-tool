@@ -41,6 +41,15 @@ npm run test --workspace @em-tool/web -- --run admin-github-orgs
 npm run lint
 ```
 
+### Verification record (2026-06-04)
+
+| Command | Result |
+|---|---|
+| `db:migration:run` | Applied `AddGithubIntegrations1779769000000` (`github_integrations` table) |
+| Backend `--run admin-github-orgs` | 7 files, 14 tests passed |
+| Web `--run admin-github-orgs` | 5 files, 6 tests passed |
+| `npm run lint` | Passed (`tsc --noEmit` backend + web) |
+
 ## Manual smoke
 
 1. Administration → **GitHub integration**.

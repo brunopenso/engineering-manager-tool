@@ -7,6 +7,7 @@ import OptionUnavailablePage from './pages/OptionUnavailablePage.js';
 import ProfilePage from './pages/ProfilePage.js';
 import AdminUsersPage from './pages/AdminUsersPage.js';
 import AdminTagsPage from './pages/AdminTagsPage.js';
+import AdminGithubIntegrationsPage from './pages/AdminGithubIntegrationsPage.js';
 import DeliverablesPage from './pages/DeliverablesPage.js';
 import DeliverableFormPage from './pages/DeliverableFormPage.js';
 import DeliverablesViewPage from './pages/DeliverablesViewPage.js';
@@ -83,6 +84,14 @@ export default function App() {
           element={
             <AdminRoute>
               <AdminTagsPage />
+            </AdminRoute>
+          }
+        />
+        <Route
+          path="admin/github"
+          element={
+            <AdminRoute>
+              <AdminGithubIntegrationsPage />
             </AdminRoute>
           }
         />

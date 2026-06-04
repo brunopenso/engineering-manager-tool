@@ -13,6 +13,7 @@ import { isDevAuthEnabled } from './auth/devAuthConfig.js';
 import { registerHealthcheckRoutes } from './routes/healthcheck.js';
 import { registerDeliverablesRoutes } from './routes/deliverables.js';
 import { registerTagsRoutes } from './routes/tags.js';
+import { registerGithubIntegrationsRoutes } from './routes/githubIntegrations.js';
 import { registerUsersRoutes } from './routes/users.js';
 import { registerOrganizationalHierarchyResolver } from './services/organizationalHierarchy.js';
 import { databaseOrganizationalHierarchyResolver } from './services/databaseOrganizationalHierarchyResolver.js';
@@ -28,6 +29,7 @@ await registerAuthRoutes(app);
 await registerDevAuthRoutes(app);
 await registerUsersRoutes(app);
 await registerTagsRoutes(app);
+await registerGithubIntegrationsRoutes(app);
 await registerDeliverablesRoutes(app);
 
 try {

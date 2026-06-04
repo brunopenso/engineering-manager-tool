@@ -13,9 +13,9 @@
 
 **Purpose**: Acceptance plans and test scaffolds.
 
-- [ ] T001 Create acceptance test plans in `tests/015-admin-github-orgs/` (`github-integrations-menu.us1.test.md`, `github-integrations-enable.us2.test.md`, `github-integrations-disable.us3.test.md`)
-- [ ] T002 [P] Create backend test scaffold `packages/backend/tests/admin-github-orgs/github-integrations.setup.ts`
-- [ ] T003 [P] Create web test directory `packages/web/tests/admin-github-orgs/` aligned with `packages/web/src/test/renderWithProviders.ts`
+- [X] T001 Create acceptance test plans in `tests/015-admin-github-orgs/` (`github-integrations-menu.us1.test.md`, `github-integrations-enable.us2.test.md`, `github-integrations-disable.us3.test.md`)
+- [X] T002 [P] Create backend test scaffold `packages/backend/tests/admin-github-orgs/github-integrations.setup.ts`
+- [X] T003 [P] Create web test directory `packages/web/tests/admin-github-orgs/` aligned with `packages/web/src/test/renderWithProviders.ts`
 
 ---
 
@@ -25,16 +25,16 @@
 
 **⚠️ CRITICAL**: No user story work starts until this phase is complete.
 
-- [ ] T004 Add migration `packages/backend/database/migrations/*-AddGithubIntegrations.ts` creating table `github_integrations` (`id`, unique `login`, timestamps)
-- [ ] T005 Add `GithubIntegration` entity mapped to `github_integrations` in `packages/backend/src/database/entities/GithubIntegration.ts`
-- [ ] T006 Register `GithubIntegration` in ORM config in `packages/backend/src/database/connection.ts` (or equivalent entity registry)
-- [ ] T007 [P] Add `DUPLICATE_GITHUB_INTEGRATION_LOGIN` to `packages/backend/src/auth/types.ts`
-- [ ] T008 [P] Implement `githubIntegrationValidation.ts` (trim, slug rules, lowercase) in `packages/backend/src/services/githubIntegrationValidation.ts`
-- [ ] T009 Implement `listGithubIntegrations`, `enableGithubIntegration`, `disableGithubIntegration` in `packages/backend/src/services/githubIntegrationService.ts`
-- [ ] T010 Implement `GET` / `POST` / `DELETE /github-integrations/:integrationId` with `assertAdministrator` in `packages/backend/src/routes/githubIntegrations.ts`
-- [ ] T011 Register `githubIntegrations` routes in `packages/backend/src/index.ts`
-- [ ] T012 [P] Add `githubIntegrationsApi.ts` (`listGithubIntegrations`, `enableGithubIntegration`, `disableGithubIntegration`) in `packages/web/src/services/githubIntegrationsApi.ts`
-- [ ] T013 Add backend smoke test: empty `GET /github-integrations` returns `{ integrations: [] }` in `packages/backend/tests/admin-github-orgs/github-integrations.setup.test.ts`
+- [X] T004 Add migration `packages/backend/database/migrations/*-AddGithubIntegrations.ts` creating table `github_integrations` (`id`, unique `login`, timestamps)
+- [X] T005 Add `GithubIntegration` entity mapped to `github_integrations` in `packages/backend/src/database/entities/GithubIntegration.ts`
+- [X] T006 Register `GithubIntegration` in ORM config in `packages/backend/src/database/connection.ts` (or equivalent entity registry)
+- [X] T007 [P] Add `DUPLICATE_GITHUB_INTEGRATION_LOGIN` to `packages/backend/src/auth/types.ts`
+- [X] T008 [P] Implement `githubIntegrationValidation.ts` (trim, slug rules, lowercase) in `packages/backend/src/services/githubIntegrationValidation.ts`
+- [X] T009 Implement `listGithubIntegrations`, `enableGithubIntegration`, `disableGithubIntegration` in `packages/backend/src/services/githubIntegrationService.ts`
+- [X] T010 Implement `GET` / `POST` / `DELETE /github-integrations/:integrationId` with `assertAdministrator` in `packages/backend/src/routes/githubIntegrations.ts`
+- [X] T011 Register `githubIntegrations` routes in `packages/backend/src/index.ts`
+- [X] T012 [P] Add `githubIntegrationsApi.ts` (`listGithubIntegrations`, `enableGithubIntegration`, `disableGithubIntegration`) in `packages/web/src/services/githubIntegrationsApi.ts`
+- [X] T013 Add backend smoke test: empty `GET /github-integrations` returns `{ integrations: [] }` in `packages/backend/tests/admin-github-orgs/github-integrations.setup.test.ts`
 
 **Checkpoint**: Migration runnable; `/github-integrations` endpoints respond for administrators.
 
@@ -48,18 +48,18 @@
 
 ### Tests for User Story 1 (MANDATORY)
 
-- [ ] T014 [P] [US1] Align acceptance scenarios in `tests/015-admin-github-orgs/github-integrations-menu.us1.test.md` with `specs/015-admin-github-orgs/contracts/github-integrations-api.yaml`
-- [ ] T015 [P] [US1] Add backend test: non-admin `GET /github-integrations` returns 403 in `packages/backend/tests/admin-github-orgs/github-integrations-auth.us1.test.ts`
-- [ ] T016 [P] [US1] Add web test: admin menu shows GitHub integration option in `packages/web/tests/admin-github-orgs/admin-github-menu.us1.test.tsx`
-- [ ] T017 [P] [US1] Add web test: `AdminRoute` blocks non-admin on `/app/admin/github` in `packages/web/tests/admin-github-orgs/admin-github-route-guard.us1.test.tsx`
-- [ ] T018 [P] [US1] Add web test: empty state when `integrations` is empty in `packages/web/tests/admin-github-orgs/admin-github-page-empty.us1.test.tsx`
+- [X] T014 [P] [US1] Align acceptance scenarios in `tests/015-admin-github-orgs/github-integrations-menu.us1.test.md` with `specs/015-admin-github-orgs/contracts/github-integrations-api.yaml`
+- [X] T015 [P] [US1] Add backend test: non-admin `GET /github-integrations` returns 403 in `packages/backend/tests/admin-github-orgs/github-integrations-auth.us1.test.ts`
+- [X] T016 [P] [US1] Add web test: admin menu shows GitHub integration option in `packages/web/tests/admin-github-orgs/admin-github-menu.us1.test.tsx`
+- [X] T017 [P] [US1] Add web test: `AdminRoute` blocks non-admin on `/app/admin/github` in `packages/web/tests/admin-github-orgs/admin-github-route-guard.us1.test.tsx`
+- [X] T018 [P] [US1] Add web test: empty state when `integrations` is empty in `packages/web/tests/admin-github-orgs/admin-github-page-empty.us1.test.tsx`
 
 ### Implementation for User Story 1
 
-- [ ] T019 [US1] Add `ADMIN_GITHUB_ROUTE = '/app/admin/github'` and menu option **GitHub integration** in `packages/web/src/routes/shellOptions.ts`
-- [ ] T020 [US1] Create `AdminGithubIntegrationsPage.tsx` shell (heading, list area, empty state) using `frontend-design` skill in `packages/web/src/pages/AdminGithubIntegrationsPage.tsx`
-- [ ] T021 [US1] Wire `listGithubIntegrations` on mount in `packages/web/src/pages/AdminGithubIntegrationsPage.tsx`
-- [ ] T022 [US1] Register `/app/admin/github` with `AdminRoute` in `packages/web/src/App.tsx`
+- [X] T019 [US1] Add `ADMIN_GITHUB_ROUTE = '/app/admin/github'` and menu option **GitHub integration** in `packages/web/src/routes/shellOptions.ts`
+- [X] T020 [US1] Create `AdminGithubIntegrationsPage.tsx` shell (heading, list area, empty state) using `frontend-design` skill in `packages/web/src/pages/AdminGithubIntegrationsPage.tsx`
+- [X] T021 [US1] Wire `listGithubIntegrations` on mount in `packages/web/src/pages/AdminGithubIntegrationsPage.tsx`
+- [X] T022 [US1] Register `/app/admin/github` with `AdminRoute` in `packages/web/src/App.tsx`
 
 **Checkpoint**: User Story 1 — discoverability and read-only screen for administrators.
 
@@ -73,16 +73,16 @@
 
 ### Tests for User Story 2 (MANDATORY)
 
-- [ ] T023 [P] [US2] Align acceptance scenarios in `tests/015-admin-github-orgs/github-integrations-enable.us2.test.md`
-- [ ] T024 [P] [US2] Add backend tests: POST valid, trim, duplicate 409, invalid 400 in `packages/backend/tests/admin-github-orgs/github-integrations-enable.us2.test.ts`
-- [ ] T025 [P] [US2] Add backend test: non-admin POST returns 403 in `packages/backend/tests/admin-github-orgs/github-integrations-auth.us2.test.ts`
-- [ ] T026 [P] [US2] Add web test: add form calls enable API and shows new row in `packages/web/tests/admin-github-orgs/admin-github-page-enable.us2.test.tsx`
+- [X] T023 [P] [US2] Align acceptance scenarios in `tests/015-admin-github-orgs/github-integrations-enable.us2.test.md`
+- [X] T024 [P] [US2] Add backend tests: POST valid, trim, duplicate 409, invalid 400 in `packages/backend/tests/admin-github-orgs/github-integrations-enable.us2.test.ts`
+- [X] T025 [P] [US2] Add backend test: non-admin POST returns 403 in `packages/backend/tests/admin-github-orgs/github-integrations-auth.us2.test.ts`
+- [X] T026 [P] [US2] Add web test: add form calls enable API and shows new row in `packages/web/tests/admin-github-orgs/admin-github-page-enable.us2.test.tsx`
 
 ### Implementation for User Story 2
 
-- [ ] T027 [US2] Add labeled login `TextField`, helper text, and Enable button using `frontend-design` skill in `packages/web/src/pages/AdminGithubIntegrationsPage.tsx`
-- [ ] T028 [US2] Wire enable to `enableGithubIntegration` and refresh list; surface 409/400 errors in `packages/web/src/pages/AdminGithubIntegrationsPage.tsx`
-- [ ] T029 [US2] Map API errors in `packages/web/src/services/githubIntegrationsApi.ts` (including `DUPLICATE_GITHUB_INTEGRATION_LOGIN`)
+- [X] T027 [US2] Add labeled login `TextField`, helper text, and Enable button using `frontend-design` skill in `packages/web/src/pages/AdminGithubIntegrationsPage.tsx`
+- [X] T028 [US2] Wire enable to `enableGithubIntegration` and refresh list; surface 409/400 errors in `packages/web/src/pages/AdminGithubIntegrationsPage.tsx`
+- [X] T029 [US2] Map API errors in `packages/web/src/services/githubIntegrationsApi.ts` (including `DUPLICATE_GITHUB_INTEGRATION_LOGIN`)
 
 **Checkpoint**: User Stories 1 and 2 — full enable flow on `github_integrations`.
 
@@ -96,16 +96,16 @@
 
 ### Tests for User Story 3 (MANDATORY)
 
-- [ ] T030 [P] [US3] Align acceptance scenarios in `tests/015-admin-github-orgs/github-integrations-disable.us3.test.md`
-- [ ] T031 [P] [US3] Add backend tests: DELETE success, 404 unknown id in `packages/backend/tests/admin-github-orgs/github-integrations-disable.us3.test.ts`
-- [ ] T032 [P] [US3] Add backend test: populated `GET /github-integrations` returns stable ids in `packages/backend/tests/admin-github-orgs/github-integrations-list.us3.test.ts`
-- [ ] T033 [P] [US3] Add web test: disable confirmation removes row in `packages/web/tests/admin-github-orgs/admin-github-page-disable.us3.test.tsx`
+- [X] T030 [P] [US3] Align acceptance scenarios in `tests/015-admin-github-orgs/github-integrations-disable.us3.test.md`
+- [X] T031 [P] [US3] Add backend tests: DELETE success, 404 unknown id in `packages/backend/tests/admin-github-orgs/github-integrations-disable.us3.test.ts`
+- [X] T032 [P] [US3] Add backend test: populated `GET /github-integrations` returns stable ids in `packages/backend/tests/admin-github-orgs/github-integrations-list.us3.test.ts`
+- [X] T033 [P] [US3] Add web test: disable confirmation removes row in `packages/web/tests/admin-github-orgs/admin-github-page-disable.us3.test.tsx`
 
 ### Implementation for User Story 3
 
-- [ ] T034 [US3] Add integrations `Table` with login column and Disable action using `frontend-design` skill in `packages/web/src/pages/AdminGithubIntegrationsPage.tsx`
-- [ ] T035 [US3] Add disable confirmation `Dialog` and wire `disableGithubIntegration(integrationId)` in `packages/web/src/pages/AdminGithubIntegrationsPage.tsx`
-- [ ] T036 [US3] Show empty state after last integration disabled in `packages/web/src/pages/AdminGithubIntegrationsPage.tsx`
+- [X] T034 [US3] Add integrations `Table` with login column and Disable action using `frontend-design` skill in `packages/web/src/pages/AdminGithubIntegrationsPage.tsx`
+- [X] T035 [US3] Add disable confirmation `Dialog` and wire `disableGithubIntegration(integrationId)` in `packages/web/src/pages/AdminGithubIntegrationsPage.tsx`
+- [X] T036 [US3] Show empty state after last integration disabled in `packages/web/src/pages/AdminGithubIntegrationsPage.tsx`
 
 **Checkpoint**: All user stories independently functional.
 
@@ -115,9 +115,9 @@
 
 **Purpose**: Contract fidelity, auth regression, verification evidence.
 
-- [ ] T037 [P] Add backend regression: unauthenticated `GET/POST/DELETE` on `/github-integrations` return 401 in `packages/backend/tests/admin-github-orgs/github-integrations-auth.test.ts`
-- [ ] T038 Run `npm run db:migration:run --workspace @em-tool/backend` and record in `specs/015-admin-github-orgs/quickstart.md`
-- [ ] T039 Run verification commands from `specs/015-admin-github-orgs/quickstart.md` and record outcomes in `specs/015-admin-github-orgs/quickstart.md`
+- [X] T037 [P] Add backend regression: unauthenticated `GET/POST/DELETE` on `/github-integrations` return 401 in `packages/backend/tests/admin-github-orgs/github-integrations-auth.test.ts`
+- [X] T038 Run `npm run db:migration:run --workspace @em-tool/backend` and record in `specs/015-admin-github-orgs/quickstart.md`
+- [X] T039 Run verification commands from `specs/015-admin-github-orgs/quickstart.md` and record outcomes in `specs/015-admin-github-orgs/quickstart.md`
 
 ---
 
