@@ -1,4 +1,4 @@
 <!-- SPECKIT START -->
 For additional context about technologies to be used, project structure,
-shell commands, and other important information, read specs/012-deliverables-list-filters/plan.md
+shell commands, and other important information, read specs/014-profile-theme-github/plan.md
 <!-- SPECKIT END -->
