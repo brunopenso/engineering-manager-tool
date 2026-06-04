@@ -1,0 +1,145 @@
+openapi: 3.0.3
+info:
+  title: Engineering Manager Tool Leader Team Analytics API
+  version: 0.1.0
+  description: Leader-only aggregated deliverable analytics for Team Analytics dashboard charts.
+servers:
+  - url: http://localhost:3001
+paths:
+  /users/leader/team-analytics:
+    get:
+      summary: Aggregated team analytics for charts (impact, engagement, pending review)
+      tags: [LeaderTeamAnalytics]
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: startDate
+          in: query
+          required: true
+          schema:
+            type: string
+            format: date
+          description: Inclusive start date (YYYY-MM-DD), filters deliverable created_at
+        - name: endDate
+          in: query
+          required: true
+          schema:
+            type: string
+            format: date
+          description: Inclusive end date (YYYY-MM-DD), filters deliverable created_at
+        - name: userId
+          in: query
+          required: false
+          schema:
+            type: string
+            format: uuid
+          description: Optional team member; must be in leader descendant subtree
+      responses:
+        '200':
+          description: Weekly aggregates and pending review count for the filter context
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TeamAnalyticsResponse'
+        '400':
+          description: Invalid date range (e.g. end before start)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Missing or invalid application token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Leader role required or userId outside subtree
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    ErrorResponse:
+      type: object
+      required: [code, message]
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+    BusinessImpact:
+      type: string
+      enum: [LOW, MEDIUM, HIGH, TRANSFORMATIONAL]
+    ImpactBucketRow:
+      type: object
+      required: [weekStart, impact, count]
+      properties:
+        weekStart:
+          type: string
+          format: date
+          description: Monday (UTC) week start date for the bucket
+        impact:
+          $ref: '#/components/schemas/BusinessImpact'
+        count:
+          type: integer
+          minimum: 0
+    EngagementBucketRow:
+      type: object
+      required: [weekStart, userId, displayName, count]
+      properties:
+        weekStart:
+          type: string
+          format: date
+        userId:
+          type: string
+          format: uuid
+        displayName:
+          type: string
+        count:
+          type: integer
+          minimum: 0
+    TeamAnalyticsResponse:
+      type: object
+      required:
+        - startDate
+        - endDate
+        - weekStarts
+        - deliverablesByWeekAndImpact
+        - engagementByWeek
+        - pendingReviewCount
+      properties:
+        startDate:
+          type: string
+          format: date
+        endDate:
+          type: string
+          format: date
+        userId:
+          type: string
+          format: uuid
+          description: Present when filtered to a single team member
+        weekStarts:
+          type: array
+          description: Ordered week labels (Monday UTC) spanning the date range for chart axes
+          items:
+            type: string
+            format: date
+        deliverablesByWeekAndImpact:
+          type: array
+          items:
+            $ref: '#/components/schemas/ImpactBucketRow'
+        engagementByWeek:
+          type: array
+          items:
+            $ref: '#/components/schemas/EngagementBucketRow'
+        pendingReviewCount:
+          type: integer
+          minimum: 0
+          description: In-scope deliverables the logged-in leader has not marked reviewed
