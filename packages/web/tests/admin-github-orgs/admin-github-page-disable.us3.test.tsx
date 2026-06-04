@@ -11,7 +11,7 @@ describe('US3 disable GitHub organization', () => {
   it('removes the organization after disable confirmation', async () => {
     const integration = {
       id: 'integration-1',
-      login: 'acme-corp',
+      organizationName: 'acme-corp',
       createdAt: '2026-06-04T12:00:00.000Z',
       updatedAt: '2026-06-04T12:00:00.000Z',
     };
@@ -51,7 +51,7 @@ describe('US3 disable GitHub organization', () => {
     await waitFor(() => {
       expect(
         screen.getByText(
-          'No GitHub organizations enabled yet. Add the first organization login above to enable integration scope.',
+          'No GitHub organizations enabled yet. Add the first organization name above to enable integration scope.',
         ),
       ).toBeInTheDocument();
     });

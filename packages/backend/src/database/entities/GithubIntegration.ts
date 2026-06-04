@@ -11,8 +11,8 @@ export class GithubIntegration {
   @PrimaryGeneratedColumn('uuid')
   id!: string;
 
-  @Column({ type: 'varchar', length: 39 })
-  login!: string;
+  @Column({ type: 'varchar', length: 39, name: 'organization_name' })
+  organizationName!: string;
 
   @CreateDateColumn({ type: 'timestamptz', name: 'created_at' })
   createdAt!: Date;

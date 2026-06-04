@@ -126,15 +126,15 @@ components:
   schemas:
     GithubIntegration:
       type: object
-      required: [id, login, createdAt]
+      required: [id, organizationName, createdAt]
       properties:
         id:
           type: string
           format: uuid
-        login:
+        organizationName:
           type: string
           maxLength: 39
-          description: GitHub organization slug (lowercase).
+          description: GitHub organization slug (lowercase); persisted as organization_name.
         createdAt:
           type: string
           format: date-time
@@ -143,12 +143,12 @@ components:
           format: date-time
     GithubIntegrationCreateRequest:
       type: object
-      required: [login]
+      required: [organizationName]
       properties:
-        login:
+        organizationName:
           type: string
           maxLength: 39
-          description: Organization slug; trimmed and normalized to lowercase on save.
+          description: Organization slug; trimmed and normalized to lowercase on save (organization_name column).
     ErrorResponse:
       type: object
       required: [code, message]

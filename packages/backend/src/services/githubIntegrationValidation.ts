@@ -1,7 +1,7 @@
 import { AUTH_ERROR_CODES } from '../auth/types.js';
 
-const GITHUB_LOGIN_PATTERN = /^[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?$/;
-const GITHUB_LOGIN_MAX_LENGTH = 39;
+const GITHUB_ORGANIZATION_NAME_PATTERN = /^[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?$/;
+const GITHUB_ORGANIZATION_NAME_MAX_LENGTH = 39;
 
 export class GithubIntegrationValidationError extends Error {
   code: string;
@@ -23,26 +23,26 @@ export class GithubIntegrationDuplicateLoginError extends Error {
   }
 }
 
-export function validateGithubIntegrationLogin(value: unknown): string {
+export function validateGithubIntegrationOrganizationName(value: unknown): string {
   if (typeof value !== 'string') {
-    throw new GithubIntegrationValidationError('Organization login must be a string.');
+    throw new GithubIntegrationValidationError('Organization name must be a string.');
   }
 
   const trimmed = value.trim();
 
   if (!trimmed) {
-    throw new GithubIntegrationValidationError('Organization login is required.');
+    throw new GithubIntegrationValidationError('Organization name is required.');
   }
 
-  if (trimmed.length > GITHUB_LOGIN_MAX_LENGTH) {
+  if (trimmed.length > GITHUB_ORGANIZATION_NAME_MAX_LENGTH) {
     throw new GithubIntegrationValidationError(
-      `Organization login must be at most ${GITHUB_LOGIN_MAX_LENGTH} characters.`,
+      `Organization name must be at most ${GITHUB_ORGANIZATION_NAME_MAX_LENGTH} characters.`,
     );
   }
 
-  if (!GITHUB_LOGIN_PATTERN.test(trimmed)) {
+  if (!GITHUB_ORGANIZATION_NAME_PATTERN.test(trimmed)) {
     throw new GithubIntegrationValidationError(
-      'Organization login may only contain letters, numbers, and hyphens.',
+      'Organization name may only contain letters, numbers, and hyphens.',
     );
   }
 

@@ -20,7 +20,7 @@ describe('US2 enable GitHub organization', () => {
         json: async () => ({
           integration: {
             id: 'integration-1',
-            login: 'acme-corp',
+            organizationName: 'acme-corp',
             createdAt: '2026-06-04T12:00:00.000Z',
             updatedAt: '2026-06-04T12:00:00.000Z',
           },
@@ -32,7 +32,7 @@ describe('US2 enable GitHub organization', () => {
           integrations: [
             {
               id: 'integration-1',
-              login: 'acme-corp',
+              organizationName: 'acme-corp',
               createdAt: '2026-06-04T12:00:00.000Z',
               updatedAt: '2026-06-04T12:00:00.000Z',
             },
@@ -49,10 +49,10 @@ describe('US2 enable GitHub organization', () => {
     });
 
     await waitFor(() => {
-      expect(screen.getByLabelText('Organization login')).toBeInTheDocument();
+      expect(screen.getByLabelText('Organization name')).toBeInTheDocument();
     });
 
-    fireEvent.change(screen.getByLabelText('Organization login'), {
+    fireEvent.change(screen.getByLabelText('Organization name'), {
       target: { value: 'acme-corp' },
     });
     fireEvent.click(screen.getByRole('button', { name: 'Enable organization' }));
@@ -64,7 +64,7 @@ describe('US2 enable GitHub organization', () => {
     expect(fetchMock).toHaveBeenCalledTimes(3);
     expect(fetchMock.mock.calls[1]?.[1]).toMatchObject({
       method: 'POST',
-      body: JSON.stringify({ login: 'acme-corp' }),
+      body: JSON.stringify({ organizationName: 'acme-corp' }),
     });
   });
 });

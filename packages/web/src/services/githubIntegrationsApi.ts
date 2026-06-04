@@ -1,6 +1,6 @@
 export type GithubIntegration = {
   id: string;
-  login: string;
+  organizationName: string;
   createdAt: string;
   updatedAt: string;
 };
@@ -60,7 +60,7 @@ export async function listGithubIntegrations(accessToken: string): Promise<Githu
 
 export async function enableGithubIntegration(
   accessToken: string,
-  login: string,
+  organizationName: string,
 ): Promise<GithubIntegration> {
   const response = await fetch(`${API_BASE_URL}/github-integrations`, {
     method: 'POST',
@@ -68,7 +68,7 @@ export async function enableGithubIntegration(
       Authorization: `Bearer ${accessToken}`,
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({ login }),
+    body: JSON.stringify({ organizationName }),
   });
 
   if (!response.ok) {

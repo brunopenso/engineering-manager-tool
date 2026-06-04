@@ -34,11 +34,11 @@ export default function AdminGithubIntegrationsPage() {
   const [integrations, setIntegrations] = useState<GithubIntegration[]>([]);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [loginInput, setLoginInput] = useState('');
+  const [organizationNameInput, setOrganizationNameInput] = useState('');
   const [disableTarget, setDisableTarget] = useState<GithubIntegration | null>(null);
 
   const hasIntegrations = integrations.length > 0;
-  const isEnableDisabled = useMemo(() => !loginInput.trim(), [loginInput]);
+  const isEnableDisabled = useMemo(() => !organizationNameInput.trim(), [organizationNameInput]);
 
   async function refreshIntegrations() {
     if (!accessToken) {
@@ -74,8 +74,8 @@ export default function AdminGithubIntegrationsPage() {
     setErrorMessage(null);
 
     try {
-      await enableGithubIntegration(accessToken, loginInput);
-      setLoginInput('');
+      await enableGithubIntegration(accessToken, organizationNameInput);
+      setOrganizationNameInput('');
       await refreshIntegrations();
     } catch (error) {
       setErrorMessage(
@@ -127,9 +127,9 @@ export default function AdminGithubIntegrationsPage() {
                 sx={{ alignItems: { md: 'center' } }}
               >
                 <TextField
-                  label="Organization login"
-                  value={loginInput}
-                  onChange={(event) => setLoginInput(event.target.value)}
+                  label="Organization name"
+                  value={organizationNameInput}
+                  onChange={(event) => setOrganizationNameInput(event.target.value)}
                   fullWidth
                 />
                 <Button
@@ -150,21 +150,21 @@ export default function AdminGithubIntegrationsPage() {
               <Typography color="text.secondary">Loading organizations...</Typography>
             ) : !hasIntegrations ? (
               <Typography color="text.secondary">
-                No GitHub organizations enabled yet. Add the first organization login above to
+                No GitHub organizations enabled yet. Add the first organization name above to
                 enable integration scope.
               </Typography>
             ) : (
               <Table>
                 <TableHead>
                   <TableRow>
-                    <TableCell>Organization login</TableCell>
+                    <TableCell>Organization name</TableCell>
                     <TableCell align="right">Actions</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
                   {integrations.map((integration) => (
                     <TableRow key={integration.id}>
-                      <TableCell>{integration.login}</TableCell>
+                      <TableCell>{integration.organizationName}</TableCell>
                       <TableCell align="right">
                         <Button
                           size="small"
@@ -188,7 +188,7 @@ export default function AdminGithubIntegrationsPage() {
         <DialogTitle>Disable organization</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            Are you sure you want to disable &quot;{disableTarget?.login}&quot;? It will no longer
+            Are you sure you want to disable &quot;{disableTarget?.organizationName}&quot;? It will no longer
             be part of the enabled integration scope.
           </DialogContentText>
         </DialogContent>

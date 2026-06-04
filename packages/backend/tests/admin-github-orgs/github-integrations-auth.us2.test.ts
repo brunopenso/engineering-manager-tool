@@ -23,7 +23,7 @@ describe('US2 non-admin POST /github-integrations', () => {
     const response = await app.inject({
       method: 'POST',
       url: '/github-integrations',
-      payload: { login: 'acme-corp' },
+      payload: { organizationName: 'acme-corp' },
     });
 
     expect(response.statusCode).toBe(403);

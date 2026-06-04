@@ -26,7 +26,7 @@ describe('US1 empty GitHub integrations state', () => {
     await waitFor(() => {
       expect(
         screen.getByText(
-          'No GitHub organizations enabled yet. Add the first organization login above to enable integration scope.',
+          'No GitHub organizations enabled yet. Add the first organization name above to enable integration scope.',
         ),
       ).toBeInTheDocument();
     });

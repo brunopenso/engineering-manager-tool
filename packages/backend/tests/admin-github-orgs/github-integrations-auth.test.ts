@@ -29,7 +29,7 @@ describe('github integrations auth', () => {
     const response = await app.inject({
       method: 'POST',
       url: '/github-integrations',
-      payload: { login: 'acme-corp' },
+      payload: { organizationName: 'acme-corp' },
     });
 
     expect(response.statusCode).toBe(401);

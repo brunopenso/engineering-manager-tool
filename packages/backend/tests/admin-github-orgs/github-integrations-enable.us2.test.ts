@@ -13,9 +13,9 @@ vi.mock('../../src/services/githubIntegrationService.js', () => ({
   listGithubIntegrations: vi.fn(),
   enableGithubIntegration: vi.fn(),
   disableGithubIntegration: vi.fn(),
-  mapGithubIntegration: vi.fn((entity: { id: string; login: string; createdAt: Date; updatedAt: Date }) => ({
+  mapGithubIntegration: vi.fn((entity: { id: string; organizationName: string; createdAt: Date; updatedAt: Date }) => ({
     id: entity.id,
-    login: entity.login,
+    organizationName: entity.organizationName,
     createdAt: entity.createdAt.toISOString(),
     updatedAt: entity.updatedAt.toISOString(),
   })),
@@ -37,7 +37,7 @@ describe('US2 POST /github-integrations', () => {
     const createdAt = new Date('2026-06-04T12:00:00.000Z');
     vi.mocked(githubIntegrationService.enableGithubIntegration).mockResolvedValue({
       id: 'integration-1',
-      login: 'acme-corp',
+      organizationName: 'acme-corp',
       createdAt,
       updatedAt: createdAt,
     } as never);
@@ -45,16 +45,16 @@ describe('US2 POST /github-integrations', () => {
     const response = await app.inject({
       method: 'POST',
       url: '/github-integrations',
-      payload: { login: 'acme-corp' },
+      payload: { organizationName: 'acme-corp' },
     });
 
     expect(response.statusCode).toBe(201);
     expect(githubIntegrationService.enableGithubIntegration).toHaveBeenCalledWith('acme-corp');
-    expect(response.json().integration.login).toBe('acme-corp');
+    expect(response.json().integration.organizationName).toBe('acme-corp');
     await app.close();
   });
 
-  it('passes trimmed login to the service', async () => {
+  it('passes trimmed organization name to the service', async () => {
     const app = Fastify();
     app.addHook('onRequest', (request, _reply, done) => {
       request.auth = { ...ADMIN_AUTH };
@@ -65,7 +65,7 @@ describe('US2 POST /github-integrations', () => {
     const createdAt = new Date('2026-06-04T12:00:00.000Z');
     vi.mocked(githubIntegrationService.enableGithubIntegration).mockResolvedValue({
       id: 'integration-1',
-      login: 'acme-corp',
+      organizationName: 'acme-corp',
       createdAt,
       updatedAt: createdAt,
     } as never);
@@ -73,14 +73,14 @@ describe('US2 POST /github-integrations', () => {
     await app.inject({
       method: 'POST',
       url: '/github-integrations',
-      payload: { login: '  acme-corp  ' },
+      payload: { organizationName: '  acme-corp  ' },
     });
 
     expect(githubIntegrationService.enableGithubIntegration).toHaveBeenCalledWith('  acme-corp  ');
     await app.close();
   });
 
-  it('returns 409 for duplicate organization login', async () => {
+  it('returns 409 for duplicate organization name', async () => {
     const app = Fastify();
     app.addHook('onRequest', (request, _reply, done) => {
       request.auth = { ...ADMIN_AUTH };
@@ -95,7 +95,7 @@ describe('US2 POST /github-integrations', () => {
     const response = await app.inject({
       method: 'POST',
       url: '/github-integrations',
-      payload: { login: 'acme-corp' },
+      payload: { organizationName: 'acme-corp' },
     });
 
     expect(response.statusCode).toBe(409);
@@ -103,7 +103,7 @@ describe('US2 POST /github-integrations', () => {
     await app.close();
   });
 
-  it('returns 400 for invalid organization login', async () => {
+  it('returns 400 for invalid organization name', async () => {
     const app = Fastify();
     app.addHook('onRequest', (request, _reply, done) => {
       request.auth = { ...ADMIN_AUTH };
@@ -112,13 +112,13 @@ describe('US2 POST /github-integrations', () => {
     await registerGithubIntegrationsRoutes(app);
 
     vi.mocked(githubIntegrationService.enableGithubIntegration).mockRejectedValue(
-      new GithubIntegrationValidationError('Organization login is required.'),
+      new GithubIntegrationValidationError('Organization name is required.'),
     );
 
     const response = await app.inject({
       method: 'POST',
       url: '/github-integrations',
-      payload: { login: '' },
+      payload: { organizationName: '' },
     });
 
     expect(response.statusCode).toBe(400);
@@ -126,7 +126,7 @@ describe('US2 POST /github-integrations', () => {
     await app.close();
   });
 
-  it('returns 400 when login is missing from body', async () => {
+  it('returns 400 when organizationName is missing from body', async () => {
     const app = Fastify();
     app.addHook('onRequest', (request, _reply, done) => {
       request.auth = { ...ADMIN_AUTH };

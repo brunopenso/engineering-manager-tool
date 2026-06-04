@@ -5,11 +5,11 @@
 | Column | Type | Constraints | Notes |
 |--------|------|-------------|-------|
 | `id` | uuid | PK, generated | Stable identifier |
-| `login` | varchar(39) | NOT NULL, **UNIQUE** | Organization slug; stored lowercase |
+| `organization_name` | varchar(39) | NOT NULL, **UNIQUE** | Organization slug; stored lowercase |
 | `created_at` | timestamptz | NOT NULL | Audit |
 | `updated_at` | timestamptz | NOT NULL | Audit |
 
-**Migration**: Create `github_integrations` table with unique index on `login`.
+**Migration**: Create `github_integrations` table with unique index on `organization_name`.
 
 **Entity**: `GithubIntegration` mapped to `github_integrations`.
 
@@ -20,7 +20,7 @@
 | Field | Type | Required | Notes |
 |-------|------|----------|-------|
 | `id` | uuid | yes | |
-| `login` | string | yes | Canonical lowercase slug |
+| `organizationName` | string | yes | Canonical lowercase slug (`organization_name` column) |
 | `createdAt` | date-time | yes | ISO string in JSON |
 | `updatedAt` | date-time | optional in list | ISO string if exposed |
 
@@ -36,7 +36,7 @@
 
 | Field | Type | Validation |
 |-------|------|------------|
-| `login` | string | Trim; slug rules; lowercase persist; unique |
+| `organizationName` | string | Trim; slug rules; lowercase persist; unique (`organization_name`) |
 
 ### Create response
 
@@ -56,8 +56,8 @@ Status **201** on success.
 
 | Condition | HTTP | Code |
 |-----------|------|------|
-| Invalid login format | 400 | `VALIDATION_ERROR` |
-| Duplicate login | 409 | `DUPLICATE_GITHUB_INTEGRATION_LOGIN` |
+| Invalid organization name format | 400 | `VALIDATION_ERROR` |
+| Duplicate organization name | 409 | `DUPLICATE_GITHUB_INTEGRATION_LOGIN` |
 | Non-administrator | 403 | `FORBIDDEN` |
 | Missing auth | 401 | `MISSING_APP_TOKEN` |
 | Unknown id on delete | 404 | `NOT_FOUND` |
@@ -67,7 +67,7 @@ Status **201** on success.
 | State | Notes |
 |-------|-------|
 | `integrations` | From `GET /github-integrations` |
-| `loginDraft` | Add form input |
+| `organizationNameDraft` | Add form input |
 | `errorMessage` | API errors |
 | `disableTarget` | Row pending confirmation dialog |
 | `isLoading` | Initial list fetch |

@@ -8,9 +8,9 @@ vi.mock('../../src/services/githubIntegrationService.js', () => ({
   listGithubIntegrations: vi.fn(),
   enableGithubIntegration: vi.fn(),
   disableGithubIntegration: vi.fn(),
-  mapGithubIntegration: vi.fn((entity: { id: string; login: string; createdAt: Date; updatedAt: Date }) => ({
+  mapGithubIntegration: vi.fn((entity: { id: string; organizationName: string; createdAt: Date; updatedAt: Date }) => ({
     id: entity.id,
-    login: entity.login,
+    organizationName: entity.organizationName,
     createdAt: entity.createdAt.toISOString(),
     updatedAt: entity.updatedAt.toISOString(),
   })),
@@ -33,13 +33,13 @@ describe('US3 GET /github-integrations list', () => {
     vi.mocked(githubIntegrationService.listGithubIntegrations).mockResolvedValue([
       {
         id: 'integration-1',
-        login: 'acme-corp',
+        organizationName: 'acme-corp',
         createdAt,
         updatedAt: createdAt,
       },
       {
         id: 'integration-2',
-        login: 'beta-org',
+        organizationName: 'beta-org',
         createdAt,
         updatedAt: createdAt,
       },
@@ -51,7 +51,7 @@ describe('US3 GET /github-integrations list', () => {
     expect(response.statusCode).toBe(200);
     expect(payload.integrations).toHaveLength(2);
     expect(payload.integrations[0].id).toBe('integration-1');
-    expect(payload.integrations[1].login).toBe('beta-org');
+    expect(payload.integrations[1].organizationName).toBe('beta-org');
     await app.close();
   });
 });

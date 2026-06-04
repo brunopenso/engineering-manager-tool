@@ -13,7 +13,7 @@ import {
 } from '../services/githubIntegrationValidation.js';
 
 type EnableBody = {
-  login?: unknown;
+  organizationName?: unknown;
 };
 
 function requireAuth(request: FastifyRequest, reply: FastifyReply) {
@@ -95,11 +95,11 @@ export async function registerGithubIntegrationsRoutes(app: FastifyInstance): Pr
     }
 
     try {
-      if (request.body?.login === undefined) {
-        return validationError(reply, 'Organization login is required.');
+      if (request.body?.organizationName === undefined) {
+        return validationError(reply, 'Organization name is required.');
       }
 
-      const integration = await enableGithubIntegration(request.body.login);
+      const integration = await enableGithubIntegration(request.body.organizationName);
       reply.code(201);
       return { integration: mapGithubIntegration(integration) };
     } catch (error) {
