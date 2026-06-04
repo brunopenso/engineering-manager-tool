@@ -12,6 +12,8 @@ export const testUser: AuthUser = {
   firstLoginAt: '2026-01-01T00:00:00.000Z',
   lastLoginAt: '2026-01-01T00:00:00.000Z',
   roles: ['COLLABORATOR'],
+  themePreference: 'light',
+  githubLogin: null,
 };
 
 export const testAdminUser: AuthUser = {

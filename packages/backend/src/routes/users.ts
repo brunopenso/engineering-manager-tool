@@ -23,6 +23,7 @@ import {
   findAllUsers,
   findUsersForAdmin,
   findUserById,
+  updateUserProfileSettings,
   getLeaderHierarchyView,
   getLeaderTeamMembers,
   searchOrphanUsers,
@@ -34,6 +35,15 @@ import {
   AdminUserListValidationError,
   parseAdminUserListFilters,
 } from '../services/adminUserListQuery.js';
+import {
+  UserProfileValidationError,
+  parseProfileSettingsUpdate,
+} from '../services/userProfileValidation.js';
+
+type ProfileSettingsBody = {
+  themePreference?: unknown;
+  githubLogin?: unknown;
+};
 
 type RoleChangeBody = {
   role?: string;
@@ -97,6 +107,35 @@ function requireAuth(request: FastifyRequest, reply: FastifyReply) {
 }
 
 export async function registerUsersRoutes(app: FastifyInstance): Promise<void> {
+  app.patch<{ Body: ProfileSettingsBody }>('/users/me', async (request, reply) => {
+    const auth = requireAuth(request, reply);
+    if (!auth) {
+      return {
+        code: AUTH_ERROR_CODES.MISSING_APP_TOKEN,
+        message: 'Authentication token is missing.',
+      };
+    }
+
+    try {
+      const partial = parseProfileSettingsUpdate(request.body ?? {});
+      const user = await updateUserProfileSettings(auth.userId, partial);
+
+      return {
+        user: await mapUserToAuthResponse(user),
+      };
+    } catch (error) {
+      if (error instanceof UserProfileValidationError) {
+        return validationError(reply, error.message);
+      }
+
+      if (error instanceof Error && error.name === AUTH_ERROR_CODES.NOT_FOUND) {
+        return notFound(reply);
+      }
+
+      throw error;
+    }
+  });
+
   app.post<{ Body: LeaderCreateUserBody }>('/users', async (request, reply) => {
     const auth = requireAuth(request, reply);
     if (!auth) {

@@ -14,6 +14,7 @@ import { AdminRoute } from './auth/AdminRoute.js';
 import { LeaderRoute } from './auth/LeaderRoute.js';
 import { DEFAULT_APP_ROUTE, LOGIN_ROUTE } from './routes/shellOptions.js';
 import { useAuth } from './auth/AuthProvider.js';
+import AuthThemeSync from './auth/AuthThemeSync.js';
 import LeaderHierarchyManagementPage from './pages/LeaderHierarchyManagementPage.js';
 import LeaderTeamDeliverablesPage from './pages/LeaderTeamDeliverablesPage.js';
 
@@ -34,7 +35,9 @@ function DefaultRouteRedirect() {
 
 export default function App() {
   return (
-    <Routes>
+    <>
+      <AuthThemeSync />
+      <Routes>
       <Route path="/" element={<LoginPage />} />
       <Route path="/login" element={<LoginPage />} />
       <Route
@@ -88,5 +91,6 @@ export default function App() {
       </Route>
       <Route path="*" element={<DefaultRouteRedirect />} />
     </Routes>
+    </>
   );
 }

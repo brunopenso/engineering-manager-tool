@@ -9,6 +9,8 @@ export type AuthUserResponse = {
   firstLoginAt: string;
   lastLoginAt: string;
   roles: UserRoleType[];
+  themePreference: 'light' | 'dark';
+  githubLogin: string | null;
 };
 
 export async function mapUserToAuthResponse(user: User): Promise<AuthUserResponse> {
@@ -21,5 +23,7 @@ export async function mapUserToAuthResponse(user: User): Promise<AuthUserRespons
     firstLoginAt: user.firstLoginAt.toISOString(),
     lastLoginAt: user.lastLoginAt.toISOString(),
     roles,
+    themePreference: user.themePreference ?? 'light',
+    githubLogin: user.githubLogin ?? null,
   };
 }

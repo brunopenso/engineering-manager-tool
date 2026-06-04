@@ -23,6 +23,12 @@ export class User {
   @Column({ type: 'varchar', name: 'full_name' })
   fullName!: string;
 
+  @Column({ type: 'varchar', name: 'theme_preference', default: 'light' })
+  themePreference!: 'light' | 'dark';
+
+  @Column({ type: 'varchar', name: 'github_login', length: 39, nullable: true })
+  githubLogin!: string | null;
+
   @Column({ type: 'timestamptz', name: 'first_login_at' })
   firstLoginAt!: Date;
 

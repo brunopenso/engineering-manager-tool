@@ -48,9 +48,17 @@ In `packages/web`:
 npm run db:migration:run --workspace @em-tool/backend
 npm run test --workspace @em-tool/backend -- --run profile-theme-github
 npm run test --workspace @em-tool/web -- --run profile-theme-github
-npm run test --workspace @em-tool/web -- --run profile-
-npm run lint
+npm run test --workspace @em-tool/web -- --run profile/profile-theme
+npm run lint --workspace @em-tool/backend
+npm run lint --workspace @em-tool/web
 ```
+
+### Verification outcomes (2026-06-04)
+
+- Migration `AddUserProfilePreferences1779768000000` applied successfully.
+- Backend: 12 tests passed in `packages/backend/tests/profile-theme-github/`.
+- Web: 6 tests passed in `packages/web/tests/profile-theme-github/` and `packages/web/tests/profile/profile-theme.test.tsx`.
+- Lint: `@em-tool/backend` and `@em-tool/web` `tsc --noEmit` passed.
 
 ## Manual smoke
 

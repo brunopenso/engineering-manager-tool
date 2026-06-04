@@ -57,6 +57,8 @@ describe('POST /auth/refresh', () => {
       firstLoginAt: '2026-01-01T00:00:00.000Z',
       lastLoginAt: '2026-01-01T00:00:00.000Z',
       roles: ['COLLABORATOR'],
+      themePreference: 'light',
+      githubLogin: null,
     });
 
     const response = await app.inject({ method: 'POST', url: '/auth/refresh' });
