@@ -34,4 +34,5 @@
 - Validation passed on first iteration (2026-06-04).
 - Scope limited to admin menu, configuration screen, persistence of enabled organization list; OAuth/sync/webhooks deferred.
 - Distinct from user profile GitHub login (feature 014).
-- Ready for `/speckit-plan` or `/speckit-clarify`.
+- Clarification 2026-06-04: persistence **`github_integrations`**, API **`/github-integrations`** (see spec Clarifications).
+- Ready for `/speckit-tasks` or `/speckit-implement` (plan updated to match).

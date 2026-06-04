@@ -1,0 +1,166 @@
+openapi: 3.0.3
+info:
+  title: Engineering Manager Tool GitHub Integrations API
+  version: 0.1.0
+  description: Administrator-only management of enabled GitHub organizations (github_integrations persistence).
+servers:
+  - url: http://localhost:3001
+paths:
+  /github-integrations:
+    get:
+      summary: List enabled GitHub integrations (administrator only)
+      tags: [GitHub Administration]
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Enabled integration list
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [integrations]
+                properties:
+                  integrations:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/GithubIntegration'
+        '401':
+          description: Missing or invalid application token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Caller lacks administrator role
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    post:
+      summary: Enable a GitHub organization integration (administrator only)
+      tags: [GitHub Administration]
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GithubIntegrationCreateRequest'
+      responses:
+        '201':
+          description: Integration enabled
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [integration]
+                properties:
+                  integration:
+                    $ref: '#/components/schemas/GithubIntegration'
+        '400':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: Organization login already enabled
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Missing or invalid application token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Caller lacks administrator role
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /github-integrations/{integrationId}:
+    delete:
+      summary: Disable (remove) a GitHub integration (administrator only)
+      tags: [GitHub Administration]
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: integrationId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: Integration disabled (removed from github_integrations)
+        '401':
+          description: Missing or invalid application token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Caller lacks administrator role
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Integration not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    GithubIntegration:
+      type: object
+      required: [id, login, createdAt]
+      properties:
+        id:
+          type: string
+          format: uuid
+        login:
+          type: string
+          maxLength: 39
+          description: GitHub organization slug (lowercase).
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+    GithubIntegrationCreateRequest:
+      type: object
+      required: [login]
+      properties:
+        login:
+          type: string
+          maxLength: 39
+          description: Organization slug; trimmed and normalized to lowercase on save.
+    ErrorResponse:
+      type: object
+      required: [code, message]
+      properties:
+        code:
+          type: string
+          enum:
+            - VALIDATION_ERROR
+            - DUPLICATE_GITHUB_INTEGRATION_LOGIN
+            - FORBIDDEN
+            - NOT_FOUND
+            - MISSING_APP_TOKEN
+            - INVALID_APP_TOKEN
+        message:
+          type: string

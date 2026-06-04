@@ -5,6 +5,12 @@
 **Status**: Draft  
 **Input**: User description: "create a new menu for administration purposes that will handle github integration configurations. Lets start by creating a screen, entity, migrations to save a list of github organizations that are enabled."
 
+## Clarifications
+
+### Session 2026-06-04
+
+- Q: What are the canonical persistence and administration API names for enabled GitHub organizations? → A: Use the **github_integrations** table (persistence) and the **github-integrations** administration API resource (list, enable, disable).
+
 ## User Scenarios & Testing *(mandatory, with required automated tests)*
 
 ### User Story 1 - Administrator opens GitHub integration configuration (Priority: P1)
@@ -86,7 +92,7 @@ An administrator can review all enabled GitHub organizations on the configuratio
 
 - **FR-001**: The system MUST provide an **Administration** menu entry for **GitHub integration configuration** visible only to users with the **administrator** role.
 - **FR-002**: The system MUST provide a dedicated **GitHub integration configuration screen** reachable from that menu entry.
-- **FR-003**: The system MUST persist each **enabled GitHub organization** as a distinct record with a stable identifier and organization login (slug).
+- **FR-003**: The system MUST persist each **enabled GitHub organization** as a distinct record in the **github_integrations** catalog, with a stable identifier and organization login (slug).
 - **FR-004**: The system MUST store organization login using rules appropriate to GitHub organization slugs (alphanumeric ASCII and hyphens, reasonable length limit, no spaces or full URLs).
 - **FR-005**: The system MUST trim leading and trailing whitespace from organization login before validation and storage.
 - **FR-006**: The system MUST enforce **unique** organization login among enabled records (no duplicates).
@@ -95,7 +101,8 @@ An administrator can review all enabled GitHub organizations on the configuratio
 - **FR-009**: The system MUST allow an administrator to **disable** (remove from enabled list) an organization from the configuration screen.
 - **FR-010**: The system MUST reject invalid organization login values with clear validation feedback and must not persist invalid entries.
 - **FR-011**: The system MUST deny non-administrators from viewing, adding, or disabling enabled organizations through menu, screen, or data access paths.
-- **FR-012**: The system MUST deliver schema changes through **migrations** so existing deployments receive the new organization storage without manual ad-hoc steps.
+- **FR-012**: The system MUST deliver schema changes through **migrations** that create the **github_integrations** storage without manual ad-hoc steps.
+- **FR-015**: The system MUST expose administrator list, enable, and disable operations through a **github-integrations** administration API resource (stable resource name across list, create, and remove operations).
 - **FR-013**: The configuration screen MUST show an appropriate **empty state** when no organizations are enabled.
 - **FR-014**: The system MUST retain enabled organization data across application restarts (durable persistence).
 
@@ -112,8 +119,8 @@ An administrator can review all enabled GitHub organizations on the configuratio
 
 ### Key Entities
 
-- **Enabled GitHub organization**: A GitHub organization login that the product treats as enabled for integration purposes; has a stable identifier and the organization slug used on GitHub.
-- **GitHub integration configuration (logical)**: The administrator-managed allowlist of enabled organizations and the screen used to maintain it.
+- **GitHub integration** (persisted): One enabled GitHub organization stored in **github_integrations**—stable identifier plus organization login (slug).
+- **GitHub integration configuration (logical)**: The administrator-managed allowlist (backed by **github_integrations**) and the screen used to maintain it; accessed via the **github-integrations** administration API.
 
 ## Success Criteria *(mandatory)*
 
@@ -135,3 +142,4 @@ An administrator can review all enabled GitHub organizations on the configuratio
 - No requirement that at least one organization remain enabled at all times in this release.
 - Future GitHub integration features (user linking, sync jobs) will consume this allowlist; this feature does not implement those consumers yet.
 - Menu label **GitHub integration** (or close variant) is acceptable unless product naming standards dictate otherwise.
+- Canonical names are fixed for this feature: persistence table **github_integrations**; administration API resource **github-integrations** (each row represents one enabled organization login).
