@@ -23,6 +23,8 @@ type AuthUser = {
   firstLoginAt: string;
   lastLoginAt: string;
   roles: UserRoleType[];
+  themePreference: 'light' | 'dark';
+  githubLogin: string | null;
 };
 
 export type { AuthUser };

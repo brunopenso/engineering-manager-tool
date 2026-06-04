@@ -19,6 +19,7 @@ import type {
 } from '../types/hierarchyView.js';
 import type { TeamMemberOption, TeamMembersResponse } from '../types/teamDeliverables.js';
 import type { AdminUserListFilters } from '../types/adminUserListFilters.js';
+import type { ParsedProfileSettingsUpdate } from './userProfileValidation.js';
 import {
   buildHierarchyTreeFromRows,
   collectHierarchyNodeIds,
@@ -102,6 +103,29 @@ export async function findUsersForAdmin(filters: AdminUserListFilters = {}): Pro
 
 export async function findUserById(id: string): Promise<User | null> {
   return userRepository().findOne({ where: { id } });
+}
+
+export async function updateUserProfileSettings(
+  userId: string,
+  partial: ParsedProfileSettingsUpdate,
+): Promise<User> {
+  const user = await findUserById(userId);
+
+  if (!user) {
+    const error = new Error('User not found.');
+    error.name = AUTH_ERROR_CODES.NOT_FOUND;
+    throw error;
+  }
+
+  if (partial.themePreference !== undefined) {
+    user.themePreference = partial.themePreference;
+  }
+
+  if (partial.githubLogin !== undefined) {
+    user.githubLogin = partial.githubLogin;
+  }
+
+  return userRepository().save(user);
 }
 
 export type CreatedUserByLeader = {

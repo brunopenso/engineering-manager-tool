@@ -7,6 +7,7 @@ import OptionUnavailablePage from './pages/OptionUnavailablePage.js';
 import ProfilePage from './pages/ProfilePage.js';
 import AdminUsersPage from './pages/AdminUsersPage.js';
 import AdminTagsPage from './pages/AdminTagsPage.js';
+import AdminGithubIntegrationsPage from './pages/AdminGithubIntegrationsPage.js';
 import DeliverablesPage from './pages/DeliverablesPage.js';
 import DeliverableFormPage from './pages/DeliverableFormPage.js';
 import DeliverablesViewPage from './pages/DeliverablesViewPage.js';
@@ -14,6 +15,7 @@ import { AdminRoute } from './auth/AdminRoute.js';
 import { LeaderRoute } from './auth/LeaderRoute.js';
 import { DEFAULT_APP_ROUTE, LOGIN_ROUTE } from './routes/shellOptions.js';
 import { useAuth } from './auth/AuthProvider.js';
+import AuthThemeSync from './auth/AuthThemeSync.js';
 import LeaderHierarchyManagementPage from './pages/LeaderHierarchyManagementPage.js';
 import LeaderTeamDeliverablesPage from './pages/LeaderTeamDeliverablesPage.js';
 
@@ -34,7 +36,9 @@ function DefaultRouteRedirect() {
 
 export default function App() {
   return (
-    <Routes>
+    <>
+      <AuthThemeSync />
+      <Routes>
       <Route path="/" element={<LoginPage />} />
       <Route path="/login" element={<LoginPage />} />
       <Route
@@ -83,10 +87,19 @@ export default function App() {
             </AdminRoute>
           }
         />
+        <Route
+          path="admin/github"
+          element={
+            <AdminRoute>
+              <AdminGithubIntegrationsPage />
+            </AdminRoute>
+          }
+        />
         <Route path="unavailable" element={<OptionUnavailablePage />} />
         <Route path="*" element={<Navigate to={DEFAULT_APP_ROUTE} replace />} />
       </Route>
       <Route path="*" element={<DefaultRouteRedirect />} />
     </Routes>
+    </>
   );
 }

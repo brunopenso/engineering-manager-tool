@@ -7,6 +7,7 @@ export const DEFAULT_APP_ROUTE = '/app';
 export const PROFILE_ROUTE = '/app/profile';
 export const ADMIN_USERS_ROUTE = '/app/admin/users';
 export const ADMIN_TAGS_ROUTE = '/app/admin/tags';
+export const ADMIN_GITHUB_ROUTE = '/app/admin/github';
 export const LEADER_HIERARCHY_ROUTE = '/app/leader/hierarchy';
 export const LEADER_TEAM_DELIVERABLES_ROUTE = '/app/leader/team-deliverables';
 export const DELIVERABLES_ROUTE = '/app/deliverables';
@@ -57,6 +58,12 @@ const ADMIN_SHELL_MENU_OPTIONS: ShellMenuOption[] = [
     id: 'admin-tags',
     label: 'Tags',
     route: ADMIN_TAGS_ROUTE,
+    available: true,
+  },
+  {
+    id: 'admin-github',
+    label: 'GitHub integration',
+    route: ADMIN_GITHUB_ROUTE,
     available: true,
   },
 ];
