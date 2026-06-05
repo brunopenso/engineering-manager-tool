@@ -5,7 +5,14 @@ type AnalyticsWidgetTitleProps = TypographyProps;
 
 export default function AnalyticsWidgetTitle({ children, sx, ...rest }: AnalyticsWidgetTitleProps) {
   return (
-    <Typography variant="subtitle1" sx={[analyticsWidgetTitleSx, sx]} {...rest}>
+    <Typography
+      variant="subtitle1"
+      sx={{
+        ...analyticsWidgetTitleSx,
+        ...(sx && typeof sx === 'object' && !Array.isArray(sx) ? sx : {}),
+      }}
+      {...rest}
+    >
       {children}
     </Typography>
   );

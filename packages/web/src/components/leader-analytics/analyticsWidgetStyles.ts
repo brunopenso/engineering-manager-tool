@@ -10,11 +10,11 @@ export const analyticsWidgetPaperSx: SxProps<Theme> = {
 };
 
 /** Widget title: Typography subtitle1, semibold (Deliverables pending review pattern). */
-export const analyticsWidgetTitleSx: SxProps<Theme> = {
+export const analyticsWidgetTitleSx = {
   flexShrink: 0,
   fontWeight: 600,
   lineHeight: 1.3,
-};
+} as const;
 
 /** Chart legend item labels — same font size and family across widgets. */
 export const analyticsChartLegendLabelSx: SxProps<Theme> = {
