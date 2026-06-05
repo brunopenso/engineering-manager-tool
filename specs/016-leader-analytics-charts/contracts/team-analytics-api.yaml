@@ -114,6 +114,7 @@ components:
         - deliverablesByWeekAndImpact
         - engagementByWeek
         - pendingReviewCount
+        - pendingReviewByImpact
       properties:
         startDate:
           type: string
@@ -143,3 +144,15 @@ components:
           type: integer
           minimum: 0
           description: In-scope deliverables the logged-in leader has not marked reviewed
+        pendingReviewByImpact:
+          type: array
+          description: Pending review counts grouped by business impact (all four levels, zero-filled)
+          items:
+            type: object
+            required: [impact, count]
+            properties:
+              impact:
+                $ref: '#/components/schemas/BusinessImpact'
+              count:
+                type: integer
+                minimum: 0

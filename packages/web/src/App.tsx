@@ -18,6 +18,7 @@ import { useAuth } from './auth/AuthProvider.js';
 import AuthThemeSync from './auth/AuthThemeSync.js';
 import LeaderHierarchyManagementPage from './pages/LeaderHierarchyManagementPage.js';
 import LeaderTeamDeliverablesPage from './pages/LeaderTeamDeliverablesPage.js';
+import LeaderTeamAnalyticsPage from './pages/LeaderTeamAnalyticsPage.js';
 
 function DefaultRouteRedirect() {
   const { accessToken, user, sessionStatus } = useAuth();
@@ -60,6 +61,14 @@ export default function App() {
           element={
             <LeaderRoute>
               <LeaderTeamDeliverablesPage />
+            </LeaderRoute>
+          }
+        />
+        <Route
+          path="leader/team-analytics"
+          element={
+            <LeaderRoute>
+              <LeaderTeamAnalyticsPage />
             </LeaderRoute>
           }
         />

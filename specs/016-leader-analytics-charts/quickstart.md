@@ -63,6 +63,8 @@ npm run test --workspace @em-tool/web -- --run leader-analytics
 npm run lint
 ```
 
+**Verified 2026-06-04**: Backend (12 tests) and web (13 tests) leader-analytics suites passing; monorepo lint clean.
+
 Manual:
 
 1. Log in as leader → Leader → **Team Analytics**.
