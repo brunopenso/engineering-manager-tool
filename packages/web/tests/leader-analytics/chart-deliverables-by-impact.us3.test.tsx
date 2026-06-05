@@ -24,6 +24,7 @@ describe('US3 deliverables by impact chart', () => {
     );
 
     expect(screen.getByTestId('impact-chart')).toBeInTheDocument();
+    expect(screen.getByTestId('impact-chart-legend')).toBeInTheDocument();
     expect(screen.getByText(/deliverables by week and impact/i)).toBeInTheDocument();
   });
 });

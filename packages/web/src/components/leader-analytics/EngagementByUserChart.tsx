@@ -2,14 +2,19 @@ import { useMemo } from 'react';
 import { Box, Paper, Typography } from '@mui/material';
 import { BarChart } from '@mui/x-charts/BarChart';
 import type { EngagementBucketRow, TeamAnalyticsResponse } from '../../services/leaderAnalyticsApi.js';
+import AnalyticsWidgetTitle from './AnalyticsWidgetTitle.js';
+import ChartLegend from './ChartLegend.js';
 import ChartResizeContainer from './ChartResizeContainer.js';
-import EngagementChartLegend, { ENGAGEMENT_CHART_COLORS } from './EngagementChartLegend.js';
+import {
+  analyticsWidgetPaperSx,
+  ANALYTICS_CHART_LEGEND_MIN_HEIGHT,
+} from './analyticsWidgetStyles.js';
+import { ENGAGEMENT_CHART_COLORS } from './engagementChartColors.js';
 import { buildAscendingIsoWeekAxis } from '../../utils/isoWeekLabel.js';
 
 const MAX_LEGEND_USERS = 12;
 
 const PLOT_MARGINS = { left: 52, right: 16, top: 16, bottom: 56 };
-const LEGEND_AREA_MIN_HEIGHT = 48;
 
 type EngagementByUserChartProps = {
   analytics: TeamAnalyticsResponse | null;
@@ -62,16 +67,15 @@ export default function EngagementByUserChart({ analytics }: EngagementByUserCha
       legendItems: userIds.map((userId, index) => ({
         id: userId,
         label: labels[index] ?? userId,
+        color: ENGAGEMENT_CHART_COLORS[index % ENGAGEMENT_CHART_COLORS.length],
       })),
     };
   }, [rows, weekStarts]);
 
   if (weekStarts.length === 0) {
     return (
-      <Paper variant="outlined" sx={{ p: 2, height: '100%' }}>
-        <Typography variant="h6" gutterBottom>
-          Team engagement (adds per week)
-        </Typography>
+      <Paper variant="outlined" sx={analyticsWidgetPaperSx}>
+        <AnalyticsWidgetTitle gutterBottom>Team engagement (adds per week)</AnalyticsWidgetTitle>
         <Typography color="text.secondary">No data for the selected filters.</Typography>
       </Paper>
     );
@@ -79,10 +83,8 @@ export default function EngagementByUserChart({ analytics }: EngagementByUserCha
 
   if (seriesUserIds.length === 0) {
     return (
-      <Paper variant="outlined" sx={{ p: 2, height: '100%' }}>
-        <Typography variant="h6" gutterBottom>
-          Team engagement (adds per week)
-        </Typography>
+      <Paper variant="outlined" sx={analyticsWidgetPaperSx}>
+        <AnalyticsWidgetTitle gutterBottom>Team engagement (adds per week)</AnalyticsWidgetTitle>
         <Typography color="text.secondary">
           No deliverables were added in this period for the selected team scope.
         </Typography>
@@ -91,20 +93,8 @@ export default function EngagementByUserChart({ analytics }: EngagementByUserCha
   }
 
   return (
-    <Paper
-      variant="outlined"
-      sx={{
-        p: 2,
-        height: '100%',
-        display: 'flex',
-        flexDirection: 'column',
-        boxSizing: 'border-box',
-        overflow: 'hidden',
-      }}
-    >
-      <Typography variant="h6" gutterBottom sx={{ flexShrink: 0 }}>
-        Team engagement (adds per week)
-      </Typography>
+    <Paper variant="outlined" sx={{ ...analyticsWidgetPaperSx, overflow: 'hidden' }}>
+      <AnalyticsWidgetTitle sx={{ mb: 1 }}>Team engagement (adds per week)</AnalyticsWidgetTitle>
       {rows.length > 0 && seriesUserIds.length < new Set(rows.map((row) => row.userId)).size ? (
         <Typography variant="caption" color="text.secondary" sx={{ mb: 1, flexShrink: 0 }}>
           Showing top {MAX_LEGEND_USERS} contributors by total adds in range.
@@ -112,7 +102,7 @@ export default function EngagementByUserChart({ analytics }: EngagementByUserCha
       ) : null}
       <ChartResizeContainer minHeight={200}>
         {(containerHeight) => {
-          const plotHeight = Math.max(160, containerHeight - LEGEND_AREA_MIN_HEIGHT);
+          const plotHeight = Math.max(160, containerHeight - ANALYTICS_CHART_LEGEND_MIN_HEIGHT);
 
           return (
             <Box
@@ -149,7 +139,7 @@ export default function EngagementByUserChart({ analytics }: EngagementByUserCha
                   }}
                 />
               </Box>
-              <EngagementChartLegend items={legendItems} />
+              <ChartLegend items={legendItems} data-testid="engagement-chart-legend" />
             </Box>
           );
         }}

@@ -1,5 +1,7 @@
 import { alpha, Box, Paper, Typography } from '@mui/material';
 import type { PendingReviewByImpactRow } from '../../services/leaderAnalyticsApi.js';
+import AnalyticsWidgetTitle from './AnalyticsWidgetTitle.js';
+import { analyticsWidgetPaperSx } from './analyticsWidgetStyles.js';
 import {
   BUSINESS_IMPACT_COLORS,
   BUSINESS_IMPACT_LABELS,
@@ -20,19 +22,13 @@ export default function PendingReviewWidget({ totalCount, byImpact }: PendingRev
     <Paper
       variant="outlined"
       sx={{
-        p: 1.5,
-        height: '100%',
-        display: 'flex',
-        flexDirection: 'column',
-        boxSizing: 'border-box',
+        ...analyticsWidgetPaperSx,
         overflow: 'auto',
         gap: 1,
       }}
       data-testid="pending-review-widget"
     >
-      <Typography variant="subtitle1" sx={{ flexShrink: 0, fontWeight: 600, lineHeight: 1.3 }}>
-        Deliverables pending review
-      </Typography>
+      <AnalyticsWidgetTitle>Deliverables pending review</AnalyticsWidgetTitle>
 
       <Box
         sx={{

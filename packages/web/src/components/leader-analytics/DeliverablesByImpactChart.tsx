@@ -2,7 +2,13 @@ import { useMemo } from 'react';
 import { Box, Paper, Typography } from '@mui/material';
 import { BarChart } from '@mui/x-charts/BarChart';
 import type { ImpactBucketRow, TeamAnalyticsResponse } from '../../services/leaderAnalyticsApi.js';
+import AnalyticsWidgetTitle from './AnalyticsWidgetTitle.js';
+import ChartLegend from './ChartLegend.js';
 import ChartResizeContainer from './ChartResizeContainer.js';
+import {
+  analyticsWidgetPaperSx,
+  ANALYTICS_CHART_LEGEND_MIN_HEIGHT,
+} from './analyticsWidgetStyles.js';
 import {
   BUSINESS_IMPACT_COLORS,
   BUSINESS_IMPACT_LABELS,
@@ -45,7 +51,13 @@ function buildImpactMatrix(
   return matrix;
 }
 
-const CHART_MARGINS = { left: 52, right: 16, top: 48, bottom: 64 };
+const IMPACT_LEGEND_ITEMS = BUSINESS_IMPACT_LEVELS.map((impact) => ({
+  id: impact,
+  label: BUSINESS_IMPACT_LABELS[impact],
+  color: BUSINESS_IMPACT_COLORS[impact],
+}));
+
+const PLOT_MARGINS = { left: 52, right: 16, top: 16, bottom: 64 };
 
 export default function DeliverablesByImpactChart({ analytics }: DeliverablesByImpactChartProps) {
   const { weekStarts, labels: weekLabels } = useMemo(
@@ -60,59 +72,61 @@ export default function DeliverablesByImpactChart({ analytics }: DeliverablesByI
 
   if (weekStarts.length === 0) {
     return (
-      <Paper variant="outlined" sx={{ p: 2, height: '100%' }}>
-        <Typography variant="h6" gutterBottom>
-          Deliverables by week and impact
-        </Typography>
+      <Paper variant="outlined" sx={analyticsWidgetPaperSx}>
+        <AnalyticsWidgetTitle gutterBottom>Deliverables by week and impact</AnalyticsWidgetTitle>
         <Typography color="text.secondary">No data for the selected filters.</Typography>
       </Paper>
     );
   }
 
   return (
-    <Paper
-      variant="outlined"
-      sx={{
-        p: 2,
-        height: '100%',
-        display: 'flex',
-        flexDirection: 'column',
-        boxSizing: 'border-box',
-        overflow: 'hidden',
-      }}
-    >
-      <Typography variant="h6" gutterBottom sx={{ flexShrink: 0 }}>
-        Deliverables by week and impact
-      </Typography>
+    <Paper variant="outlined" sx={{ ...analyticsWidgetPaperSx, overflow: 'hidden' }}>
+      <AnalyticsWidgetTitle sx={{ mb: 1 }}>Deliverables by week and impact</AnalyticsWidgetTitle>
       <ChartResizeContainer minHeight={200}>
-        {(chartHeight) => (
-          <Box data-testid="impact-chart" sx={{ width: '100%', height: chartHeight }}>
-            <BarChart
-              height={chartHeight}
-              xAxis={[
-                {
-                  data: weekLabels,
-                  scaleType: 'band',
-                  tickLabelStyle: { fontSize: 11 },
-                },
-              ]}
-              series={BUSINESS_IMPACT_LEVELS.map((impact) => ({
-                id: impact,
-                label: BUSINESS_IMPACT_LABELS[impact],
-                data: weekStarts.map((week) => matrix[week]?.[impact] ?? 0),
-                stack: 'total',
-                color: BUSINESS_IMPACT_COLORS[impact],
-              }))}
-              colors={BUSINESS_IMPACT_LEVELS.map((impact) => BUSINESS_IMPACT_COLORS[impact])}
-              margin={CHART_MARGINS}
-              slotProps={{
-                legend: {
-                  position: { vertical: 'top', horizontal: 'right' },
-                },
+        {(containerHeight) => {
+          const plotHeight = Math.max(160, containerHeight - ANALYTICS_CHART_LEGEND_MIN_HEIGHT);
+
+          return (
+            <Box
+              data-testid="impact-chart"
+              sx={{
+                width: '100%',
+                height: containerHeight,
+                display: 'flex',
+                flexDirection: 'column',
+                minHeight: 0,
               }}
-            />
-          </Box>
-        )}
+            >
+              <Box sx={{ flex: 1, minHeight: 0, width: '100%' }}>
+                <BarChart
+                  height={plotHeight}
+                  xAxis={[
+                    {
+                      data: weekLabels,
+                      scaleType: 'band',
+                      tickLabelStyle: { fontSize: 11 },
+                    },
+                  ]}
+                  series={BUSINESS_IMPACT_LEVELS.map((impact) => ({
+                    id: impact,
+                    label: BUSINESS_IMPACT_LABELS[impact],
+                    data: weekStarts.map((week) => matrix[week]?.[impact] ?? 0),
+                    stack: 'total',
+                    color: BUSINESS_IMPACT_COLORS[impact],
+                  }))}
+                  colors={BUSINESS_IMPACT_LEVELS.map((impact) => BUSINESS_IMPACT_COLORS[impact])}
+                  margin={PLOT_MARGINS}
+                  slotProps={{
+                    legend: {
+                      hidden: true,
+                    },
+                  }}
+                />
+              </Box>
+              <ChartLegend items={IMPACT_LEGEND_ITEMS} data-testid="impact-chart-legend" />
+            </Box>
+          );
+        }}
       </ChartResizeContainer>
     </Paper>
   );
