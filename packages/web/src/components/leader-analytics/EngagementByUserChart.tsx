@@ -1,20 +1,16 @@
 import { useMemo } from 'react';
-import { Box, Paper, Typography } from '@mui/material';
+import { Paper, Typography } from '@mui/material';
 import { BarChart } from '@mui/x-charts/BarChart';
 import type { EngagementBucketRow, TeamAnalyticsResponse } from '../../services/leaderAnalyticsApi.js';
 import AnalyticsWidgetTitle from './AnalyticsWidgetTitle.js';
 import ChartLegend from './ChartLegend.js';
 import ChartResizeContainer from './ChartResizeContainer.js';
-import {
-  analyticsWidgetPaperSx,
-  ANALYTICS_CHART_LEGEND_MIN_HEIGHT,
-} from './analyticsWidgetStyles.js';
+import ChartWithLegendLayout from './ChartWithLegendLayout.js';
+import { analyticsChartPlotMargins, analyticsWidgetPaperSx } from './analyticsWidgetStyles.js';
 import { ENGAGEMENT_CHART_COLORS } from './engagementChartColors.js';
 import { buildAscendingIsoWeekAxis } from '../../utils/isoWeekLabel.js';
 
 const MAX_LEGEND_USERS = 12;
-
-const PLOT_MARGINS = { left: 52, right: 16, top: 16, bottom: 56 };
 
 type EngagementByUserChartProps = {
   analytics: TeamAnalyticsResponse | null;
@@ -101,48 +97,37 @@ export default function EngagementByUserChart({ analytics }: EngagementByUserCha
         </Typography>
       ) : null}
       <ChartResizeContainer minHeight={200}>
-        {(containerHeight) => {
-          const plotHeight = Math.max(160, containerHeight - ANALYTICS_CHART_LEGEND_MIN_HEIGHT);
-
-          return (
-            <Box
-              data-testid="engagement-chart"
-              sx={{
-                width: '100%',
-                height: containerHeight,
-                display: 'flex',
-                flexDirection: 'column',
-                minHeight: 0,
-              }}
-            >
-              <Box sx={{ flex: 1, minHeight: 0, width: '100%' }}>
-                <BarChart
-                  height={plotHeight}
-                  colors={[...ENGAGEMENT_CHART_COLORS]}
-                  xAxis={[
-                    {
-                      data: weekLabels,
-                      scaleType: 'band',
-                      tickLabelStyle: { fontSize: 11 },
-                    },
-                  ]}
-                  series={seriesLabels.map((label, index) => ({
-                    id: seriesUserIds[index],
-                    label,
-                    data: seriesData[index],
-                  }))}
-                  margin={PLOT_MARGINS}
-                  slotProps={{
-                    legend: {
-                      hidden: true,
-                    },
-                  }}
-                />
-              </Box>
-              <ChartLegend items={legendItems} data-testid="engagement-chart-legend" />
-            </Box>
-          );
-        }}
+        {(containerHeight) => (
+          <ChartWithLegendLayout
+            containerHeight={containerHeight}
+            data-testid="engagement-chart"
+            legend={<ChartLegend items={legendItems} data-testid="engagement-chart-legend" />}
+            renderChart={(plotHeight) => (
+              <BarChart
+                height={plotHeight}
+                colors={[...ENGAGEMENT_CHART_COLORS]}
+                xAxis={[
+                  {
+                    data: weekLabels,
+                    scaleType: 'band',
+                    tickLabelStyle: { fontSize: 11 },
+                  },
+                ]}
+                series={seriesLabels.map((label, index) => ({
+                  id: seriesUserIds[index],
+                  label,
+                  data: seriesData[index],
+                }))}
+                margin={analyticsChartPlotMargins}
+                slotProps={{
+                  legend: {
+                    hidden: true,
+                  },
+                }}
+              />
+            )}
+          />
+        )}
       </ChartResizeContainer>
     </Paper>
   );

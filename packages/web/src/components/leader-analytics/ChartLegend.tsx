@@ -24,7 +24,8 @@ export default function ChartLegend({ items, 'data-testid': testId }: ChartLegen
       sx={{
         listStyle: 'none',
         m: 0,
-        mt: 1,
+        mt: 0.25,
+        py: 0.25,
         p: 0,
         display: 'flex',
         flexWrap: 'wrap',

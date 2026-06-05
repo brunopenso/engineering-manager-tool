@@ -22,5 +22,10 @@ export const analyticsChartLegendLabelSx: SxProps<Theme> = {
   fontSize: '0.75rem',
 };
 
-/** Reserved height below the plot for a horizontal legend row. */
-export const ANALYTICS_CHART_LEGEND_MIN_HEIGHT = 48;
+/** Bottom margin inside MUI X BarChart for rotated / multi-line week labels. */
+export const analyticsChartPlotMargins = {
+  left: 52,
+  right: 16,
+  top: 12,
+  bottom: 44,
+} as const;
