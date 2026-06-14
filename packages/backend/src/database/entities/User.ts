@@ -29,6 +29,12 @@ export class User {
   @Column({ type: 'varchar', name: 'github_login', length: 39, nullable: true })
   githubLogin!: string | null;
 
+  @Column({ type: 'varchar', name: 'language_preference', length: 5, default: 'en' })
+  languagePreference!: 'en' | 'es' | 'de' | 'fr' | 'pt';
+
+  @Column({ type: 'varchar', name: 'date_format_preference', length: 3, default: 'MDY' })
+  dateFormatPreference!: 'MDY' | 'DMY' | 'YMD';
+
   @Column({ type: 'timestamptz', name: 'first_login_at' })
   firstLoginAt!: Date;
 

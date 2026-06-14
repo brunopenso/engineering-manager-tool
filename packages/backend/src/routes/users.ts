@@ -43,6 +43,8 @@ import {
 type ProfileSettingsBody = {
   themePreference?: unknown;
   githubLogin?: unknown;
+  languagePreference?: unknown;
+  dateFormatPreference?: unknown;
 };
 
 type RoleChangeBody = {

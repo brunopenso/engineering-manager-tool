@@ -59,6 +59,8 @@ describe('POST /auth/refresh', () => {
       roles: ['COLLABORATOR'],
       themePreference: 'light',
       githubLogin: null,
+      languagePreference: 'en',
+      dateFormatPreference: 'MDY',
     });
 
     const response = await app.inject({ method: 'POST', url: '/auth/refresh' });

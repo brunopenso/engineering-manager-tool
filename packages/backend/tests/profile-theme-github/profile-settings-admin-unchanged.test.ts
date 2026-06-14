@@ -45,6 +45,8 @@ describe('admin user list profile fields', () => {
       roles: adminListAuthRoles,
       themePreference: 'light',
       githubLogin: null,
+      languagePreference: 'en',
+      dateFormatPreference: 'MDY',
     });
 
     const response = await app.inject({ method: 'GET', url: '/users' });
@@ -54,6 +56,8 @@ describe('admin user list profile fields', () => {
       id: sampleAdminListUser.id,
       themePreference: 'light',
       githubLogin: null,
+      languagePreference: 'en',
+      dateFormatPreference: 'MDY',
     });
 
     await app.close();

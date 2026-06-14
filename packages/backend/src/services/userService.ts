@@ -125,6 +125,14 @@ export async function updateUserProfileSettings(
     user.githubLogin = partial.githubLogin;
   }
 
+  if (partial.languagePreference !== undefined) {
+    user.languagePreference = partial.languagePreference;
+  }
+
+  if (partial.dateFormatPreference !== undefined) {
+    user.dateFormatPreference = partial.dateFormatPreference;
+  }
+
   return userRepository().save(user);
 }
 
