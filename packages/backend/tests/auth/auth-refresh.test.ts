@@ -1,3 +1,7 @@
+import {
+  DEFAULT_DATE_FORMAT_PREFERENCE,
+  DEFAULT_LANGUAGE_PREFERENCE,
+} from '../../src/types/profilePreferences.js';
 import Fastify from 'fastify';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { AUTH_ERROR_CODES, type AppTokenPayload } from '../../src/auth/types.js';
@@ -59,6 +63,8 @@ describe('POST /auth/refresh', () => {
       roles: ['COLLABORATOR'],
       themePreference: 'light',
       githubLogin: null,
+      languagePreference: DEFAULT_LANGUAGE_PREFERENCE,
+      dateFormatPreference: DEFAULT_DATE_FORMAT_PREFERENCE,
     });
 
     const response = await app.inject({ method: 'POST', url: '/auth/refresh' });

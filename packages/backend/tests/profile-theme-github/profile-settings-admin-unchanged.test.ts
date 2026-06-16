@@ -1,3 +1,7 @@
+import {
+  DEFAULT_DATE_FORMAT_PREFERENCE,
+  DEFAULT_LANGUAGE_PREFERENCE,
+} from '../../src/types/profilePreferences.js';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import * as userService from '../../src/services/userService.js';
 import * as authUserMapper from '../../src/services/authUserMapper.js';
@@ -45,6 +49,8 @@ describe('admin user list profile fields', () => {
       roles: adminListAuthRoles,
       themePreference: 'light',
       githubLogin: null,
+      languagePreference: DEFAULT_LANGUAGE_PREFERENCE,
+      dateFormatPreference: DEFAULT_DATE_FORMAT_PREFERENCE,
     });
 
     const response = await app.inject({ method: 'GET', url: '/users' });
@@ -54,6 +60,8 @@ describe('admin user list profile fields', () => {
       id: sampleAdminListUser.id,
       themePreference: 'light',
       githubLogin: null,
+      languagePreference: DEFAULT_LANGUAGE_PREFERENCE,
+      dateFormatPreference: DEFAULT_DATE_FORMAT_PREFERENCE,
     });
 
     await app.close();

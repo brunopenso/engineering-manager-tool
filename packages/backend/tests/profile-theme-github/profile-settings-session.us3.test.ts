@@ -1,3 +1,7 @@
+import {
+  DATE_FORMAT_PREFERENCE_DMY,
+  LANGUAGE_PREFERENCES,
+} from '../../src/types/profilePreferences.js';
 import Fastify from 'fastify';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { AUTH_ERROR_CODES, type AppTokenPayload } from '../../src/auth/types.js';
@@ -33,7 +37,7 @@ describe('US3 session identity profile fields', () => {
     }));
   };
 
-  it('includes themePreference and githubLogin on refresh', async () => {
+  it('includes themePreference, githubLogin, languagePreference, and dateFormatPreference on refresh', async () => {
     const app = Fastify();
     app.addHook('onRequest', (request, _reply, done) => {
       request.auth = {
@@ -51,12 +55,16 @@ describe('US3 session identity profile fields', () => {
       ...sampleProfileUser,
       themePreference: 'dark',
       githubLogin: 'acme-dev',
+      languagePreference: LANGUAGE_PREFERENCES[1],
+      dateFormatPreference: DATE_FORMAT_PREFERENCE_DMY,
     } as never);
     vi.mocked(authUserMapper.mapUserToAuthResponse).mockResolvedValue(
       toAuthUserResponse({
         ...sampleProfileUser,
         themePreference: 'dark',
         githubLogin: 'acme-dev',
+        languagePreference: LANGUAGE_PREFERENCES[1],
+        dateFormatPreference: DATE_FORMAT_PREFERENCE_DMY,
       }),
     );
 
@@ -66,6 +74,8 @@ describe('US3 session identity profile fields', () => {
     expect(response.statusCode).toBe(200);
     expect(payload.user.themePreference).toBe('dark');
     expect(payload.user.githubLogin).toBe('acme-dev');
+    expect(payload.user.languagePreference).toBe(LANGUAGE_PREFERENCES[1]);
+    expect(payload.user.dateFormatPreference).toBe(DATE_FORMAT_PREFERENCE_DMY);
 
     await app.close();
   });

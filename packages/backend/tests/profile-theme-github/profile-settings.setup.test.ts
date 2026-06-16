@@ -1,3 +1,7 @@
+import {
+  DEFAULT_DATE_FORMAT_PREFERENCE,
+  DEFAULT_LANGUAGE_PREFERENCE,
+} from '../../src/types/profilePreferences.js';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import * as userService from '../../src/services/userService.js';
 import * as authUserMapper from '../../src/services/authUserMapper.js';
@@ -38,6 +42,8 @@ describe('profile settings setup', () => {
 
     expect(mapped.themePreference).toBe('light');
     expect(mapped.githubLogin).toBeNull();
+    expect(mapped.languagePreference).toBe(DEFAULT_LANGUAGE_PREFERENCE);
+    expect(mapped.dateFormatPreference).toBe(DEFAULT_DATE_FORMAT_PREFERENCE);
     expect(mapped.roles).toEqual(profileAuthRoles);
   });
 
@@ -63,6 +69,27 @@ describe('profile settings setup', () => {
     expect(userService.updateUserProfileSettings).toHaveBeenCalledWith(profileActorId, {
       themePreference: 'dark',
     });
+
+    await app.close();
+  });
+
+  it('accepts PATCH /users/me with an empty body', async () => {
+    const app = buildProfileSettingsTestApp({ userId: profileActorId });
+    await registerProfileSettingsTestRoutes(app);
+
+    vi.mocked(userService.updateUserProfileSettings).mockResolvedValue(sampleProfileUser as never);
+    vi.mocked(authUserMapper.mapUserToAuthResponse).mockResolvedValue(
+      toAuthUserResponse(sampleProfileUser),
+    );
+
+    const response = await app.inject({
+      method: 'PATCH',
+      url: '/users/me',
+      payload: {},
+    });
+
+    expect(response.statusCode).toBe(200);
+    expect(userService.updateUserProfileSettings).toHaveBeenCalledWith(profileActorId, {});
 
     await app.close();
   });
