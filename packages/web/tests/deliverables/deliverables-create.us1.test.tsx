@@ -1,4 +1,4 @@
-import { fireEvent, screen, within } from '@testing-library/react';
+import { fireEvent, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import App from '../../src/App.js';
@@ -100,8 +100,10 @@ describe('US1 deliverable creation', () => {
       await userEvent.keyboard('{Escape}');
       await userEvent.click(await screen.findByRole('button', { name: 'Save' }));
 
-      expect(await screen.findByRole('heading', { name: 'Deliverables' })).toBeInTheDocument();
-      expect(await screen.findByText('API redesign')).toBeInTheDocument();
+      await waitFor(() => {
+        expect(screen.getByRole('heading', { name: 'Deliverables' })).toBeInTheDocument();
+        expect(screen.getByText('API redesign')).toBeInTheDocument();
+      });
     },
     15000,
   );
@@ -196,8 +198,10 @@ describe('US1 deliverable creation', () => {
 
       await userEvent.click(await screen.findByRole('button', { name: 'Save' }));
 
-      expect(await screen.findByRole('heading', { name: 'Deliverables' })).toBeInTheDocument();
-      expect(await screen.findByText('Untagged deliverable')).toBeInTheDocument();
+      await waitFor(() => {
+        expect(screen.getByRole('heading', { name: 'Deliverables' })).toBeInTheDocument();
+        expect(screen.getByText('Untagged deliverable')).toBeInTheDocument();
+      });
 
       expect(postBody).toMatchObject({ systemTagIds: [] });
     },
