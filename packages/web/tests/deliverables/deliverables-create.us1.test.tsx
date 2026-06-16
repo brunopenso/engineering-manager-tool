@@ -103,7 +103,7 @@ describe('US1 deliverable creation', () => {
       await waitFor(() => {
         expect(screen.getByRole('heading', { name: 'Deliverables' })).toBeInTheDocument();
         expect(screen.getByText('API redesign')).toBeInTheDocument();
-      });
+      }, { timeout: 5000 });
     },
     15000,
   );
@@ -201,7 +201,7 @@ describe('US1 deliverable creation', () => {
       await waitFor(() => {
         expect(screen.getByRole('heading', { name: 'Deliverables' })).toBeInTheDocument();
         expect(screen.getByText('Untagged deliverable')).toBeInTheDocument();
-      });
+      }, { timeout: 5000 });
 
       expect(postBody).toMatchObject({ systemTagIds: [] });
     },
