@@ -1,0 +1,53 @@
+{
+  "list": {
+    "title": "Entregas",
+    "subtitle": "Registre seus resultados, impacto e áreas de crescimento para conversas de desempenho.",
+    "add": "Adicionar entrega",
+    "loadError": "Não foi possível carregar as entregas.",
+    "deleteError": "Não foi possível excluir a entrega.",
+    "emptyNone": {
+      "title": "Nenhuma entrega ainda",
+      "body": "Adicione sua primeira entrega para começar seu portfólio."
+    },
+    "emptyFiltered": {
+      "title": "Nenhuma entrega corresponde aos filtros",
+      "body": "Tente ajustar o intervalo de datas, níveis de impacto ou tags do sistema."
+    },
+    "deleteDialog": {
+      "title": "Excluir entrega?",
+      "body": "Isso removerá permanentemente \"{{title}}\" do seu portfólio."
+    }
+  },
+  "view": {
+    "title": "Entregas do membro da equipe",
+    "subtitle": "Visualização somente leitura para coaching e conversas de desempenho.",
+    "loadError": "Não foi possível carregar as entregas deste colaborador.",
+    "empty": "Nenhuma entrega para exibir."
+  },
+  "form": {
+    "breadcrumb": "Entregas",
+    "editTitle": "Editar entrega",
+    "createTitle": "Adicionar entrega",
+    "subtitle": "Registre o resultado, impacto, papel e notas de crescimento em um espaço focado.",
+    "loadError": "Não foi possível carregar a entrega.",
+    "formLoadError": "Não foi possível carregar o formulário da entrega.",
+    "updateError": "Não foi possível atualizar a entrega.",
+    "createError": "Não foi possível criar a entrega.",
+    "readOnly": "Esta entrega é somente leitura e não pode ser editada.",
+    "loading": "Carregando formulário da entrega...",
+    "description": "Descrição",
+    "roleInDeliverable": "Seu papel nesta entrega",
+    "tagsHelper": "Opcional — selecione tags do catálogo que se aplicam",
+    "businessImpact": "Impacto no negócio",
+    "improvementPoints": "Pontos de melhoria de desempenho pessoal",
+    "technicalDescription": "Descrição técnica (opcional)",
+    "userTags": "Tags do usuário (opcional, separadas por vírgula)",
+    "referenceLinks": "Links de referência (opcional)",
+    "referenceLinksAria": "Tabela de links de referência",
+    "linkUrl": "URL do link {{index}}",
+    "linkLabel": "Rótulo do link {{index}}",
+    "addLink": "Adicionar link",
+    "saveChanges": "Salvar alterações",
+    "saving": "Salvando..."
+  }
+}

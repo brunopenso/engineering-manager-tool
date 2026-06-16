@@ -1,0 +1,39 @@
+{
+  "appTitle": "Ferramenta do Engineering Manager",
+  "menu": {
+    "home": "Início",
+    "profile": "Perfil",
+    "deliverables": "Entregas",
+    "userRoles": "Papéis de usuário",
+    "tags": "Tags",
+    "githubIntegration": "Integração GitHub",
+    "teamDeliverables": "Entregas da equipe",
+    "teamAnalytics": "Análises da equipe",
+    "hierarchyManagement": "Gestão de hierarquia"
+  },
+  "sections": {
+    "leader": "Líder",
+    "administration": "Administração"
+  },
+  "aria": {
+    "openDrawer": "abrir menu",
+    "appNavigation": "Navegação do aplicativo"
+  },
+  "welcome": {
+    "title": "Bem-vindo",
+    "paragraph1": "Gerentes de engenharia e suas equipes usam esta ferramenta para registrar entregas, acompanhar impacto e crescimento e entender a estrutura da equipe em um só lugar.",
+    "paragraph2": "Cada usuário é um colaborador que gerencia suas próprias entregas e perfil. Líderes também revisam entregas da equipe e gerenciam a hierarquia de reporte. Administradores configuram papéis de usuário e o catálogo compartilhado de tags.",
+    "paragraph3": "Você vê apenas as opções de menu e os dados permitidos pelo seu papel. Líderes leem entregas de subordinados somente leitura, pares não veem o trabalho uns dos outros e administradores governam configurações da organização.",
+    "cta": "Selecione uma opção no menu para continuar"
+  },
+  "unavailable": {
+    "title": "Recurso indisponível",
+    "body": "Esta opção de menu está indisponível no momento. Volte mais tarde ou selecione outra opção no menu.",
+    "backToHome": "Voltar ao início"
+  },
+  "logout": {
+    "title": "Confirmar saída",
+    "body": "Tem certeza de que deseja sair? Será necessário entrar novamente para acessar o aplicativo.",
+    "confirm": "Sair"
+  }
+}

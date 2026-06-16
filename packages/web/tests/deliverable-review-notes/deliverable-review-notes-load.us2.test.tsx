@@ -1,6 +1,6 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { render } from '@testing-library/react';
+import { renderWithI18n } from '../../src/test/renderWithProviders.js';
 import DeliverableReviewNotesPanel from '../../src/components/team-deliverables/DeliverableReviewNotesPanel.js';
 
 describe('US2 deliverable review notes load', () => {
@@ -22,7 +22,7 @@ describe('US2 deliverable review notes load', () => {
       }),
     );
 
-    render(
+    renderWithI18n(
       <DeliverableReviewNotesPanel deliverableId="del-1" accessToken="token-1" active />,
     );
 
@@ -45,7 +45,7 @@ describe('US2 deliverable review notes load', () => {
       }),
     );
 
-    render(
+    renderWithI18n(
       <DeliverableReviewNotesPanel deliverableId="del-1" accessToken="token-1" active />,
     );
 
@@ -65,7 +65,7 @@ describe('US2 deliverable review notes load', () => {
       }),
     );
 
-    render(
+    renderWithI18n(
       <DeliverableReviewNotesPanel deliverableId="del-1" accessToken="token-1" active />,
     );
 

@@ -1,0 +1,61 @@
+{
+  "actions": {
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "save": "Save",
+    "edit": "Edit",
+    "remove": "Remove",
+    "actions": "Actions",
+    "clearAllFilters": "Clear all filters",
+    "all": "All"
+  },
+  "fields": {
+    "name": "Name",
+    "email": "Email",
+    "title": "Title",
+    "startDate": "Start date",
+    "endDate": "End date",
+    "url": "URL",
+    "label": "Label",
+    "color": "Color",
+    "roles": "Roles",
+    "tags": "Tags",
+    "impact": "Impact"
+  },
+  "impact": {
+    "low": "Low",
+    "medium": "Medium",
+    "high": "High",
+    "transformational": "Transformational",
+    "LOW": "Low",
+    "MEDIUM": "Medium",
+    "HIGH": "High",
+    "TRANSFORMATIONAL": "Transformational"
+  },
+  "roles": {
+    "collaborator": "Collaborator",
+    "leader": "Leader",
+    "administrator": "Administrator",
+    "COLLABORATOR": "Collaborator",
+    "LEADER": "Leader",
+    "ADMINISTRATOR": "Administrator"
+  },
+  "validation": {
+    "endDateBeforeStart": "End date must be on or after start date."
+  },
+  "loading": {
+    "deliverables": "Loading deliverables…",
+    "users": "Loading users...",
+    "tags": "Loading tags...",
+    "organizations": "Loading organizations...",
+    "generic": "Loading…"
+  },
+  "errors": {
+    "generic": "Something went wrong. Please try again."
+  },
+  "dates": {
+    "created": "Created",
+    "updated": "Updated"
+  },
+  "systemTags": "System tags"
+}

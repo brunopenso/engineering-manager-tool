@@ -1,6 +1,6 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { render } from '@testing-library/react';
+import { renderWithI18n } from '../../src/test/renderWithProviders.js';
 import DeliverableReviewNotesPanel from '../../src/components/team-deliverables/DeliverableReviewNotesPanel.js';
 
 describe('US1 deliverable review notes save', () => {
@@ -34,7 +34,7 @@ describe('US1 deliverable review notes save', () => {
 
     const onReviewedChange = vi.fn();
 
-    render(
+    renderWithI18n(
       <DeliverableReviewNotesPanel
         deliverableId="del-1"
         accessToken="token-1"

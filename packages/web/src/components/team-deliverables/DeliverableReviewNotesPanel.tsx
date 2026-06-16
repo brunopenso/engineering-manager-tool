@@ -8,6 +8,7 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 import {
   DeliverableReviewNotesApiError,
   getReviewNotes,
@@ -29,6 +30,7 @@ export default function DeliverableReviewNotesPanel({
   active,
   onReviewedChange,
 }: DeliverableReviewNotesPanelProps) {
+  const { t } = useTranslation('leader');
   const [notes, setNotes] = useState('');
   const [loadedNotes, setLoadedNotes] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -50,12 +52,12 @@ export default function DeliverableReviewNotesPanel({
       setLoadError(
         error instanceof DeliverableReviewNotesApiError
           ? error.message
-          : 'Unable to load review notes.',
+          : t('reviewNotes.loadError'),
       );
     } finally {
       setIsLoading(false);
     }
-  }, [accessToken, deliverableId]);
+  }, [accessToken, deliverableId, t]);
 
   useEffect(() => {
     if (!active) {
@@ -84,7 +86,7 @@ export default function DeliverableReviewNotesPanel({
       setSaveError(
         error instanceof DeliverableReviewNotesApiError
           ? error.message
-          : 'Unable to save review notes.',
+          : t('reviewNotes.saveError'),
       );
     } finally {
       setIsSaving(false);
@@ -94,7 +96,7 @@ export default function DeliverableReviewNotesPanel({
   if (isLoading) {
     return (
       <Box sx={{ display: 'flex', justifyContent: 'center', py: 4 }}>
-        <CircularProgress size={28} aria-label="Loading review notes" />
+        <CircularProgress size={28} aria-label={t('reviewNotes.loading')} />
       </Box>
     );
   }
@@ -108,7 +110,7 @@ export default function DeliverableReviewNotesPanel({
           severity="error"
           action={
             <Button color="inherit" size="small" onClick={() => void loadNotes()}>
-              Retry
+              {t('reviewNotes.retry')}
             </Button>
           }
         >
@@ -118,12 +120,12 @@ export default function DeliverableReviewNotesPanel({
 
       {showEmptyGuidance ? (
         <Typography color="text.secondary" variant="body2">
-          Add private coaching notes for this deliverable. Only you can see notes you save here.
+          {t('reviewNotes.emptyGuidance')}
         </Typography>
       ) : null}
 
       <TextField
-        label="Review notes"
+        label={t('reviewNotes.label')}
         multiline
         minRows={6}
         fullWidth
@@ -138,16 +140,19 @@ export default function DeliverableReviewNotesPanel({
             'data-testid': 'review-notes-input',
           },
         }}
-        helperText={`${notes.length}/${MAX_NOTES_LENGTH} characters`}
+        helperText={t('reviewNotes.characterCount', {
+          count: notes.length,
+          max: MAX_NOTES_LENGTH,
+        })}
         disabled={isSaving}
       />
 
       {saveError ? <Alert severity="error">{saveError}</Alert> : null}
-      {saveSuccess ? <Alert severity="success">Review notes saved.</Alert> : null}
+      {saveSuccess ? <Alert severity="success">{t('reviewNotes.saved')}</Alert> : null}
 
       <Box>
         <Button variant="contained" onClick={() => void handleSave()} disabled={isSaving}>
-          {isSaving ? 'Saving…' : 'Save notes'}
+          {isSaving ? t('reviewNotes.saving') : t('reviewNotes.save')}
         </Button>
       </Box>
     </Stack>

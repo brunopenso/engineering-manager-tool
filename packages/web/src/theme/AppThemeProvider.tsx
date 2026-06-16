@@ -6,8 +6,10 @@ import {
   useState,
   type ReactNode,
 } from 'react';
-import { ThemeProvider } from '@mui/material/styles';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { enUS, ptBR } from '@mui/material/locale';
 import CssBaseline from '@mui/material/CssBaseline';
+import { useTranslation } from 'react-i18next';
 import { createAppTheme, type ThemeMode } from './appTheme.js';
 import { getThemeFromCookie, setThemeCookie } from './themeCookie.js';
 
@@ -23,6 +25,7 @@ type AppThemeProviderProps = {
 };
 
 export function AppThemeProvider({ children }: AppThemeProviderProps) {
+  const { i18n } = useTranslation();
   const [mode, setModeState] = useState<ThemeMode>(() => getThemeFromCookie());
 
   const setMode = useCallback((nextMode: ThemeMode) => {
@@ -30,7 +33,11 @@ export function AppThemeProvider({ children }: AppThemeProviderProps) {
     setThemeCookie(nextMode);
   }, []);
 
-  const theme = useMemo(() => createAppTheme(mode), [mode]);
+  const theme = useMemo(() => {
+    const baseTheme = createAppTheme(mode);
+    const muiLocale = i18n.language === 'pt-BR' ? ptBR : enUS;
+    return createTheme(baseTheme, muiLocale);
+  }, [i18n.language, mode]);
 
   const value = useMemo(
     () => ({

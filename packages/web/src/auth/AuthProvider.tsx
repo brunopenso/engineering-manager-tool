@@ -13,8 +13,18 @@ import {
   writeStoredSession,
 } from './sessionStorage.js';
 import { useSessionRefresh } from './useSessionRefresh.js';
+import i18n from '../i18n/index.js';
+import {
+  DEFAULT_DATE_FORMAT_PREFERENCE,
+  DEFAULT_LANGUAGE_PREFERENCE,
+} from '../types/profilePreferences.js';
 
 export type UserRoleType = 'COLLABORATOR' | 'LEADER' | 'ADMINISTRATOR';
+
+import type {
+  DateFormatPreference,
+  LanguagePreference,
+} from '../types/profilePreferences.js';
 
 type AuthUser = {
   id: string;
@@ -25,6 +35,8 @@ type AuthUser = {
   roles: UserRoleType[];
   themePreference: 'light' | 'dark';
   githubLogin: string | null;
+  languagePreference: LanguagePreference;
+  dateFormatPreference: DateFormatPreference;
 };
 
 export type { AuthUser };
@@ -91,6 +103,9 @@ export function AuthProvider({
         setAccessToken(nextSession.accessToken);
         setUser(nextSession.user);
         writeStoredSession({ accessToken: nextSession.accessToken });
+        void i18n.changeLanguage(
+          nextSession.user.languagePreference ?? DEFAULT_LANGUAGE_PREFERENCE,
+        );
         setSessionStatus('authenticated');
       })
       .catch(() => {
@@ -116,6 +131,9 @@ export function AuthProvider({
       setAccessToken(nextSession.accessToken);
       setUser(nextSession.user);
       writeStoredSession({ accessToken: nextSession.accessToken });
+      void i18n.changeLanguage(
+        nextSession.user.languagePreference ?? DEFAULT_LANGUAGE_PREFERENCE,
+      );
     },
     onSessionExpired: () => {
       clearStoredSession();
@@ -134,6 +152,9 @@ export function AuthProvider({
         setAccessToken(nextToken);
         setUser(nextUser);
         writeStoredSession({ accessToken: nextToken });
+        void i18n.changeLanguage(
+          nextUser.languagePreference ?? DEFAULT_LANGUAGE_PREFERENCE,
+        );
         setSessionStatus('authenticated');
       },
       clearSession: () => {

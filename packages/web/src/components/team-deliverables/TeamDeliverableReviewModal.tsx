@@ -14,11 +14,18 @@ import {
   Tabs,
   Typography,
 } from '@mui/material';
+import { useTranslation } from 'react-i18next';
+import { useAuth } from '../../auth/AuthProvider.js';
 import {
   DeliverablesApiError,
   getDeliverable,
   type DeliverableDetail,
 } from '../../services/deliverablesApi.js';
+import {
+  DEFAULT_DATE_FORMAT_PREFERENCE,
+  DEFAULT_LANGUAGE_PREFERENCE,
+} from '../../types/profilePreferences.js';
+import { formatDisplayDateTime } from '../../utils/formatDisplayDate.js';
 import DeliverableReviewNotesPanel from './DeliverableReviewNotesPanel.js';
 
 type TeamDeliverableReviewModalProps = {
@@ -68,18 +75,26 @@ function TagFieldValue({
 }
 
 function DeliverableFieldsPanel({ deliverable }: { deliverable: DeliverableDetail }) {
+  const { t } = useTranslation(['leader', 'common']);
+  const { user } = useAuth();
+  const languagePreference = user?.languagePreference ?? DEFAULT_LANGUAGE_PREFERENCE;
+  const dateFormatPreference = user?.dateFormatPreference ?? DEFAULT_DATE_FORMAT_PREFERENCE;
+
   const fields: DeliverableField[] = [
-    { label: 'Title', value: deliverable.title },
-    { label: 'Description', value: deliverable.description },
-    { label: 'Role in deliverable', value: deliverable.roleInDeliverable },
-    { label: 'Business impact', value: deliverable.businessImpact },
-    { label: 'Improvement points', value: deliverable.improvementPoints },
+    { label: t('reviewModal.title'), value: deliverable.title },
+    { label: t('reviewModal.description'), value: deliverable.description },
+    { label: t('reviewModal.roleInDeliverable'), value: deliverable.roleInDeliverable },
     {
-      label: 'Technical description',
+      label: t('reviewModal.businessImpact'),
+      value: t(`impact.${deliverable.businessImpact}`, { ns: 'common' }),
+    },
+    { label: t('reviewModal.improvementPoints'), value: deliverable.improvementPoints },
+    {
+      label: t('reviewModal.technicalDescription'),
       value: deliverable.technicalDescription ?? '—',
     },
     {
-      label: 'System tags',
+      label: t('systemTags', { ns: 'common' }),
       value: (
         <TagFieldValue
           tags={deliverable.systemTags.map((tag) => ({
@@ -92,7 +107,7 @@ function DeliverableFieldsPanel({ deliverable }: { deliverable: DeliverableDetai
       ),
     },
     {
-      label: 'User tags',
+      label: t('reviewModal.userTags'),
       value: (
         <TagFieldValue
           tags={deliverable.userTags.map((tag, index) => ({
@@ -104,14 +119,20 @@ function DeliverableFieldsPanel({ deliverable }: { deliverable: DeliverableDetai
       ),
     },
     {
-      label: 'Links',
+      label: t('reviewModal.links'),
       value:
         deliverable.links
           .map((link) => (link.label ? `${link.label}: ${link.url}` : link.url))
           .join('\n') || '—',
     },
-    { label: 'Created at', value: new Date(deliverable.createdAt).toLocaleString() },
-    { label: 'Updated at', value: new Date(deliverable.updatedAt).toLocaleString() },
+    {
+      label: t('reviewModal.createdAt'),
+      value: formatDisplayDateTime(deliverable.createdAt, dateFormatPreference, languagePreference),
+    },
+    {
+      label: t('reviewModal.updatedAt'),
+      value: formatDisplayDateTime(deliverable.updatedAt, dateFormatPreference, languagePreference),
+    },
   ];
 
   return (
@@ -139,6 +160,7 @@ export default function TeamDeliverableReviewModal({
   onClose,
   onReviewedChange,
 }: TeamDeliverableReviewModalProps) {
+  const { t } = useTranslation('leader');
   const [activeTab, setActiveTab] = useState(0);
   const [deliverable, setDeliverable] = useState<DeliverableDetail | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -173,7 +195,7 @@ export default function TeamDeliverableReviewModal({
           setErrorMessage(
             error instanceof DeliverablesApiError
               ? error.message
-              : 'Unable to load deliverable details.',
+              : t('reviewModal.loadError'),
           );
         }
       } finally {
@@ -188,26 +210,26 @@ export default function TeamDeliverableReviewModal({
     return () => {
       cancelled = true;
     };
-  }, [open, accessToken, deliverableId]);
+  }, [open, accessToken, deliverableId, t]);
 
   return (
     <Dialog open={open} onClose={onClose} fullWidth maxWidth="md">
-      <DialogTitle>Review deliverable</DialogTitle>
+      <DialogTitle>{t('reviewModal.dialogTitle')}</DialogTitle>
       <DialogContent dividers>
         <Tabs
           value={activeTab}
           onChange={(_event, nextTab) => setActiveTab(nextTab)}
-          aria-label="Deliverable review tabs"
+          aria-label={t('reviewModal.tabsAria')}
         >
-          <Tab label="Details" />
-          <Tab label="Notes" />
+          <Tab label={t('reviewModal.details')} />
+          <Tab label={t('reviewModal.notes')} />
         </Tabs>
 
         <Box sx={{ mt: 2 }}>
           {activeTab === 0 ? (
             isLoading ? (
               <Box sx={{ display: 'flex', justifyContent: 'center', py: 4 }}>
-                <CircularProgress size={28} aria-label="Loading deliverable details" />
+                <CircularProgress size={28} aria-label={t('reviewModal.loadingDetails')} />
               </Box>
             ) : errorMessage ? (
               <Alert severity="error">{errorMessage}</Alert>
@@ -225,7 +247,7 @@ export default function TeamDeliverableReviewModal({
         </Box>
       </DialogContent>
       <DialogActions>
-        <Button onClick={onClose}>Close</Button>
+        <Button onClick={onClose}>{t('reviewModal.close')}</Button>
       </DialogActions>
     </Dialog>
   );

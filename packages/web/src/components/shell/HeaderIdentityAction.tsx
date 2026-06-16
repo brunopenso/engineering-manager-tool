@@ -10,6 +10,7 @@ import {
   Typography,
 } from '@mui/material';
 import LogoutIcon from '@mui/icons-material/Logout';
+import { useTranslation } from 'react-i18next';
 
 type HeaderIdentityActionProps = {
   fullName: string;
@@ -44,6 +45,7 @@ export default function HeaderIdentityAction({
   onConfirmLogout,
   onCancelLogout,
 }: HeaderIdentityActionProps) {
+  const { t } = useTranslation(['shell', 'common']);
   const initials = getInitials(fullName, email);
 
   return (
@@ -80,16 +82,13 @@ export default function HeaderIdentityAction({
       </Button>
 
       <Dialog open={isConfirmingLogout} onClose={onCancelLogout}>
-        <DialogTitle>Confirm Logout</DialogTitle>
+        <DialogTitle>{t('logout.title')}</DialogTitle>
         <DialogContent>
-          <DialogContentText>
-            Are you sure you want to log out? You'll need to sign in again to
-            access the application.
-          </DialogContentText>
+          <DialogContentText>{t('logout.body')}</DialogContentText>
         </DialogContent>
         <DialogActions>
           <Button onClick={onCancelLogout} color="primary">
-            Cancel
+            {t('actions.cancel', { ns: 'common' })}
           </Button>
           <Button
             onClick={onConfirmLogout}
@@ -98,7 +97,7 @@ export default function HeaderIdentityAction({
             startIcon={<LogoutIcon />}
             autoFocus
           >
-            Log Out
+            {t('logout.confirm')}
           </Button>
         </DialogActions>
       </Dialog>

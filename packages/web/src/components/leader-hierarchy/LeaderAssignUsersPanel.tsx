@@ -10,6 +10,7 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../auth/AuthProvider.js';
 import {
   assignLeaderToUser,
@@ -20,6 +21,7 @@ import {
 
 export default function LeaderAssignUsersPanel() {
   const { accessToken, user } = useAuth();
+  const { t } = useTranslation('leader');
   const [query, setQuery] = useState('');
   const [isSearching, setIsSearching] = useState(false);
   const [assigningUserId, setAssigningUserId] = useState<string | null>(null);
@@ -43,7 +45,7 @@ export default function LeaderAssignUsersPanel() {
       setUsers(result);
       setHasSearched(true);
     } catch (error) {
-      const message = error instanceof UsersApiError ? error.message : 'Unable to search users.';
+      const message = error instanceof UsersApiError ? error.message : t('assignUsers.searchError');
       setErrorMessage(message);
       setUsers([]);
     } finally {
@@ -63,9 +65,9 @@ export default function LeaderAssignUsersPanel() {
     try {
       await assignLeaderToUser(accessToken, userId);
       setUsers((current) => current.filter((entry) => entry.id !== userId));
-      setSuccessMessage('User assigned successfully to your hierarchy.');
+      setSuccessMessage(t('assignUsers.success'));
     } catch (error) {
-      const message = error instanceof UsersApiError ? error.message : 'Unable to assign user.';
+      const message = error instanceof UsersApiError ? error.message : t('assignUsers.assignError');
       setErrorMessage(message);
     } finally {
       setAssigningUserId(null);
@@ -75,7 +77,9 @@ export default function LeaderAssignUsersPanel() {
   return (
     <Stack spacing={3}>
       <Typography variant="body2" color="text.secondary">
-        Find users without leaders and assign them to {user?.fullName ?? 'your hierarchy'}.
+        {t('assignUsers.intro', {
+          name: user?.fullName ?? t('assignUsers.hierarchyFallback'),
+        })}
       </Typography>
 
       {errorMessage && <Alert severity="error">{errorMessage}</Alert>}
@@ -84,11 +88,11 @@ export default function LeaderAssignUsersPanel() {
       <Box component="form" onSubmit={handleSearch}>
         <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
           <TextField
-            label="Search by name or email"
+            label={t('assignUsers.searchLabel')}
             value={query}
             onChange={(event) => setQuery(event.target.value)}
             fullWidth
-            helperText="Supports full and partial matches."
+            helperText={t('assignUsers.searchHelper')}
           />
           <Button
             type="submit"
@@ -96,7 +100,7 @@ export default function LeaderAssignUsersPanel() {
             disabled={isSearching}
             sx={{ minWidth: 140 }}
           >
-            {isSearching ? 'Searching...' : 'Search'}
+            {isSearching ? t('assignUsers.searching') : t('assignUsers.search')}
           </Button>
         </Stack>
       </Box>
@@ -131,13 +135,15 @@ export default function LeaderAssignUsersPanel() {
                 onClick={() => handleAssign(candidate.id)}
                 disabled={assigningUserId === candidate.id}
               >
-                {assigningUserId === candidate.id ? 'Assigning...' : 'Assign to me'}
+                {assigningUserId === candidate.id
+                  ? t('assignUsers.assigning')
+                  : t('assignUsers.assignToMe')}
               </Button>
             </Paper>
           ))}
 
           {hasSearched && users.length === 0 && !errorMessage && (
-            <Alert severity="info">No users without leader found for this search.</Alert>
+            <Alert severity="info">{t('assignUsers.noResults')}</Alert>
           )}
         </Stack>
       )}

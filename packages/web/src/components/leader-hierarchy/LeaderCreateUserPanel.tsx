@@ -9,6 +9,7 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../auth/AuthProvider.js';
 import { createUser, UsersApiError } from '../../services/usersApi.js';
 
@@ -16,6 +17,7 @@ const ROLE_OPTIONS = ['COLLABORATOR', 'LEADER', 'ADMINISTRATOR'] as const;
 
 export default function LeaderCreateUserPanel() {
   const { accessToken, user } = useAuth();
+  const { t } = useTranslation(['leader', 'common']);
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
   const [role, setRole] = useState<string>('COLLABORATOR');
@@ -35,14 +37,12 @@ export default function LeaderCreateUserPanel() {
 
     try {
       const created = await createUser(accessToken, { fullName, email, role });
-      setSuccessMessage(
-        `User ${created.fullName} created successfully. Leader assigned automatically to you.`,
-      );
+      setSuccessMessage(t('createUser.success', { fullName: created.fullName }));
       setFullName('');
       setEmail('');
       setRole('COLLABORATOR');
     } catch (error) {
-      const message = error instanceof UsersApiError ? error.message : 'Unable to create user.';
+      const message = error instanceof UsersApiError ? error.message : t('createUser.error');
       setErrorMessage(message);
     } finally {
       setIsSubmitting(false);
@@ -52,7 +52,9 @@ export default function LeaderCreateUserPanel() {
   return (
     <Stack spacing={3}>
       <Typography variant="body2" color="text.secondary">
-        Leader assigned automatically to you ({user?.fullName ?? 'current leader'}).
+        {t('createUser.intro', {
+          name: user?.fullName ?? t('createUser.currentLeaderFallback'),
+        })}
       </Typography>
 
       {errorMessage && <Alert severity="error">{errorMessage}</Alert>}
@@ -61,14 +63,14 @@ export default function LeaderCreateUserPanel() {
       <Box component="form" onSubmit={handleSubmit}>
         <Stack spacing={2}>
           <TextField
-            label="Full name"
+            label={t('createUser.fullName')}
             value={fullName}
             onChange={(event) => setFullName(event.target.value)}
             required
             fullWidth
           />
           <TextField
-            label="Email"
+            label={t('fields.email', { ns: 'common' })}
             value={email}
             onChange={(event) => setEmail(event.target.value)}
             required
@@ -77,20 +79,20 @@ export default function LeaderCreateUserPanel() {
           />
           <TextField
             select
-            label="User role"
+            label={t('createUser.userRole')}
             value={role}
             onChange={(event) => setRole(event.target.value)}
             fullWidth
           >
             {ROLE_OPTIONS.map((value) => (
               <MenuItem key={value} value={value}>
-                {value}
+                {t(`roles.${value}`, { ns: 'common' })}
               </MenuItem>
             ))}
           </TextField>
           <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
             <Button type="submit" variant="contained" disabled={isSubmitting}>
-              {isSubmitting ? 'Creating...' : 'Create user'}
+              {isSubmitting ? t('createUser.creating') : t('createUser.create')}
             </Button>
           </Box>
         </Stack>

@@ -1,9 +1,16 @@
 import { render } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
+import { I18nextProvider } from 'react-i18next';
 import type { ReactElement } from 'react';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import { AuthProvider, type AuthUser } from '../auth/AuthProvider.js';
+import AuthLocaleSync from '../auth/AuthLocaleSync.js';
 import { AppThemeProvider } from '../theme/AppThemeProvider.js';
+import i18n from '../i18n/index.js';
+import {
+  DEFAULT_DATE_FORMAT_PREFERENCE,
+  DEFAULT_LANGUAGE_PREFERENCE,
+} from '../types/profilePreferences.js';
 
 export const testUser: AuthUser = {
   id: 'user-1',
@@ -14,6 +21,8 @@ export const testUser: AuthUser = {
   roles: ['COLLABORATOR'],
   themePreference: 'light',
   githubLogin: null,
+  languagePreference: DEFAULT_LANGUAGE_PREFERENCE,
+  dateFormatPreference: DEFAULT_DATE_FORMAT_PREFERENCE,
 };
 
 export const testAdminUser: AuthUser = {
@@ -39,6 +48,14 @@ type RenderOptions = {
   enableSessionBootstrap?: boolean;
 };
 
+export function renderWithI18n(ui: ReactElement) {
+  return render(
+    <I18nextProvider i18n={i18n}>
+      <AppThemeProvider>{ui}</AppThemeProvider>
+    </I18nextProvider>,
+  );
+}
+
 export function renderWithProviders(
   ui: ReactElement,
   options?: RenderOptions,
@@ -56,17 +73,20 @@ export function renderWithProviders(
     : undefined;
 
   return render(
-    <AppThemeProvider>
-      <GoogleOAuthProvider clientId="test-client-id">
-        <MemoryRouter initialEntries={[initialPath]}>
-          <AuthProvider
-            initialSession={initialSession}
-            enableSessionBootstrap={enableSessionBootstrap}
-          >
-            {ui}
-          </AuthProvider>
-        </MemoryRouter>
-      </GoogleOAuthProvider>
-    </AppThemeProvider>,
+    <I18nextProvider i18n={i18n}>
+      <AppThemeProvider>
+        <GoogleOAuthProvider clientId="test-client-id">
+          <MemoryRouter initialEntries={[initialPath]}>
+            <AuthProvider
+              initialSession={initialSession}
+              enableSessionBootstrap={enableSessionBootstrap}
+            >
+              <AuthLocaleSync />
+              {ui}
+            </AuthProvider>
+          </MemoryRouter>
+        </GoogleOAuthProvider>
+      </AppThemeProvider>
+    </I18nextProvider>,
   );
 }

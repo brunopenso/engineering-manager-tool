@@ -51,6 +51,17 @@ components:
       scheme: bearer
       bearerFormat: JWT
   schemas:
+    LanguagePreference:
+      type: string
+      enum:
+        - en-US
+        - pt-BR
+    DateFormatPreference:
+      type: string
+      enum:
+        - MDY
+        - DMY
+        - YMD
     ThemePreference:
       type: string
       enum:
@@ -67,6 +78,8 @@ components:
         - roles
         - themePreference
         - githubLogin
+        - languagePreference
+        - dateFormatPreference
       properties:
         id:
           type: string
@@ -93,6 +106,10 @@ components:
           nullable: true
           maxLength: 39
           description: GitHub username handle; null when unset.
+        languagePreference:
+          $ref: '#/components/schemas/LanguagePreference'
+        dateFormatPreference:
+          $ref: '#/components/schemas/DateFormatPreference'
     ProfileSettingsUpdate:
       type: object
       minProperties: 1
@@ -104,6 +121,10 @@ components:
           nullable: true
           maxLength: 39
           description: Trimmed; empty string clears to null.
+        languagePreference:
+          $ref: '#/components/schemas/LanguagePreference'
+        dateFormatPreference:
+          $ref: '#/components/schemas/DateFormatPreference'
     UserRoleType:
       type: string
       enum:

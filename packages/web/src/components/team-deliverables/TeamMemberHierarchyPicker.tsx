@@ -16,6 +16,7 @@ import {
   Stack,
   Typography,
 } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 import type { HierarchyViewNode } from '../../services/usersApi.js';
 
 type TeamMemberHierarchyPickerProps = {
@@ -46,6 +47,7 @@ function HierarchyOption({
   onToggle,
   onSelect,
 }: HierarchyOptionProps) {
+  const { t } = useTranslation(['leader', 'common']);
   const children = node.children ?? [];
   const hasChildren = children.length > 0;
   const isExpanded = expandedItems.includes(node.id);
@@ -56,14 +58,18 @@ function HierarchyOption({
         selected={selectedUserId === node.id}
         onClick={() => onSelect(node)}
         sx={{ alignItems: 'center', gap: 1, pl: 1 + depth * 2 }}
-        aria-label={`Select ${node.displayName}`}
+        aria-label={t('picker.selectMemberAria', { name: node.displayName })}
       >
         <Box sx={{ width: 32, display: 'flex', justifyContent: 'center' }}>
           {hasChildren ? (
             <IconButton
               size="small"
               edge="start"
-              aria-label={`${isExpanded ? 'Collapse' : 'Expand'} ${node.displayName}`}
+              aria-label={
+                isExpanded
+                  ? t('picker.collapse', { name: node.displayName })
+                  : t('picker.expand', { name: node.displayName })
+              }
               onClick={(event) => {
                 event.stopPropagation();
                 onToggle(node.id);
@@ -75,7 +81,9 @@ function HierarchyOption({
         </Box>
         <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
           <Typography variant="body2">{node.displayName}</Typography>
-          {node.isLeader ? <Chip size="small" label="Leader" color="error" /> : null}
+          {node.isLeader ? (
+            <Chip size="small" label={t('roles.leader', { ns: 'common' })} color="error" />
+          ) : null}
         </Stack>
       </ListItemButton>
 
@@ -106,6 +114,7 @@ export default function TeamMemberHierarchyPicker({
   disabled = false,
   onChange,
 }: TeamMemberHierarchyPickerProps) {
+  const { t } = useTranslation('leader');
   const inputRef = useRef<HTMLDivElement>(null);
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const [expandedItems, setExpandedItems] = useState<string[]>([]);
@@ -115,6 +124,7 @@ export default function TeamMemberHierarchyPicker({
   );
   const open = Boolean(anchorEl);
   const labelShrunk = Boolean(selectedMember) || open;
+  const teamMemberLabel = t('picker.teamMember');
 
   function handleOpen() {
     if (disabled || !inputRef.current) {
@@ -142,20 +152,22 @@ export default function TeamMemberHierarchyPicker({
   return (
     <FormControl disabled={disabled} fullWidth>
       <InputLabel htmlFor="team-member-picker-input" shrink={labelShrunk}>
-        Team member
+        {teamMemberLabel}
       </InputLabel>
       <OutlinedInput
         ref={inputRef}
         id="team-member-picker-input"
         readOnly
         notched={labelShrunk}
-        label="Team member"
+        label={teamMemberLabel}
         value={selectedMember?.displayName ?? ''}
         onClick={handleOpen}
         inputProps={{
           'data-testid': 'team-member-select',
           readOnly: true,
-          'aria-label': `Team member: ${selectedMember?.displayName ?? 'Select a team member'}`,
+          'aria-label': selectedMember
+            ? t('picker.teamMemberAria', { name: selectedMember.displayName })
+            : t('picker.selectMemberPlaceholder'),
           'aria-haspopup': 'dialog',
           'aria-expanded': open ? 'true' : undefined,
         }}
@@ -195,12 +207,12 @@ export default function TeamMemberHierarchyPicker({
         }}
       >
         <Box sx={{ p: 1.5, pb: 0.5 }}>
-          <Typography variant="subtitle2">Select collaborator</Typography>
+          <Typography variant="subtitle2">{t('picker.selectCollaborator')}</Typography>
           <Typography variant="caption" color="text.secondary">
-            Expand leaders to see their reports.
+            {t('picker.expandLeadersHint')}
           </Typography>
         </Box>
-        <List aria-label="Team member hierarchy" dense sx={{ pb: 1 }}>
+        <List aria-label={t('picker.hierarchyAria')} dense sx={{ pb: 1 }}>
           {reports.map((report) => (
             <HierarchyOption
               key={report.id}

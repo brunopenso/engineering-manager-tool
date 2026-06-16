@@ -7,11 +7,11 @@ export const BUSINESS_IMPACT_LEVELS: BusinessImpactLevel[] = [
   'TRANSFORMATIONAL',
 ];
 
-export const BUSINESS_IMPACT_LABELS: Record<BusinessImpactLevel, string> = {
-  LOW: 'Low',
-  MEDIUM: 'Medium',
-  HIGH: 'High',
-  TRANSFORMATIONAL: 'Transformational',
+export const BUSINESS_IMPACT_I18N_KEYS: Record<BusinessImpactLevel, string> = {
+  LOW: 'impact.LOW',
+  MEDIUM: 'impact.MEDIUM',
+  HIGH: 'impact.HIGH',
+  TRANSFORMATIONAL: 'impact.TRANSFORMATIONAL',
 };
 
 /** Matches MUI X default series order for stacked impact chart */

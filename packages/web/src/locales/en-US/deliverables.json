@@ -1,0 +1,53 @@
+{
+  "list": {
+    "title": "Deliverables",
+    "subtitle": "Capture your work outcomes, impact, and growth areas for performance conversations.",
+    "add": "Add deliverable",
+    "loadError": "Unable to load deliverables.",
+    "deleteError": "Unable to delete deliverable.",
+    "emptyNone": {
+      "title": "No deliverables yet",
+      "body": "Add your first deliverable to start building your portfolio."
+    },
+    "emptyFiltered": {
+      "title": "No deliverables match your filters",
+      "body": "Try adjusting the date range, impact levels, or system tags."
+    },
+    "deleteDialog": {
+      "title": "Delete deliverable?",
+      "body": "This will permanently remove \"{{title}}\" from your portfolio."
+    }
+  },
+  "view": {
+    "title": "Team member deliverables",
+    "subtitle": "Read-only view for coaching and performance conversations.",
+    "loadError": "Unable to load deliverables for this collaborator.",
+    "empty": "No deliverables to display."
+  },
+  "form": {
+    "breadcrumb": "Deliverables",
+    "editTitle": "Edit deliverable",
+    "createTitle": "Add deliverable",
+    "subtitle": "Capture the outcome, impact, role, and growth notes in one focused workspace.",
+    "loadError": "Unable to load deliverable.",
+    "formLoadError": "Unable to load deliverable form.",
+    "updateError": "Unable to update deliverable.",
+    "createError": "Unable to create deliverable.",
+    "readOnly": "This deliverable is read-only and cannot be edited.",
+    "loading": "Loading deliverable form...",
+    "description": "Description",
+    "roleInDeliverable": "Your role in this deliverable",
+    "tagsHelper": "Optional — select catalog tags that apply",
+    "businessImpact": "Business impact",
+    "improvementPoints": "Personal performance improvement points",
+    "technicalDescription": "Technical description (optional)",
+    "userTags": "User tags (optional, comma-separated)",
+    "referenceLinks": "Reference links (optional)",
+    "referenceLinksAria": "Reference links table",
+    "linkUrl": "Link URL {{index}}",
+    "linkLabel": "Link label {{index}}",
+    "addLink": "Add link",
+    "saveChanges": "Save changes",
+    "saving": "Saving..."
+  }
+}

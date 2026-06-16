@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 import { Paper, Typography } from '@mui/material';
 import { BarChart } from '@mui/x-charts/BarChart';
+import { useTranslation } from 'react-i18next';
 import type { EngagementBucketRow, TeamAnalyticsResponse } from '../../services/leaderAnalyticsApi.js';
 import AnalyticsWidgetTitle from './AnalyticsWidgetTitle.js';
 import ChartLegend from './ChartLegend.js';
@@ -36,6 +37,7 @@ function topUsersByTotalAdds(rows: EngagementBucketRow[]): string[] {
 }
 
 export default function EngagementByUserChart({ analytics }: EngagementByUserChartProps) {
+  const { t } = useTranslation('leader');
   const { weekStarts, labels: weekLabels } = useMemo(
     () => buildAscendingIsoWeekAxis(analytics?.weekStarts ?? []),
     [analytics?.weekStarts],
@@ -71,8 +73,8 @@ export default function EngagementByUserChart({ analytics }: EngagementByUserCha
   if (weekStarts.length === 0) {
     return (
       <Paper variant="outlined" sx={analyticsWidgetPaperSx}>
-        <AnalyticsWidgetTitle gutterBottom>Team engagement (adds per week)</AnalyticsWidgetTitle>
-        <Typography color="text.secondary">No data for the selected filters.</Typography>
+        <AnalyticsWidgetTitle gutterBottom>{t('charts.engagementTitle')}</AnalyticsWidgetTitle>
+        <Typography color="text.secondary">{t('charts.noData')}</Typography>
       </Paper>
     );
   }
@@ -80,20 +82,18 @@ export default function EngagementByUserChart({ analytics }: EngagementByUserCha
   if (seriesUserIds.length === 0) {
     return (
       <Paper variant="outlined" sx={analyticsWidgetPaperSx}>
-        <AnalyticsWidgetTitle gutterBottom>Team engagement (adds per week)</AnalyticsWidgetTitle>
-        <Typography color="text.secondary">
-          No deliverables were added in this period for the selected team scope.
-        </Typography>
+        <AnalyticsWidgetTitle gutterBottom>{t('charts.engagementTitle')}</AnalyticsWidgetTitle>
+        <Typography color="text.secondary">{t('charts.noEngagementInPeriod')}</Typography>
       </Paper>
     );
   }
 
   return (
     <Paper variant="outlined" sx={{ ...analyticsWidgetPaperSx, overflow: 'hidden' }}>
-      <AnalyticsWidgetTitle sx={{ mb: 1 }}>Team engagement (adds per week)</AnalyticsWidgetTitle>
+      <AnalyticsWidgetTitle sx={{ mb: 1 }}>{t('charts.engagementTitle')}</AnalyticsWidgetTitle>
       {rows.length > 0 && seriesUserIds.length < new Set(rows.map((row) => row.userId)).size ? (
         <Typography variant="caption" color="text.secondary" sx={{ mb: 1, flexShrink: 0 }}>
-          Showing top {MAX_LEGEND_USERS} contributors by total adds in range.
+          {t('charts.topContributors', { max: MAX_LEGEND_USERS })}
         </Typography>
       ) : null}
       <ChartResizeContainer minHeight={200}>

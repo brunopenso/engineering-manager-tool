@@ -19,6 +19,7 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 import { useAuth } from '../auth/AuthProvider.js';
 import {
   createTag,
@@ -36,6 +37,7 @@ type EditState = {
 
 export default function AdminTagsPage() {
   const { accessToken } = useAuth();
+  const { t } = useTranslation(['admin', 'common']);
   const [tags, setTags] = useState<Tag[]>([]);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -69,7 +71,7 @@ export default function AdminTagsPage() {
         ),
       );
     } catch (error) {
-      setErrorMessage(error instanceof TagsApiError ? error.message : 'Unable to load tags.');
+      setErrorMessage(error instanceof TagsApiError ? error.message : t('tags.loadError'));
     } finally {
       setIsLoading(false);
     }
@@ -94,7 +96,7 @@ export default function AdminTagsPage() {
       setNewColor('#1976D2');
       await refreshTags();
     } catch (error) {
-      setErrorMessage(error instanceof TagsApiError ? error.message : 'Unable to create tag.');
+      setErrorMessage(error instanceof TagsApiError ? error.message : t('tags.createError'));
     }
   }
 
@@ -117,7 +119,7 @@ export default function AdminTagsPage() {
       });
       await refreshTags();
     } catch (error) {
-      setErrorMessage(error instanceof TagsApiError ? error.message : 'Unable to update tag.');
+      setErrorMessage(error instanceof TagsApiError ? error.message : t('tags.updateError'));
     }
   }
 
@@ -133,7 +135,7 @@ export default function AdminTagsPage() {
       setDeleteTarget(null);
       await refreshTags();
     } catch (error) {
-      setErrorMessage(error instanceof TagsApiError ? error.message : 'Unable to delete tag.');
+      setErrorMessage(error instanceof TagsApiError ? error.message : t('tags.deleteError'));
     }
   }
 
@@ -143,7 +145,7 @@ export default function AdminTagsPage() {
         <Paper sx={{ p: 3, border: '1px solid', borderColor: 'divider' }} elevation={0}>
           <Stack spacing={3}>
             <Typography variant="h4" component="h1">
-              Tag management
+              {t('tags.title')}
             </Typography>
 
             {errorMessage && <Alert severity="error">{errorMessage}</Alert>}
@@ -154,36 +156,34 @@ export default function AdminTagsPage() {
               sx={{ alignItems: { md: 'end' } }}
             >
               <TextField
-                label="Tag name"
+                label={t('tags.tagName')}
                 value={newName}
                 onChange={(event) => setNewName(event.target.value)}
                 fullWidth
               />
               <TextField
-                label="Tag color"
+                label={t('tags.tagColor')}
                 type="color"
                 value={newColor}
                 onChange={(event) => setNewColor(event.target.value)}
                 sx={{ minWidth: 140 }}
               />
               <Button variant="contained" onClick={() => void handleCreate()} disabled={isCreateDisabled}>
-                Create tag
+                {t('tags.createTag')}
               </Button>
             </Stack>
 
             {isLoading ? (
-              <Typography color="text.secondary">Loading tags...</Typography>
+              <Typography color="text.secondary">{t('loading.tags', { ns: 'common' })}</Typography>
             ) : !hasTags ? (
-              <Typography color="text.secondary">
-                No tags yet. Create your first tag to start the catalog.
-              </Typography>
+              <Typography color="text.secondary">{t('tags.empty')}</Typography>
             ) : (
               <Table>
                 <TableHead>
                   <TableRow>
-                    <TableCell>Name</TableCell>
-                    <TableCell>Color</TableCell>
-                    <TableCell align="right">Actions</TableCell>
+                    <TableCell>{t('fields.name', { ns: 'common' })}</TableCell>
+                    <TableCell>{t('fields.color', { ns: 'common' })}</TableCell>
+                    <TableCell align="right">{t('actions.actions', { ns: 'common' })}</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -233,7 +233,7 @@ export default function AdminTagsPage() {
                         <TableCell align="right">
                           <Stack direction="row" spacing={1} sx={{ justifyContent: 'flex-end' }}>
                             <Button size="small" variant="outlined" onClick={() => void handleSave(tag.id)}>
-                              Save
+                              {t('actions.save', { ns: 'common' })}
                             </Button>
                             <Button
                               size="small"
@@ -241,7 +241,7 @@ export default function AdminTagsPage() {
                               variant="outlined"
                               onClick={() => setDeleteTarget(tag)}
                             >
-                              Delete
+                              {t('actions.delete', { ns: 'common' })}
                             </Button>
                           </Stack>
                         </TableCell>
@@ -256,16 +256,18 @@ export default function AdminTagsPage() {
       </Box>
 
       <Dialog open={Boolean(deleteTarget)} onClose={() => setDeleteTarget(null)}>
-        <DialogTitle>Delete tag</DialogTitle>
+        <DialogTitle>{t('tags.deleteDialog.title')}</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            Are you sure you want to delete the tag &quot;{deleteTarget?.name}&quot;?
+            {t('tags.deleteDialog.body', { name: deleteTarget?.name ?? '' })}
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setDeleteTarget(null)}>Cancel</Button>
+          <Button onClick={() => setDeleteTarget(null)}>
+            {t('actions.cancel', { ns: 'common' })}
+          </Button>
           <Button color="error" variant="contained" onClick={() => void confirmDelete()}>
-            Delete
+            {t('actions.delete', { ns: 'common' })}
           </Button>
         </DialogActions>
       </Dialog>

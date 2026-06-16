@@ -1,6 +1,9 @@
 import { Container, Box, Paper, Typography, Stack } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 
 export default function WelcomePage() {
+  const { t } = useTranslation('shell');
+
   return (
     <Container maxWidth="md">
       <Box sx={{ py: 6 }}>
@@ -23,31 +26,23 @@ export default function WelcomePage() {
                 textAlign: 'center',
               }}
             >
-              Welcome
+              {t('welcome.title')}
             </Typography>
 
             <Stack spacing={2} sx={{ textAlign: 'justify' }}>
               <Typography variant="body1" color="text.secondary">
-                Engineering managers and their teams use this tool to capture
-                deliverables, track impact and growth, and understand team
-                structure in one place.
+                {t('welcome.paragraph1')}
               </Typography>
               <Typography variant="body1" color="text.secondary">
-                Every user is a collaborator who manages their own deliverables
-                and profile. Leaders additionally review team deliverables and
-                manage reporting hierarchy. Administrators configure user roles
-                and the shared tag catalog.
+                {t('welcome.paragraph2')}
               </Typography>
               <Typography variant="body1" color="text.secondary">
-                You only see menu options and data your role allows. Leaders read
-                subordinate deliverables read-only, peers cannot see each
-                other&apos;s work, and administrators govern organization-wide
-                settings.
+                {t('welcome.paragraph3')}
               </Typography>
             </Stack>
 
             <Typography variant="h6" color="text.secondary" sx={{ textAlign: 'center' }}>
-              Select an option from the menu to continue
+              {t('welcome.cta')}
             </Typography>
           </Stack>
         </Paper>
