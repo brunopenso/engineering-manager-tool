@@ -72,4 +72,25 @@ describe('profile settings setup', () => {
 
     await app.close();
   });
+
+  it('accepts PATCH /users/me with an empty body', async () => {
+    const app = buildProfileSettingsTestApp({ userId: profileActorId });
+    await registerProfileSettingsTestRoutes(app);
+
+    vi.mocked(userService.updateUserProfileSettings).mockResolvedValue(sampleProfileUser as never);
+    vi.mocked(authUserMapper.mapUserToAuthResponse).mockResolvedValue(
+      toAuthUserResponse(sampleProfileUser),
+    );
+
+    const response = await app.inject({
+      method: 'PATCH',
+      url: '/users/me',
+      payload: {},
+    });
+
+    expect(response.statusCode).toBe(200);
+    expect(userService.updateUserProfileSettings).toHaveBeenCalledWith(profileActorId, {});
+
+    await app.close();
+  });
 });

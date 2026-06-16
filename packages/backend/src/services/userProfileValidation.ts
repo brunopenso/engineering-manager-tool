@@ -109,12 +109,6 @@ export function parseProfileSettingsUpdate(
   const hasLanguage = Object.prototype.hasOwnProperty.call(input, 'languagePreference');
   const hasDateFormat = Object.prototype.hasOwnProperty.call(input, 'dateFormatPreference');
 
-  if (!hasTheme && !hasGithub && !hasLanguage && !hasDateFormat) {
-    throw new UserProfileValidationError(
-      'At least one of themePreference, githubLogin, languagePreference, or dateFormatPreference is required.',
-    );
-  }
-
   const update: ParsedProfileSettingsUpdate = {};
 
   if (hasTheme) {
