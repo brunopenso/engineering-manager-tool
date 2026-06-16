@@ -1,5 +1,11 @@
 import { User } from '../database/entities/User.js';
 import type { UserRoleType } from '../auth/types.js';
+import {
+  DEFAULT_DATE_FORMAT_PREFERENCE,
+  DEFAULT_LANGUAGE_PREFERENCE,
+  type DateFormatPreference,
+  type LanguagePreference,
+} from '../types/profilePreferences.js';
 import { loadRolesForUser } from './roleService.js';
 
 export type AuthUserResponse = {
@@ -11,6 +17,8 @@ export type AuthUserResponse = {
   roles: UserRoleType[];
   themePreference: 'light' | 'dark';
   githubLogin: string | null;
+  languagePreference: LanguagePreference;
+  dateFormatPreference: DateFormatPreference;
 };
 
 export async function mapUserToAuthResponse(user: User): Promise<AuthUserResponse> {
@@ -25,5 +33,7 @@ export async function mapUserToAuthResponse(user: User): Promise<AuthUserRespons
     roles,
     themePreference: user.themePreference ?? 'light',
     githubLogin: user.githubLogin ?? null,
+    languagePreference: user.languagePreference ?? DEFAULT_LANGUAGE_PREFERENCE,
+    dateFormatPreference: user.dateFormatPreference ?? DEFAULT_DATE_FORMAT_PREFERENCE,
   };
 }

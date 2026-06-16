@@ -1,15 +1,27 @@
 import { AUTH_ERROR_CODES } from '../auth/types.js';
+import {
+  DATE_FORMAT_PREFERENCES,
+  LANGUAGE_PREFERENCES,
+  type DateFormatPreference,
+  type LanguagePreference,
+} from '../types/profilePreferences.js';
+
+export type { DateFormatPreference, LanguagePreference } from '../types/profilePreferences.js';
 
 export type ThemePreference = 'light' | 'dark';
 
 export type ProfileSettingsInput = {
   themePreference?: unknown;
   githubLogin?: unknown;
+  languagePreference?: unknown;
+  dateFormatPreference?: unknown;
 };
 
 export type ParsedProfileSettingsUpdate = {
   themePreference?: ThemePreference;
   githubLogin?: string | null;
+  languagePreference?: LanguagePreference;
+  dateFormatPreference?: DateFormatPreference;
 };
 
 export class UserProfileValidationError extends Error {
@@ -63,17 +75,39 @@ export function parseGithubLogin(value: unknown): string | null {
   return trimmed;
 }
 
+export function parseLanguagePreference(value: unknown): LanguagePreference {
+  if (
+    typeof value !== 'string' ||
+    !LANGUAGE_PREFERENCES.includes(value as LanguagePreference)
+  ) {
+    throw new UserProfileValidationError(
+      `Language preference must be one of: ${LANGUAGE_PREFERENCES.join(', ')}.`,
+    );
+  }
+
+  return value as LanguagePreference;
+}
+
+export function parseDateFormatPreference(value: unknown): DateFormatPreference {
+  if (
+    typeof value !== 'string' ||
+    !DATE_FORMAT_PREFERENCES.includes(value as DateFormatPreference)
+  ) {
+    throw new UserProfileValidationError(
+      `Date format preference must be one of: ${DATE_FORMAT_PREFERENCES.join(', ')}.`,
+    );
+  }
+
+  return value as DateFormatPreference;
+}
+
 export function parseProfileSettingsUpdate(
   input: ProfileSettingsInput,
 ): ParsedProfileSettingsUpdate {
   const hasTheme = Object.prototype.hasOwnProperty.call(input, 'themePreference');
   const hasGithub = Object.prototype.hasOwnProperty.call(input, 'githubLogin');
-
-  if (!hasTheme && !hasGithub) {
-    throw new UserProfileValidationError(
-      'At least one of themePreference or githubLogin is required.',
-    );
-  }
+  const hasLanguage = Object.prototype.hasOwnProperty.call(input, 'languagePreference');
+  const hasDateFormat = Object.prototype.hasOwnProperty.call(input, 'dateFormatPreference');
 
   const update: ParsedProfileSettingsUpdate = {};
 
@@ -83,6 +117,14 @@ export function parseProfileSettingsUpdate(
 
   if (hasGithub) {
     update.githubLogin = parseGithubLogin(input.githubLogin);
+  }
+
+  if (hasLanguage) {
+    update.languagePreference = parseLanguagePreference(input.languagePreference);
+  }
+
+  if (hasDateFormat) {
+    update.dateFormatPreference = parseDateFormatPreference(input.dateFormatPreference);
   }
 
   return update;
