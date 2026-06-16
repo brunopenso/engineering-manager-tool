@@ -3,18 +3,25 @@ import { Paper, Typography } from '@mui/material';
 import { BarChart } from '@mui/x-charts/BarChart';
 import { useTranslation } from 'react-i18next';
 import type { EngagementBucketRow, TeamAnalyticsResponse } from '../../services/leaderAnalyticsApi.js';
+import type { DateFormatPreference, LanguagePreference } from '../../types/profilePreferences.js';
+import {
+  DEFAULT_DATE_FORMAT_PREFERENCE,
+  DEFAULT_LANGUAGE_PREFERENCE,
+} from '../../types/profilePreferences.js';
 import AnalyticsWidgetTitle from './AnalyticsWidgetTitle.js';
 import ChartLegend from './ChartLegend.js';
 import ChartResizeContainer from './ChartResizeContainer.js';
 import ChartWithLegendLayout from './ChartWithLegendLayout.js';
 import { analyticsChartPlotMargins, analyticsWidgetPaperSx } from './analyticsWidgetStyles.js';
 import { ENGAGEMENT_CHART_COLORS } from './engagementChartColors.js';
-import { buildAscendingIsoWeekAxis } from '../../utils/isoWeekLabel.js';
+import { buildAscendingWeekAxis } from '../../utils/isoWeekLabel.js';
 
 const MAX_LEGEND_USERS = 12;
 
 type EngagementByUserChartProps = {
   analytics: TeamAnalyticsResponse | null;
+  dateFormatPreference?: DateFormatPreference;
+  languagePreference?: LanguagePreference;
 };
 
 function topUsersByTotalAdds(rows: EngagementBucketRow[]): string[] {
@@ -36,11 +43,20 @@ function topUsersByTotalAdds(rows: EngagementBucketRow[]): string[] {
     .map((entry) => entry.userId);
 }
 
-export default function EngagementByUserChart({ analytics }: EngagementByUserChartProps) {
+export default function EngagementByUserChart({
+  analytics,
+  dateFormatPreference = DEFAULT_DATE_FORMAT_PREFERENCE,
+  languagePreference = DEFAULT_LANGUAGE_PREFERENCE,
+}: EngagementByUserChartProps) {
   const { t } = useTranslation('leader');
   const { weekStarts, labels: weekLabels } = useMemo(
-    () => buildAscendingIsoWeekAxis(analytics?.weekStarts ?? []),
-    [analytics?.weekStarts],
+    () =>
+      buildAscendingWeekAxis(
+        analytics?.weekStarts ?? [],
+        dateFormatPreference,
+        languagePreference,
+      ),
+    [analytics?.weekStarts, dateFormatPreference, languagePreference],
   );
   const rows = analytics?.engagementByWeek ?? [];
 

@@ -1,3 +1,6 @@
+import { formatDisplayDate } from './formatDisplayDate.js';
+import type { DateFormatPreference, LanguagePreference } from '../types/profilePreferences.js';
+
 /**
  * Formats a Monday UTC week-start date (YYYY-MM-DD) as ISO 8601 year-week (e.g. 2026-W15).
  */
@@ -22,6 +25,24 @@ export function formatIsoWeekLabel(weekStartMonday: string): string {
 
 export function sortWeekStartsAscending(weekStarts: string[]): string[] {
   return [...weekStarts].sort((left, right) => left.localeCompare(right));
+}
+
+export function buildAscendingWeekAxis(
+  weekStarts: string[],
+  dateFormatPreference: DateFormatPreference,
+  languagePreference: LanguagePreference,
+): {
+  weekStarts: string[];
+  labels: string[];
+} {
+  const ordered = sortWeekStartsAscending(weekStarts);
+
+  return {
+    weekStarts: ordered,
+    labels: ordered.map((week) =>
+      formatDisplayDate(week, dateFormatPreference, languagePreference),
+    ),
+  };
 }
 
 export function buildAscendingIsoWeekAxis(weekStarts: string[]): {

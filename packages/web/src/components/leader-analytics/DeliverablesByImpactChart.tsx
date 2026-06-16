@@ -3,6 +3,11 @@ import { Paper, Typography } from '@mui/material';
 import { BarChart } from '@mui/x-charts/BarChart';
 import { useTranslation } from 'react-i18next';
 import type { ImpactBucketRow, TeamAnalyticsResponse } from '../../services/leaderAnalyticsApi.js';
+import type { DateFormatPreference, LanguagePreference } from '../../types/profilePreferences.js';
+import {
+  DEFAULT_DATE_FORMAT_PREFERENCE,
+  DEFAULT_LANGUAGE_PREFERENCE,
+} from '../../types/profilePreferences.js';
 import AnalyticsWidgetTitle from './AnalyticsWidgetTitle.js';
 import ChartLegend from './ChartLegend.js';
 import ChartResizeContainer from './ChartResizeContainer.js';
@@ -13,10 +18,12 @@ import {
   BUSINESS_IMPACT_I18N_KEYS,
   BUSINESS_IMPACT_LEVELS,
 } from './businessImpactStyles.js';
-import { buildAscendingIsoWeekAxis } from '../../utils/isoWeekLabel.js';
+import { buildAscendingWeekAxis } from '../../utils/isoWeekLabel.js';
 
 type DeliverablesByImpactChartProps = {
   analytics: TeamAnalyticsResponse | null;
+  dateFormatPreference?: DateFormatPreference;
+  languagePreference?: LanguagePreference;
 };
 
 function buildImpactMatrix(
@@ -50,11 +57,20 @@ function buildImpactMatrix(
   return matrix;
 }
 
-export default function DeliverablesByImpactChart({ analytics }: DeliverablesByImpactChartProps) {
+export default function DeliverablesByImpactChart({
+  analytics,
+  dateFormatPreference = DEFAULT_DATE_FORMAT_PREFERENCE,
+  languagePreference = DEFAULT_LANGUAGE_PREFERENCE,
+}: DeliverablesByImpactChartProps) {
   const { t } = useTranslation(['leader', 'common']);
   const { weekStarts, labels: weekLabels } = useMemo(
-    () => buildAscendingIsoWeekAxis(analytics?.weekStarts ?? []),
-    [analytics?.weekStarts],
+    () =>
+      buildAscendingWeekAxis(
+        analytics?.weekStarts ?? [],
+        dateFormatPreference,
+        languagePreference,
+      ),
+    [analytics?.weekStarts, dateFormatPreference, languagePreference],
   );
 
   const matrix = useMemo(

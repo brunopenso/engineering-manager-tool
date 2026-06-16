@@ -22,4 +22,8 @@ describe('US4 formatDisplayDate', () => {
   it('includes time in formatDisplayDateTime', () => {
     expect(formatDisplayDateTime(sample, 'DMY', 'en-US')).toMatch(/^15\/05\/2026 /);
   });
+
+  it('formats ISO date-only strings without timezone shift', () => {
+    expect(formatDisplayDate('2026-05-15', 'DMY', 'en-US')).toBe('15/05/2026');
+  });
 });

@@ -29,10 +29,16 @@ import {
   type LeaderHierarchyViewResponse,
   UsersApiError,
 } from '../services/usersApi.js';
+import {
+  DEFAULT_DATE_FORMAT_PREFERENCE,
+  DEFAULT_LANGUAGE_PREFERENCE,
+} from '../types/profilePreferences.js';
 
 export default function LeaderTeamAnalyticsPage() {
   const { accessToken, user } = useAuth();
   const { t } = useTranslation(['leader', 'common']);
+  const dateFormatPreference = user?.dateFormatPreference ?? DEFAULT_DATE_FORMAT_PREFERENCE;
+  const languagePreference = user?.languagePreference ?? DEFAULT_LANGUAGE_PREFERENCE;
   const defaultRange = useMemo(() => defaultLast60DayRange(), []);
   const [hierarchy, setHierarchy] = useState<LeaderHierarchyViewResponse | null>(null);
   const [selectedUserId, setSelectedUserId] = useState('');
@@ -219,8 +225,20 @@ export default function LeaderTeamAnalyticsPage() {
                   byImpact={analytics?.pendingReviewByImpact ?? []}
                 />
               ),
-              impact: <DeliverablesByImpactChart analytics={analytics} />,
-              engagement: <EngagementByUserChart analytics={analytics} />,
+              impact: (
+                <DeliverablesByImpactChart
+                  analytics={analytics}
+                  dateFormatPreference={dateFormatPreference}
+                  languagePreference={languagePreference}
+                />
+              ),
+              engagement: (
+                <EngagementByUserChart
+                  analytics={analytics}
+                  dateFormatPreference={dateFormatPreference}
+                  languagePreference={languagePreference}
+                />
+              ),
             }}
           />
         )}
