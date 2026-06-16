@@ -1,0 +1,64 @@
+openapi: 3.0.3
+info:
+  title: Engineering Manager Tool Web i18n Profile Wiring
+  version: 0.1.0
+  description: |
+    Delta for feature 017-web-i18n.
+    Backend support for languagePreference and dateFormatPreference already exists;
+    this document records the web-facing contract alignment.
+    Merge UserProfile and ProfileSettingsUpdate extensions into
+    specs/014-profile-theme-github/contracts/profile-settings-api.yaml
+    (and user-roles-api.yaml UserProfile) during implementation.
+servers:
+  - url: http://localhost:3001
+paths:
+  /users/me:
+    patch:
+      summary: Update own profile settings (extended)
+      description: |
+        Existing PATCH /users/me also accepts languagePreference and dateFormatPreference.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProfileSettingsUpdate'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [user]
+                properties:
+                  user:
+                    $ref: '#/components/schemas/UserProfile'
+components:
+  schemas:
+    LanguagePreference:
+      type: string
+      enum:
+        - en-US
+        - pt-BR
+    DateFormatPreference:
+      type: string
+      enum:
+        - MDY
+        - DMY
+        - YMD
+    UserProfile:
+      type: object
+      required:
+        - languagePreference
+        - dateFormatPreference
+      properties:
+        languagePreference:
+          $ref: '#/components/schemas/LanguagePreference'
+        dateFormatPreference:
+          $ref: '#/components/schemas/DateFormatPreference'
+    ProfileSettingsUpdate:
+      type: object
+      properties:
+        languagePreference:
+          $ref: '#/components/schemas/LanguagePreference'
+        dateFormatPreference:
+          $ref: '#/components/schemas/DateFormatPreference'
