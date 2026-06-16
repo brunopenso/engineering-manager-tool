@@ -31,7 +31,7 @@ describe('US2 deliverables list', () => {
 
     await waitFor(() => {
       expect(screen.getByText('API redesign')).toBeInTheDocument();
-      expect(screen.getByText('HIGH')).toBeInTheDocument();
+      expect(screen.getByText('High')).toBeInTheDocument();
       expect(screen.getByText('Platform')).toBeInTheDocument();
     });
   });

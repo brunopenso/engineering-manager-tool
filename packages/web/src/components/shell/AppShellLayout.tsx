@@ -10,8 +10,9 @@ import {
   Drawer,
 } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
+import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../auth/AuthProvider.js';
-import { getVisibleShellMenuSections, LOGIN_ROUTE } from '../../routes/shellOptions.js';
+import { useVisibleShellMenuSections, LOGIN_ROUTE } from '../../routes/shellOptions.js';
 import ShellNavigation from './ShellNavigation.js';
 import HeaderIdentityAction from './HeaderIdentityAction.js';
 import { useHeaderIdentityAction } from './useHeaderIdentityAction.js';
@@ -36,6 +37,7 @@ export default function AppShellLayout() {
   const navigate = useNavigate();
   const location = useLocation();
   const { user, clearSession, accessToken } = useAuth();
+  const { t } = useTranslation('shell');
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const {
     isConfirmingLogout,
@@ -59,7 +61,7 @@ export default function AppShellLayout() {
     navigate(LOGIN_ROUTE, { replace: true });
   }
 
-  const menuSections = getVisibleShellMenuSections(user);
+  const menuSections = useVisibleShellMenuSections(user);
 
   const navigationContent = (
     <ShellNavigation
@@ -85,7 +87,7 @@ export default function AppShellLayout() {
         <Toolbar>
           <IconButton
             color="inherit"
-            aria-label="open drawer"
+            aria-label={t('aria.openDrawer')}
             aria-expanded={isDrawerOpen}
             onClick={toggleDrawer}
             edge="start"
@@ -102,7 +104,7 @@ export default function AppShellLayout() {
               fontSize: { xs: '1rem', sm: '1.25rem' },
             }}
           >
-            Engineering Manager Tool
+            {t('appTitle')}
           </Typography>
           <HeaderIdentityAction
             fullName={user?.fullName ?? ''}

@@ -1,0 +1,40 @@
+{
+  "title": "Your profile",
+  "fields": {
+    "githubLogin": "GitHub login",
+    "githubPlaceholder": "octocat",
+    "githubHelper": "Your GitHub username (handle), not a full profile URL.",
+    "activeRoles": "Active roles",
+    "appearance": "Appearance",
+    "language": "Language",
+    "dateFormat": "Date format"
+  },
+  "language": {
+    "enUS": "English (US)",
+    "ptBR": "Portuguese (Brazil)",
+    "aria": "Language preference"
+  },
+  "dateFormat": {
+    "mdy": "Month / Day / Year",
+    "dmy": "Day / Month / Year",
+    "ymd": "Year / Month / Day",
+    "aria": "Date format preference"
+  },
+  "theme": {
+    "aria": "Theme appearance",
+    "light": "Light",
+    "lightAria": "Light theme",
+    "dark": "Dark",
+    "darkAria": "Dark theme"
+  },
+  "github": {
+    "save": "Save GitHub login",
+    "saving": "Saving…"
+  },
+  "errors": {
+    "themeSave": "Could not save appearance preference.",
+    "githubSave": "Could not save GitHub login.",
+    "languageSave": "Could not save language preference.",
+    "dateFormatSave": "Could not save date format preference."
+  }
+}

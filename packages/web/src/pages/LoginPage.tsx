@@ -18,6 +18,8 @@ import {
   MenuItem,
 } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
+import { useTranslation } from 'react-i18next';
+import type { TFunction } from 'i18next';
 import { useAuth } from '../auth/AuthProvider.js';
 import {
   AuthApiError,
@@ -29,26 +31,25 @@ import {
 } from '../services/authApi.js';
 import { DEFAULT_APP_ROUTE } from '../routes/shellOptions.js';
 
-const FALLBACK_ERROR = 'Authentication failed. Please try again.';
-
-function mapErrorMessage(error: AuthApiError): string {
+function mapErrorMessage(error: AuthApiError, t: TFunction<'auth'>): string {
   switch (error.code) {
     case 'INVALID_TOKEN':
-      return 'Google token is invalid.';
+      return t('errors.invalidToken');
     case 'EXPIRED_TOKEN':
-      return 'Google token has expired.';
+      return t('errors.expiredToken');
     case 'ISSUER_MISMATCH':
-      return 'Google token issuer is not accepted.';
+      return t('errors.issuerMismatch');
     case 'AUDIENCE_MISMATCH':
-      return 'Google token audience does not match this application.';
+      return t('errors.audienceMismatch');
     default:
-      return error.message || FALLBACK_ERROR;
+      return error.message || t('errors.authFailed');
   }
 }
 
 function DevLoginSection() {
   const navigate = useNavigate();
   const { setSession } = useAuth();
+  const { t } = useTranslation(['auth', 'common']);
   const [devUsers, setDevUsers] = useState<DevAuthUser[]>([]);
   const [selectedUserId, setSelectedUserId] = useState('');
   const [devEmail, setDevEmail] = useState('');
@@ -65,9 +66,9 @@ function DevLoginSection() {
         }
       })
       .catch(() => {
-        setDevError('Failed to load development users.');
+        setDevError(t('dev.loadUsersFailed'));
       });
-  }, []);
+  }, [t]);
 
   async function handleDevLogin(input: {
     userId?: string;
@@ -85,7 +86,7 @@ function DevLoginSection() {
       if (error instanceof AuthApiError) {
         setDevError(error.message);
       } else {
-        setDevError(FALLBACK_ERROR);
+        setDevError(t('errors.authFailed'));
       }
     } finally {
       setDevLoading(false);
@@ -94,10 +95,8 @@ function DevLoginSection() {
 
   return (
     <Stack spacing={2} sx={{ width: '100%' }}>
-      <Divider>Development login</Divider>
-      <Alert severity="warning">
-        Development-only login. Do not enable in production.
-      </Alert>
+      <Divider>{t('dev.divider')}</Divider>
+      <Alert severity="warning">{t('dev.warning')}</Alert>
 
       {devError && (
         <Alert severity="error" onClose={() => setDevError(null)}>
@@ -107,16 +106,22 @@ function DevLoginSection() {
 
       {devUsers.length > 0 && (
         <FormControl fullWidth disabled={devLoading}>
-          <InputLabel id="dev-user-select-label">Existing user</InputLabel>
+          <InputLabel id="dev-user-select-label">{t('dev.existingUser')}</InputLabel>
           <Select
             labelId="dev-user-select-label"
-            label="Existing user"
+            label={t('dev.existingUser')}
             value={selectedUserId}
             onChange={(event) => setSelectedUserId(event.target.value)}
           >
             {devUsers.map((user) => (
               <MenuItem key={user.id} value={user.id}>
-                {user.fullName} ({user.email}) — {user.roles.join(', ')}
+                {t('dev.userOption', {
+                  fullName: user.fullName,
+                  email: user.email,
+                  roles: user.roles
+                    .map((role) => t(`roles.${role}`, { ns: 'common' }))
+                    .join(', '),
+                })}
               </MenuItem>
             ))}
           </Select>
@@ -129,19 +134,19 @@ function DevLoginSection() {
           disabled={devLoading || !selectedUserId}
           onClick={() => void handleDevLogin({ userId: selectedUserId })}
         >
-          Sign in as selected user
+          {t('dev.signInSelected')}
         </Button>
       )}
 
       <TextField
-        label="Email"
+        label={t('fields.email', { ns: 'common' })}
         value={devEmail}
         onChange={(event) => setDevEmail(event.target.value)}
         disabled={devLoading}
         fullWidth
       />
       <TextField
-        label="Full name"
+        label={t('dev.fullName')}
         value={devFullName}
         onChange={(event) => setDevFullName(event.target.value)}
         disabled={devLoading}
@@ -157,7 +162,7 @@ function DevLoginSection() {
           })
         }
       >
-        Sign in with email
+        {t('dev.signInEmail')}
       </Button>
     </Stack>
   );
@@ -167,6 +172,7 @@ export default function LoginPage() {
   const navigate = useNavigate();
   const theme = useTheme();
   const { setSession } = useAuth();
+  const { t } = useTranslation(['auth', 'shell']);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const googleButtonTheme = theme.palette.mode === 'dark' ? 'filled_black' : 'outline';
@@ -174,7 +180,7 @@ export default function LoginPage() {
 
   async function handleGoogleSuccess(response: CredentialResponse): Promise<void> {
     if (!response.credential) {
-      setErrorMessage(FALLBACK_ERROR);
+      setErrorMessage(t('errors.authFailed'));
       return;
     }
 
@@ -185,9 +191,9 @@ export default function LoginPage() {
       navigate(DEFAULT_APP_ROUTE, { replace: true });
     } catch (error) {
       if (error instanceof AuthApiError) {
-        setErrorMessage(mapErrorMessage(error));
+        setErrorMessage(mapErrorMessage(error, t));
       } else {
-        setErrorMessage(FALLBACK_ERROR);
+        setErrorMessage(t('errors.authFailed'));
       }
     } finally {
       setIsLoading(false);
@@ -227,10 +233,10 @@ export default function LoginPage() {
                 color: 'primary.main',
               }}
             >
-              Engineering Manager Tool
+              {t('appTitle', { ns: 'shell' })}
             </Typography>
             <Typography variant="body1" color="text.secondary">
-              Sign in with Google to access
+              {t('subtitle')}
             </Typography>
           </Box>
 
@@ -261,7 +267,7 @@ export default function LoginPage() {
               <GoogleLogin
                 theme={googleButtonTheme}
                 onSuccess={handleGoogleSuccess}
-                onError={() => setErrorMessage(FALLBACK_ERROR)}
+                onError={() => setErrorMessage(t('errors.authFailed'))}
               />
             </Box>
 

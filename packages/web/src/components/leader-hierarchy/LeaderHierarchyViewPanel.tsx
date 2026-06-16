@@ -7,6 +7,7 @@ import {
   Stack,
   Typography,
 } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../auth/AuthProvider.js';
 import HierarchyTree from '../hierarchy/HierarchyTree.js';
 import {
@@ -17,6 +18,7 @@ import {
 
 export default function LeaderHierarchyViewPanel() {
   const { accessToken } = useAuth();
+  const { t } = useTranslation('leader');
   const [hierarchy, setHierarchy] = useState<LeaderHierarchyViewResponse | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -44,7 +46,7 @@ export default function LeaderHierarchyViewPanel() {
           const message =
             error instanceof UsersApiError
               ? error.message
-              : 'Unable to load hierarchy view.';
+              : t('hierarchy.viewLoadError');
           setErrorMessage(message);
           setHierarchy(null);
         }
@@ -60,17 +62,17 @@ export default function LeaderHierarchyViewPanel() {
     return () => {
       cancelled = true;
     };
-  }, [accessToken]);
+  }, [accessToken, t]);
 
   return (
     <Stack spacing={3}>
       <Typography variant="body2" color="text.secondary">
-        Read-only view of your reporting line and team structure.
+        {t('hierarchy.viewSubtitle')}
       </Typography>
 
       {isLoading && (
         <Box sx={{ display: 'flex', justifyContent: 'center', py: 6 }}>
-          <CircularProgress aria-label="Loading hierarchy" />
+          <CircularProgress aria-label={t('hierarchy.loadingHierarchy')} />
         </Box>
       )}
 
@@ -82,7 +84,7 @@ export default function LeaderHierarchyViewPanel() {
             {hierarchy.manager && (
               <Box>
                 <Typography variant="subtitle2" color="text.secondary" gutterBottom>
-                  Your manager
+                  {t('hierarchy.yourManager')}
                 </Typography>
                 <Typography variant="body1">{hierarchy.manager.displayName}</Typography>
               </Box>
@@ -90,7 +92,7 @@ export default function LeaderHierarchyViewPanel() {
 
             <Box>
               <Typography variant="subtitle2" color="text.secondary" gutterBottom>
-                Your team
+                {t('hierarchy.yourTeam')}
               </Typography>
               <HierarchyTree self={hierarchy.self} reports={hierarchy.reports} />
             </Box>
@@ -99,7 +101,7 @@ export default function LeaderHierarchyViewPanel() {
       )}
 
       {!isLoading && hierarchy && hierarchy.reports.length === 0 && !hierarchy.manager && (
-        <Alert severity="info">You have no manager assigned and no direct reports yet.</Alert>
+        <Alert severity="info">{t('hierarchy.emptyNoManagerOrReports')}</Alert>
       )}
     </Stack>
   );

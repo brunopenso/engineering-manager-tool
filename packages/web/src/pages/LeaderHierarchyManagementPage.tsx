@@ -8,12 +8,14 @@ import {
   Tabs,
   Typography,
 } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 import LeaderAssignUsersPanel from '../components/leader-hierarchy/LeaderAssignUsersPanel.js';
 import LeaderCreateUserPanel from '../components/leader-hierarchy/LeaderCreateUserPanel.js';
 import LeaderHierarchyViewPanel from '../components/leader-hierarchy/LeaderHierarchyViewPanel.js';
 
 export default function LeaderHierarchyManagementPage() {
   const [activeTab, setActiveTab] = useState(0);
+  const { t } = useTranslation('leader');
 
   return (
     <Container maxWidth="md">
@@ -21,17 +23,17 @@ export default function LeaderHierarchyManagementPage() {
         <Paper sx={{ p: 3, border: '1px solid', borderColor: 'divider' }} elevation={0}>
           <Stack spacing={3}>
             <Typography variant="h4" component="h1">
-              Hierarchy management
+              {t('hierarchy.title')}
             </Typography>
 
             <Tabs
               value={activeTab}
               onChange={(_event, nextTab) => setActiveTab(nextTab)}
-              aria-label="Hierarchy management tabs"
+              aria-label={t('hierarchy.tabsAria')}
             >
-              <Tab label="View" />
-              <Tab label="Assign users" />
-              <Tab label="Create User" />
+              <Tab label={t('hierarchy.view')} />
+              <Tab label={t('hierarchy.assignUsers')} />
+              <Tab label={t('hierarchy.createUser')} />
             </Tabs>
 
             {activeTab === 0 && <LeaderHierarchyViewPanel />}

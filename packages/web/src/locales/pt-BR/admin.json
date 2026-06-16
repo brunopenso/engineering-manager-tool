@@ -1,0 +1,54 @@
+{
+  "users": {
+    "title": "Gestão de papéis de usuário",
+    "namePlaceholder": "Pelo menos 3 caracteres",
+    "emailPlaceholder": "Pelo menos 3 caracteres",
+    "searchHelper": "Digite pelo menos {{count}} caracteres para buscar",
+    "loadError": "Não foi possível carregar os usuários.",
+    "updateError": "Não foi possível atualizar o papel.",
+    "emptyFiltered": {
+      "title": "Nenhum usuário corresponde aos filtros",
+      "body": "Tente ajustar sua busca ou limpe todos os filtros para ver a lista completa."
+    },
+    "emptyNone": {
+      "title": "Nenhum usuário na organização",
+      "body": "Ainda não há contas de usuário para gerenciar."
+    },
+    "grantLeader": "Conceder Líder",
+    "revokeLeader": "Revogar Líder",
+    "grantAdmin": "Conceder Admin",
+    "revokeAdmin": "Revogar Admin"
+  },
+  "tags": {
+    "title": "Gestão de tags",
+    "loadError": "Não foi possível carregar as tags.",
+    "createError": "Não foi possível criar a tag.",
+    "updateError": "Não foi possível atualizar a tag.",
+    "deleteError": "Não foi possível excluir a tag.",
+    "tagName": "Nome da tag",
+    "tagColor": "Cor da tag",
+    "createTag": "Criar tag",
+    "empty": "Nenhuma tag ainda. Crie sua primeira tag para iniciar o catálogo.",
+    "deleteDialog": {
+      "title": "Excluir tag",
+      "body": "Tem certeza de que deseja excluir a tag \"{{name}}\"?"
+    }
+  },
+  "github": {
+    "title": "Integração GitHub",
+    "subtitle": "Gerencie quais organizações GitHub estão habilitadas para integrações do produto.",
+    "loadError": "Não foi possível carregar as integrações GitHub.",
+    "enableError": "Não foi possível habilitar a organização GitHub.",
+    "disableError": "Não foi possível desabilitar a organização GitHub.",
+    "orgName": "Nome da organização",
+    "enableOrg": "Habilitar organização",
+    "orgHelper": "Slug da organização GitHub (por exemplo acme-corp), não uma URL completa.",
+    "empty": "Nenhuma organização GitHub habilitada ainda. Adicione o primeiro nome de organização acima para habilitar o escopo de integração.",
+    "orgColumn": "Nome da organização",
+    "disable": "Desabilitar",
+    "disableDialog": {
+      "title": "Desabilitar organização",
+      "body": "Tem certeza de que deseja desabilitar \"{{organizationName}}\"? Ela não fará mais parte do escopo de integração habilitado."
+    }
+  }
+}

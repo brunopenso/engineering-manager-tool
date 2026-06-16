@@ -1,5 +1,8 @@
+import { useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import type { AuthUser } from '../auth/AuthProvider.js';
 import { isAdministrator, isLeader } from '../auth/roleGuards.js';
+import i18n from '../i18n/config.js';
 
 export const LOGIN_ROUTE = '/login';
 export const ROOT_LOGIN_ROUTE = '/';
@@ -27,78 +30,76 @@ export type ShellMenuSection = {
   options: ShellMenuOption[];
 };
 
-const BASE_SHELL_MENU_OPTIONS: ShellMenuOption[] = [
-  {
-    id: 'home',
-    label: 'Home',
-    route: '/app',
-    available: true,
-  },
-  {
-    id: 'profile',
-    label: 'Profile',
-    route: PROFILE_ROUTE,
-    available: true,
-  },
+type ShellMenuOptionDef = {
+  id: string;
+  labelKey: string;
+  route: string;
+  available: boolean;
+};
+
+type ShellMenuSectionDef = {
+  id: string;
+  titleKey?: string;
+  options: ShellMenuOptionDef[];
+};
+
+const BASE_SHELL_MENU_OPTIONS: ShellMenuOptionDef[] = [
+  { id: 'home', labelKey: 'menu.home', route: '/app', available: true },
+  { id: 'profile', labelKey: 'menu.profile', route: PROFILE_ROUTE, available: true },
   {
     id: 'deliverables',
-    label: 'Deliverables',
+    labelKey: 'menu.deliverables',
     route: DELIVERABLES_ROUTE,
     available: true,
   },
 ];
 
-const ADMIN_SHELL_MENU_OPTIONS: ShellMenuOption[] = [
+const ADMIN_SHELL_MENU_OPTIONS: ShellMenuOptionDef[] = [
   {
     id: 'admin-users',
-    label: 'User roles',
+    labelKey: 'menu.userRoles',
     route: ADMIN_USERS_ROUTE,
     available: true,
   },
-  {
-    id: 'admin-tags',
-    label: 'Tags',
-    route: ADMIN_TAGS_ROUTE,
-    available: true,
-  },
+  { id: 'admin-tags', labelKey: 'menu.tags', route: ADMIN_TAGS_ROUTE, available: true },
   {
     id: 'admin-github',
-    label: 'GitHub integration',
+    labelKey: 'menu.githubIntegration',
     route: ADMIN_GITHUB_ROUTE,
     available: true,
   },
 ];
 
-const LEADER_SHELL_MENU_OPTIONS: ShellMenuOption[] = [
+const LEADER_SHELL_MENU_OPTIONS: ShellMenuOptionDef[] = [
   {
     id: 'leader-team-deliverables',
-    label: 'Team Deliverables',
+    labelKey: 'menu.teamDeliverables',
     route: LEADER_TEAM_DELIVERABLES_ROUTE,
     available: true,
   },
   {
     id: 'leader-team-analytics',
-    label: 'Team Analytics',
+    labelKey: 'menu.teamAnalytics',
     route: LEADER_TEAM_ANALYTICS_ROUTE,
     available: true,
   },
   {
     id: 'leader-hierarchy',
-    label: 'Hierarchy Management',
+    labelKey: 'menu.hierarchyManagement',
     route: LEADER_HIERARCHY_ROUTE,
     available: true,
   },
 ];
 
-export function getVisibleShellMenuSections(user: AuthUser | null): ShellMenuSection[] {
-  const sections: ShellMenuSection[] = [
+function getVisibleShellMenuSectionDefs(user: AuthUser | null): ShellMenuSectionDef[] {
+  const sections: ShellMenuSectionDef[] = [
     { id: 'collaborator', options: [...BASE_SHELL_MENU_OPTIONS] },
   ];
 
   if (isLeader(user)) {
     sections.push({
       id: 'leader',
-      title: 'Leader',
+      titleKey: 'sections.leader',
       options: [...LEADER_SHELL_MENU_OPTIONS],
     });
   }
@@ -106,7 +107,7 @@ export function getVisibleShellMenuSections(user: AuthUser | null): ShellMenuSec
   if (isAdministrator(user)) {
     sections.push({
       id: 'administration',
-      title: 'Administration',
+      titleKey: 'sections.administration',
       options: [...ADMIN_SHELL_MENU_OPTIONS],
     });
   }
@@ -114,9 +115,44 @@ export function getVisibleShellMenuSections(user: AuthUser | null): ShellMenuSec
   return sections;
 }
 
+function translateSections(
+  sections: ShellMenuSectionDef[],
+  translate: (key: string) => string,
+): ShellMenuSection[] {
+  return sections.map((section) => ({
+    id: section.id,
+    title: section.titleKey ? translate(section.titleKey) : undefined,
+    options: section.options.map((option) => ({
+      id: option.id,
+      label: translate(option.labelKey),
+      route: option.route,
+      available: option.available,
+    })),
+  }));
+}
+
+export function useVisibleShellMenuSections(user: AuthUser | null): ShellMenuSection[] {
+  const { t } = useTranslation('shell');
+  const sectionDefs = useMemo(() => getVisibleShellMenuSectionDefs(user), [user]);
+
+  return useMemo(
+    () => translateSections(sectionDefs, (key) => t(key)),
+    [sectionDefs, t],
+  );
+}
+
+export function getVisibleShellMenuSections(user: AuthUser | null): ShellMenuSection[] {
+  return translateSections(getVisibleShellMenuSectionDefs(user), (key) =>
+    i18n.t(key, { ns: 'shell' }),
+  );
+}
+
 export function getVisibleShellMenuOptions(user: AuthUser | null): ShellMenuOption[] {
   return getVisibleShellMenuSections(user).flatMap((section) => section.options);
 }
 
-/** @deprecated Use getVisibleShellMenuSections(user) for role-aware navigation */
-export const SHELL_MENU_OPTIONS = BASE_SHELL_MENU_OPTIONS;
+/** @deprecated Use useVisibleShellMenuSections(user) for role-aware navigation */
+export const SHELL_MENU_OPTIONS: ShellMenuOption[] = translateSections(
+  [{ id: 'collaborator', options: BASE_SHELL_MENU_OPTIONS }],
+  (key) => i18n.t(key, { ns: 'shell' }),
+)[0]!.options;

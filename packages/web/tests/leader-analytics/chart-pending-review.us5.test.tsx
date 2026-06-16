@@ -1,10 +1,11 @@
-import { render, screen } from '@testing-library/react';
+import { screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 import PendingReviewWidget from '../../src/components/leader-analytics/PendingReviewWidget.js';
+import { renderWithProviders } from '../../src/test/renderWithProviders.js';
 
 describe('US5 pending review widget', () => {
   it('shows total and per-impact counts with impact labels', () => {
-    render(
+    renderWithProviders(
       <PendingReviewWidget
         totalCount={7}
         byImpact={[

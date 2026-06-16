@@ -14,19 +14,29 @@ import {
   TableRow,
   Typography,
 } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 import { useAuth } from '../auth/AuthProvider.js';
 import {
   DeliverablesApiError,
   listUserDeliverables,
   type DeliverableSummary,
 } from '../services/deliverablesApi.js';
+import { formatDisplayDateTime } from '../utils/formatDisplayDate.js';
+import {
+  DEFAULT_DATE_FORMAT_PREFERENCE,
+  DEFAULT_LANGUAGE_PREFERENCE,
+} from '../types/profilePreferences.js';
 
 export default function DeliverablesViewPage() {
   const { userId } = useParams<{ userId: string }>();
-  const { accessToken } = useAuth();
+  const { accessToken, user } = useAuth();
+  const { t } = useTranslation(['deliverables', 'common']);
   const [deliverables, setDeliverables] = useState<DeliverableSummary[]>([]);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+
+  const languagePreference = user?.languagePreference ?? DEFAULT_LANGUAGE_PREFERENCE;
+  const dateFormatPreference = user?.dateFormatPreference ?? DEFAULT_DATE_FORMAT_PREFERENCE;
 
   useEffect(() => {
     async function load() {
@@ -42,9 +52,7 @@ export default function DeliverablesViewPage() {
         setDeliverables(result.deliverables);
       } catch (error) {
         setErrorMessage(
-          error instanceof DeliverablesApiError
-            ? error.message
-            : 'Unable to load deliverables for this collaborator.',
+          error instanceof DeliverablesApiError ? error.message : t('view.loadError'),
         );
       } finally {
         setIsLoading(false);
@@ -52,18 +60,16 @@ export default function DeliverablesViewPage() {
     }
 
     void load();
-  }, [accessToken, userId]);
+  }, [accessToken, userId, t]);
 
   return (
     <Container maxWidth="lg" sx={{ py: 4 }}>
       <Stack spacing={3}>
         <Box>
           <Typography variant="h4" component="h1" gutterBottom>
-            Team member deliverables
+            {t('view.title')}
           </Typography>
-          <Typography color="text.secondary">
-            Read-only view for coaching and performance conversations.
-          </Typography>
+          <Typography color="text.secondary">{t('view.subtitle')}</Typography>
         </Box>
 
         {errorMessage ? <Alert severity="error">{errorMessage}</Alert> : null}
@@ -71,27 +77,27 @@ export default function DeliverablesViewPage() {
         <Paper variant="outlined">
           {isLoading ? (
             <Box sx={{ p: 3 }}>
-              <Typography>Loading deliverables…</Typography>
+              <Typography>{t('loading.deliverables', { ns: 'common' })}</Typography>
             </Box>
           ) : deliverables.length === 0 ? (
             <Box sx={{ p: 3 }}>
-              <Typography color="text.secondary">No deliverables to display.</Typography>
+              <Typography color="text.secondary">{t('view.empty')}</Typography>
             </Box>
           ) : (
             <Table>
               <TableHead>
                 <TableRow>
-                  <TableCell>Title</TableCell>
-                  <TableCell>Impact</TableCell>
-                  <TableCell>System tags</TableCell>
-                  <TableCell>Updated</TableCell>
+                  <TableCell>{t('fields.title', { ns: 'common' })}</TableCell>
+                  <TableCell>{t('fields.impact', { ns: 'common' })}</TableCell>
+                  <TableCell>{t('systemTags', { ns: 'common' })}</TableCell>
+                  <TableCell>{t('dates.updated', { ns: 'common' })}</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
                 {deliverables.map((item) => (
                   <TableRow key={item.id}>
                     <TableCell>{item.title}</TableCell>
-                    <TableCell>{item.businessImpact}</TableCell>
+                    <TableCell>{t(`impact.${item.businessImpact}`, { ns: 'common' })}</TableCell>
                     <TableCell>
                       <Stack direction="row" spacing={0.5} useFlexGap sx={{ flexWrap: 'wrap' }}>
                         {item.systemTags.map((tag) => (
@@ -104,7 +110,13 @@ export default function DeliverablesViewPage() {
                         ))}
                       </Stack>
                     </TableCell>
-                    <TableCell>{new Date(item.updatedAt).toLocaleString()}</TableCell>
+                    <TableCell>
+                      {formatDisplayDateTime(
+                        item.updatedAt,
+                        dateFormatPreference,
+                        languagePreference,
+                      )}
+                    </TableCell>
                   </TableRow>
                 ))}
               </TableBody>

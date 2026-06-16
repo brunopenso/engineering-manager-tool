@@ -27,6 +27,7 @@ import {
   Typography,
   type SelectChangeEvent,
 } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 import { useAuth } from '../auth/AuthProvider.js';
 import {
   deleteDeliverable,
@@ -38,13 +39,13 @@ import {
 } from '../services/deliverablesApi.js';
 import { fetchTagCatalog, type Tag } from '../services/tagsApi.js';
 import { defaultLast30DayRange, isValidDateRange } from '../utils/dateRange.js';
+import { formatDisplayDate, formatDisplayDateTime } from '../utils/formatDisplayDate.js';
+import {
+  DEFAULT_DATE_FORMAT_PREFERENCE,
+  DEFAULT_LANGUAGE_PREFERENCE,
+} from '../types/profilePreferences.js';
 
-const IMPACT_OPTIONS: { value: BusinessImpact; label: string }[] = [
-  { value: 'LOW', label: 'Low' },
-  { value: 'MEDIUM', label: 'Medium' },
-  { value: 'HIGH', label: 'High' },
-  { value: 'TRANSFORMATIONAL', label: 'Transformational' },
-];
+const BUSINESS_IMPACTS: BusinessImpact[] = ['LOW', 'MEDIUM', 'HIGH', 'TRANSFORMATIONAL'];
 
 function filtersMatchDefault(
   startDate: string,
@@ -62,7 +63,8 @@ function filtersMatchDefault(
 }
 
 export default function DeliverablesPage() {
-  const { accessToken } = useAuth();
+  const { accessToken, user } = useAuth();
+  const { t } = useTranslation(['deliverables', 'common']);
   const navigate = useNavigate();
   const defaultRange = useMemo(() => defaultLast30DayRange(), []);
   const [startDate, setStartDate] = useState(defaultRange.startDate);
@@ -77,6 +79,9 @@ export default function DeliverablesPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [deleteTarget, setDeleteTarget] = useState<DeliverableSummary | null>(null);
   const listRequestId = useRef(0);
+
+  const languagePreference = user?.languagePreference ?? DEFAULT_LANGUAGE_PREFERENCE;
+  const dateFormatPreference = user?.dateFormatPreference ?? DEFAULT_DATE_FORMAT_PREFERENCE;
 
   const dateRangeIsValid = isValidDateRange(startDate, endDate);
   const hasDeliverables = deliverables.length > 0;
@@ -127,7 +132,7 @@ export default function DeliverablesPage() {
       setDeliverables([]);
       setHasAnyDeliverables(false);
       setErrorMessage(
-        error instanceof DeliverablesApiError ? error.message : 'Unable to load deliverables.',
+        error instanceof DeliverablesApiError ? error.message : t('list.loadError'),
       );
     } finally {
       if (requestId === listRequestId.current) {
@@ -166,7 +171,7 @@ export default function DeliverablesPage() {
 
   useEffect(() => {
     if (!dateRangeIsValid) {
-      setDateRangeError('End date must be on or after start date.');
+      setDateRangeError(t('validation.endDateBeforeStart', { ns: 'common' }));
       setDeliverables([]);
       setIsLoading(false);
       return;
@@ -206,7 +211,7 @@ export default function DeliverablesPage() {
       await loadDeliverables();
     } catch (error) {
       setErrorMessage(
-        error instanceof DeliverablesApiError ? error.message : 'Unable to delete deliverable.',
+        error instanceof DeliverablesApiError ? error.message : t('list.deleteError'),
       );
     }
   }
@@ -216,11 +221,9 @@ export default function DeliverablesPage() {
       <Stack spacing={3}>
         <Box>
           <Typography variant="h4" component="h1" gutterBottom>
-            Deliverables
+            {t('list.title')}
           </Typography>
-          <Typography color="text.secondary">
-            Capture your work outcomes, impact, and growth areas for performance conversations.
-          </Typography>
+          <Typography color="text.secondary">{t('list.subtitle')}</Typography>
         </Box>
 
         <Paper variant="outlined" sx={{ p: 3 }}>
@@ -236,7 +239,7 @@ export default function DeliverablesPage() {
             }}
           >
             <TextField
-              label="Start date"
+              label={t('fields.startDate', { ns: 'common' })}
               type="date"
               value={startDate}
               onChange={(event) => setStartDate(event.target.value)}
@@ -247,7 +250,7 @@ export default function DeliverablesPage() {
             />
 
             <TextField
-              label="End date"
+              label={t('fields.endDate', { ns: 'common' })}
               type="date"
               value={endDate}
               onChange={(event) => setEndDate(event.target.value)}
@@ -259,24 +262,24 @@ export default function DeliverablesPage() {
 
             <FormControl>
               <InputLabel id="impact-filter-label" shrink>
-                Impact
+                {t('fields.impact', { ns: 'common' })}
               </InputLabel>
               <Select
                 labelId="impact-filter-label"
                 multiple
                 value={selectedImpacts}
                 onChange={handleImpactChange}
-                input={<OutlinedInput label="Impact" />}
+                input={<OutlinedInput label={t('fields.impact', { ns: 'common' })} />}
                 renderValue={(selected) =>
                   selected
-                    .map((value) => IMPACT_OPTIONS.find((opt) => opt.value === value)?.label ?? value)
+                    .map((value) => t(`impact.${value}`, { ns: 'common' }))
                     .join(', ')
                 }
                 data-testid="impact-filter-select"
               >
-                {IMPACT_OPTIONS.map((option) => (
-                  <MenuItem key={option.value} value={option.value}>
-                    {option.label}
+                {BUSINESS_IMPACTS.map((impact) => (
+                  <MenuItem key={impact} value={impact}>
+                    {t(`impact.${impact}`, { ns: 'common' })}
                   </MenuItem>
                 ))}
               </Select>
@@ -284,14 +287,14 @@ export default function DeliverablesPage() {
 
             <FormControl>
               <InputLabel id="tag-filter-label" shrink>
-                System tags
+                {t('systemTags', { ns: 'common' })}
               </InputLabel>
               <Select
                 labelId="tag-filter-label"
                 multiple
                 value={selectedTagIds}
                 onChange={handleTagChange}
-                input={<OutlinedInput label="System tags" />}
+                input={<OutlinedInput label={t('systemTags', { ns: 'common' })} />}
                 renderValue={(selected) => (
                   <Stack direction="row" spacing={0.5} useFlexGap sx={{ flexWrap: 'wrap' }}>
                     {selected.map((tagId) => {
@@ -324,7 +327,7 @@ export default function DeliverablesPage() {
                 data-testid="clear-filters-button"
                 sx={{ alignSelf: 'center' }}
               >
-                Clear all filters
+                {t('actions.clearAllFilters', { ns: 'common' })}
               </Button>
             ) : null}
           </Box>
@@ -340,34 +343,30 @@ export default function DeliverablesPage() {
 
         <Box>
           <Button variant="contained" onClick={() => navigate('/app/deliverables/new')}>
-            Add deliverable
+            {t('list.add')}
           </Button>
         </Box>
 
         <Paper variant="outlined">
           {isLoading ? (
             <Box sx={{ p: 3 }}>
-              <Typography>Loading deliverables…</Typography>
+              <Typography>{t('loading.deliverables', { ns: 'common' })}</Typography>
             </Box>
           ) : !hasDeliverables ? (
             <Box sx={{ p: 3 }}>
               {!hasAnyDeliverables ? (
                 <>
                   <Typography variant="h6" gutterBottom>
-                    No deliverables yet
+                    {t('list.emptyNone.title')}
                   </Typography>
-                  <Typography color="text.secondary">
-                    Add your first deliverable to start building your portfolio.
-                  </Typography>
+                  <Typography color="text.secondary">{t('list.emptyNone.body')}</Typography>
                 </>
               ) : (
                 <>
                   <Typography variant="h6" gutterBottom>
-                    No deliverables match your filters
+                    {t('list.emptyFiltered.title')}
                   </Typography>
-                  <Typography color="text.secondary">
-                    Try adjusting the date range, impact levels, or system tags.
-                  </Typography>
+                  <Typography color="text.secondary">{t('list.emptyFiltered.body')}</Typography>
                 </>
               )}
             </Box>
@@ -375,19 +374,19 @@ export default function DeliverablesPage() {
             <Table>
               <TableHead>
                 <TableRow>
-                  <TableCell>Title</TableCell>
-                  <TableCell>Impact</TableCell>
-                  <TableCell>Tags</TableCell>
-                  <TableCell>Created</TableCell>
-                  <TableCell>Updated</TableCell>
-                  <TableCell align="right">Actions</TableCell>
+                  <TableCell>{t('fields.title', { ns: 'common' })}</TableCell>
+                  <TableCell>{t('fields.impact', { ns: 'common' })}</TableCell>
+                  <TableCell>{t('fields.tags', { ns: 'common' })}</TableCell>
+                  <TableCell>{t('dates.created', { ns: 'common' })}</TableCell>
+                  <TableCell>{t('dates.updated', { ns: 'common' })}</TableCell>
+                  <TableCell align="right">{t('actions.actions', { ns: 'common' })}</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
                 {deliverables.map((item) => (
                   <TableRow key={item.id}>
                     <TableCell>{item.title}</TableCell>
-                    <TableCell>{item.businessImpact}</TableCell>
+                    <TableCell>{t(`impact.${item.businessImpact}`, { ns: 'common' })}</TableCell>
                     <TableCell>
                       <Stack direction="row" spacing={0.5} useFlexGap sx={{ flexWrap: 'wrap' }}>
                         {item.systemTags.map((tag) => (
@@ -400,18 +399,22 @@ export default function DeliverablesPage() {
                         ))}
                       </Stack>
                     </TableCell>
-                    <TableCell>{new Date(item.createdAt).toLocaleDateString()}</TableCell>
-                    <TableCell>{new Date(item.updatedAt).toLocaleString()}</TableCell>
+                    <TableCell>
+                      {formatDisplayDate(item.createdAt, dateFormatPreference, languagePreference)}
+                    </TableCell>
+                    <TableCell>
+                      {formatDisplayDateTime(item.updatedAt, dateFormatPreference, languagePreference)}
+                    </TableCell>
                     <TableCell align="right">
                       <Stack direction="row" spacing={1} sx={{ justifyContent: 'flex-end' }}>
                         <Button
                           size="small"
                           onClick={() => navigate(`/app/deliverables/${item.id}/edit`)}
                         >
-                          Edit
+                          {t('actions.edit', { ns: 'common' })}
                         </Button>
                         <Button size="small" color="error" onClick={() => setDeleteTarget(item)}>
-                          Delete
+                          {t('actions.delete', { ns: 'common' })}
                         </Button>
                       </Stack>
                     </TableCell>
@@ -424,16 +427,18 @@ export default function DeliverablesPage() {
       </Stack>
 
       <Dialog open={Boolean(deleteTarget)} onClose={() => setDeleteTarget(null)}>
-        <DialogTitle>Delete deliverable?</DialogTitle>
+        <DialogTitle>{t('list.deleteDialog.title')}</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            This will permanently remove &quot;{deleteTarget?.title}&quot; from your portfolio.
+            {t('list.deleteDialog.body', { title: deleteTarget?.title ?? '' })}
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setDeleteTarget(null)}>Cancel</Button>
+          <Button onClick={() => setDeleteTarget(null)}>
+            {t('actions.cancel', { ns: 'common' })}
+          </Button>
           <Button color="error" variant="contained" onClick={() => void handleDelete()}>
-            Delete
+            {t('actions.delete', { ns: 'common' })}
           </Button>
         </DialogActions>
       </Dialog>

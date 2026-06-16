@@ -24,9 +24,16 @@ type ErrorResponse = {
   message: string;
 };
 
+import type {
+  DateFormatPreference,
+  LanguagePreference,
+} from '../types/profilePreferences.js';
+
 export type ProfileSettingsUpdate = {
   themePreference?: 'light' | 'dark';
   githubLogin?: string | null;
+  languagePreference?: LanguagePreference;
+  dateFormatPreference?: DateFormatPreference;
 };
 
 async function parseError(response: Response): Promise<ProfileApiError> {

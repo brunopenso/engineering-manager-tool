@@ -1,19 +1,27 @@
 import { useMemo } from 'react';
 import { Paper, Typography } from '@mui/material';
 import { BarChart } from '@mui/x-charts/BarChart';
+import { useTranslation } from 'react-i18next';
 import type { EngagementBucketRow, TeamAnalyticsResponse } from '../../services/leaderAnalyticsApi.js';
+import type { DateFormatPreference, LanguagePreference } from '../../types/profilePreferences.js';
+import {
+  DEFAULT_DATE_FORMAT_PREFERENCE,
+  DEFAULT_LANGUAGE_PREFERENCE,
+} from '../../types/profilePreferences.js';
 import AnalyticsWidgetTitle from './AnalyticsWidgetTitle.js';
 import ChartLegend from './ChartLegend.js';
 import ChartResizeContainer from './ChartResizeContainer.js';
 import ChartWithLegendLayout from './ChartWithLegendLayout.js';
 import { analyticsChartPlotMargins, analyticsWidgetPaperSx } from './analyticsWidgetStyles.js';
 import { ENGAGEMENT_CHART_COLORS } from './engagementChartColors.js';
-import { buildAscendingIsoWeekAxis } from '../../utils/isoWeekLabel.js';
+import { buildAscendingWeekAxis } from '../../utils/isoWeekLabel.js';
 
 const MAX_LEGEND_USERS = 12;
 
 type EngagementByUserChartProps = {
   analytics: TeamAnalyticsResponse | null;
+  dateFormatPreference?: DateFormatPreference;
+  languagePreference?: LanguagePreference;
 };
 
 function topUsersByTotalAdds(rows: EngagementBucketRow[]): string[] {
@@ -35,10 +43,20 @@ function topUsersByTotalAdds(rows: EngagementBucketRow[]): string[] {
     .map((entry) => entry.userId);
 }
 
-export default function EngagementByUserChart({ analytics }: EngagementByUserChartProps) {
+export default function EngagementByUserChart({
+  analytics,
+  dateFormatPreference = DEFAULT_DATE_FORMAT_PREFERENCE,
+  languagePreference = DEFAULT_LANGUAGE_PREFERENCE,
+}: EngagementByUserChartProps) {
+  const { t } = useTranslation('leader');
   const { weekStarts, labels: weekLabels } = useMemo(
-    () => buildAscendingIsoWeekAxis(analytics?.weekStarts ?? []),
-    [analytics?.weekStarts],
+    () =>
+      buildAscendingWeekAxis(
+        analytics?.weekStarts ?? [],
+        dateFormatPreference,
+        languagePreference,
+      ),
+    [analytics?.weekStarts, dateFormatPreference, languagePreference],
   );
   const rows = analytics?.engagementByWeek ?? [];
 
@@ -71,8 +89,8 @@ export default function EngagementByUserChart({ analytics }: EngagementByUserCha
   if (weekStarts.length === 0) {
     return (
       <Paper variant="outlined" sx={analyticsWidgetPaperSx}>
-        <AnalyticsWidgetTitle gutterBottom>Team engagement (adds per week)</AnalyticsWidgetTitle>
-        <Typography color="text.secondary">No data for the selected filters.</Typography>
+        <AnalyticsWidgetTitle gutterBottom>{t('charts.engagementTitle')}</AnalyticsWidgetTitle>
+        <Typography color="text.secondary">{t('charts.noData')}</Typography>
       </Paper>
     );
   }
@@ -80,20 +98,18 @@ export default function EngagementByUserChart({ analytics }: EngagementByUserCha
   if (seriesUserIds.length === 0) {
     return (
       <Paper variant="outlined" sx={analyticsWidgetPaperSx}>
-        <AnalyticsWidgetTitle gutterBottom>Team engagement (adds per week)</AnalyticsWidgetTitle>
-        <Typography color="text.secondary">
-          No deliverables were added in this period for the selected team scope.
-        </Typography>
+        <AnalyticsWidgetTitle gutterBottom>{t('charts.engagementTitle')}</AnalyticsWidgetTitle>
+        <Typography color="text.secondary">{t('charts.noEngagementInPeriod')}</Typography>
       </Paper>
     );
   }
 
   return (
     <Paper variant="outlined" sx={{ ...analyticsWidgetPaperSx, overflow: 'hidden' }}>
-      <AnalyticsWidgetTitle sx={{ mb: 1 }}>Team engagement (adds per week)</AnalyticsWidgetTitle>
+      <AnalyticsWidgetTitle sx={{ mb: 1 }}>{t('charts.engagementTitle')}</AnalyticsWidgetTitle>
       {rows.length > 0 && seriesUserIds.length < new Set(rows.map((row) => row.userId)).size ? (
         <Typography variant="caption" color="text.secondary" sx={{ mb: 1, flexShrink: 0 }}>
-          Showing top {MAX_LEGEND_USERS} contributors by total adds in range.
+          {t('charts.topContributors', { max: MAX_LEGEND_USERS })}
         </Typography>
       ) : null}
       <ChartResizeContainer minHeight={200}>

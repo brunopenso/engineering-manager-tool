@@ -1,0 +1,39 @@
+{
+  "appTitle": "Engineering Manager Tool",
+  "menu": {
+    "home": "Home",
+    "profile": "Profile",
+    "deliverables": "Deliverables",
+    "userRoles": "User roles",
+    "tags": "Tags",
+    "githubIntegration": "GitHub integration",
+    "teamDeliverables": "Team Deliverables",
+    "teamAnalytics": "Team Analytics",
+    "hierarchyManagement": "Hierarchy Management"
+  },
+  "sections": {
+    "leader": "Leader",
+    "administration": "Administration"
+  },
+  "aria": {
+    "openDrawer": "open drawer",
+    "appNavigation": "App navigation"
+  },
+  "welcome": {
+    "title": "Welcome",
+    "paragraph1": "Engineering managers and their teams use this tool to capture deliverables, track impact and growth, and understand team structure in one place.",
+    "paragraph2": "Every user is a collaborator who manages their own deliverables and profile. Leaders additionally review team deliverables and manage reporting hierarchy. Administrators configure user roles and the shared tag catalog.",
+    "paragraph3": "You only see menu options and data your role allows. Leaders read subordinate deliverables read-only, peers cannot see each other's work, and administrators govern organization-wide settings.",
+    "cta": "Select an option from the menu to continue"
+  },
+  "unavailable": {
+    "title": "Feature Unavailable",
+    "body": "This menu option is currently unavailable. Please check back later or select another option from the menu.",
+    "backToHome": "Back to Home"
+  },
+  "logout": {
+    "title": "Confirm Logout",
+    "body": "Are you sure you want to log out? You'll need to sign in again to access the application.",
+    "confirm": "Log Out"
+  }
+}

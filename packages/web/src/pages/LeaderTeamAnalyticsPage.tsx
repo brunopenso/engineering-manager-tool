@@ -9,6 +9,7 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 import AnalyticsWidgetGrid from '../components/leader-analytics/AnalyticsWidgetGrid.js';
 import DeliverablesByImpactChart from '../components/leader-analytics/DeliverablesByImpactChart.js';
 import EngagementByUserChart from '../components/leader-analytics/EngagementByUserChart.js';
@@ -28,9 +29,16 @@ import {
   type LeaderHierarchyViewResponse,
   UsersApiError,
 } from '../services/usersApi.js';
+import {
+  DEFAULT_DATE_FORMAT_PREFERENCE,
+  DEFAULT_LANGUAGE_PREFERENCE,
+} from '../types/profilePreferences.js';
 
 export default function LeaderTeamAnalyticsPage() {
   const { accessToken, user } = useAuth();
+  const { t } = useTranslation(['leader', 'common']);
+  const dateFormatPreference = user?.dateFormatPreference ?? DEFAULT_DATE_FORMAT_PREFERENCE;
+  const languagePreference = user?.languagePreference ?? DEFAULT_LANGUAGE_PREFERENCE;
   const defaultRange = useMemo(() => defaultLast60DayRange(), []);
   const [hierarchy, setHierarchy] = useState<LeaderHierarchyViewResponse | null>(null);
   const [selectedUserId, setSelectedUserId] = useState('');
@@ -67,7 +75,7 @@ export default function LeaderTeamAnalyticsPage() {
           setErrorMessage(
             error instanceof UsersApiError
               ? error.message
-              : 'Unable to load team hierarchy.',
+              : t('teamAnalytics.hierarchyLoadError'),
           );
           setHierarchy(null);
         }
@@ -109,7 +117,7 @@ export default function LeaderTeamAnalyticsPage() {
         setErrorMessage(
           error instanceof LeaderAnalyticsApiError
             ? error.message
-            : 'Unable to load team analytics.',
+            : t('teamAnalytics.analyticsLoadError'),
         );
         setAnalytics(null);
       }
@@ -122,7 +130,7 @@ export default function LeaderTeamAnalyticsPage() {
 
   useEffect(() => {
     if (!dateRangeIsValid) {
-      setDateRangeError('End date must be on or after start date.');
+      setDateRangeError(t('validation.endDateBeforeStart', { ns: 'common' }));
       setAnalytics(null);
       return;
     }
@@ -142,11 +150,9 @@ export default function LeaderTeamAnalyticsPage() {
       <Stack spacing={3}>
         <Box>
           <Typography variant="h4" component="h1" gutterBottom>
-            Team Analytics
+            {t('teamAnalytics.title')}
           </Typography>
-          <Typography color="text.secondary">
-            Visualize deliverable activity and review workload across your reporting team.
-          </Typography>
+          <Typography color="text.secondary">{t('teamAnalytics.subtitle')}</Typography>
         </Box>
 
         <Paper variant="outlined" sx={{ p: 3 }}>
@@ -169,7 +175,7 @@ export default function LeaderTeamAnalyticsPage() {
             />
 
             <TextField
-              label="Start date"
+              label={t('fields.startDate', { ns: 'common' })}
               type="date"
               value={startDate}
               onChange={(event) => setStartDate(event.target.value)}
@@ -180,7 +186,7 @@ export default function LeaderTeamAnalyticsPage() {
             />
 
             <TextField
-              label="End date"
+              label={t('fields.endDate', { ns: 'common' })}
               type="date"
               value={endDate}
               onChange={(event) => setEndDate(event.target.value)}
@@ -203,15 +209,12 @@ export default function LeaderTeamAnalyticsPage() {
         ) : null}
 
         {!isLoadingHierarchy && !hasReports ? (
-          <Alert severity="info">
-            No team members are available in your hierarchy. Analytics will appear when you have
-            direct or indirect reports.
-          </Alert>
+          <Alert severity="info">{t('teamAnalytics.noTeamMembers')}</Alert>
         ) : null}
 
         {isLoadingAnalytics ? (
           <Box sx={{ display: 'flex', justifyContent: 'center', py: 6 }}>
-            <CircularProgress aria-label="Loading analytics" />
+            <CircularProgress aria-label={t('teamAnalytics.loadingAnalytics')} />
           </Box>
         ) : (
           <AnalyticsWidgetGrid
@@ -222,8 +225,20 @@ export default function LeaderTeamAnalyticsPage() {
                   byImpact={analytics?.pendingReviewByImpact ?? []}
                 />
               ),
-              impact: <DeliverablesByImpactChart analytics={analytics} />,
-              engagement: <EngagementByUserChart analytics={analytics} />,
+              impact: (
+                <DeliverablesByImpactChart
+                  analytics={analytics}
+                  dateFormatPreference={dateFormatPreference}
+                  languagePreference={languagePreference}
+                />
+              ),
+              engagement: (
+                <EngagementByUserChart
+                  analytics={analytics}
+                  dateFormatPreference={dateFormatPreference}
+                  languagePreference={languagePreference}
+                />
+              ),
             }}
           />
         )}

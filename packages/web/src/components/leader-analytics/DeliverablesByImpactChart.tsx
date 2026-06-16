@@ -1,7 +1,13 @@
 import { useMemo } from 'react';
 import { Paper, Typography } from '@mui/material';
 import { BarChart } from '@mui/x-charts/BarChart';
+import { useTranslation } from 'react-i18next';
 import type { ImpactBucketRow, TeamAnalyticsResponse } from '../../services/leaderAnalyticsApi.js';
+import type { DateFormatPreference, LanguagePreference } from '../../types/profilePreferences.js';
+import {
+  DEFAULT_DATE_FORMAT_PREFERENCE,
+  DEFAULT_LANGUAGE_PREFERENCE,
+} from '../../types/profilePreferences.js';
 import AnalyticsWidgetTitle from './AnalyticsWidgetTitle.js';
 import ChartLegend from './ChartLegend.js';
 import ChartResizeContainer from './ChartResizeContainer.js';
@@ -9,13 +15,15 @@ import ChartWithLegendLayout from './ChartWithLegendLayout.js';
 import { analyticsChartPlotMargins, analyticsWidgetPaperSx } from './analyticsWidgetStyles.js';
 import {
   BUSINESS_IMPACT_COLORS,
-  BUSINESS_IMPACT_LABELS,
+  BUSINESS_IMPACT_I18N_KEYS,
   BUSINESS_IMPACT_LEVELS,
 } from './businessImpactStyles.js';
-import { buildAscendingIsoWeekAxis } from '../../utils/isoWeekLabel.js';
+import { buildAscendingWeekAxis } from '../../utils/isoWeekLabel.js';
 
 type DeliverablesByImpactChartProps = {
   analytics: TeamAnalyticsResponse | null;
+  dateFormatPreference?: DateFormatPreference;
+  languagePreference?: LanguagePreference;
 };
 
 function buildImpactMatrix(
@@ -49,16 +57,20 @@ function buildImpactMatrix(
   return matrix;
 }
 
-const IMPACT_LEGEND_ITEMS = BUSINESS_IMPACT_LEVELS.map((impact) => ({
-  id: impact,
-  label: BUSINESS_IMPACT_LABELS[impact],
-  color: BUSINESS_IMPACT_COLORS[impact],
-}));
-
-export default function DeliverablesByImpactChart({ analytics }: DeliverablesByImpactChartProps) {
+export default function DeliverablesByImpactChart({
+  analytics,
+  dateFormatPreference = DEFAULT_DATE_FORMAT_PREFERENCE,
+  languagePreference = DEFAULT_LANGUAGE_PREFERENCE,
+}: DeliverablesByImpactChartProps) {
+  const { t } = useTranslation(['leader', 'common']);
   const { weekStarts, labels: weekLabels } = useMemo(
-    () => buildAscendingIsoWeekAxis(analytics?.weekStarts ?? []),
-    [analytics?.weekStarts],
+    () =>
+      buildAscendingWeekAxis(
+        analytics?.weekStarts ?? [],
+        dateFormatPreference,
+        languagePreference,
+      ),
+    [analytics?.weekStarts, dateFormatPreference, languagePreference],
   );
 
   const matrix = useMemo(
@@ -66,24 +78,36 @@ export default function DeliverablesByImpactChart({ analytics }: DeliverablesByI
     [weekStarts, analytics?.deliverablesByWeekAndImpact],
   );
 
+  const impactLegendItems = useMemo(
+    () =>
+      BUSINESS_IMPACT_LEVELS.map((impact) => ({
+        id: impact,
+        label: t(BUSINESS_IMPACT_I18N_KEYS[impact], { ns: 'common' }),
+        color: BUSINESS_IMPACT_COLORS[impact],
+      })),
+    [t],
+  );
+
   if (weekStarts.length === 0) {
     return (
       <Paper variant="outlined" sx={analyticsWidgetPaperSx}>
-        <AnalyticsWidgetTitle gutterBottom>Deliverables by week and impact</AnalyticsWidgetTitle>
-        <Typography color="text.secondary">No data for the selected filters.</Typography>
+        <AnalyticsWidgetTitle gutterBottom>
+          {t('charts.deliverablesByWeekTitle')}
+        </AnalyticsWidgetTitle>
+        <Typography color="text.secondary">{t('charts.noData')}</Typography>
       </Paper>
     );
   }
 
   return (
     <Paper variant="outlined" sx={{ ...analyticsWidgetPaperSx, overflow: 'hidden' }}>
-      <AnalyticsWidgetTitle sx={{ mb: 1 }}>Deliverables by week and impact</AnalyticsWidgetTitle>
+      <AnalyticsWidgetTitle sx={{ mb: 1 }}>{t('charts.deliverablesByWeekTitle')}</AnalyticsWidgetTitle>
       <ChartResizeContainer minHeight={200}>
         {(containerHeight) => (
           <ChartWithLegendLayout
             containerHeight={containerHeight}
             data-testid="impact-chart"
-            legend={<ChartLegend items={IMPACT_LEGEND_ITEMS} data-testid="impact-chart-legend" />}
+            legend={<ChartLegend items={impactLegendItems} data-testid="impact-chart-legend" />}
             renderChart={(plotHeight) => (
               <BarChart
                 height={plotHeight}
@@ -96,7 +120,7 @@ export default function DeliverablesByImpactChart({ analytics }: DeliverablesByI
                 ]}
                 series={BUSINESS_IMPACT_LEVELS.map((impact) => ({
                   id: impact,
-                  label: BUSINESS_IMPACT_LABELS[impact],
+                  label: t(BUSINESS_IMPACT_I18N_KEYS[impact], { ns: 'common' }),
                   data: weekStarts.map((week) => matrix[week]?.[impact] ?? 0),
                   stack: 'total',
                   color: BUSINESS_IMPACT_COLORS[impact],

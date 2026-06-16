@@ -20,6 +20,7 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 import { useAuth } from '../auth/AuthProvider.js';
 import {
   createDeliverable,
@@ -126,6 +127,7 @@ function DeliverableFormFields({
   tagCatalog: Tag[];
   onChange: (next: FormState) => void;
 }) {
+  const { t } = useTranslation(['deliverables', 'common']);
   const updateLink = (index: number, field: 'url' | 'label', value: string) => {
     const nextLinks = form.links.map((link, linkIndex) =>
       linkIndex === index ? { ...link, [field]: value } : link,
@@ -144,13 +146,13 @@ function DeliverableFormFields({
   return (
     <Stack spacing={2}>
       <TextField
-        label="Title"
+        label={t('fields.title', { ns: 'common' })}
         required
         value={form.title}
         onChange={(event) => onChange({ ...form, title: event.target.value })}
       />
       <TextField
-        label="Description"
+        label={t('form.description')}
         required
         multiline
         minRows={3}
@@ -158,17 +160,17 @@ function DeliverableFormFields({
         onChange={(event) => onChange({ ...form, description: event.target.value })}
       />
       <TextField
-        label="Your role in this deliverable"
+        label={t('form.roleInDeliverable')}
         required
         value={form.roleInDeliverable}
         onChange={(event) => onChange({ ...form, roleInDeliverable: event.target.value })}
       />
       <FormControl>
-        <InputLabel id="deliverable-tags-label">Tags</InputLabel>
+        <InputLabel id="deliverable-tags-label">{t('fields.tags', { ns: 'common' })}</InputLabel>
         <Select
           labelId="deliverable-tags-label"
           multiple
-          label="Tags"
+          label={t('fields.tags', { ns: 'common' })}
           value={form.systemTagIds}
           onChange={(event) =>
             onChange({
@@ -189,13 +191,13 @@ function DeliverableFormFields({
             </MenuItem>
           ))}
         </Select>
-        <FormHelperText>Optional — select catalog tags that apply</FormHelperText>
+        <FormHelperText>{t('form.tagsHelper')}</FormHelperText>
       </FormControl>
       <FormControl required>
-        <InputLabel id="deliverable-business-impact-label">Business impact</InputLabel>
+        <InputLabel id="deliverable-business-impact-label">{t('form.businessImpact')}</InputLabel>
         <Select
           labelId="deliverable-business-impact-label"
-          label="Business impact"
+          label={t('form.businessImpact')}
           value={form.businessImpact}
           onChange={(event) =>
             onChange({ ...form, businessImpact: event.target.value as BusinessImpact })
@@ -203,13 +205,13 @@ function DeliverableFormFields({
         >
           {BUSINESS_IMPACTS.map((impact) => (
             <MenuItem key={impact} value={impact}>
-              {impact}
+              {t(`impact.${impact}`, { ns: 'common' })}
             </MenuItem>
           ))}
         </Select>
       </FormControl>
       <TextField
-        label="Personal performance improvement points"
+        label={t('form.improvementPoints')}
         required
         multiline
         minRows={2}
@@ -217,27 +219,27 @@ function DeliverableFormFields({
         onChange={(event) => onChange({ ...form, improvementPoints: event.target.value })}
       />
       <TextField
-        label="Technical description (optional)"
+        label={t('form.technicalDescription')}
         multiline
         minRows={2}
         value={form.technicalDescription}
         onChange={(event) => onChange({ ...form, technicalDescription: event.target.value })}
       />
       <TextField
-        label="User tags (optional, comma-separated)"
+        label={t('form.userTags')}
         value={form.userTagsText}
         onChange={(event) => onChange({ ...form, userTagsText: event.target.value })}
       />
       <Box>
         <Typography variant="subtitle2" sx={{ mb: 1 }}>
-          Reference links (optional)
+          {t('form.referenceLinks')}
         </Typography>
-        <Table size="small" aria-label="Reference links table">
+        <Table size="small" aria-label={t('form.referenceLinksAria')}>
           <TableHead>
             <TableRow>
-              <TableCell>URL</TableCell>
-              <TableCell>Label</TableCell>
-              <TableCell align="right">Actions</TableCell>
+              <TableCell>{t('fields.url', { ns: 'common' })}</TableCell>
+              <TableCell>{t('fields.label', { ns: 'common' })}</TableCell>
+              <TableCell align="right">{t('actions.actions', { ns: 'common' })}</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -245,7 +247,7 @@ function DeliverableFormFields({
               <TableRow key={`link-${index}`}>
                 <TableCell>
                   <TextField
-                    label={`Link URL ${index + 1}`}
+                    label={t('form.linkUrl', { index: index + 1 })}
                     size="small"
                     fullWidth
                     value={link.url}
@@ -254,7 +256,7 @@ function DeliverableFormFields({
                 </TableCell>
                 <TableCell>
                   <TextField
-                    label={`Link label ${index + 1}`}
+                    label={t('form.linkLabel', { index: index + 1 })}
                     size="small"
                     fullWidth
                     value={link.label}
@@ -262,14 +264,16 @@ function DeliverableFormFields({
                   />
                 </TableCell>
                 <TableCell align="right">
-                  <Button onClick={() => removeLinkRow(index)}>Remove</Button>
+                  <Button onClick={() => removeLinkRow(index)}>
+                    {t('actions.remove', { ns: 'common' })}
+                  </Button>
                 </TableCell>
               </TableRow>
             ))}
           </TableBody>
         </Table>
         <Button sx={{ mt: 1 }} onClick={addLinkRow}>
-          Add link
+          {t('form.addLink')}
         </Button>
       </Box>
     </Stack>
@@ -280,6 +284,7 @@ export default function DeliverableFormPage({ mode }: { mode: DeliverableFormMod
   const { deliverableId } = useParams<{ deliverableId: string }>();
   const navigate = useNavigate();
   const { accessToken } = useAuth();
+  const { t } = useTranslation(['deliverables', 'common']);
   const [form, setForm] = useState<FormState>(emptyForm);
   const [tagCatalog, setTagCatalog] = useState<Tag[]>([]);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -288,8 +293,8 @@ export default function DeliverableFormPage({ mode }: { mode: DeliverableFormMod
   const [isReadOnly, setIsReadOnly] = useState(false);
 
   const isEditMode = mode === 'edit';
-  const title = isEditMode ? 'Edit deliverable' : 'Add deliverable';
-  const saveLabel = isEditMode ? 'Save changes' : 'Save';
+  const title = isEditMode ? t('form.editTitle') : t('form.createTitle');
+  const saveLabel = isEditMode ? t('form.saveChanges') : t('actions.save', { ns: 'common' });
   const isSaveDisabled = useMemo(
     () => isDeliverableFormInvalid(form) || isSubmitting || isReadOnly,
     [form, isReadOnly, isSubmitting],
@@ -307,7 +312,7 @@ export default function DeliverableFormPage({ mode }: { mode: DeliverableFormMod
       try {
         if (isEditMode) {
           if (!deliverableId) {
-            setErrorMessage('Unable to load deliverable.');
+            setErrorMessage(t('form.loadError'));
             return;
           }
 
@@ -326,7 +331,7 @@ export default function DeliverableFormPage({ mode }: { mode: DeliverableFormMod
         }
       } catch (error) {
         setErrorMessage(
-          error instanceof DeliverablesApiError ? error.message : 'Unable to load deliverable form.',
+          error instanceof DeliverablesApiError ? error.message : t('form.formLoadError'),
         );
       } finally {
         setIsLoading(false);
@@ -347,7 +352,7 @@ export default function DeliverableFormPage({ mode }: { mode: DeliverableFormMod
     try {
       if (isEditMode) {
         if (!deliverableId) {
-          setErrorMessage('Unable to update deliverable.');
+          setErrorMessage(t('form.updateError'));
           return;
         }
 
@@ -362,8 +367,8 @@ export default function DeliverableFormPage({ mode }: { mode: DeliverableFormMod
         error instanceof DeliverablesApiError
           ? error.message
           : isEditMode
-            ? 'Unable to update deliverable.'
-            : 'Unable to create deliverable.',
+            ? t('form.updateError')
+            : t('form.createError'),
       );
     } finally {
       setIsSubmitting(false);
@@ -375,31 +380,29 @@ export default function DeliverableFormPage({ mode }: { mode: DeliverableFormMod
       <Stack spacing={3}>
         <Box>
           <Typography variant="overline" color="text.secondary">
-            Deliverables
+            {t('form.breadcrumb')}
           </Typography>
           <Typography variant="h4" component="h1" gutterBottom>
             {title}
           </Typography>
-          <Typography color="text.secondary">
-            Capture the outcome, impact, role, and growth notes in one focused workspace.
-          </Typography>
+          <Typography color="text.secondary">{t('form.subtitle')}</Typography>
         </Box>
 
         {errorMessage ? <Alert severity="error">{errorMessage}</Alert> : null}
-        {isReadOnly ? (
-          <Alert severity="warning">This deliverable is read-only and cannot be edited.</Alert>
-        ) : null}
+        {isReadOnly ? <Alert severity="warning">{t('form.readOnly')}</Alert> : null}
 
         <Paper variant="outlined" sx={{ p: { xs: 2, sm: 3 } }}>
           {isLoading ? (
-            <Typography>Loading deliverable form...</Typography>
+            <Typography>{t('form.loading')}</Typography>
           ) : (
             <Stack spacing={3}>
               <DeliverableFormFields form={form} tagCatalog={tagCatalog} onChange={setForm} />
               <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1} sx={{ justifyContent: 'flex-end' }}>
-                <Button onClick={() => navigate('/app/deliverables')}>Cancel</Button>
+                <Button onClick={() => navigate('/app/deliverables')}>
+                  {t('actions.cancel', { ns: 'common' })}
+                </Button>
                 <Button variant="contained" disabled={isSaveDisabled} onClick={() => void handleSubmit()}>
-                  {isSubmitting ? 'Saving...' : saveLabel}
+                  {isSubmitting ? t('form.saving') : saveLabel}
                 </Button>
               </Stack>
             </Stack>

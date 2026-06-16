@@ -20,6 +20,7 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 import TeamDeliverableReviewModal from '../components/team-deliverables/TeamDeliverableReviewModal.js';
 import TeamMemberHierarchyPicker from '../components/team-deliverables/TeamMemberHierarchyPicker.js';
 import { useAuth } from '../auth/AuthProvider.js';
@@ -41,6 +42,7 @@ type ReviewedFilter = 'not_reviewed' | 'reviewed' | 'all';
 
 export default function LeaderTeamDeliverablesPage() {
   const { accessToken, user } = useAuth();
+  const { t } = useTranslation(['leader', 'common']);
   const defaultRange = useMemo(() => defaultLast30DayRange(), []);
   const [hierarchy, setHierarchy] = useState<LeaderHierarchyViewResponse | null>(null);
   const [selectedUserId, setSelectedUserId] = useState('');
@@ -91,7 +93,7 @@ export default function LeaderTeamDeliverablesPage() {
           setErrorMessage(
             error instanceof UsersApiError
               ? error.message
-              : 'Unable to load team hierarchy.',
+              : t('teamDeliverables.hierarchyLoadError'),
           );
           setHierarchy(null);
         }
@@ -133,7 +135,7 @@ export default function LeaderTeamDeliverablesPage() {
         setErrorMessage(
           error instanceof TeamDeliverablesApiError
             ? error.message
-            : 'Unable to search team deliverables.',
+            : t('teamDeliverables.searchError'),
         );
         setDeliverables([]);
       }
@@ -151,7 +153,7 @@ export default function LeaderTeamDeliverablesPage() {
     }
 
     if (!dateRangeIsValid) {
-      setDateRangeError('End date must be on or after start date.');
+      setDateRangeError(t('validation.endDateBeforeStart', { ns: 'common' }));
       setDeliverables([]);
       return;
     }
@@ -169,11 +171,9 @@ export default function LeaderTeamDeliverablesPage() {
       <Stack spacing={3}>
         <Box>
           <Typography variant="h4" component="h1" gutterBottom>
-            Team Deliverables
+            {t('teamDeliverables.title')}
           </Typography>
-          <Typography color="text.secondary">
-            Review your team&apos;s deliverables for coaching and performance conversations.
-          </Typography>
+          <Typography color="text.secondary">{t('teamDeliverables.subtitle')}</Typography>
         </Box>
 
         <Paper variant="outlined" sx={{ p: 3 }}>
@@ -196,7 +196,7 @@ export default function LeaderTeamDeliverablesPage() {
             />
 
             <TextField
-              label="Start date"
+              label={t('fields.startDate', { ns: 'common' })}
               type="date"
               value={startDate}
               onChange={(event) => setStartDate(event.target.value)}
@@ -207,7 +207,7 @@ export default function LeaderTeamDeliverablesPage() {
             />
 
             <TextField
-              label="End date"
+              label={t('fields.endDate', { ns: 'common' })}
               type="date"
               value={endDate}
               onChange={(event) => setEndDate(event.target.value)}
@@ -219,18 +219,18 @@ export default function LeaderTeamDeliverablesPage() {
 
             <FormControl>
               <InputLabel id="reviewed-filter-label" shrink>
-                Review status
+                {t('teamDeliverables.reviewStatus')}
               </InputLabel>
               <Select
                 labelId="reviewed-filter-label"
-                label="Review status"
+                label={t('teamDeliverables.reviewStatus')}
                 value={reviewedFilter}
                 onChange={(event) => setReviewedFilter(event.target.value as ReviewedFilter)}
                 data-testid="reviewed-filter"
               >
-                <MenuItem value="not_reviewed">Not reviewed</MenuItem>
-                <MenuItem value="reviewed">Reviewed</MenuItem>
-                <MenuItem value="all">All</MenuItem>
+                <MenuItem value="not_reviewed">{t('teamDeliverables.notReviewed')}</MenuItem>
+                <MenuItem value="reviewed">{t('teamDeliverables.reviewed')}</MenuItem>
+                <MenuItem value="all">{t('actions.all', { ns: 'common' })}</MenuItem>
               </Select>
             </FormControl>
           </Box>
@@ -246,36 +246,34 @@ export default function LeaderTeamDeliverablesPage() {
 
         {isLoadingMembers ? (
           <Box sx={{ display: 'flex', justifyContent: 'center', py: 4 }}>
-            <CircularProgress aria-label="Loading team members" />
+            <CircularProgress aria-label={t('teamDeliverables.loadingMembers')} />
           </Box>
         ) : (hierarchy?.reports.length ?? 0) === 0 ? (
-          <Alert severity="info">You have no team members available to review.</Alert>
+          <Alert severity="info">{t('teamDeliverables.noTeamMembers')}</Alert>
         ) : null}
 
         {!selectedUserId ? (
-          <Alert severity="info">Select a team member to search deliverables.</Alert>
+          <Alert severity="info">{t('teamDeliverables.selectMember')}</Alert>
         ) : null}
 
         {selectedUserId && dateRangeIsValid ? (
           <Paper variant="outlined">
             {isSearching ? (
               <Box sx={{ p: 3, display: 'flex', justifyContent: 'center' }}>
-                <CircularProgress aria-label="Searching deliverables" size={28} />
+                <CircularProgress aria-label={t('teamDeliverables.searching')} size={28} />
               </Box>
             ) : filteredDeliverables.length === 0 ? (
               <Box sx={{ p: 3 }}>
-                <Typography color="text.secondary">
-                  No deliverables match the current filters.
-                </Typography>
+                <Typography color="text.secondary">{t('teamDeliverables.noResults')}</Typography>
               </Box>
             ) : (
               <Table>
                 <TableHead>
                   <TableRow>
-                    <TableCell>Title</TableCell>
-                    <TableCell>Description</TableCell>
-                    <TableCell>System tags</TableCell>
-                    <TableCell align="right">Actions</TableCell>
+                    <TableCell>{t('fields.title', { ns: 'common' })}</TableCell>
+                    <TableCell>{t('teamDeliverables.description')}</TableCell>
+                    <TableCell>{t('systemTags', { ns: 'common' })}</TableCell>
+                    <TableCell align="right">{t('actions.actions', { ns: 'common' })}</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -302,9 +300,9 @@ export default function LeaderTeamDeliverablesPage() {
                           size="small"
                           variant="outlined"
                           onClick={() => setSelectedDeliverableId(item.id)}
-                          aria-label={`Review ${item.title}`}
+                          aria-label={t('teamDeliverables.reviewAria', { title: item.title })}
                         >
-                          Review
+                          {t('teamDeliverables.review')}
                         </Button>
                       </TableCell>
                     </TableRow>

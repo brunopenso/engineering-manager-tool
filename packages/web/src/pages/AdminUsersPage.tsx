@@ -21,6 +21,7 @@ import {
   Typography,
   type SelectChangeEvent,
 } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 import { useAuth } from '../auth/AuthProvider.js';
 import type { AuthUser } from '../auth/AuthProvider.js';
 import RoleBadgeList from '../components/profile/RoleBadgeList.js';
@@ -40,14 +41,9 @@ type RoleFilterOption = (typeof ROLE_FILTER_OPTIONS)[number];
 
 const MIN_SEARCH_LENGTH = 3;
 
-const ROLE_FILTER_LABELS: Record<RoleFilterOption, string> = {
-  COLLABORATOR: 'Collaborator',
-  LEADER: 'Leader',
-  ADMINISTRATOR: 'Administrator',
-};
-
 export default function AdminUsersPage() {
   const { accessToken, user: currentUser, setSession } = useAuth();
+  const { t } = useTranslation(['admin', 'common']);
   const [users, setUsers] = useState<AuthUser[]>([]);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -91,7 +87,7 @@ export default function AdminUsersPage() {
   function searchHelperText(value: string): string | undefined {
     const length = value.trim().length;
     if (length > 0 && length < MIN_SEARCH_LENGTH) {
-      return `Enter at least ${MIN_SEARCH_LENGTH} characters to search`;
+      return t('users.searchHelper', { count: MIN_SEARCH_LENGTH });
     }
 
     return undefined;
@@ -112,7 +108,7 @@ export default function AdminUsersPage() {
       const message =
         error instanceof UsersApiError
           ? error.message
-          : 'Unable to load users.';
+          : t('users.loadError');
       setErrorMessage(message);
     } finally {
       setIsLoading(false);
@@ -145,7 +141,7 @@ export default function AdminUsersPage() {
       const message =
         error instanceof UsersApiError
           ? error.message
-          : 'Unable to update role.';
+          : t('users.updateError');
       setErrorMessage(message);
     }
   }
@@ -175,7 +171,7 @@ export default function AdminUsersPage() {
         <Paper sx={{ p: 3, border: '1px solid', borderColor: 'divider' }} elevation={0}>
           <Stack spacing={3}>
             <Typography variant="h4" component="h1">
-              User role management
+              {t('users.title')}
             </Typography>
 
             <Paper variant="outlined" sx={{ p: 2 }}>
@@ -188,8 +184,8 @@ export default function AdminUsersPage() {
                 }}
               >
                 <TextField
-                  label="Name"
-                  placeholder="At least 3 characters"
+                  label={t('fields.name', { ns: 'common' })}
+                  placeholder={t('users.namePlaceholder')}
                   value={nameFilter}
                   onChange={(event) => setNameFilter(event.target.value)}
                   size="small"
@@ -198,8 +194,8 @@ export default function AdminUsersPage() {
                   slotProps={{ htmlInput: { 'data-testid': 'admin-users-name-filter' } }}
                 />
                 <TextField
-                  label="Email"
-                  placeholder="At least 3 characters"
+                  label={t('fields.email', { ns: 'common' })}
+                  placeholder={t('users.emailPlaceholder')}
                   value={emailFilter}
                   onChange={(event) => setEmailFilter(event.target.value)}
                   size="small"
@@ -209,18 +205,18 @@ export default function AdminUsersPage() {
                 />
                 <FormControl size="small" sx={{ minWidth: 240, flex: '1 1 240px' }}>
                   <InputLabel id="admin-users-role-filter-label" shrink>
-                    Roles
+                    {t('fields.roles', { ns: 'common' })}
                   </InputLabel>
                   <Select
                     labelId="admin-users-role-filter-label"
                     multiple
                     value={selectedRoles}
                     onChange={handleRoleFilterChange}
-                    input={<OutlinedInput label="Roles" />}
+                    input={<OutlinedInput label={t('fields.roles', { ns: 'common' })} />}
                     renderValue={(selected) => (
                       <Stack direction="row" spacing={0.5} useFlexGap sx={{ flexWrap: 'wrap' }}>
                         {selected.map((role) => (
-                          <Chip key={role} size="small" label={ROLE_FILTER_LABELS[role]} />
+                          <Chip key={role} size="small" label={t(`roles.${role}`, { ns: 'common' })} />
                         ))}
                       </Stack>
                     )}
@@ -228,7 +224,7 @@ export default function AdminUsersPage() {
                   >
                     {ROLE_FILTER_OPTIONS.map((role) => (
                       <MenuItem key={role} value={role}>
-                        {ROLE_FILTER_LABELS[role]}
+                        {t(`roles.${role}`, { ns: 'common' })}
                       </MenuItem>
                     ))}
                   </Select>
@@ -240,7 +236,7 @@ export default function AdminUsersPage() {
                     data-testid="admin-users-clear-filters"
                     sx={{ alignSelf: 'center' }}
                   >
-                    Clear all filters
+                    {t('actions.clearAllFilters', { ns: 'common' })}
                   </Button>
                 ) : null}
               </Box>
@@ -250,27 +246,23 @@ export default function AdminUsersPage() {
 
             {isLoading ? (
               <Typography color="text.secondary" data-testid="admin-users-loading">
-                Loading users...
+                {t('loading.users', { ns: 'common' })}
               </Typography>
             ) : users.length === 0 ? (
               <Box data-testid="admin-users-empty-state">
                 {hasAppliedFilters ? (
                   <>
                     <Typography variant="h6" gutterBottom>
-                      No users match your filters
+                      {t('users.emptyFiltered.title')}
                     </Typography>
-                    <Typography color="text.secondary">
-                      Try adjusting your search or clear all filters to see the full user list.
-                    </Typography>
+                    <Typography color="text.secondary">{t('users.emptyFiltered.body')}</Typography>
                   </>
                 ) : (
                   <>
                     <Typography variant="h6" gutterBottom>
-                      No users in the organization
+                      {t('users.emptyNone.title')}
                     </Typography>
-                    <Typography color="text.secondary">
-                      There are no user accounts to manage yet.
-                    </Typography>
+                    <Typography color="text.secondary">{t('users.emptyNone.body')}</Typography>
                   </>
                 )}
               </Box>
@@ -278,10 +270,10 @@ export default function AdminUsersPage() {
               <Table>
                 <TableHead>
                   <TableRow>
-                    <TableCell>Name</TableCell>
-                    <TableCell>Email</TableCell>
-                    <TableCell>Roles</TableCell>
-                    <TableCell align="right">Actions</TableCell>
+                    <TableCell>{t('fields.name', { ns: 'common' })}</TableCell>
+                    <TableCell>{t('fields.email', { ns: 'common' })}</TableCell>
+                    <TableCell>{t('fields.roles', { ns: 'common' })}</TableCell>
+                    <TableCell align="right">{t('actions.actions', { ns: 'common' })}</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -305,7 +297,7 @@ export default function AdminUsersPage() {
                               )
                             }
                           >
-                            {hasRole(user, 'LEADER') ? 'Revoke Leader' : 'Grant Leader'}
+                            {hasRole(user, 'LEADER') ? t('users.revokeLeader') : t('users.grantLeader')}
                           </Button>
                           <Button
                             size="small"
@@ -321,8 +313,8 @@ export default function AdminUsersPage() {
                             }
                           >
                             {hasRole(user, 'ADMINISTRATOR')
-                              ? 'Revoke Admin'
-                              : 'Grant Admin'}
+                              ? t('users.revokeAdmin')
+                              : t('users.grantAdmin')}
                           </Button>
                         </Stack>
                       </TableCell>

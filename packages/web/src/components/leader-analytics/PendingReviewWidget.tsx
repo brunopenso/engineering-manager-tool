@@ -1,10 +1,11 @@
 import { alpha, Box, Paper, Typography } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 import type { PendingReviewByImpactRow } from '../../services/leaderAnalyticsApi.js';
 import AnalyticsWidgetTitle from './AnalyticsWidgetTitle.js';
 import { analyticsWidgetPaperSx } from './analyticsWidgetStyles.js';
 import {
   BUSINESS_IMPACT_COLORS,
-  BUSINESS_IMPACT_LABELS,
+  BUSINESS_IMPACT_I18N_KEYS,
   BUSINESS_IMPACT_LEVELS,
 } from './businessImpactStyles.js';
 
@@ -18,6 +19,8 @@ function countForImpact(byImpact: PendingReviewByImpactRow[], impact: string): n
 }
 
 export default function PendingReviewWidget({ totalCount, byImpact }: PendingReviewWidgetProps) {
+  const { t } = useTranslation(['leader', 'common']);
+
   return (
     <Paper
       variant="outlined"
@@ -28,7 +31,7 @@ export default function PendingReviewWidget({ totalCount, byImpact }: PendingRev
       }}
       data-testid="pending-review-widget"
     >
-      <AnalyticsWidgetTitle>Deliverables pending review</AnalyticsWidgetTitle>
+      <AnalyticsWidgetTitle>{t('charts.pendingReviewTitle')}</AnalyticsWidgetTitle>
 
       <Box
         sx={{
@@ -59,7 +62,7 @@ export default function PendingReviewWidget({ totalCount, byImpact }: PendingRev
             {totalCount}
           </Typography>
           <Typography variant="caption" color="text.secondary" display="block">
-            total to review
+            {t('charts.totalToReview')}
           </Typography>
         </Box>
 
@@ -104,7 +107,7 @@ export default function PendingReviewWidget({ totalCount, byImpact }: PendingRev
                   sx={{ textAlign: 'center', lineHeight: 1.2, fontSize: '0.65rem' }}
                   noWrap
                 >
-                  {BUSINESS_IMPACT_LABELS[impact]}
+                  {t(BUSINESS_IMPACT_I18N_KEYS[impact], { ns: 'common' })}
                 </Typography>
                 <Typography
                   variant="h6"

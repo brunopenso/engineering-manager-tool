@@ -21,6 +21,11 @@ type AuthErrorCode =
 
 export type UserRoleType = 'COLLABORATOR' | 'LEADER' | 'ADMINISTRATOR';
 
+import type {
+  DateFormatPreference,
+  LanguagePreference,
+} from '../types/profilePreferences.js';
+
 export type AuthUser = {
   id: string;
   email: string;
@@ -30,6 +35,8 @@ export type AuthUser = {
   roles: UserRoleType[];
   themePreference: 'light' | 'dark';
   githubLogin: string | null;
+  languagePreference: LanguagePreference;
+  dateFormatPreference: DateFormatPreference;
 };
 
 type LoginResponse = {

@@ -1,0 +1,61 @@
+{
+  "actions": {
+    "cancel": "Cancelar",
+    "delete": "Excluir",
+    "save": "Salvar",
+    "edit": "Editar",
+    "remove": "Remover",
+    "actions": "Ações",
+    "clearAllFilters": "Limpar todos os filtros",
+    "all": "Todos"
+  },
+  "fields": {
+    "name": "Nome",
+    "email": "E-mail",
+    "title": "Título",
+    "startDate": "Data inicial",
+    "endDate": "Data final",
+    "url": "URL",
+    "label": "Rótulo",
+    "color": "Cor",
+    "roles": "Papéis",
+    "tags": "Tags",
+    "impact": "Impacto"
+  },
+  "impact": {
+    "low": "Baixo",
+    "medium": "Médio",
+    "high": "Alto",
+    "transformational": "Transformacional",
+    "LOW": "Baixo",
+    "MEDIUM": "Médio",
+    "HIGH": "Alto",
+    "TRANSFORMATIONAL": "Transformacional"
+  },
+  "roles": {
+    "collaborator": "Colaborador",
+    "leader": "Líder",
+    "administrator": "Administrador",
+    "COLLABORATOR": "Colaborador",
+    "LEADER": "Líder",
+    "ADMINISTRATOR": "Administrador"
+  },
+  "validation": {
+    "endDateBeforeStart": "A data final deve ser igual ou posterior à data inicial."
+  },
+  "loading": {
+    "deliverables": "Carregando entregas…",
+    "users": "Carregando usuários...",
+    "tags": "Carregando tags...",
+    "organizations": "Carregando organizações...",
+    "generic": "Carregando…"
+  },
+  "errors": {
+    "generic": "Algo deu errado. Tente novamente."
+  },
+  "dates": {
+    "created": "Criado",
+    "updated": "Atualizado"
+  },
+  "systemTags": "Tags do sistema"
+}

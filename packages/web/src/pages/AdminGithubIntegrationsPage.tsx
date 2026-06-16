@@ -20,6 +20,7 @@ import {
   Typography,
   FormHelperText,
 } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 import { useAuth } from '../auth/AuthProvider.js';
 import {
   disableGithubIntegration,
@@ -31,6 +32,7 @@ import {
 
 export default function AdminGithubIntegrationsPage() {
   const { accessToken } = useAuth();
+  const { t } = useTranslation(['admin', 'common']);
   const [integrations, setIntegrations] = useState<GithubIntegration[]>([]);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -55,7 +57,7 @@ export default function AdminGithubIntegrationsPage() {
       setErrorMessage(
         error instanceof GithubIntegrationsApiError
           ? error.message
-          : 'Unable to load GitHub integrations.',
+          : t('github.loadError'),
       );
     } finally {
       setIsLoading(false);
@@ -81,7 +83,7 @@ export default function AdminGithubIntegrationsPage() {
       setErrorMessage(
         error instanceof GithubIntegrationsApiError
           ? error.message
-          : 'Unable to enable GitHub organization.',
+          : t('github.enableError'),
       );
     }
   }
@@ -101,7 +103,7 @@ export default function AdminGithubIntegrationsPage() {
       setErrorMessage(
         error instanceof GithubIntegrationsApiError
           ? error.message
-          : 'Unable to disable GitHub organization.',
+          : t('github.disableError'),
       );
     }
   }
@@ -112,11 +114,9 @@ export default function AdminGithubIntegrationsPage() {
         <Paper sx={{ p: 3, border: '1px solid', borderColor: 'divider' }} elevation={0}>
           <Stack spacing={3}>
             <Typography variant="h4" component="h1">
-              GitHub integration
+              {t('github.title')}
             </Typography>
-            <Typography color="text.secondary">
-              Manage which GitHub organizations are enabled for product integrations.
-            </Typography>
+            <Typography color="text.secondary">{t('github.subtitle')}</Typography>
 
             {errorMessage && <Alert severity="error">{errorMessage}</Alert>}
 
@@ -127,7 +127,7 @@ export default function AdminGithubIntegrationsPage() {
                 sx={{ alignItems: { md: 'center' } }}
               >
                 <TextField
-                  label="Organization name"
+                  label={t('github.orgName')}
                   value={organizationNameInput}
                   onChange={(event) => setOrganizationNameInput(event.target.value)}
                   fullWidth
@@ -138,27 +138,22 @@ export default function AdminGithubIntegrationsPage() {
                   disabled={isEnableDisabled}
                   sx={{ flexShrink: 0, alignSelf: { xs: 'stretch', md: 'auto' } }}
                 >
-                  Enable organization
+                  {t('github.enableOrg')}
                 </Button>
               </Stack>
-              <FormHelperText sx={{ mx: 1.75, mt: 0.5 }}>
-                GitHub organization slug (for example acme-corp), not a full URL.
-              </FormHelperText>
+              <FormHelperText sx={{ mx: 1.75, mt: 0.5 }}>{t('github.orgHelper')}</FormHelperText>
             </Box>
 
             {isLoading ? (
-              <Typography color="text.secondary">Loading organizations...</Typography>
+              <Typography color="text.secondary">{t('loading.organizations', { ns: 'common' })}</Typography>
             ) : !hasIntegrations ? (
-              <Typography color="text.secondary">
-                No GitHub organizations enabled yet. Add the first organization name above to
-                enable integration scope.
-              </Typography>
+              <Typography color="text.secondary">{t('github.empty')}</Typography>
             ) : (
               <Table>
                 <TableHead>
                   <TableRow>
-                    <TableCell>Organization name</TableCell>
-                    <TableCell align="right">Actions</TableCell>
+                    <TableCell>{t('github.orgColumn')}</TableCell>
+                    <TableCell align="right">{t('actions.actions', { ns: 'common' })}</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -172,7 +167,7 @@ export default function AdminGithubIntegrationsPage() {
                           variant="outlined"
                           onClick={() => setDisableTarget(integration)}
                         >
-                          Disable
+                          {t('github.disable')}
                         </Button>
                       </TableCell>
                     </TableRow>
@@ -185,17 +180,20 @@ export default function AdminGithubIntegrationsPage() {
       </Box>
 
       <Dialog open={Boolean(disableTarget)} onClose={() => setDisableTarget(null)}>
-        <DialogTitle>Disable organization</DialogTitle>
+        <DialogTitle>{t('github.disableDialog.title')}</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            Are you sure you want to disable &quot;{disableTarget?.organizationName}&quot;? It will no longer
-            be part of the enabled integration scope.
+            {t('github.disableDialog.body', {
+              organizationName: disableTarget?.organizationName ?? '',
+            })}
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setDisableTarget(null)}>Cancel</Button>
+          <Button onClick={() => setDisableTarget(null)}>
+            {t('actions.cancel', { ns: 'common' })}
+          </Button>
           <Button color="error" variant="contained" onClick={() => void confirmDisable()}>
-            Disable
+            {t('github.disable')}
           </Button>
         </DialogActions>
       </Dialog>

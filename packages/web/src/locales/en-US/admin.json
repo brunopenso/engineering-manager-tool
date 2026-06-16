@@ -1,0 +1,54 @@
+{
+  "users": {
+    "title": "User role management",
+    "namePlaceholder": "At least 3 characters",
+    "emailPlaceholder": "At least 3 characters",
+    "searchHelper": "Enter at least {{count}} characters to search",
+    "loadError": "Unable to load users.",
+    "updateError": "Unable to update role.",
+    "emptyFiltered": {
+      "title": "No users match your filters",
+      "body": "Try adjusting your search or clear all filters to see the full user list."
+    },
+    "emptyNone": {
+      "title": "No users in the organization",
+      "body": "There are no user accounts to manage yet."
+    },
+    "grantLeader": "Grant Leader",
+    "revokeLeader": "Revoke Leader",
+    "grantAdmin": "Grant Admin",
+    "revokeAdmin": "Revoke Admin"
+  },
+  "tags": {
+    "title": "Tag management",
+    "loadError": "Unable to load tags.",
+    "createError": "Unable to create tag.",
+    "updateError": "Unable to update tag.",
+    "deleteError": "Unable to delete tag.",
+    "tagName": "Tag name",
+    "tagColor": "Tag color",
+    "createTag": "Create tag",
+    "empty": "No tags yet. Create your first tag to start the catalog.",
+    "deleteDialog": {
+      "title": "Delete tag",
+      "body": "Are you sure you want to delete the tag \"{{name}}\"?"
+    }
+  },
+  "github": {
+    "title": "GitHub integration",
+    "subtitle": "Manage which GitHub organizations are enabled for product integrations.",
+    "loadError": "Unable to load GitHub integrations.",
+    "enableError": "Unable to enable GitHub organization.",
+    "disableError": "Unable to disable GitHub organization.",
+    "orgName": "Organization name",
+    "enableOrg": "Enable organization",
+    "orgHelper": "GitHub organization slug (for example acme-corp), not a full URL.",
+    "empty": "No GitHub organizations enabled yet. Add the first organization name above to enable integration scope.",
+    "orgColumn": "Organization name",
+    "disable": "Disable",
+    "disableDialog": {
+      "title": "Disable organization",
+      "body": "Are you sure you want to disable \"{{organizationName}}\"? It will no longer be part of the enabled integration scope."
+    }
+  }
+}

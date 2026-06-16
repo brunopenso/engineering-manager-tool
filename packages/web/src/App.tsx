@@ -16,6 +16,7 @@ import { LeaderRoute } from './auth/LeaderRoute.js';
 import { DEFAULT_APP_ROUTE, LOGIN_ROUTE } from './routes/shellOptions.js';
 import { useAuth } from './auth/AuthProvider.js';
 import AuthThemeSync from './auth/AuthThemeSync.js';
+import AuthLocaleSync from './auth/AuthLocaleSync.js';
 import LeaderHierarchyManagementPage from './pages/LeaderHierarchyManagementPage.js';
 import LeaderTeamDeliverablesPage from './pages/LeaderTeamDeliverablesPage.js';
 import LeaderTeamAnalyticsPage from './pages/LeaderTeamAnalyticsPage.js';
@@ -39,6 +40,7 @@ export default function App() {
   return (
     <>
       <AuthThemeSync />
+      <AuthLocaleSync />
       <Routes>
       <Route path="/" element={<LoginPage />} />
       <Route path="/login" element={<LoginPage />} />

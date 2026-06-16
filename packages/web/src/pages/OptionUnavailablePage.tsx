@@ -1,9 +1,11 @@
 import { Container, Box, Paper, Typography, Button, Stack } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { DEFAULT_APP_ROUTE } from '../routes/shellOptions.js';
 
 export default function OptionUnavailablePage() {
   const navigate = useNavigate();
+  const { t } = useTranslation('shell');
 
   return (
     <Container maxWidth="md">
@@ -37,11 +39,10 @@ export default function OptionUnavailablePage() {
                 color: 'primary.main',
               }}
             >
-              Feature Unavailable
+              {t('unavailable.title')}
             </Typography>
             <Typography variant="body1" color="text.secondary">
-              This menu option is currently unavailable. Please check back later or
-              select another option from the menu.
+              {t('unavailable.body')}
             </Typography>
             <Button
               variant="contained"
@@ -49,7 +50,7 @@ export default function OptionUnavailablePage() {
               onClick={() => navigate(DEFAULT_APP_ROUTE, { replace: true })}
               sx={{ alignSelf: 'center', mt: 2 }}
             >
-              Back to Home
+              {t('unavailable.backToHome')}
             </Button>
           </Stack>
         </Paper>
