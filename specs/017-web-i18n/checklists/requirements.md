@@ -32,5 +32,5 @@
 ## Notes
 
 - Validation passed on first iteration (2026-06-16).
-- Scope explicitly limits v1 to the web UI with `en-US` and `pt-BR` catalogs; backend API localization is out of scope.
-- Locale persistence uses client-side storage in v1 to keep the web package self-contained; server profile sync is documented as optional follow-up.
+- Scope limits v1 to web UI translation plus wiring existing backend profile fields (`languagePreference`, `dateFormatPreference`); backend API error localization remains out of scope.
+- Clarification session 2026-06-16: preferences persist server-side on the user profile (not client storage), matching theme preference behavior.
