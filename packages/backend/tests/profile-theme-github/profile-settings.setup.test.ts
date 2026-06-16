@@ -38,7 +38,7 @@ describe('profile settings setup', () => {
 
     expect(mapped.themePreference).toBe('light');
     expect(mapped.githubLogin).toBeNull();
-    expect(mapped.languagePreference).toBe('en');
+    expect(mapped.languagePreference).toBe('en-US');
     expect(mapped.dateFormatPreference).toBe('MDY');
     expect(mapped.roles).toEqual(profileAuthRoles);
   });

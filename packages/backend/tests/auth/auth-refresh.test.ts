@@ -59,7 +59,7 @@ describe('POST /auth/refresh', () => {
       roles: ['COLLABORATOR'],
       themePreference: 'light',
       githubLogin: null,
-      languagePreference: 'en',
+      languagePreference: 'en-US',
       dateFormatPreference: 'MDY',
     });
 

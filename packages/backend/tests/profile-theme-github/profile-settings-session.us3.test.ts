@@ -51,7 +51,7 @@ describe('US3 session identity profile fields', () => {
       ...sampleProfileUser,
       themePreference: 'dark',
       githubLogin: 'acme-dev',
-      languagePreference: 'es',
+      languagePreference: 'pt-BR',
       dateFormatPreference: 'DMY',
     } as never);
     vi.mocked(authUserMapper.mapUserToAuthResponse).mockResolvedValue(
@@ -59,7 +59,7 @@ describe('US3 session identity profile fields', () => {
         ...sampleProfileUser,
         themePreference: 'dark',
         githubLogin: 'acme-dev',
-        languagePreference: 'es',
+        languagePreference: 'pt-BR',
         dateFormatPreference: 'DMY',
       }),
     );
@@ -70,7 +70,7 @@ describe('US3 session identity profile fields', () => {
     expect(response.statusCode).toBe(200);
     expect(payload.user.themePreference).toBe('dark');
     expect(payload.user.githubLogin).toBe('acme-dev');
-    expect(payload.user.languagePreference).toBe('es');
+    expect(payload.user.languagePreference).toBe('pt-BR');
     expect(payload.user.dateFormatPreference).toBe('DMY');
 
     await app.close();

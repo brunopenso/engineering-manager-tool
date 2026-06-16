@@ -8,7 +8,7 @@ export const sampleProfileUser = {
   fullName: 'Profile Actor',
   themePreference: 'light' as const,
   githubLogin: null as string | null,
-  languagePreference: 'en' as const,
+  languagePreference: 'en-US' as const,
   dateFormatPreference: 'MDY' as const,
   firstLoginAt: new Date('2026-01-01T00:00:00.000Z'),
   lastLoginAt: new Date('2026-01-02T00:00:00.000Z'),

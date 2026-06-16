@@ -11,7 +11,7 @@ export type AuthUserResponse = {
   roles: UserRoleType[];
   themePreference: 'light' | 'dark';
   githubLogin: string | null;
-  languagePreference: 'en' | 'es' | 'de' | 'fr' | 'pt';
+  languagePreference: 'en-US' | 'pt-BR';
   dateFormatPreference: 'MDY' | 'DMY' | 'YMD';
 };
 
@@ -27,7 +27,7 @@ export async function mapUserToAuthResponse(user: User): Promise<AuthUserRespons
     roles,
     themePreference: user.themePreference ?? 'light',
     githubLogin: user.githubLogin ?? null,
-    languagePreference: user.languagePreference ?? 'en',
+    languagePreference: user.languagePreference ?? 'en-US',
     dateFormatPreference: user.dateFormatPreference ?? 'MDY',
   };
 }

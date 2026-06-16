@@ -6,7 +6,7 @@ export class AddUserProfileLocalePreferences1779770000000 implements MigrationIn
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(`
       ALTER TABLE users
-      ADD COLUMN IF NOT EXISTS language_preference varchar(5) NOT NULL DEFAULT 'en'
+      ADD COLUMN IF NOT EXISTS language_preference varchar(10) NOT NULL DEFAULT 'en-US'
     `);
 
     await queryRunner.query(`

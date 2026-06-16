@@ -2,7 +2,7 @@ import { AUTH_ERROR_CODES } from '../auth/types.js';
 
 export type ThemePreference = 'light' | 'dark';
 
-export type LanguagePreference = 'en' | 'es' | 'de' | 'fr' | 'pt';
+export type LanguagePreference = 'en-US' | 'pt-BR';
 
 export type DateFormatPreference = 'MDY' | 'DMY' | 'YMD';
 
@@ -33,7 +33,7 @@ export class UserProfileValidationError extends Error {
 const GITHUB_LOGIN_PATTERN = /^[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?$/;
 const GITHUB_LOGIN_MAX_LENGTH = 39;
 
-const LANGUAGE_PREFERENCES: LanguagePreference[] = ['en', 'es', 'de', 'fr', 'pt'];
+const LANGUAGE_PREFERENCES: LanguagePreference[] = ['en-US', 'pt-BR'];
 const DATE_FORMAT_PREFERENCES: DateFormatPreference[] = ['MDY', 'DMY', 'YMD'];
 
 export function parseThemePreference(value: unknown): ThemePreference {
@@ -77,7 +77,7 @@ export function parseGithubLogin(value: unknown): string | null {
 export function parseLanguagePreference(value: unknown): LanguagePreference {
   if (typeof value !== 'string' || !LANGUAGE_PREFERENCES.includes(value as LanguagePreference)) {
     throw new UserProfileValidationError(
-      'Language preference must be one of: en, es, de, fr, pt.',
+      'Language preference must be one of: en-US, pt-BR.',
     );
   }
 

@@ -29,32 +29,32 @@ describe('profile language preference settings', () => {
     vi.clearAllMocks();
   });
 
-  it('saves supported language preferences', async () => {
+  it('saves supported BCP 47 language preferences', async () => {
     const app = buildProfileSettingsTestApp({ userId: profileActorId });
     await registerProfileSettingsTestRoutes(app);
 
     vi.mocked(userService.updateUserProfileSettings)
-      .mockResolvedValueOnce({ ...sampleProfileUser, languagePreference: 'es' } as never)
-      .mockResolvedValueOnce({ ...sampleProfileUser, languagePreference: 'de' } as never);
+      .mockResolvedValueOnce({ ...sampleProfileUser, languagePreference: 'pt-BR' } as never)
+      .mockResolvedValueOnce({ ...sampleProfileUser, languagePreference: 'en-US' } as never);
     vi.mocked(authUserMapper.mapUserToAuthResponse)
-      .mockResolvedValueOnce(toAuthUserResponse({ ...sampleProfileUser, languagePreference: 'es' }))
-      .mockResolvedValueOnce(toAuthUserResponse({ ...sampleProfileUser, languagePreference: 'de' }));
+      .mockResolvedValueOnce(toAuthUserResponse({ ...sampleProfileUser, languagePreference: 'pt-BR' }))
+      .mockResolvedValueOnce(toAuthUserResponse({ ...sampleProfileUser, languagePreference: 'en-US' }));
 
-    const spanishResponse = await app.inject({
+    const portugueseResponse = await app.inject({
       method: 'PATCH',
       url: '/users/me',
-      payload: { languagePreference: 'es' },
+      payload: { languagePreference: 'pt-BR' },
     });
-    const germanResponse = await app.inject({
+    const englishResponse = await app.inject({
       method: 'PATCH',
       url: '/users/me',
-      payload: { languagePreference: 'de' },
+      payload: { languagePreference: 'en-US' },
     });
 
-    expect(spanishResponse.statusCode).toBe(200);
-    expect(spanishResponse.json().user.languagePreference).toBe('es');
-    expect(germanResponse.statusCode).toBe(200);
-    expect(germanResponse.json().user.languagePreference).toBe('de');
+    expect(portugueseResponse.statusCode).toBe(200);
+    expect(portugueseResponse.json().user.languagePreference).toBe('pt-BR');
+    expect(englishResponse.statusCode).toBe(200);
+    expect(englishResponse.json().user.languagePreference).toBe('en-US');
 
     await app.close();
   });
@@ -66,7 +66,7 @@ describe('profile language preference settings', () => {
     const response = await app.inject({
       method: 'PATCH',
       url: '/users/me',
-      payload: { languagePreference: 'jp' },
+      payload: { languagePreference: 'pt-PT' },
     });
 
     expect(response.statusCode).toBe(400);

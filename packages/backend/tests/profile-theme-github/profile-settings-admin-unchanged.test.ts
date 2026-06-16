@@ -45,7 +45,7 @@ describe('admin user list profile fields', () => {
       roles: adminListAuthRoles,
       themePreference: 'light',
       githubLogin: null,
-      languagePreference: 'en',
+      languagePreference: 'en-US',
       dateFormatPreference: 'MDY',
     });
 
@@ -56,7 +56,7 @@ describe('admin user list profile fields', () => {
       id: sampleAdminListUser.id,
       themePreference: 'light',
       githubLogin: null,
-      languagePreference: 'en',
+      languagePreference: 'en-US',
       dateFormatPreference: 'MDY',
     });
 
