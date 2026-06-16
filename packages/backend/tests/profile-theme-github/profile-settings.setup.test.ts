@@ -1,4 +1,7 @@
-import { DEFAULT_LANGUAGE_PREFERENCE } from '../../src/types/profilePreferences.js';
+import {
+  DEFAULT_DATE_FORMAT_PREFERENCE,
+  DEFAULT_LANGUAGE_PREFERENCE,
+} from '../../src/types/profilePreferences.js';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import * as userService from '../../src/services/userService.js';
 import * as authUserMapper from '../../src/services/authUserMapper.js';
@@ -40,7 +43,7 @@ describe('profile settings setup', () => {
     expect(mapped.themePreference).toBe('light');
     expect(mapped.githubLogin).toBeNull();
     expect(mapped.languagePreference).toBe(DEFAULT_LANGUAGE_PREFERENCE);
-    expect(mapped.dateFormatPreference).toBe('MDY');
+    expect(mapped.dateFormatPreference).toBe(DEFAULT_DATE_FORMAT_PREFERENCE);
     expect(mapped.roles).toEqual(profileAuthRoles);
   });
 

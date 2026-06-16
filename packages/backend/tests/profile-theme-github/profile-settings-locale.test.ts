@@ -11,6 +11,11 @@ import {
   registerProfileSettingsTestRoutes,
 } from './profile-settings-test-app.js';
 import { AUTH_ERROR_CODES } from '../../src/auth/types.js';
+import {
+  DATE_FORMAT_PREFERENCE_DMY,
+  DATE_FORMAT_PREFERENCE_YMD,
+  LANGUAGE_PREFERENCES,
+} from '../../src/types/profilePreferences.js';
 
 vi.mock('../../src/services/userService.js', async (importOriginal) => {
   const actual = await importOriginal<typeof import('../../src/services/userService.js')>();
@@ -34,27 +39,27 @@ describe('profile language preference settings', () => {
     await registerProfileSettingsTestRoutes(app);
 
     vi.mocked(userService.updateUserProfileSettings)
-      .mockResolvedValueOnce({ ...sampleProfileUser, languagePreference: 'pt-BR' } as never)
-      .mockResolvedValueOnce({ ...sampleProfileUser, languagePreference: 'en-US' } as never);
+      .mockResolvedValueOnce({ ...sampleProfileUser, languagePreference: LANGUAGE_PREFERENCES[1] } as never)
+      .mockResolvedValueOnce({ ...sampleProfileUser, languagePreference: LANGUAGE_PREFERENCES[0] } as never);
     vi.mocked(authUserMapper.mapUserToAuthResponse)
-      .mockResolvedValueOnce(toAuthUserResponse({ ...sampleProfileUser, languagePreference: 'pt-BR' }))
-      .mockResolvedValueOnce(toAuthUserResponse({ ...sampleProfileUser, languagePreference: 'en-US' }));
+      .mockResolvedValueOnce(toAuthUserResponse({ ...sampleProfileUser, languagePreference: LANGUAGE_PREFERENCES[1] }))
+      .mockResolvedValueOnce(toAuthUserResponse({ ...sampleProfileUser, languagePreference: LANGUAGE_PREFERENCES[0] }));
 
     const portugueseResponse = await app.inject({
       method: 'PATCH',
       url: '/users/me',
-      payload: { languagePreference: 'pt-BR' },
+      payload: { languagePreference: LANGUAGE_PREFERENCES[1] },
     });
     const englishResponse = await app.inject({
       method: 'PATCH',
       url: '/users/me',
-      payload: { languagePreference: 'en-US' },
+      payload: { languagePreference: LANGUAGE_PREFERENCES[0] },
     });
 
     expect(portugueseResponse.statusCode).toBe(200);
-    expect(portugueseResponse.json().user.languagePreference).toBe('pt-BR');
+    expect(portugueseResponse.json().user.languagePreference).toBe(LANGUAGE_PREFERENCES[1]);
     expect(englishResponse.statusCode).toBe(200);
-    expect(englishResponse.json().user.languagePreference).toBe('en-US');
+    expect(englishResponse.json().user.languagePreference).toBe(LANGUAGE_PREFERENCES[0]);
 
     await app.close();
   });
@@ -86,27 +91,27 @@ describe('profile date format preference settings', () => {
     await registerProfileSettingsTestRoutes(app);
 
     vi.mocked(userService.updateUserProfileSettings)
-      .mockResolvedValueOnce({ ...sampleProfileUser, dateFormatPreference: 'DMY' } as never)
-      .mockResolvedValueOnce({ ...sampleProfileUser, dateFormatPreference: 'YMD' } as never);
+      .mockResolvedValueOnce({ ...sampleProfileUser, dateFormatPreference: DATE_FORMAT_PREFERENCE_DMY } as never)
+      .mockResolvedValueOnce({ ...sampleProfileUser, dateFormatPreference: DATE_FORMAT_PREFERENCE_YMD } as never);
     vi.mocked(authUserMapper.mapUserToAuthResponse)
-      .mockResolvedValueOnce(toAuthUserResponse({ ...sampleProfileUser, dateFormatPreference: 'DMY' }))
-      .mockResolvedValueOnce(toAuthUserResponse({ ...sampleProfileUser, dateFormatPreference: 'YMD' }));
+      .mockResolvedValueOnce(toAuthUserResponse({ ...sampleProfileUser, dateFormatPreference: DATE_FORMAT_PREFERENCE_DMY }))
+      .mockResolvedValueOnce(toAuthUserResponse({ ...sampleProfileUser, dateFormatPreference: DATE_FORMAT_PREFERENCE_YMD }));
 
     const dmyResponse = await app.inject({
       method: 'PATCH',
       url: '/users/me',
-      payload: { dateFormatPreference: 'DMY' },
+      payload: { dateFormatPreference: DATE_FORMAT_PREFERENCE_DMY },
     });
     const ymdResponse = await app.inject({
       method: 'PATCH',
       url: '/users/me',
-      payload: { dateFormatPreference: 'YMD' },
+      payload: { dateFormatPreference: DATE_FORMAT_PREFERENCE_YMD },
     });
 
     expect(dmyResponse.statusCode).toBe(200);
-    expect(dmyResponse.json().user.dateFormatPreference).toBe('DMY');
+    expect(dmyResponse.json().user.dateFormatPreference).toBe(DATE_FORMAT_PREFERENCE_DMY);
     expect(ymdResponse.statusCode).toBe(200);
-    expect(ymdResponse.json().user.dateFormatPreference).toBe('YMD');
+    expect(ymdResponse.json().user.dateFormatPreference).toBe(DATE_FORMAT_PREFERENCE_YMD);
 
     await app.close();
   });

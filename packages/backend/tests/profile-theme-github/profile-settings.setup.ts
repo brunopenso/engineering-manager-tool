@@ -1,5 +1,8 @@
 import type { UserRoleType } from '../../src/auth/types.js';
-import { DEFAULT_LANGUAGE_PREFERENCE } from '../../src/types/profilePreferences.js';
+import {
+  DEFAULT_DATE_FORMAT_PREFERENCE,
+  DEFAULT_LANGUAGE_PREFERENCE,
+} from '../../src/types/profilePreferences.js';
 
 export const profileActorId = 'profile-actor-1';
 
@@ -10,7 +13,7 @@ export const sampleProfileUser = {
   themePreference: 'light' as const,
   githubLogin: null as string | null,
   languagePreference: DEFAULT_LANGUAGE_PREFERENCE,
-  dateFormatPreference: 'MDY' as const,
+  dateFormatPreference: DEFAULT_DATE_FORMAT_PREFERENCE,
   firstLoginAt: new Date('2026-01-01T00:00:00.000Z'),
   lastLoginAt: new Date('2026-01-02T00:00:00.000Z'),
 };
