@@ -1,10 +1,14 @@
 import { AUTH_ERROR_CODES } from '../auth/types.js';
+import {
+  DATE_FORMAT_PREFERENCES,
+  LANGUAGE_PREFERENCES,
+  type DateFormatPreference,
+  type LanguagePreference,
+} from '../types/profilePreferences.js';
+
+export type { DateFormatPreference, LanguagePreference } from '../types/profilePreferences.js';
 
 export type ThemePreference = 'light' | 'dark';
-
-export type LanguagePreference = 'en-US' | 'pt-BR';
-
-export type DateFormatPreference = 'MDY' | 'DMY' | 'YMD';
 
 export type ProfileSettingsInput = {
   themePreference?: unknown;
@@ -32,9 +36,6 @@ export class UserProfileValidationError extends Error {
 
 const GITHUB_LOGIN_PATTERN = /^[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?$/;
 const GITHUB_LOGIN_MAX_LENGTH = 39;
-
-const LANGUAGE_PREFERENCES: LanguagePreference[] = ['en-US', 'pt-BR'];
-const DATE_FORMAT_PREFERENCES: DateFormatPreference[] = ['MDY', 'DMY', 'YMD'];
 
 export function parseThemePreference(value: unknown): ThemePreference {
   if (value !== 'light' && value !== 'dark') {
@@ -75,9 +76,12 @@ export function parseGithubLogin(value: unknown): string | null {
 }
 
 export function parseLanguagePreference(value: unknown): LanguagePreference {
-  if (typeof value !== 'string' || !LANGUAGE_PREFERENCES.includes(value as LanguagePreference)) {
+  if (
+    typeof value !== 'string' ||
+    !LANGUAGE_PREFERENCES.includes(value as LanguagePreference)
+  ) {
     throw new UserProfileValidationError(
-      'Language preference must be one of: en-US, pt-BR.',
+      `Language preference must be one of: ${LANGUAGE_PREFERENCES.join(', ')}.`,
     );
   }
 
@@ -90,7 +94,7 @@ export function parseDateFormatPreference(value: unknown): DateFormatPreference 
     !DATE_FORMAT_PREFERENCES.includes(value as DateFormatPreference)
   ) {
     throw new UserProfileValidationError(
-      'Date format preference must be one of: MDY, DMY, YMD.',
+      `Date format preference must be one of: ${DATE_FORMAT_PREFERENCES.join(', ')}.`,
     );
   }
 

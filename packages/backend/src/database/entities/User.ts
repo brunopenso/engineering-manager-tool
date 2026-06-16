@@ -11,6 +11,12 @@ import {
 import { LoginAuditEvent } from './LoginAuditEvent.js';
 import { UserRole } from './UserRole.js';
 import { UserCreationAudit } from './UserCreationAudit.js';
+import {
+  DEFAULT_DATE_FORMAT_PREFERENCE,
+  DEFAULT_LANGUAGE_PREFERENCE,
+  type DateFormatPreference,
+  type LanguagePreference,
+} from '../../types/profilePreferences.js';
 
 @Entity({ name: 'users' })
 export class User {
@@ -29,11 +35,21 @@ export class User {
   @Column({ type: 'varchar', name: 'github_login', length: 39, nullable: true })
   githubLogin!: string | null;
 
-  @Column({ type: 'varchar', name: 'language_preference', length: 10, default: 'en-US' })
-  languagePreference!: 'en-US' | 'pt-BR';
+  @Column({
+    type: 'varchar',
+    name: 'language_preference',
+    length: 10,
+    default: DEFAULT_LANGUAGE_PREFERENCE,
+  })
+  languagePreference!: LanguagePreference;
 
-  @Column({ type: 'varchar', name: 'date_format_preference', length: 3, default: 'MDY' })
-  dateFormatPreference!: 'MDY' | 'DMY' | 'YMD';
+  @Column({
+    type: 'varchar',
+    name: 'date_format_preference',
+    length: 3,
+    default: DEFAULT_DATE_FORMAT_PREFERENCE,
+  })
+  dateFormatPreference!: DateFormatPreference;
 
   @Column({ type: 'timestamptz', name: 'first_login_at' })
   firstLoginAt!: Date;

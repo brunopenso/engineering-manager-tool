@@ -1,3 +1,4 @@
+import { DEFAULT_LANGUAGE_PREFERENCE } from '../../src/types/profilePreferences.js';
 import Fastify from 'fastify';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { AUTH_ERROR_CODES, type AppTokenPayload } from '../../src/auth/types.js';
@@ -59,7 +60,7 @@ describe('POST /auth/refresh', () => {
       roles: ['COLLABORATOR'],
       themePreference: 'light',
       githubLogin: null,
-      languagePreference: 'en-US',
+      languagePreference: DEFAULT_LANGUAGE_PREFERENCE,
       dateFormatPreference: 'MDY',
     });
 
