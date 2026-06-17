@@ -30,6 +30,8 @@
 
 **Frontend Design**: [If this story includes screen, page, form, or dashboard creation, the implementation MUST use the `frontend-design` skill with Material UI best practices.]
 
+**Internationalization**: [If this story includes user-visible web UI strings, all copy MUST be externalized to `en-US` and `pt-BR` translation catalogs via the established i18n configuration. Tests MUST verify both locales and key parity.]
+
 **Access Control Validation**: [If this story exposes collaborator or organizational data, define explicit allow/deny visibility outcomes for self, direct/indirect subordinates, peers, and superiors.]
 
 **Acceptance Scenarios**:
@@ -49,6 +51,8 @@
 
 **Frontend Design**: [If this story includes screen, page, form, or dashboard creation, the implementation MUST use the `frontend-design` skill with Material UI best practices.]
 
+**Internationalization**: [If this story includes user-visible web UI strings, all copy MUST be externalized to `en-US` and `pt-BR` translation catalogs via the established i18n configuration. Tests MUST verify both locales and key parity.]
+
 **Access Control Validation**: [If this story exposes collaborator or organizational data, define explicit allow/deny visibility outcomes for self, direct/indirect subordinates, peers, and superiors.]
 
 **Acceptance Scenarios**:
@@ -66,6 +70,8 @@
 **Independent Test**: [Describe how this can be tested independently]
 
 **Frontend Design**: [If this story includes screen, page, form, or dashboard creation, the implementation MUST use the `frontend-design` skill with Material UI best practices.]
+
+**Internationalization**: [If this story includes user-visible web UI strings, all copy MUST be externalized to `en-US` and `pt-BR` translation catalogs via the established i18n configuration. Tests MUST verify both locales and key parity.]
 
 **Access Control Validation**: [If this story exposes collaborator or organizational data, define explicit allow/deny visibility outcomes for self, direct/indirect subordinates, peers, and superiors.]
 
