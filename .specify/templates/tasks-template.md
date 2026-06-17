@@ -36,6 +36,19 @@ Frontend implementation tasks MUST include Material UI best practices and MUST r
 
 Example task: `Create Dashboard UI in packages/web/src/pages/DashboardPage.tsx using frontend-design skill`
 
+## Internationalization Standards
+
+**IMPORTANT**: Every user-visible string in web UI tasks MUST use translation keys from
+the established i18n configuration. Hard-coded user-facing copy in components is not allowed.
+
+- Default locale: `en-US`; required translation catalog: `pt-BR`
+- Locale files under `packages/web/src/locales/{en-US,pt-BR}/`
+- Resolve copy through `react-i18next` hooks or project i18n wrappers
+- Update both locale catalogs for every new or changed user-facing key
+- Tests MUST cover locale behavior and key parity when UI strings change
+
+Example task: `Add en-US and pt-BR keys for deliverables filters in packages/web/src/locales/`
+
 <!-- 
   ============================================================================
   IMPORTANT: The tasks below are SAMPLE TASKS for illustration purposes only.

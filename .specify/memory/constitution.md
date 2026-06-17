@@ -1,16 +1,17 @@
 <!--
 Sync Impact Report
-Version change: 1.3.0 -> 1.4.0
+Version change: 1.4.0 -> 1.5.0
 Modified principles:
 - None
 Added sections:
-- None
+- Principle IX: Internationalized User Interface (i18n)
+- Technical Standards: i18n stack requirement for web UI
 Removed sections:
 - None
 Templates requiring updates:
-- ✅ .specify/templates/plan-template.md (Constitution Check now requires latest compatible stable dependency versions)
-- ✅ .specify/templates/spec-template.md (no changes required; existing requirement structure remains aligned)
-- ✅ .specify/templates/tasks-template.md (setup guidance now specifies latest compatible stable dependency versions)
+- ✅ .specify/templates/plan-template.md (Constitution Check now requires i18n for user-visible web UI)
+- ✅ .specify/templates/spec-template.md (user stories now include Internationalization requirement)
+- ✅ .specify/templates/tasks-template.md (Internationalization Standards section added)
 - ⚠ pending .specify/templates/commands/*.md (directory not present in repository; no command templates to update)
 - ✅ README.md (no constitution-reference updates required)
 Follow-up TODOs:
@@ -109,6 +110,31 @@ Rationale: A unified skill-driven approach ensures consistent user experience, r
 design-to-implementation friction, and guarantees accessibility and responsiveness
 across all frontend surfaces.
 
+### IX. Internationalized User Interface (i18n)
+All user-visible web UI copy MUST be externalized through the established i18n
+configuration in `@em-tool/web`. The default locale MUST be `en-US` with a complete
+English (United States) translation catalog. A matching `pt-BR` (Brazilian Portuguese)
+catalog MUST be maintained for every user-facing key in scope. Hard-coded user-visible
+strings in React components, pages, or shared UI utilities are not allowed.
+
+Locale resources MUST live under `packages/web/src/locales/` using the project's
+namespace layout. Components MUST resolve copy through `react-i18next` (or the
+project's configured i18n wrapper) rather than inline literals. When authenticated,
+the server-side user profile `languagePreference` MUST be the source of truth for the
+active locale; unauthenticated sessions MUST default to `en-US` or a supported browser
+locale (`en-US` or `pt-BR` only). Display formatting for dates and numbers MUST use
+centralized formatting utilities so presentation respects profile preferences
+independently of UI language.
+
+New or changed frontend features MUST add or update translation keys in both `en-US`
+and `pt-BR` before merge. Automated tests MUST verify locale behavior for affected
+screens, including key parity between catalogs and absence of hard-coded strings on
+in-scope routes.
+
+Rationale: Mandatory i18n configuration ensures the product serves English and
+Brazilian Portuguese audiences consistently, prevents translation drift, and keeps
+locale behavior testable across the full web surface.
+
 ## Technical Standards
 
 - Runtime stack MUST remain Node.js + TypeScript for backend and Vite + React for web
@@ -116,6 +142,8 @@ across all frontend surfaces.
 - PostgreSQL via TypeORM is the authoritative persistence stack for backend features.
 - Operational endpoints used for health monitoring MUST be documented when exempt from
 	product authentication behavior.
+- Web user interface internationalization MUST use `i18next` and `react-i18next` with
+	locale catalogs under `packages/web/src/locales/` for `en-US` (default) and `pt-BR`.
 - Dependencies MUST target the latest stable versions available at implementation time,
 	provided compatibility across the repository is preserved. Version selection MUST be
 	validated against peer dependencies, runtime constraints, and build/test outcomes.
@@ -130,6 +158,8 @@ across all frontend surfaces.
 - Each tasks document MUST preserve story-based phases and explicit file paths.
 - Pull requests MUST include evidence of requirement coverage and validation outcomes,
 	including DAC allow/deny evidence when hierarchical data visibility is in scope.
+- Pull requests that change user-visible web UI MUST include evidence of `en-US` and
+	`pt-BR` translation coverage and locale validation for affected screens.
 
 ## Governance
 
@@ -147,4 +177,4 @@ Compliance review is required during planning and before merge for feature branc
 Any temporary exception MUST be logged in the feature plan Complexity Tracking section
 with rationale and explicit expiration criteria.
 
-**Version**: 1.4.0 | **Ratified**: 2026-05-13 | **Last Amended**: 2026-05-27
+**Version**: 1.5.0 | **Ratified**: 2026-05-13 | **Last Amended**: 2026-06-16
