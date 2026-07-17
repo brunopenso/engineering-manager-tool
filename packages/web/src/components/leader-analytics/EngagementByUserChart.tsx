@@ -135,11 +135,7 @@ export default function EngagementByUserChart({
                   data: seriesData[index],
                 }))}
                 margin={analyticsChartPlotMargins}
-                slotProps={{
-                  legend: {
-                    hidden: true,
-                  },
-                }}
+                hideLegend
               />
             )}
           />

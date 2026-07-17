@@ -6,7 +6,7 @@ import 'react-grid-layout/css/styles.css';
 
 const LAYOUT_STORAGE_KEY = 'em-tool:leader-analytics-layout:v4';
 
-const DEFAULT_LAYOUT: Layout[] = [
+const DEFAULT_LAYOUT: Layout = [
   { i: 'pending-review', x: 0, y: 0, w: 12, h: 3, minW: 4, minH: 3 },
   { i: 'impact', x: 0, y: 2, w: 12, h: 5, minW: 6, minH: 4 },
   { i: 'engagement', x: 0, y: 7, w: 12, h: 5, minW: 6, minH: 4 },
@@ -20,14 +20,14 @@ type AnalyticsWidgetGridProps = {
   };
 };
 
-function readStoredLayout(): Layout[] | null {
+function readStoredLayout(): Layout | null {
   try {
     const raw = sessionStorage.getItem(LAYOUT_STORAGE_KEY);
     if (!raw) {
       return null;
     }
 
-    const parsed = JSON.parse(raw) as Layout[];
+    const parsed = JSON.parse(raw) as Layout;
     if (!Array.isArray(parsed)) {
       return null;
     }
@@ -44,7 +44,7 @@ function readStoredLayout(): Layout[] | null {
 }
 
 export default function AnalyticsWidgetGrid({ widgets }: AnalyticsWidgetGridProps) {
-  const [layout, setLayout] = useState<Layout[]>(() => readStoredLayout() ?? DEFAULT_LAYOUT);
+  const [layout, setLayout] = useState<Layout>(() => readStoredLayout() ?? DEFAULT_LAYOUT);
   const [gridWidth, setGridWidth] = useState(1200);
 
   const widgetMap = useMemo(
@@ -73,7 +73,7 @@ export default function AnalyticsWidgetGrid({ widgets }: AnalyticsWidgetGridProp
     return () => window.removeEventListener('resize', updateWidth);
   }, []);
 
-  const handleLayoutChange = useCallback((nextLayout: Layout[]) => {
+  const handleLayoutChange = useCallback((nextLayout: Layout) => {
     setLayout(nextLayout);
   }, []);
 
@@ -82,11 +82,10 @@ export default function AnalyticsWidgetGrid({ widgets }: AnalyticsWidgetGridProp
       <GridLayout
         className="layout"
         layout={layout}
-        cols={12}
-        rowHeight={60}
         width={gridWidth}
+        gridConfig={{ cols: 12, rowHeight: 60 }}
+        dragConfig={{ handle: '.widget-drag-handle' }}
         onLayoutChange={handleLayoutChange}
-        draggableHandle=".widget-drag-handle"
       >
         {layout.map((item) => (
           <Box
