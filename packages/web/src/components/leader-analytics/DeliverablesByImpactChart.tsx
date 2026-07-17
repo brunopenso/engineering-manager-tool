@@ -127,11 +127,7 @@ export default function DeliverablesByImpactChart({
                 }))}
                 colors={BUSINESS_IMPACT_LEVELS.map((impact) => BUSINESS_IMPACT_COLORS[impact])}
                 margin={analyticsChartPlotMargins}
-                slotProps={{
-                  legend: {
-                    hidden: true,
-                  },
-                }}
+                hideLegend
               />
             )}
           />

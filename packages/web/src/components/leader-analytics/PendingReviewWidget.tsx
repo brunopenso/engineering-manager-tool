@@ -61,7 +61,7 @@ export default function PendingReviewWidget({ totalCount, byImpact }: PendingRev
           >
             {totalCount}
           </Typography>
-          <Typography variant="caption" color="text.secondary" display="block">
+          <Typography variant="caption" color="text.secondary" sx={{ display: 'block' }}>
             {t('charts.totalToReview')}
           </Typography>
         </Box>
