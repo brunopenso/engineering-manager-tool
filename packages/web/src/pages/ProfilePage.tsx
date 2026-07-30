@@ -259,7 +259,7 @@ export default function ProfilePage() {
             </Stack>
             {saveError ? <Alert severity="error">{saveError}</Alert> : null}
             {saveSuccess ? <Alert severity="success">{saveSuccess}</Alert> : null}
-            <Stack direction="row" spacing={2} justifyContent="flex-end">
+            <Stack direction="row" spacing={2} sx={{ justifyContent: 'flex-end' }}>
               <Button
                 variant="outlined"
                 onClick={() => navigate(DEFAULT_APP_ROUTE)}
