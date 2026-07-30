@@ -18,7 +18,7 @@ describe('US2 profile page github login', () => {
     vi.clearAllMocks();
   });
 
-  it('saves github login and shows stored value', async () => {
+  it('saves github login through the page Save action', async () => {
     const user = userEvent.setup();
     vi.mocked(patchMyProfile).mockResolvedValue({
       ...testUser,
@@ -33,7 +33,7 @@ describe('US2 profile page github login', () => {
     const input = screen.getByLabelText('GitHub login');
     await user.clear(input);
     await user.type(input, 'acme-dev');
-    await user.click(screen.getByRole('button', { name: 'Save GitHub login' }));
+    await user.click(screen.getByRole('button', { name: 'Save' }));
 
     await waitFor(() => {
       expect(patchMyProfile).toHaveBeenCalledWith('token-123', {
@@ -42,6 +42,9 @@ describe('US2 profile page github login', () => {
     });
 
     expect(input).toHaveValue('acme-dev');
+    expect(
+      screen.getByText('Profile changes saved successfully.'),
+    ).toBeInTheDocument();
   });
 
   it('shows validation error from api', async () => {
@@ -56,7 +59,7 @@ describe('US2 profile page github login', () => {
     });
 
     await user.type(screen.getByLabelText('GitHub login'), 'bad handle!');
-    await user.click(screen.getByRole('button', { name: 'Save GitHub login' }));
+    await user.click(screen.getByRole('button', { name: 'Save' }));
 
     const alert = await screen.findByRole('alert');
     expect(alert).toHaveTextContent('GitHub login is invalid.');
