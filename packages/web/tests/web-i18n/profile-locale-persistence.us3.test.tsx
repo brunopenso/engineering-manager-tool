@@ -30,6 +30,8 @@ describe('US3 profile locale persistence', () => {
     renderWithProviders(<ProfilePage />, { isAuthenticated: true, user: testUser });
 
     await user.click(screen.getByRole('button', { name: 'Portuguese (Brazil)' }));
+    expect(patchMyProfile).not.toHaveBeenCalled();
+    await user.click(screen.getByRole('button', { name: 'Save' }));
 
     await waitFor(() => {
       expect(patchMyProfile).toHaveBeenCalledWith('token-123', {
@@ -38,7 +40,7 @@ describe('US3 profile locale persistence', () => {
     });
   });
 
-  it('reverts language on failed PATCH', async () => {
+  it('shows error on failed Save', async () => {
     const user = userEvent.setup();
     vi.mocked(patchMyProfile).mockRejectedValue(
       new ProfileApiError('VALIDATION_ERROR', 'Save failed'),
@@ -47,6 +49,7 @@ describe('US3 profile locale persistence', () => {
     renderWithProviders(<ProfilePage />, { isAuthenticated: true, user: testUser });
 
     await user.click(screen.getByRole('button', { name: 'Portuguese (Brazil)' }));
+    await user.click(screen.getByRole('button', { name: 'Save' }));
 
     expect(await screen.findByRole('alert')).toHaveTextContent('Save failed');
     expect(screen.getByRole('heading', { name: 'Your profile' })).toBeInTheDocument();
