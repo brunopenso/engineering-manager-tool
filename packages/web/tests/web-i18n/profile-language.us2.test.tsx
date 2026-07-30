@@ -18,7 +18,7 @@ describe('US2 profile language', () => {
     vi.clearAllMocks();
   });
 
-  it('switches UI to Portuguese when selecting pt-BR', async () => {
+  it('switches UI to Portuguese after saving pt-BR selection', async () => {
     const user = userEvent.setup();
     vi.mocked(patchMyProfile).mockResolvedValue({
       ...testUser,
@@ -28,6 +28,8 @@ describe('US2 profile language', () => {
     renderWithProviders(<ProfilePage />, { isAuthenticated: true, user: testUser });
 
     await user.click(screen.getByRole('button', { name: 'Portuguese (Brazil)' }));
+    expect(patchMyProfile).not.toHaveBeenCalled();
+    await user.click(screen.getByRole('button', { name: 'Save' }));
 
     await waitFor(() => {
       expect(patchMyProfile).toHaveBeenCalledWith('token-123', {

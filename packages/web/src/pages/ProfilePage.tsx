@@ -17,32 +17,43 @@ import DarkModeIcon from '@mui/icons-material/DarkMode';
 import LanguageIcon from '@mui/icons-material/Language';
 import EventIcon from '@mui/icons-material/Event';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../auth/AuthProvider.js';
 import RoleBadgeList from '../components/profile/RoleBadgeList.js';
 import { useAppTheme } from '../theme/AppThemeProvider.js';
 import type { ThemeMode } from '../theme/appTheme.js';
-import { patchMyProfile, ProfileApiError } from '../services/profileApi.js';
+import {
+  patchMyProfile,
+  ProfileApiError,
+  type ProfileSettingsUpdate,
+} from '../services/profileApi.js';
 import type {
   DateFormatPreference,
   LanguagePreference,
 } from '../types/profilePreferences.js';
 import i18n from '../i18n/index.js';
+import { DEFAULT_APP_ROUTE } from '../routes/shellOptions.js';
 
 export default function ProfilePage() {
   const { t } = useTranslation('profile');
   const { t: tCommon } = useTranslation('common');
+  const navigate = useNavigate();
   const { accessToken, user, setSession } = useAuth();
-  const { mode, setMode } = useAppTheme();
+  const { setMode } = useAppTheme();
   const [githubDraft, setGithubDraft] = useState('');
-  const [githubError, setGithubError] = useState<string | null>(null);
-  const [themeError, setThemeError] = useState<string | null>(null);
-  const [languageError, setLanguageError] = useState<string | null>(null);
-  const [dateFormatError, setDateFormatError] = useState<string | null>(null);
-  const [isSavingGithub, setIsSavingGithub] = useState(false);
+  const [themeDraft, setThemeDraft] = useState<ThemeMode>('light');
+  const [languageDraft, setLanguageDraft] = useState<LanguagePreference>('en-US');
+  const [dateFormatDraft, setDateFormatDraft] = useState<DateFormatPreference>('MDY');
+  const [saveError, setSaveError] = useState<string | null>(null);
+  const [saveSuccess, setSaveSuccess] = useState<string | null>(null);
+  const [isSavingProfile, setIsSavingProfile] = useState(false);
 
   useEffect(() => {
     if (user) {
       setGithubDraft(user.githubLogin ?? '');
+      setThemeDraft(user.themePreference);
+      setLanguageDraft(user.languagePreference);
+      setDateFormatDraft(user.dateFormatPreference);
     }
   }, [user]);
 
@@ -53,102 +64,85 @@ export default function ProfilePage() {
   const profileUser = user;
   const sessionToken = accessToken;
 
-  async function handleThemeChange(
+  function handleThemeChange(
     _event: React.MouseEvent<HTMLElement>,
     nextMode: ThemeMode | null,
   ) {
-    if (!nextMode || nextMode === mode) {
+    if (!nextMode) {
       return;
     }
-
-    const previousMode = mode;
-    setThemeError(null);
-    setMode(nextMode);
-
-    try {
-      const updatedUser = await patchMyProfile(sessionToken, {
-        themePreference: nextMode,
-      });
-      setSession({ accessToken: sessionToken, user: updatedUser });
-    } catch (error) {
-      setMode(previousMode);
-      const message =
-        error instanceof ProfileApiError
-          ? error.message
-          : t('errors.themeSave');
-      setThemeError(message);
-    }
+    setThemeDraft(nextMode);
+    setSaveError(null);
+    setSaveSuccess(null);
   }
 
-  async function handleLanguageChange(
+  function handleLanguageChange(
     _event: React.MouseEvent<HTMLElement>,
     nextLanguage: LanguagePreference | null,
   ) {
-    if (!nextLanguage || nextLanguage === profileUser.languagePreference) {
+    if (!nextLanguage) {
       return;
     }
-
-    const previousLanguage = profileUser.languagePreference;
-    setLanguageError(null);
-    void i18n.changeLanguage(nextLanguage);
-
-    try {
-      const updatedUser = await patchMyProfile(sessionToken, {
-        languagePreference: nextLanguage,
-      });
-      setSession({ accessToken: sessionToken, user: updatedUser });
-    } catch (error) {
-      void i18n.changeLanguage(previousLanguage);
-      const message =
-        error instanceof ProfileApiError
-          ? error.message
-          : t('errors.languageSave');
-      setLanguageError(message);
-    }
+    setLanguageDraft(nextLanguage);
+    setSaveError(null);
+    setSaveSuccess(null);
   }
 
-  async function handleDateFormatChange(
+  function handleDateFormatChange(
     _event: React.MouseEvent<HTMLElement>,
     nextFormat: DateFormatPreference | null,
   ) {
-    if (!nextFormat || nextFormat === profileUser.dateFormatPreference) {
+    if (!nextFormat) {
+      return;
+    }
+    setDateFormatDraft(nextFormat);
+    setSaveError(null);
+    setSaveSuccess(null);
+  }
+
+  const hasUnsavedChanges =
+    githubDraft !== (profileUser.githubLogin ?? '') ||
+    themeDraft !== profileUser.themePreference ||
+    languageDraft !== profileUser.languagePreference ||
+    dateFormatDraft !== profileUser.dateFormatPreference;
+
+  async function handleSaveProfile() {
+    if (!hasUnsavedChanges) {
       return;
     }
 
-    setDateFormatError(null);
+    const updates: ProfileSettingsUpdate = {};
 
-    try {
-      const updatedUser = await patchMyProfile(sessionToken, {
-        dateFormatPreference: nextFormat,
-      });
-      setSession({ accessToken: sessionToken, user: updatedUser });
-    } catch (error) {
-      const message =
-        error instanceof ProfileApiError
-          ? error.message
-          : t('errors.dateFormatSave');
-      setDateFormatError(message);
+    if (githubDraft !== (profileUser.githubLogin ?? '')) {
+      updates.githubLogin = githubDraft;
     }
-  }
+    if (themeDraft !== profileUser.themePreference) {
+      updates.themePreference = themeDraft;
+    }
+    if (languageDraft !== profileUser.languagePreference) {
+      updates.languagePreference = languageDraft;
+    }
+    if (dateFormatDraft !== profileUser.dateFormatPreference) {
+      updates.dateFormatPreference = dateFormatDraft;
+    }
 
-  async function handleGithubSave() {
-    setGithubError(null);
-    setIsSavingGithub(true);
-
+    setSaveError(null);
+    setSaveSuccess(null);
+    setIsSavingProfile(true);
     try {
-      const updatedUser = await patchMyProfile(sessionToken, {
-        githubLogin: githubDraft,
-      });
+      const updatedUser = await patchMyProfile(sessionToken, updates);
       setSession({ accessToken: sessionToken, user: updatedUser });
-      setGithubDraft(updatedUser.githubLogin ?? '');
+      setMode(updatedUser.themePreference);
+      await i18n.changeLanguage(updatedUser.languagePreference);
+      setSaveSuccess(t('messages.saveSuccess'));
     } catch (error) {
       const message =
         error instanceof ProfileApiError
           ? error.message
-          : t('errors.githubSave');
-      setGithubError(message);
+          : t('errors.profileSave');
+      setSaveError(message);
     } finally {
-      setIsSavingGithub(false);
+      setIsSavingProfile(false);
     }
   }
 
@@ -190,19 +184,8 @@ export default function ProfilePage() {
                 onChange={(event) => setGithubDraft(event.target.value)}
                 placeholder={t('fields.githubPlaceholder')}
                 helperText={t('fields.githubHelper')}
-                error={Boolean(githubError)}
                 fullWidth
               />
-              {githubError ? <Alert severity="error">{githubError}</Alert> : null}
-              <Box>
-                <Button
-                  variant="contained"
-                  onClick={() => void handleGithubSave()}
-                  disabled={isSavingGithub}
-                >
-                  {isSavingGithub ? t('github.saving') : t('github.save')}
-                </Button>
-              </Box>
             </Stack>
             <Stack spacing={1}>
               <Typography variant="subtitle2" color="text.secondary">
@@ -216,7 +199,7 @@ export default function ProfilePage() {
               </Typography>
               <ToggleButtonGroup
                 exclusive
-                value={profileUser.languagePreference}
+                value={languageDraft}
                 onChange={handleLanguageChange}
                 aria-label={t('language.aria')}
               >
@@ -229,7 +212,6 @@ export default function ProfilePage() {
                   {t('language.ptBR')}
                 </ToggleButton>
               </ToggleButtonGroup>
-              {languageError ? <Alert severity="error">{languageError}</Alert> : null}
             </Stack>
             <Stack spacing={1}>
               <Typography variant="subtitle2" color="text.secondary">
@@ -237,7 +219,7 @@ export default function ProfilePage() {
               </Typography>
               <ToggleButtonGroup
                 exclusive
-                value={profileUser.dateFormatPreference}
+                value={dateFormatDraft}
                 onChange={handleDateFormatChange}
                 aria-label={t('dateFormat.aria')}
               >
@@ -254,7 +236,6 @@ export default function ProfilePage() {
                   {t('dateFormat.ymd')}
                 </ToggleButton>
               </ToggleButtonGroup>
-              {dateFormatError ? <Alert severity="error">{dateFormatError}</Alert> : null}
             </Stack>
             <Stack spacing={1}>
               <Typography variant="subtitle2" color="text.secondary">
@@ -262,7 +243,7 @@ export default function ProfilePage() {
               </Typography>
               <ToggleButtonGroup
                 exclusive
-                value={mode}
+                value={themeDraft}
                 onChange={handleThemeChange}
                 aria-label={t('theme.aria')}
               >
@@ -275,7 +256,23 @@ export default function ProfilePage() {
                   {t('theme.dark')}
                 </ToggleButton>
               </ToggleButtonGroup>
-              {themeError ? <Alert severity="error">{themeError}</Alert> : null}
+            </Stack>
+            {saveError ? <Alert severity="error">{saveError}</Alert> : null}
+            {saveSuccess ? <Alert severity="success">{saveSuccess}</Alert> : null}
+            <Stack direction="row" spacing={2} sx={{ justifyContent: 'flex-end' }}>
+              <Button
+                variant="outlined"
+                onClick={() => navigate(DEFAULT_APP_ROUTE)}
+              >
+                {tCommon('actions.cancel')}
+              </Button>
+              <Button
+                variant="contained"
+                onClick={() => void handleSaveProfile()}
+                disabled={!hasUnsavedChanges || isSavingProfile}
+              >
+                {isSavingProfile ? t('actions.saving') : tCommon('actions.save')}
+              </Button>
             </Stack>
           </Stack>
         </Paper>

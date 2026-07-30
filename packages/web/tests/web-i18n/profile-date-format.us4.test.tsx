@@ -28,6 +28,8 @@ describe('US4 profile date format', () => {
     renderWithProviders(<ProfilePage />, { isAuthenticated: true, user: testUser });
 
     await user.click(screen.getByRole('button', { name: /Day \/ Month \/ Year/i }));
+    expect(patchMyProfile).not.toHaveBeenCalled();
+    await user.click(screen.getByRole('button', { name: 'Save' }));
 
     await waitFor(() => {
       expect(patchMyProfile).toHaveBeenCalledWith('token-123', {

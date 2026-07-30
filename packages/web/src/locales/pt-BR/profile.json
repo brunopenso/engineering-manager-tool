@@ -27,14 +27,13 @@
     "dark": "Escuro",
     "darkAria": "Tema escuro"
   },
-  "github": {
-    "save": "Salvar login do GitHub",
+  "actions": {
     "saving": "Salvando…"
   },
+  "messages": {
+    "saveSuccess": "Alterações do perfil salvas com sucesso."
+  },
   "errors": {
-    "themeSave": "Não foi possível salvar a preferência de aparência.",
-    "githubSave": "Não foi possível salvar o login do GitHub.",
-    "languageSave": "Não foi possível salvar a preferência de idioma.",
-    "dateFormatSave": "Não foi possível salvar a preferência de formato de data."
+    "profileSave": "Não foi possível salvar as alterações do perfil."
   }
 }

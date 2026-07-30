@@ -27,14 +27,13 @@
     "dark": "Dark",
     "darkAria": "Dark theme"
   },
-  "github": {
-    "save": "Save GitHub login",
+  "actions": {
     "saving": "Saving…"
   },
+  "messages": {
+    "saveSuccess": "Profile changes saved successfully."
+  },
   "errors": {
-    "themeSave": "Could not save appearance preference.",
-    "githubSave": "Could not save GitHub login.",
-    "languageSave": "Could not save language preference.",
-    "dateFormatSave": "Could not save date format preference."
+    "profileSave": "Could not save profile changes."
   }
 }

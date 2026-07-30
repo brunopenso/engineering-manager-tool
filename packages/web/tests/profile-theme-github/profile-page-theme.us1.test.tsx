@@ -27,7 +27,7 @@ describe('US1 profile page theme', () => {
     clearThemeCookie();
   });
 
-  it('calls patchMyProfile when selecting dark theme', async () => {
+  it('saves theme changes only after clicking Save', async () => {
     const user = userEvent.setup();
     vi.mocked(patchMyProfile).mockResolvedValue({
       ...testUser,
@@ -40,6 +40,9 @@ describe('US1 profile page theme', () => {
     });
 
     await user.click(screen.getByRole('button', { name: 'Dark theme' }));
+    expect(patchMyProfile).not.toHaveBeenCalled();
+
+    await user.click(screen.getByRole('button', { name: 'Save' }));
 
     await waitFor(() => {
       expect(patchMyProfile).toHaveBeenCalledWith('token-123', {
@@ -47,13 +50,16 @@ describe('US1 profile page theme', () => {
       });
     });
 
+    expect(
+      screen.getByText('Profile changes saved successfully.'),
+    ).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Dark theme' })).toHaveAttribute(
       'aria-pressed',
       'true',
     );
   });
 
-  it('reverts theme and shows error when patch fails', async () => {
+  it('shows error when profile save fails', async () => {
     const user = userEvent.setup();
     vi.mocked(patchMyProfile).mockRejectedValue(
       new ProfileApiError('VALIDATION_ERROR', 'Could not save.'),
@@ -65,13 +71,9 @@ describe('US1 profile page theme', () => {
     });
 
     await user.click(screen.getByRole('button', { name: 'Dark theme' }));
+    await user.click(screen.getByRole('button', { name: 'Save' }));
 
     const alert = await screen.findByRole('alert');
     expect(alert).toHaveTextContent('Could not save.');
-
-    expect(screen.getByRole('button', { name: 'Light theme' })).toHaveAttribute(
-      'aria-pressed',
-      'true',
-    );
   });
 });

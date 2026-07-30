@@ -1,9 +1,10 @@
 import { screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
 import AuthThemeSync from '../../src/auth/AuthThemeSync.js';
 import ProfilePage from '../../src/pages/ProfilePage.js';
+import App from '../../src/App.js';
 import { renderWithProviders, testUser } from '../../src/test/renderWithProviders.js';
-import * as profileApi from '../../src/services/profileApi.js';
 
 vi.mock('../../src/services/profileApi.js', async (importOriginal) => {
   const actual = await importOriginal<typeof import('../../src/services/profileApi.js')>();
@@ -31,5 +32,19 @@ describe('profile theme preference', () => {
       'aria-pressed',
       'true',
     );
+  });
+
+  it('navigates back to home when clicking Cancel', async () => {
+    const user = userEvent.setup();
+
+    renderWithProviders(<App />, {
+      initialPath: '/app/profile',
+      isAuthenticated: true,
+      user: testUser,
+    });
+
+    await user.click(screen.getByRole('button', { name: 'Cancel' }));
+
+    expect(await screen.findByRole('heading', { name: 'Welcome' })).toBeInTheDocument();
   });
 });
