@@ -40,6 +40,7 @@ DEV_AUTH_SECRET=local-dev-only-change-me
 
 ```env
 VITE_API_BASE_URL=/api
+VITE_API_PROXY_TARGET=http://localhost:3001
 VITE_GOOGLE_CLIENT_ID=your-google-client-id.apps.googleusercontent.com
 
 # Development-only login bypass (must match backend DEV_AUTH_SECRET)
@@ -51,6 +52,7 @@ PostgreSQL defaults (`DB_USER` / `DB_PASS` of `postgres` / `postgres`, database
 `engineering_manager_tool`) match a typical local install — adjust as needed.
 
 - `VITE_API_BASE_URL` — use `/api` in local dev so the Vite dev server (port 3000) proxies API requests to the backend
+- `VITE_API_PROXY_TARGET` — backend origin the Vite `/api` proxy forwards to
 - `GOOGLE_CLIENT_ID` and `VITE_GOOGLE_CLIENT_ID` — same Google OAuth client ID in both files
 - For Google-free local sign-in, keep the `DEV_AUTH_*` / `VITE_DEV_AUTH_*` values in sync; see [development-login.md](development-login.md)
 
