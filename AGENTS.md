@@ -36,7 +36,7 @@ Database credentials used by `.env` files: user `emtool`, password `emtool123`, 
 The `.env` files are gitignored. They must exist at:
 
 - `packages/backend/.env` — DB credentials, `GOOGLE_CLIENT_ID`, `APP_AUTH_SECRET`, `APP_AUTH_TOKEN_TTL`
-- `packages/web/.env` — `VITE_API_BASE_URL=/api`, `VITE_GOOGLE_CLIENT_ID`
+- `packages/web/.env` — `VITE_API_BASE_URL=/api`, `VITE_API_PROXY_TARGET`, `VITE_GOOGLE_CLIENT_ID`
 
 For dev/test without real Google OAuth, placeholder values work for `GOOGLE_CLIENT_ID` since tests mock the token validator.
 
