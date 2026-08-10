@@ -88,15 +88,15 @@
 
 ## DAC Test Matrix
 
-| Case | Expected |
-|------|----------|
-| Authorized leader GET own notes | 200; notes/reviewed for actor only |
-| Authorized leader PUT non-empty notes | 200; reviewed true for actor |
-| Second leader GET same deliverable | 200; empty notes (own row only) |
-| Peer GET/PUT notes | 403 |
-| Subordinate GET/PUT notes | 403 |
-| Non-leader GET/PUT | 403 LEADER_REQUIRED |
-| Unauthenticated | 401 |
-| Notes > 8000 chars | 400 validation |
-| Toggle reviewed off with notes present | reviewed false; notes preserved |
-| Clear notes (empty save) | notes null; reviewed unchanged |
+| Case                                   | Expected                           |
+| -------------------------------------- | ---------------------------------- |
+| Authorized leader GET own notes        | 200; notes/reviewed for actor only |
+| Authorized leader PUT non-empty notes  | 200; reviewed true for actor       |
+| Second leader GET same deliverable     | 200; empty notes (own row only)    |
+| Peer GET/PUT notes                     | 403                                |
+| Subordinate GET/PUT notes              | 403                                |
+| Non-leader GET/PUT                     | 403 LEADER_REQUIRED                |
+| Unauthenticated                        | 401                                |
+| Notes > 8000 chars                     | 400 validation                     |
+| Toggle reviewed off with notes present | reviewed false; notes preserved    |
+| Clear notes (empty save)               | notes null; reviewed unchanged     |

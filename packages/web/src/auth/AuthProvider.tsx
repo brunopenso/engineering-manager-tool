@@ -1,17 +1,6 @@
-import {
-  createContext,
-  useContext,
-  useEffect,
-  useMemo,
-  useState,
-  type ReactNode,
-} from 'react';
+import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
 import { refreshSession, type AuthUser as ApiAuthUser } from '../services/authApi.js';
-import {
-  clearStoredSession,
-  readStoredSession,
-  writeStoredSession,
-} from './sessionStorage.js';
+import { clearStoredSession, readStoredSession, writeStoredSession } from './sessionStorage.js';
 import { useSessionRefresh } from './useSessionRefresh.js';
 import i18n from '../i18n/index.js';
 import {
@@ -21,10 +10,7 @@ import {
 
 export type UserRoleType = 'COLLABORATOR' | 'LEADER' | 'ADMINISTRATOR';
 
-import type {
-  DateFormatPreference,
-  LanguagePreference,
-} from '../types/profilePreferences.js';
+import type { DateFormatPreference, LanguagePreference } from '../types/profilePreferences.js';
 
 type AuthUser = {
   id: string;
@@ -68,12 +54,10 @@ export function AuthProvider({
   const [accessToken, setAccessToken] = useState<string | null>(
     initialSession?.accessToken ?? null,
   );
-  const [user, setUser] = useState<AuthUser | null>(
-    initialSession?.user ?? null,
+  const [user, setUser] = useState<AuthUser | null>(initialSession?.user ?? null);
+  const [sessionStatus, setSessionStatus] = useState<'loading' | 'authenticated' | 'anonymous'>(
+    initialSession ? 'authenticated' : 'loading',
   );
-  const [sessionStatus, setSessionStatus] = useState<
-    'loading' | 'authenticated' | 'anonymous'
-  >(initialSession ? 'authenticated' : 'loading');
 
   useEffect(() => {
     if (!enableSessionBootstrap) {
@@ -131,9 +115,7 @@ export function AuthProvider({
       setAccessToken(nextSession.accessToken);
       setUser(nextSession.user);
       writeStoredSession({ accessToken: nextSession.accessToken });
-      void i18n.changeLanguage(
-        nextSession.user.languagePreference ?? DEFAULT_LANGUAGE_PREFERENCE,
-      );
+      void i18n.changeLanguage(nextSession.user.languagePreference ?? DEFAULT_LANGUAGE_PREFERENCE);
     },
     onSessionExpired: () => {
       clearStoredSession();
@@ -152,9 +134,7 @@ export function AuthProvider({
         setAccessToken(nextToken);
         setUser(nextUser);
         writeStoredSession({ accessToken: nextToken });
-        void i18n.changeLanguage(
-          nextUser.languagePreference ?? DEFAULT_LANGUAGE_PREFERENCE,
-        );
+        void i18n.changeLanguage(nextUser.languagePreference ?? DEFAULT_LANGUAGE_PREFERENCE);
         setSessionStatus('authenticated');
       },
       clearSession: () => {

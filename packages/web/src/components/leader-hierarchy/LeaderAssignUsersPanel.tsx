@@ -94,12 +94,7 @@ export default function LeaderAssignUsersPanel() {
             fullWidth
             helperText={t('assignUsers.searchHelper')}
           />
-          <Button
-            type="submit"
-            variant="contained"
-            disabled={isSearching}
-            sx={{ minWidth: 140 }}
-          >
+          <Button type="submit" variant="contained" disabled={isSearching} sx={{ minWidth: 140 }}>
             {isSearching ? t('assignUsers.searching') : t('assignUsers.search')}
           </Button>
         </Stack>

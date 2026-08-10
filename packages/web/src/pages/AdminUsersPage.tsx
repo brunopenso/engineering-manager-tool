@@ -80,9 +80,7 @@ export default function AdminUsersPage() {
     debouncedEmail.trim().length >= MIN_SEARCH_LENGTH;
 
   const hasActiveFilters =
-    nameFilter.trim().length > 0 ||
-    emailFilter.trim().length > 0 ||
-    selectedRoles.length > 0;
+    nameFilter.trim().length > 0 || emailFilter.trim().length > 0 || selectedRoles.length > 0;
 
   function searchHelperText(value: string): string | undefined {
     const length = value.trim().length;
@@ -105,10 +103,7 @@ export default function AdminUsersPage() {
       const nextUsers = await listUsers(accessToken, listFilters);
       setUsers(nextUsers);
     } catch (error) {
-      const message =
-        error instanceof UsersApiError
-          ? error.message
-          : t('users.loadError');
+      const message = error instanceof UsersApiError ? error.message : t('users.loadError');
       setErrorMessage(message);
     } finally {
       setIsLoading(false);
@@ -119,11 +114,7 @@ export default function AdminUsersPage() {
     void refreshUsers();
   }, [refreshUsers]);
 
-  async function handleRoleChange(
-    userId: string,
-    role: ElevatedRole,
-    action: 'GRANT' | 'REVOKE',
-  ) {
+  async function handleRoleChange(userId: string, role: ElevatedRole, action: 'GRANT' | 'REVOKE') {
     if (!accessToken) {
       return;
     }
@@ -138,10 +129,7 @@ export default function AdminUsersPage() {
         setSession({ accessToken, user: updatedUser });
       }
     } catch (error) {
-      const message =
-        error instanceof UsersApiError
-          ? error.message
-          : t('users.updateError');
+      const message = error instanceof UsersApiError ? error.message : t('users.updateError');
       setErrorMessage(message);
     }
   }
@@ -216,7 +204,11 @@ export default function AdminUsersPage() {
                     renderValue={(selected) => (
                       <Stack direction="row" spacing={0.5} useFlexGap sx={{ flexWrap: 'wrap' }}>
                         {selected.map((role) => (
-                          <Chip key={role} size="small" label={t(`roles.${role}`, { ns: 'common' })} />
+                          <Chip
+                            key={role}
+                            size="small"
+                            label={t(`roles.${role}`, { ns: 'common' })}
+                          />
                         ))}
                       </Stack>
                     )}
@@ -297,13 +289,13 @@ export default function AdminUsersPage() {
                               )
                             }
                           >
-                            {hasRole(user, 'LEADER') ? t('users.revokeLeader') : t('users.grantLeader')}
+                            {hasRole(user, 'LEADER')
+                              ? t('users.revokeLeader')
+                              : t('users.grantLeader')}
                           </Button>
                           <Button
                             size="small"
-                            variant={
-                              hasRole(user, 'ADMINISTRATOR') ? 'outlined' : 'contained'
-                            }
+                            variant={hasRole(user, 'ADMINISTRATOR') ? 'outlined' : 'contained'}
                             onClick={() =>
                               void handleRoleChange(
                                 user.id,

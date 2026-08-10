@@ -21,7 +21,9 @@ export function parseDateParam(value: string, label: string): Date {
 }
 
 export function toUtcStartOfDay(date: Date): Date {
-  return new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate(), 0, 0, 0, 0));
+  return new Date(
+    Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate(), 0, 0, 0, 0),
+  );
 }
 
 export function toUtcEndOfDay(date: Date): Date {
@@ -30,7 +32,10 @@ export function toUtcEndOfDay(date: Date): Date {
   );
 }
 
-export function validateDateRange(startDate: string, endDate: string): {
+export function validateDateRange(
+  startDate: string,
+  endDate: string,
+): {
   start: Date;
   end: Date;
 } {

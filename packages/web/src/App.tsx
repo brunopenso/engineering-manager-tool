@@ -42,75 +42,78 @@ export default function App() {
       <AuthThemeSync />
       <AuthLocaleSync />
       <Routes>
-      <Route path="/" element={<LoginPage />} />
-      <Route path="/login" element={<LoginPage />} />
-      <Route
-        path="/app"
-        element={
-          <ProtectedRoute>
-            <AppShellLayout />
-          </ProtectedRoute>
-        }
-      >
-        <Route index element={<WelcomePage />} />
-        <Route path="profile" element={<ProfilePage />} />
-        <Route path="deliverables" element={<DeliverablesPage />} />
-        <Route path="deliverables/new" element={<DeliverableFormPage mode="create" />} />
-        <Route path="deliverables/:deliverableId/edit" element={<DeliverableFormPage mode="edit" />} />
-        <Route path="deliverables/view/:userId" element={<DeliverablesViewPage />} />
+        <Route path="/" element={<LoginPage />} />
+        <Route path="/login" element={<LoginPage />} />
         <Route
-          path="leader/team-deliverables"
+          path="/app"
           element={
-            <LeaderRoute>
-              <LeaderTeamDeliverablesPage />
-            </LeaderRoute>
+            <ProtectedRoute>
+              <AppShellLayout />
+            </ProtectedRoute>
           }
-        />
-        <Route
-          path="leader/team-analytics"
-          element={
-            <LeaderRoute>
-              <LeaderTeamAnalyticsPage />
-            </LeaderRoute>
-          }
-        />
-        <Route
-          path="leader/hierarchy"
-          element={
-            <LeaderRoute>
-              <LeaderHierarchyManagementPage />
-            </LeaderRoute>
-          }
-        />
-        <Route
-          path="admin/users"
-          element={
-            <AdminRoute>
-              <AdminUsersPage />
-            </AdminRoute>
-          }
-        />
-        <Route
-          path="admin/tags"
-          element={
-            <AdminRoute>
-              <AdminTagsPage />
-            </AdminRoute>
-          }
-        />
-        <Route
-          path="admin/github"
-          element={
-            <AdminRoute>
-              <AdminGithubIntegrationsPage />
-            </AdminRoute>
-          }
-        />
-        <Route path="unavailable" element={<OptionUnavailablePage />} />
-        <Route path="*" element={<Navigate to={DEFAULT_APP_ROUTE} replace />} />
-      </Route>
-      <Route path="*" element={<DefaultRouteRedirect />} />
-    </Routes>
+        >
+          <Route index element={<WelcomePage />} />
+          <Route path="profile" element={<ProfilePage />} />
+          <Route path="deliverables" element={<DeliverablesPage />} />
+          <Route path="deliverables/new" element={<DeliverableFormPage mode="create" />} />
+          <Route
+            path="deliverables/:deliverableId/edit"
+            element={<DeliverableFormPage mode="edit" />}
+          />
+          <Route path="deliverables/view/:userId" element={<DeliverablesViewPage />} />
+          <Route
+            path="leader/team-deliverables"
+            element={
+              <LeaderRoute>
+                <LeaderTeamDeliverablesPage />
+              </LeaderRoute>
+            }
+          />
+          <Route
+            path="leader/team-analytics"
+            element={
+              <LeaderRoute>
+                <LeaderTeamAnalyticsPage />
+              </LeaderRoute>
+            }
+          />
+          <Route
+            path="leader/hierarchy"
+            element={
+              <LeaderRoute>
+                <LeaderHierarchyManagementPage />
+              </LeaderRoute>
+            }
+          />
+          <Route
+            path="admin/users"
+            element={
+              <AdminRoute>
+                <AdminUsersPage />
+              </AdminRoute>
+            }
+          />
+          <Route
+            path="admin/tags"
+            element={
+              <AdminRoute>
+                <AdminTagsPage />
+              </AdminRoute>
+            }
+          />
+          <Route
+            path="admin/github"
+            element={
+              <AdminRoute>
+                <AdminGithubIntegrationsPage />
+              </AdminRoute>
+            }
+          />
+          <Route path="unavailable" element={<OptionUnavailablePage />} />
+          <Route path="*" element={<Navigate to={DEFAULT_APP_ROUTE} replace />} />
+        </Route>
+        <Route path="*" element={<DefaultRouteRedirect />} />
+      </Routes>
     </>
   );
 }

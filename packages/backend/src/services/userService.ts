@@ -3,10 +3,7 @@ import { User } from '../database/entities/User.js';
 import { UserCreationAudit } from '../database/entities/UserCreationAudit.js';
 import { AUTH_ERROR_CODES } from '../auth/types.js';
 import { ensureCollaboratorRole, loadLeaderUserIds } from './roleService.js';
-import {
-  normalizeLeaderCreateInput,
-  type LeaderCreateUserInput,
-} from './userCreateValidation.js';
+import { normalizeLeaderCreateInput, type LeaderCreateUserInput } from './userCreateValidation.js';
 import type {
   HierarchyAssignResult,
   HierarchyAssignmentAuditEvent,
@@ -38,9 +35,7 @@ type GoogleIdentity = {
 const userRepository = () => AppDataSource.getRepository(User);
 const userCreationAuditRepository = () => AppDataSource.getRepository(UserCreationAudit);
 
-export async function upsertUserFromGoogleIdentity(
-  identity: GoogleIdentity,
-): Promise<User> {
+export async function upsertUserFromGoogleIdentity(identity: GoogleIdentity): Promise<User> {
   const normalizedEmail = identity.email.trim().toLowerCase();
   const now = new Date();
 
@@ -357,11 +352,7 @@ export async function getLeaderHierarchyView(
   const self = toHierarchyViewNode(actor, true);
   const reports = buildHierarchyTreeFromRows(descendantRows, actorUserId);
 
-  const nodeIds = [
-    ...collectHierarchyNodeIds(reports),
-    self.id,
-    ...(manager ? [manager.id] : []),
-  ];
+  const nodeIds = [...collectHierarchyNodeIds(reports), self.id, ...(manager ? [manager.id] : [])];
   const leaderIds = await loadLeaderUserIds(nodeIds);
 
   return {

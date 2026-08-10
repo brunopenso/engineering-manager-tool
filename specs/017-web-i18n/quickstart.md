@@ -24,15 +24,15 @@ npm run lint --workspace @em-tool/web
 
 Create under `packages/web/src/`:
 
-| File | Purpose |
-|------|---------|
-| `i18n/config.ts` | `i18next.init` — resources, `fallbackLng: 'en-US'`, namespaces |
-| `i18n/index.ts` | Re-export initialized instance |
-| `locales/en-US/*.json` | English catalogs (start with `common`, `shell`, `profile`) |
-| `locales/pt-BR/*.json` | Portuguese mirrors |
-| `auth/AuthLocaleSync.tsx` | Apply `user.languagePreference` on authenticated session |
-| `utils/formatDisplayDate.ts` | `MDY` / `DMY` / `YMD` display formatting |
-| `utils/formatDisplayNumber.ts` | `Intl.NumberFormat` by `languagePreference` |
+| File                           | Purpose                                                        |
+| ------------------------------ | -------------------------------------------------------------- |
+| `i18n/config.ts`               | `i18next.init` — resources, `fallbackLng: 'en-US'`, namespaces |
+| `i18n/index.ts`                | Re-export initialized instance                                 |
+| `locales/en-US/*.json`         | English catalogs (start with `common`, `shell`, `profile`)     |
+| `locales/pt-BR/*.json`         | Portuguese mirrors                                             |
+| `auth/AuthLocaleSync.tsx`      | Apply `user.languagePreference` on authenticated session       |
+| `utils/formatDisplayDate.ts`   | `MDY` / `DMY` / `YMD` display formatting                       |
+| `utils/formatDisplayNumber.ts` | `Intl.NumberFormat` by `languagePreference`                    |
 
 Wire in `main.tsx`:
 
@@ -99,13 +99,13 @@ Keep `formatDateInput` for API-bound date fields.
 
 `packages/web/tests/web-i18n/`:
 
-| Test file | Covers |
-|-----------|--------|
-| `i18n-setup.test.ts` | i18n init, fallback, namespace load |
+| Test file                         | Covers                                             |
+| --------------------------------- | -------------------------------------------------- |
+| `i18n-setup.test.ts`              | i18n init, fallback, namespace load                |
 | `profile-locale.us2-us3.test.tsx` | language/date PATCH, session restore, error revert |
-| `shell-locale.us1.test.tsx` | menu labels en vs pt-BR |
-| `format-display-date.test.ts` | MDY/DMY/YMD + pt-BR separators |
-| `login-detector.test.tsx` | pre-auth browser language detection |
+| `shell-locale.us1.test.tsx`       | menu labels en vs pt-BR                            |
+| `format-display-date.test.ts`     | MDY/DMY/YMD + pt-BR separators                     |
+| `login-detector.test.tsx`         | pre-auth browser language detection                |
 
 Extend `packages/web/src/test/renderWithProviders.tsx` to wrap i18n.
 

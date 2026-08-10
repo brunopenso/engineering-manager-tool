@@ -71,5 +71,6 @@ npm test --workspace @em-tool/web
 ```
 
 Expected:
+
 - Backend tests pass for leader allow, non-leader deny, and creator-as-leader enforcement.
 - Web tests pass for leader screen visibility, submit success, and non-leader guard behavior.

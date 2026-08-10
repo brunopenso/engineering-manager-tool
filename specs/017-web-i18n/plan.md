@@ -23,7 +23,7 @@ Introduce **internationalization** to `@em-tool/web` with `en-US` (default) and 
 
 ## Constitution Check
 
-*GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
+_GATE: Must pass before Phase 0 research. Re-check after Phase 1 design._
 
 - Principle I (Type-Safe Monorepo Ownership): **PASS**. Shared `AuthUser` extended to match `AuthUserResponse`; locale types align with `packages/backend/src/types/profilePreferences.ts`.
 - Principle II (Security-First): **PASS**. Locale preferences updated only via authenticated `PATCH /users/me` (self-scope); no new public endpoints.
@@ -89,12 +89,12 @@ packages/web/tests/web-i18n/                    # Vitest executable tests
 
 ## Complexity Tracking
 
-| Item | Why Needed | Simpler Alternative Rejected Because |
-|------|------------|-------------------------------------|
-| `react-i18next` stack | 15+ screens, pluralization, interpolation, detection | Inline JSON + context does not scale; no standard fallback |
-| Namespaced locale files | Large string surface | Monolithic JSON harms reviewability |
-| `AuthLocaleSync` + detector | Pre-auth login vs post-auth profile | Single mechanism cannot satisfy FR-006 |
-| Separate `dateFormatPreference` | Spec + backend model | Locale-only formatting ignores user date order choice |
+| Item                            | Why Needed                                           | Simpler Alternative Rejected Because                       |
+| ------------------------------- | ---------------------------------------------------- | ---------------------------------------------------------- |
+| `react-i18next` stack           | 15+ screens, pluralization, interpolation, detection | Inline JSON + context does not scale; no standard fallback |
+| Namespaced locale files         | Large string surface                                 | Monolithic JSON harms reviewability                        |
+| `AuthLocaleSync` + detector     | Pre-auth login vs post-auth profile                  | Single mechanism cannot satisfy FR-006                     |
+| Separate `dateFormatPreference` | Spec + backend model                                 | Locale-only formatting ignores user date order choice      |
 
 No constitutional violations.
 
@@ -107,14 +107,14 @@ No constitutional violations.
 
 ## Implementation Phases (for /speckit-tasks)
 
-| Phase | User story | Deliverables |
-|-------|------------|--------------|
-| 1 | Setup | npm deps, `i18n/config`, locale dir scaffold, test harness |
-| 2 | US3 (partial) + US2 | `AuthUser` types, `profileApi`, `AuthLocaleSync`, profile language/date controls |
-| 3 | US1 | English catalogs complete; all screens use `t()` — no hard-coded chrome |
-| 4 | US2 | `pt-BR` catalogs parity; shell + page spot checks |
-| 5 | US4 | `formatDisplayDate` / `formatDisplayNumber`; replace `toLocaleDateString` usages |
-| 6 | Polish | `tests/017-web-i18n/*.md`, `packages/web/tests/web-i18n/*`, contract merge, lint/test CI |
+| Phase | User story          | Deliverables                                                                             |
+| ----- | ------------------- | ---------------------------------------------------------------------------------------- |
+| 1     | Setup               | npm deps, `i18n/config`, locale dir scaffold, test harness                               |
+| 2     | US3 (partial) + US2 | `AuthUser` types, `profileApi`, `AuthLocaleSync`, profile language/date controls         |
+| 3     | US1                 | English catalogs complete; all screens use `t()` — no hard-coded chrome                  |
+| 4     | US2                 | `pt-BR` catalogs parity; shell + page spot checks                                        |
+| 5     | US4                 | `formatDisplayDate` / `formatDisplayNumber`; replace `toLocaleDateString` usages         |
+| 6     | Polish              | `tests/017-web-i18n/*.md`, `packages/web/tests/web-i18n/*`, contract merge, lint/test CI |
 
 ## End-to-End Regression Notes
 

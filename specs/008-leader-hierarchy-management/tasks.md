@@ -13,9 +13,9 @@
 
 **Purpose**: Prepare feature scaffolding and test directories.
 
-- [X] T001 Create feature test directory structure in `tests/008-leader-hierarchy-management/` (contract, integration, ui, unit placeholders)
-- [X] T002 Create backend test bootstrap file for hierarchy management in `packages/backend/src/__tests__/hierarchy-management.setup.ts`
-- [X] T003 [P] Create web test bootstrap file for hierarchy management page in `packages/web/src/__tests__/leader-hierarchy-management.setup.tsx`
+- [x] T001 Create feature test directory structure in `tests/008-leader-hierarchy-management/` (contract, integration, ui, unit placeholders)
+- [x] T002 Create backend test bootstrap file for hierarchy management in `packages/backend/src/__tests__/hierarchy-management.setup.ts`
+- [x] T003 [P] Create web test bootstrap file for hierarchy management page in `packages/web/src/__tests__/leader-hierarchy-management.setup.tsx`
 
 ---
 
@@ -25,12 +25,12 @@
 
 **⚠️ CRITICAL**: No user story work starts until this phase is complete.
 
-- [X] T004 Define shared hierarchy-management DTO types in `packages/backend/src/types/hierarchyManagement.ts`
-- [X] T005 [P] Add leader-role authorization guard helper for hierarchy endpoints in `packages/backend/src/services/authorizationService.ts`
-- [X] T006 [P] Add orphan-user query helper and assignment precondition helper in `packages/backend/src/services/userService.ts`
-- [X] T007 [P] Add assignment audit-event persistence interface in `packages/backend/src/services/userService.ts`
-- [X] T008 Add frontend API client methods for orphan search and assignment in `packages/web/src/services/usersApi.ts`
-- [X] T009 Add route-level leader guard utility for hierarchy screen in `packages/web/src/routes/shellOptions.ts`
+- [x] T004 Define shared hierarchy-management DTO types in `packages/backend/src/types/hierarchyManagement.ts`
+- [x] T005 [P] Add leader-role authorization guard helper for hierarchy endpoints in `packages/backend/src/services/authorizationService.ts`
+- [x] T006 [P] Add orphan-user query helper and assignment precondition helper in `packages/backend/src/services/userService.ts`
+- [x] T007 [P] Add assignment audit-event persistence interface in `packages/backend/src/services/userService.ts`
+- [x] T008 Add frontend API client methods for orphan search and assignment in `packages/web/src/services/usersApi.ts`
+- [x] T009 Add route-level leader guard utility for hierarchy screen in `packages/web/src/routes/shellOptions.ts`
 
 **Checkpoint**: Foundation complete - user stories can proceed.
 
@@ -44,24 +44,24 @@
 
 ### Tests for User Story 1 (MANDATORY)
 
-- [X] T010 [P] [US1] Add contract test for `GET /users/orphans` in `tests/008-leader-hierarchy-management/contract/orphan-search.contract.test.md`
-- [X] T011 [P] [US1] Add contract test for `POST /users/{userId}/assign-leader` in `tests/008-leader-hierarchy-management/contract/assign-leader.contract.test.md`
-- [X] T012 [P] [US1] Add backend integration test for partial/full name-email orphan search in `packages/backend/src/__tests__/hierarchy-orphan-search.test.ts`
-- [X] T013 [P] [US1] Add backend integration test for successful orphan assignment and re-check of orphan status in `packages/backend/src/__tests__/hierarchy-assign.test.ts`
-- [X] T014 [P] [US1] Add web integration test for leader search + assignment workflow in `packages/web/src/__tests__/leader-hierarchy-management-page.test.tsx`
+- [x] T010 [P] [US1] Add contract test for `GET /users/orphans` in `tests/008-leader-hierarchy-management/contract/orphan-search.contract.test.md`
+- [x] T011 [P] [US1] Add contract test for `POST /users/{userId}/assign-leader` in `tests/008-leader-hierarchy-management/contract/assign-leader.contract.test.md`
+- [x] T012 [P] [US1] Add backend integration test for partial/full name-email orphan search in `packages/backend/src/__tests__/hierarchy-orphan-search.test.ts`
+- [x] T013 [P] [US1] Add backend integration test for successful orphan assignment and re-check of orphan status in `packages/backend/src/__tests__/hierarchy-assign.test.ts`
+- [x] T014 [P] [US1] Add web integration test for leader search + assignment workflow in `packages/web/src/__tests__/leader-hierarchy-management-page.test.tsx`
 
 ### Implementation for User Story 1
 
-- [X] T015 [US1] Implement `GET /users/orphans` route with query validation in `packages/backend/src/routes/users.ts`
-- [X] T016 [US1] Implement case-insensitive partial/full name-email orphan search service logic in `packages/backend/src/services/userService.ts`
-- [X] T017 [US1] Implement `POST /users/{userId}/assign-leader` route in `packages/backend/src/routes/users.ts`
-- [X] T018 [US1] Implement orphan-only assignment transaction with concurrency-safe eligibility check in `packages/backend/src/services/userService.ts`
-- [X] T019 [US1] Persist hierarchy assignment audit event for successful assignments in `packages/backend/src/services/userService.ts`
-- [X] T020 [US1] Create `LeaderHierarchyManagementPage` with Material UI and `frontend-design` skill in `packages/web/src/pages/LeaderHierarchyManagementPage.tsx`
-- [X] T021 [US1] Wire orphan search and assignment actions from page to API client in `packages/web/src/services/usersApi.ts`
-- [X] T022 [US1] Register hierarchy management route in `packages/web/src/App.tsx`
-- [X] T023 [US1] Add leader-only menu entry for hierarchy management in `packages/web/src/routes/shellOptions.ts`
-- [X] T024 [US1] Add success/error feedback states for search and assignment results in `packages/web/src/pages/LeaderHierarchyManagementPage.tsx`
+- [x] T015 [US1] Implement `GET /users/orphans` route with query validation in `packages/backend/src/routes/users.ts`
+- [x] T016 [US1] Implement case-insensitive partial/full name-email orphan search service logic in `packages/backend/src/services/userService.ts`
+- [x] T017 [US1] Implement `POST /users/{userId}/assign-leader` route in `packages/backend/src/routes/users.ts`
+- [x] T018 [US1] Implement orphan-only assignment transaction with concurrency-safe eligibility check in `packages/backend/src/services/userService.ts`
+- [x] T019 [US1] Persist hierarchy assignment audit event for successful assignments in `packages/backend/src/services/userService.ts`
+- [x] T020 [US1] Create `LeaderHierarchyManagementPage` with Material UI and `frontend-design` skill in `packages/web/src/pages/LeaderHierarchyManagementPage.tsx`
+- [x] T021 [US1] Wire orphan search and assignment actions from page to API client in `packages/web/src/services/usersApi.ts`
+- [x] T022 [US1] Register hierarchy management route in `packages/web/src/App.tsx`
+- [x] T023 [US1] Add leader-only menu entry for hierarchy management in `packages/web/src/routes/shellOptions.ts`
+- [x] T024 [US1] Add success/error feedback states for search and assignment results in `packages/web/src/pages/LeaderHierarchyManagementPage.tsx`
 
 **Checkpoint**: User Story 1 is independently functional and testable.
 
@@ -75,17 +75,17 @@
 
 ### Tests for User Story 2 (MANDATORY)
 
-- [X] T025 [P] [US2] Add backend authorization deny test for orphan search endpoint in `packages/backend/src/__tests__/hierarchy-access-deny.test.ts`
-- [X] T026 [P] [US2] Add backend authorization deny test for assignment endpoint in `packages/backend/src/__tests__/hierarchy-access-deny.test.ts`
-- [X] T027 [P] [US2] Add web route-guard deny test for non-leader user in `packages/web/src/__tests__/leader-hierarchy-management-guard.test.tsx`
-- [X] T028 [P] [US2] Add web unauthenticated deny test for hierarchy route entry in `packages/web/src/__tests__/leader-hierarchy-management-guard.test.tsx`
+- [x] T025 [P] [US2] Add backend authorization deny test for orphan search endpoint in `packages/backend/src/__tests__/hierarchy-access-deny.test.ts`
+- [x] T026 [P] [US2] Add backend authorization deny test for assignment endpoint in `packages/backend/src/__tests__/hierarchy-access-deny.test.ts`
+- [x] T027 [P] [US2] Add web route-guard deny test for non-leader user in `packages/web/src/__tests__/leader-hierarchy-management-guard.test.tsx`
+- [x] T028 [P] [US2] Add web unauthenticated deny test for hierarchy route entry in `packages/web/src/__tests__/leader-hierarchy-management-guard.test.tsx`
 
 ### Implementation for User Story 2
 
-- [X] T029 [US2] Enforce leader-role authorization in orphan search route boundary in `packages/backend/src/routes/users.ts`
-- [X] T030 [US2] Enforce leader-role authorization in assignment route boundary in `packages/backend/src/routes/users.ts`
-- [X] T031 [US2] Implement non-leader/unauthenticated guard handling on hierarchy page load in `packages/web/src/pages/LeaderHierarchyManagementPage.tsx`
-- [X] T032 [US2] Implement consistent unauthorized UI error state in `packages/web/src/pages/LeaderHierarchyManagementPage.tsx`
+- [x] T029 [US2] Enforce leader-role authorization in orphan search route boundary in `packages/backend/src/routes/users.ts`
+- [x] T030 [US2] Enforce leader-role authorization in assignment route boundary in `packages/backend/src/routes/users.ts`
+- [x] T031 [US2] Implement non-leader/unauthenticated guard handling on hierarchy page load in `packages/web/src/pages/LeaderHierarchyManagementPage.tsx`
+- [x] T032 [US2] Implement consistent unauthorized UI error state in `packages/web/src/pages/LeaderHierarchyManagementPage.tsx`
 
 **Checkpoint**: User Story 2 is independently functional and testable.
 
@@ -95,10 +95,10 @@
 
 **Purpose**: Final alignment, documentation, and verification across stories.
 
-- [X] T033 [P] Update feature documentation references to final endpoint names in `specs/008-leader-hierarchy-management/quickstart.md`
-- [X] T034 Validate contract/spec/plan consistency for removed transfer scope in `specs/008-leader-hierarchy-management/spec.md`
-- [X] T035 [P] Add additional backend unit tests for orphan matching edge cases in `packages/backend/src/__tests__/hierarchy-orphan-search.test.ts`
-- [X] T036 Run full feature verification steps and capture outcomes in `specs/008-leader-hierarchy-management/quickstart.md`
+- [x] T033 [P] Update feature documentation references to final endpoint names in `specs/008-leader-hierarchy-management/quickstart.md`
+- [x] T034 Validate contract/spec/plan consistency for removed transfer scope in `specs/008-leader-hierarchy-management/spec.md`
+- [x] T035 [P] Add additional backend unit tests for orphan matching edge cases in `packages/backend/src/__tests__/hierarchy-orphan-search.test.ts`
+- [x] T036 Run full feature verification steps and capture outcomes in `specs/008-leader-hierarchy-management/quickstart.md`
 
 ---
 

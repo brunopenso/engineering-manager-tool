@@ -4,19 +4,19 @@
 
 Columns on `users` (migration `1779770000000-AddUserProfileLocalePreferences`):
 
-| Column | Type | Default | Allowed values |
-|--------|------|---------|----------------|
-| `language_preference` | `varchar(10)` NOT NULL | `en-US` | `en-US`, `pt-BR` |
-| `date_format_preference` | `varchar(3)` NOT NULL | `MDY` | `MDY`, `DMY`, `YMD` |
+| Column                   | Type                   | Default | Allowed values      |
+| ------------------------ | ---------------------- | ------- | ------------------- |
+| `language_preference`    | `varchar(10)` NOT NULL | `en-US` | `en-US`, `pt-BR`    |
+| `date_format_preference` | `varchar(3)` NOT NULL  | `MDY`   | `MDY`, `DMY`, `YMD` |
 
 Canonical types: `packages/backend/src/types/profilePreferences.ts`.
 
 `UserProfile` / auth session payload fields (camelCase):
 
-| Field | Type | Notes |
-|-------|------|-------|
-| `languagePreference` | `en-US` \| `pt-BR` | UI translation catalog selector |
-| `dateFormatPreference` | `MDY` \| `DMY` \| `YMD` | Display date component order |
+| Field                  | Type                    | Notes                           |
+| ---------------------- | ----------------------- | ------------------------------- |
+| `languagePreference`   | `en-US` \| `pt-BR`      | UI translation catalog selector |
+| `dateFormatPreference` | `MDY` \| `DMY` \| `YMD` | Display date component order    |
 
 `PATCH /users/me` accepts optional `languagePreference` and `dateFormatPreference` alongside `themePreference` and `githubLogin` (at least one field required).
 
@@ -66,29 +66,29 @@ packages/web/src/locales/
 
 ### Namespace → surface mapping
 
-| Namespace | Primary surfaces |
-|-----------|------------------|
-| `common` | Generic actions, validation fallbacks, save errors |
-| `shell` | `shellOptions.ts`, `AppShellLayout`, `ShellNavigation`, `OptionUnavailablePage` |
-| `auth` | `LoginPage` |
-| `profile` | `ProfilePage`, `RoleBadgeList` role labels |
-| `deliverables` | `DeliverablesPage`, `DeliverableFormPage`, `DeliverablesViewPage` |
-| `leader` | Leader pages + `components/leader-*`, `components/team-deliverables/*` |
-| `admin` | `AdminUsersPage`, `AdminTagsPage`, `AdminGithubIntegrationsPage` |
+| Namespace      | Primary surfaces                                                                |
+| -------------- | ------------------------------------------------------------------------------- |
+| `common`       | Generic actions, validation fallbacks, save errors                              |
+| `shell`        | `shellOptions.ts`, `AppShellLayout`, `ShellNavigation`, `OptionUnavailablePage` |
+| `auth`         | `LoginPage`                                                                     |
+| `profile`      | `ProfilePage`, `RoleBadgeList` role labels                                      |
+| `deliverables` | `DeliverablesPage`, `DeliverableFormPage`, `DeliverablesViewPage`               |
+| `leader`       | Leader pages + `components/leader-*`, `components/team-deliverables/*`          |
+| `admin`        | `AdminUsersPage`, `AdminTagsPage`, `AdminGithubIntegrationsPage`                |
 
 ## Runtime state (web)
 
-| State | Source | Lifecycle |
-|-------|--------|-----------|
-| Active i18n language | `i18n.language` | Set by detector (anonymous) or `AuthLocaleSync` (authenticated) |
-| `dateFormatPreference` | `user.dateFormatPreference` via `useAuth()` | Updated on profile save; read by `formatDisplayDate` |
-| MUI locale object | derived from `languagePreference` | Updated when i18n language changes |
+| State                  | Source                                      | Lifecycle                                                       |
+| ---------------------- | ------------------------------------------- | --------------------------------------------------------------- |
+| Active i18n language   | `i18n.language`                             | Set by detector (anonymous) or `AuthLocaleSync` (authenticated) |
+| `dateFormatPreference` | `user.dateFormatPreference` via `useAuth()` | Updated on profile save; read by `formatDisplayDate`            |
+| MUI locale object      | derived from `languagePreference`           | Updated when i18n language changes                              |
 
 ## Validation rules (inherited from backend)
 
-| Field | Rule | Error |
-|-------|------|-------|
-| `languagePreference` | Must be `en-US` or `pt-BR` | 400 `VALIDATION_ERROR` |
+| Field                  | Rule                           | Error                  |
+| ---------------------- | ------------------------------ | ---------------------- |
+| `languagePreference`   | Must be `en-US` or `pt-BR`     | 400 `VALIDATION_ERROR` |
 | `dateFormatPreference` | Must be `MDY`, `DMY`, or `YMD` | 400 `VALIDATION_ERROR` |
 
 Web profile UI MUST only offer enumerated values (no free-text).

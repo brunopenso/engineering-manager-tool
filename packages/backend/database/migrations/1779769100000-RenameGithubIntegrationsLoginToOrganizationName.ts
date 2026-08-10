@@ -1,8 +1,6 @@
 import { MigrationInterface, QueryRunner } from 'typeorm';
 
-export class RenameGithubIntegrationsLoginToOrganizationName1779769100000
-  implements MigrationInterface
-{
+export class RenameGithubIntegrationsLoginToOrganizationName1779769100000 implements MigrationInterface {
   name = 'RenameGithubIntegrationsLoginToOrganizationName1779769100000';
 
   public async up(queryRunner: QueryRunner): Promise<void> {
@@ -28,9 +26,7 @@ export class RenameGithubIntegrationsLoginToOrganizationName1779769100000
       return;
     }
 
-    await queryRunner.query(
-      'DROP INDEX IF EXISTS "UQ_github_integrations_organization_name"',
-    );
+    await queryRunner.query('DROP INDEX IF EXISTS "UQ_github_integrations_organization_name"');
     await queryRunner.renameColumn('github_integrations', 'organization_name', 'login');
     await queryRunner.query(
       'CREATE UNIQUE INDEX "UQ_github_integrations_login" ON "github_integrations" ("login")',

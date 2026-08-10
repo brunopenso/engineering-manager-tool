@@ -21,7 +21,7 @@ Evolve the existing authenticated web experience into a reusable application she
 
 ## Constitution Check
 
-*GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
+_GATE: Must pass before Phase 0 research. Re-check after Phase 1 design._
 
 - Principle I (Type-Safe Monorepo Ownership): PASS. Scope remains in existing `packages/web` and aligned backend auth/session boundaries.
 - Principle II (Security-First Authentication, Authorization, and Data Handling): PASS. Protected routes remain authenticated; missing identity data redirects to login; logout and session behaviors avoid exposing sensitive internals.

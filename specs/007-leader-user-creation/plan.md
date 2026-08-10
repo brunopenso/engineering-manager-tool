@@ -21,7 +21,7 @@ Add a leader-only user creation flow that enforces creator-as-leader assignment 
 
 ## Constitution Check
 
-*GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
+_GATE: Must pass before Phase 0 research. Re-check after Phase 1 design._
 
 - Principle I (Type-Safe Monorepo Ownership): **PASS**. Work remains in TypeScript backend/web packages with explicit contract artifact.
 - Principle II (Security-First Authentication, Authorization, and Data Handling): **PASS**. Authentication required on create endpoint; authorization enforced server-side for leader-only create.

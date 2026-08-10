@@ -2,10 +2,7 @@ import Fastify from 'fastify';
 import type { UserRoleType } from '../../src/auth/types.js';
 import { registerDeliverablesRoutes } from '../../src/routes/deliverables.js';
 
-export function buildDeliverablesTestApp(options: {
-  userId: string;
-  roles?: UserRoleType[];
-}) {
+export function buildDeliverablesTestApp(options: { userId: string; roles?: UserRoleType[] }) {
   const app = Fastify();
 
   app.addHook('onRequest', (request, _reply, done) => {

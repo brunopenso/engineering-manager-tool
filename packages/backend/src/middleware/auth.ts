@@ -3,11 +3,7 @@ import { getDevAuthPublicRoutes, isDevAuthEnabled } from '../auth/devAuthConfig.
 import { AUTH_ERROR_CODES } from '../auth/types.js';
 import { loadRolesForUser } from '../services/roleService.js';
 
-const BASE_PUBLIC_ROUTES = new Set([
-  '/healthcheck',
-  '/healthcheck/complete',
-  '/auth/google/login',
-]);
+const BASE_PUBLIC_ROUTES = new Set(['/healthcheck', '/healthcheck/complete', '/auth/google/login']);
 
 function isPublicRoute(pathname: string): boolean {
   if (BASE_PUBLIC_ROUTES.has(pathname)) {

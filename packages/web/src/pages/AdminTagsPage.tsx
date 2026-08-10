@@ -168,7 +168,11 @@ export default function AdminTagsPage() {
                 onChange={(event) => setNewColor(event.target.value)}
                 sx={{ minWidth: 140 }}
               />
-              <Button variant="contained" onClick={() => void handleCreate()} disabled={isCreateDisabled}>
+              <Button
+                variant="contained"
+                onClick={() => void handleCreate()}
+                disabled={isCreateDisabled}
+              >
                 {t('tags.createTag')}
               </Button>
             </Stack>
@@ -232,7 +236,11 @@ export default function AdminTagsPage() {
                         </TableCell>
                         <TableCell align="right">
                           <Stack direction="row" spacing={1} sx={{ justifyContent: 'flex-end' }}>
-                            <Button size="small" variant="outlined" onClick={() => void handleSave(tag.id)}>
+                            <Button
+                              size="small"
+                              variant="outlined"
+                              onClick={() => void handleSave(tag.id)}
+                            >
                               {t('actions.save', { ns: 'common' })}
                             </Button>
                             <Button

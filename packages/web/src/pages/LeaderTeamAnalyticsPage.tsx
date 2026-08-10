@@ -73,9 +73,7 @@ export default function LeaderTeamAnalyticsPage() {
       } catch (error) {
         if (!cancelled) {
           setErrorMessage(
-            error instanceof UsersApiError
-              ? error.message
-              : t('teamAnalytics.hierarchyLoadError'),
+            error instanceof UsersApiError ? error.message : t('teamAnalytics.hierarchyLoadError'),
           );
           setHierarchy(null);
         }
@@ -204,9 +202,7 @@ export default function LeaderTeamAnalyticsPage() {
           ) : null}
         </Paper>
 
-        {errorMessage ? (
-          <Alert severity="error">{errorMessage}</Alert>
-        ) : null}
+        {errorMessage ? <Alert severity="error">{errorMessage}</Alert> : null}
 
         {!isLoadingHierarchy && !hasReports ? (
           <Alert severity="info">{t('teamAnalytics.noTeamMembers')}</Alert>

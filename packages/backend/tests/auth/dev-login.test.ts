@@ -174,10 +174,7 @@ describe('dev auth routes', () => {
 
     expect(response.statusCode).toBe(200);
     expect(response.json().accessToken).toBe('dev-token');
-    expect(loginSessionService.completeLoginForUser).toHaveBeenCalledWith(
-      expect.anything(),
-      user,
-    );
+    expect(loginSessionService.completeLoginForUser).toHaveBeenCalledWith(expect.anything(), user);
     await app.close();
   });
 

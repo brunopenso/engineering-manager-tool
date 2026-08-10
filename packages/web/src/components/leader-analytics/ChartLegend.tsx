@@ -57,12 +57,7 @@ export default function ChartLegend({ items, 'data-testid': testId }: ChartLegen
               flexShrink: 0,
             }}
           />
-          <Typography
-            variant="caption"
-            sx={analyticsChartLegendLabelSx}
-            noWrap
-            title={item.label}
-          >
+          <Typography variant="caption" sx={analyticsChartLegendLabelSx} noWrap title={item.label}>
             {item.label}
           </Typography>
         </Box>

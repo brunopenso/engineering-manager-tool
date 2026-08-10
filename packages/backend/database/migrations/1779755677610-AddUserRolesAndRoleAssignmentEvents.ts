@@ -1,14 +1,6 @@
-import {
-  MigrationInterface,
-  QueryRunner,
-  Table,
-  TableForeignKey,
-  TableUnique,
-} from 'typeorm';
+import { MigrationInterface, QueryRunner, Table, TableForeignKey, TableUnique } from 'typeorm';
 
-export class AddUserRolesAndRoleAssignmentEvents1779755677610
-  implements MigrationInterface
-{
+export class AddUserRolesAndRoleAssignmentEvents1779755677610 implements MigrationInterface {
   name = 'AddUserRolesAndRoleAssignmentEvents1779755677610';
 
   public async up(queryRunner: QueryRunner): Promise<void> {

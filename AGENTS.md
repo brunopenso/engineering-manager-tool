@@ -46,13 +46,13 @@ For dev/test without real Google OAuth, placeholder values work for `GOOGLE_CLIE
 
 All commands run from the workspace root. See `package.json` for the full list.
 
-| Action | Command |
-|---|---|
-| Install deps | `npm install` |
-| Dev servers | `npm run dev` |
-| Lint | `npm run lint` |
-| Test | `npm run test` |
-| Migrations | `npm run db:migration:run --workspace @em-tool/backend` |
+| Action       | Command                                                 |
+| ------------ | ------------------------------------------------------- |
+| Install deps | `npm install`                                           |
+| Dev servers  | `npm run dev`                                           |
+| Lint         | `npm run lint`                                          |
+| Test         | `npm run test`                                          |
+| Migrations   | `npm run db:migration:run --workspace @em-tool/backend` |
 
 ### Known issues
 

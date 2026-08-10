@@ -1,9 +1,5 @@
 import { afterEach, describe, expect, it } from 'vitest';
-import {
-  THEME_COOKIE_NAME,
-  getThemeFromCookie,
-  setThemeCookie,
-} from './themeCookie.js';
+import { THEME_COOKIE_NAME, getThemeFromCookie, setThemeCookie } from './themeCookie.js';
 
 function clearThemeCookie(): void {
   document.cookie = `${THEME_COOKIE_NAME}=; path=/; max-age=0`;

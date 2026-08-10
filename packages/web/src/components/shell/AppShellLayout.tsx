@@ -1,14 +1,6 @@
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
-import {
-  AppBar,
-  Toolbar,
-  Container,
-  Box,
-  Typography,
-  IconButton,
-  Drawer,
-} from '@mui/material';
+import { AppBar, Toolbar, Container, Box, Typography, IconButton, Drawer } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../auth/AuthProvider.js';
@@ -39,14 +31,11 @@ export default function AppShellLayout() {
   const { user, clearSession, accessToken } = useAuth();
   const { t } = useTranslation('shell');
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-  const {
-    isConfirmingLogout,
-    requestLogoutConfirmation,
-    cancelLogoutConfirmation,
-  } = useHeaderIdentityAction({
-    pathname: location.pathname,
-    isSessionActive: Boolean(accessToken && user?.email),
-  });
+  const { isConfirmingLogout, requestLogoutConfirmation, cancelLogoutConfirmation } =
+    useHeaderIdentityAction({
+      pathname: location.pathname,
+      isSessionActive: Boolean(accessToken && user?.email),
+    });
 
   function toggleDrawer() {
     setIsDrawerOpen((currentState) => !currentState);
@@ -64,10 +53,7 @@ export default function AppShellLayout() {
   const menuSections = useVisibleShellMenuSections(user);
 
   const navigationContent = (
-    <ShellNavigation
-      sections={menuSections}
-      onOptionSelected={closeDrawer}
-    />
+    <ShellNavigation sections={menuSections} onOptionSelected={closeDrawer} />
   );
 
   return (

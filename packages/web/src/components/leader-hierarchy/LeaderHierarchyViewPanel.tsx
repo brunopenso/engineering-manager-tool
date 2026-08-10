@@ -1,12 +1,5 @@
 import { useEffect, useState } from 'react';
-import {
-  Alert,
-  Box,
-  CircularProgress,
-  Paper,
-  Stack,
-  Typography,
-} from '@mui/material';
+import { Alert, Box, CircularProgress, Paper, Stack, Typography } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../auth/AuthProvider.js';
 import HierarchyTree from '../hierarchy/HierarchyTree.js';
@@ -44,9 +37,7 @@ export default function LeaderHierarchyViewPanel() {
       } catch (error) {
         if (!cancelled) {
           const message =
-            error instanceof UsersApiError
-              ? error.message
-              : t('hierarchy.viewLoadError');
+            error instanceof UsersApiError ? error.message : t('hierarchy.viewLoadError');
           setErrorMessage(message);
           setHierarchy(null);
         }

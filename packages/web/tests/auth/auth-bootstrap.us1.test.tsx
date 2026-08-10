@@ -47,10 +47,7 @@ describe('US1 auth bootstrap', () => {
   });
 
   it('clears invalid stored session and redirects to login', async () => {
-    window.localStorage.setItem(
-      AUTH_STORAGE_KEY,
-      JSON.stringify({ accessToken: 'expired-token' }),
-    );
+    window.localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify({ accessToken: 'expired-token' }));
     refreshSessionMock.mockRejectedValue(
       new AuthApiError('INVALID_APP_TOKEN', 'Authentication token is invalid.'),
     );

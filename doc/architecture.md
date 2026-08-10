@@ -48,10 +48,10 @@ accounts, optional dev login is available — see
 
 ## Packages
 
-| Package | Role | Stack | Default port |
-|---------|------|-------|--------------|
-| `@em-tool/web` | Single-page application, routing, UI | React 19, Vite 8, Material UI | 3000 |
-| `@em-tool/backend` | REST API, auth, business logic, database access | Fastify 5, TypeORM | 3001 |
+| Package            | Role                                            | Stack                         | Default port |
+| ------------------ | ----------------------------------------------- | ----------------------------- | ------------ |
+| `@em-tool/web`     | Single-page application, routing, UI            | React 19, Vite 8, Material UI | 3000         |
+| `@em-tool/backend` | REST API, auth, business logic, database access | Fastify 5, TypeORM            | 3001         |
 
 ## Repository layout
 

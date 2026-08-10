@@ -12,7 +12,7 @@
 - Q: Should the date filter remain fixed or be user-adjustable? → A: Changeable date range filter, defaulting to the last 30 days selected on initial load.
 - Q: What is the "reviewed" field and how does it help leaders? → A: A per-deliverable **reviewed** indicator that the logged-in leader can toggle from the results table; state is stored per leader–deliverable pair so leaders can track which items they have already read across sessions.
 
-## User Scenarios & Testing *(mandatory, with required automated tests)*
+## User Scenarios & Testing _(mandatory, with required automated tests)_
 
 ### User Story 1 - Leader browses a team member's recent deliverables (Priority: P1)
 
@@ -111,11 +111,11 @@ As the business owner, I need the Team Deliverables screen available only to use
 - Concurrent selection or date-range changes: only the latest filter combination's results are shown (no stale table from an earlier request).
 - Deliverable is deleted after being marked reviewed: reviewed state for that deliverable is no longer surfaced (orphaned review records may be discarded during planning).
 
-## Requirements *(mandatory, with required test coverage)*
+## Requirements _(mandatory, with required test coverage)_
 
 ### Functional Requirements
 
-*All functional requirements MUST be covered by automated tests. This feature exposes subordinate deliverable data and MUST enforce hierarchical DAC on every search and selector population path.*
+_All functional requirements MUST be covered by automated tests. This feature exposes subordinate deliverable data and MUST enforce hierarchical DAC on every search and selector population path._
 
 - **FR-001**: The system MUST provide a **Team Deliverables** screen in the authenticated application shell under the Leader section, reachable from leader navigation.
 - **FR-002**: The system MUST restrict access to the Team Deliverables screen and its search capability to users with the **leader** role only.
@@ -138,22 +138,22 @@ As the business owner, I need the Team Deliverables screen available only to use
 - **FR-019**: The system MUST show a clear empty or informational state when the leader has no team members in their subtree.
 - **FR-020**: The system MUST cover all functional requirements with automated tests, including authorization negative cases, date-boundary cases, and reviewed-state persistence cases.
 
-### Access Control Matrix *(required when data visibility is in scope)*
+### Access Control Matrix _(required when data visibility is in scope)_
 
 Visibility follows organizational reporting position. The Team Deliverables screen is leader-only; within it, leaders may read deliverables only for descendant subtree members and may update reviewed state only for deliverables they are authorized to view.
 
-| Actor | Team Deliverables screen | Person selector options | Search deliverables for user | Toggle reviewed state |
-|-------|--------------------------|-------------------------|------------------------------|------------------------|
-| Leader (logged in) | Allowed | Direct and indirect reports only | Allowed for subtree members only (read-only content); denied otherwise | Allowed for authorized deliverables; own reviewed state only |
-| Collaborator (non-leader) | Denied | Denied | Denied | Denied |
-| Unauthenticated user | Denied | Denied | Denied | Denied |
-| Deliverable owner (subordinate) | N/A | N/A | N/A | Denied (reviewed is leader workflow only) |
-| Leader selecting peer or superior | N/A (not in selector) | Denied (excluded from list) | Denied if requested directly | Denied |
-| Leader selecting user in another branch | N/A (not in selector) | Denied (excluded from list) | Denied if requested directly | Denied |
+| Actor                                   | Team Deliverables screen | Person selector options          | Search deliverables for user                                           | Toggle reviewed state                                        |
+| --------------------------------------- | ------------------------ | -------------------------------- | ---------------------------------------------------------------------- | ------------------------------------------------------------ |
+| Leader (logged in)                      | Allowed                  | Direct and indirect reports only | Allowed for subtree members only (read-only content); denied otherwise | Allowed for authorized deliverables; own reviewed state only |
+| Collaborator (non-leader)               | Denied                   | Denied                           | Denied                                                                 | Denied                                                       |
+| Unauthenticated user                    | Denied                   | Denied                           | Denied                                                                 | Denied                                                       |
+| Deliverable owner (subordinate)         | N/A                      | N/A                              | N/A                                                                    | Denied (reviewed is leader workflow only)                    |
+| Leader selecting peer or superior       | N/A (not in selector)    | Denied (excluded from list)      | Denied if requested directly                                           | Denied                                                       |
+| Leader selecting user in another branch | N/A (not in selector)    | Denied (excluded from list)      | Denied if requested directly                                           | Denied                                                       |
 
 **Validation notes**: Automated tests MUST cover: non-leader screen deny; unauthenticated deny; subtree member allow with title/description/reviewed rows; out-of-subtree search deny; peer/superior excluded from selector population; reviewed toggle allow for authorized leader; reviewed toggle deny for non-leader and unauthorized target.
 
-### Key Entities *(include if feature involves data)*
+### Key Entities _(include if feature involves data)_
 
 - **Team member (selector option)**: A user in the logged-in leader's descendant reporting subtree, identified by user id and display name (or email fallback), used to scope deliverable search.
 - **Deliverable (search result row)**: An existing deliverable owned by the selected team member; for this screen **title** and **description** are displayed read-only, filtered by last-updated date within the selected range.
@@ -161,7 +161,7 @@ Visibility follows organizational reporting position. The Team Deliverables scre
 - **Reviewed state**: A boolean per reviewing leader and deliverable indicating whether that leader has marked the item as reviewed; independent across leaders viewing the same deliverable; defaults to unreviewed.
 - **Reporting subtree**: The set of all direct and indirect reports of the logged-in leader, used to populate the person selector and authorize search.
 
-## Success Criteria *(mandatory)*
+## Success Criteria _(mandatory)_
 
 ### Measurable Outcomes
 

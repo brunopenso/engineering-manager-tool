@@ -10,15 +10,11 @@ type GoogleIdentity = {
 };
 
 type ValidationResult =
-  | { ok: true; identity: GoogleIdentity }
-  | { ok: false; error: AuthFailureResponse };
+  { ok: true; identity: GoogleIdentity } | { ok: false; error: AuthFailureResponse };
 
 const VALID_ISSUERS = new Set(['accounts.google.com', 'https://accounts.google.com']);
 
-function buildFailure(
-  code: AuthFailureResponse['code'],
-  message: string,
-): ValidationResult {
+function buildFailure(code: AuthFailureResponse['code'], message: string): ValidationResult {
   return {
     ok: false,
     error: { code, message },
@@ -40,10 +36,7 @@ function mapTokenVerificationError(error: unknown): ValidationResult {
   }
 
   if (text.includes('issuer')) {
-    return buildFailure(
-      AUTH_ERROR_CODES.ISSUER_MISMATCH,
-      'Google token issuer is not accepted.',
-    );
+    return buildFailure(AUTH_ERROR_CODES.ISSUER_MISMATCH, 'Google token issuer is not accepted.');
   }
 
   return buildFailure(AUTH_ERROR_CODES.INVALID_TOKEN, 'Google token is invalid.');

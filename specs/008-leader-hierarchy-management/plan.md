@@ -21,7 +21,7 @@ Add a leader-only hierarchy management screen focused on assigning orphan users 
 
 ## Constitution Check
 
-*GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
+_GATE: Must pass before Phase 0 research. Re-check after Phase 1 design._
 
 - Principle I (Type-Safe Monorepo Ownership): **PASS**. Changes stay within existing TypeScript backend/web boundaries.
 - Principle II (Security-First Authentication, Authorization, and Data Handling): **PASS**. Server-side role checks required for search/assign endpoints; no sensitive auth details exposed.

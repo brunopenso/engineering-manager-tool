@@ -60,12 +60,7 @@ function seedTitle(email: string, index: number): string {
   return `[Seed] ${emailLocalPart(email)} #${index}`;
 }
 
-function dateInPeriod(
-  endMs: number,
-  periodDays: number,
-  index: number,
-  total: number,
-): Date {
+function dateInPeriod(endMs: number, periodDays: number, index: number, total: number): Date {
   const startMs = endMs - periodDays * MS_PER_DAY;
   const slot = total <= 1 ? 0.5 : index / (total - 1);
   return new Date(startMs + slot * (endMs - startMs));
@@ -198,9 +193,7 @@ export default defineSeed({
 
       for (const user of users) {
         const isLeader = leaderUserIds.has(user.id);
-        const total = isLeader
-          ? stableCount(user.email, 2, 4)
-          : stableCount(user.email, 6, 10);
+        const total = isLeader ? stableCount(user.email, 2, 4) : stableCount(user.email, 6, 10);
 
         for (let index = 1; index <= total; index += 1) {
           await upsertSeedDeliverable(manager, user, index, total, isLeader, tags, endMs);

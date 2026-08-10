@@ -42,9 +42,7 @@ describe('US2 profile page github login', () => {
     });
 
     expect(input).toHaveValue('acme-dev');
-    expect(
-      screen.getByText('Profile changes saved successfully.'),
-    ).toBeInTheDocument();
+    expect(screen.getByText('Profile changes saved successfully.')).toBeInTheDocument();
   });
 
   it('shows validation error from api', async () => {

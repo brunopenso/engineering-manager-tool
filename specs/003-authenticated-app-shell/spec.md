@@ -18,7 +18,7 @@
 - Q: Should the specification include the prior timing-style performance requirement? → A: No, remove this requirement.
 - Q: Should parallel processing behavior be in scope for this feature specification? → A: No, parallel processing behavior is out of scope.
 
-## User Scenarios & Testing *(mandatory, with required automated tests)*
+## User Scenarios & Testing _(mandatory, with required automated tests)_
 
 ### User Story 1 - Access the authenticated shell (Priority: P1)
 
@@ -79,11 +79,11 @@ As an authenticated user, I can click my email in the header and confirm sign-ou
 - What happens if a selected menu option is temporarily unavailable? The main area shows a clear unavailable-state message while preserving shell controls.
 - What happens if a user triggers logout while viewing an option with unsaved interaction state? Logout confirmation proceeds and session termination takes precedence.
 
-## Requirements *(mandatory, with required test coverage)*
+## Requirements _(mandatory, with required test coverage)_
 
 ### Functional Requirements
 
-*All functional requirements MUST be covered by automated tests. Define the test(s) for each requirement below.*
+_All functional requirements MUST be covered by automated tests. Define the test(s) for each requirement below._
 
 - **FR-001**: System MUST redirect authenticated users to `/app` as the fixed default post-login route in the application shell immediately after successful login.  
   **Automated Test Coverage**: Authentication flow test validates redirect behavior to `/app` after login success.
@@ -123,13 +123,13 @@ As an authenticated user, I can click my email in the header and confirm sign-ou
 - The route `/app/welcome` does not exist in this feature and MUST not be used by tests, navigation, or contracts.
 - The route `/` is the same public login entry as `/login`.
 
-### Key Entities *(include if feature involves data)*
+### Key Entities _(include if feature involves data)_
 
 - **Authenticated Shell Session**: Represents the active logged-in user context required to render protected shell layout and identity controls.
 - **Navigation Option**: Represents each selectable item in the left menu that determines what is rendered in the main content area.
 - **Header Identity Control**: Represents the user email display and logout-trigger interaction in the top-right banner area.
 
-## Success Criteria *(mandatory)*
+## Success Criteria _(mandatory)_
 
 ### Measurable Outcomes
 

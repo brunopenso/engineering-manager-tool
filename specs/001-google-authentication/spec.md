@@ -15,7 +15,7 @@
 - Q: Should SC-001 remain in Success Criteria? → A: Remove SC-001.
 - Q: How specific should user-facing authentication failure messages be? → A: Provide detailed user-facing messages per failure cause.
 
-## User Scenarios & Testing *(mandatory)*
+## User Scenarios & Testing _(mandatory)_
 
 ### User Story 1 - Sign in with Google (Priority: P1)
 
@@ -70,7 +70,7 @@ Each authentication creates an audit entry so the organization can track user si
 - The audit write fails after authentication has succeeded.
 - An unauthenticated user attempts to open any route other than the login page and healthcheck endpoints.
 
-## Requirements *(mandatory)*
+## Requirements _(mandatory)_
 
 ### Functional Requirements
 
@@ -88,12 +88,12 @@ Each authentication creates an audit entry so the organization can track user si
 - **FR-012**: The system MUST restrict all non-login web pages to authenticated users only.
 - **FR-013**: The system MUST keep backend healthcheck endpoints publicly accessible as an explicit operational exception.
 
-### Key Entities *(include if feature involves data)*
+### Key Entities _(include if feature involves data)_
 
 - **User**: Represents an authenticated person in the system, including full name, email, first login date, and last login date.
 - **Login Audit Event**: Represents a successful sign-in occurrence, including the associated user and the login timestamp.
 
-## Success Criteria *(mandatory)*
+## Success Criteria _(mandatory)_
 
 ### Measurable Outcomes
 

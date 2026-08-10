@@ -72,10 +72,7 @@ export default function HeaderIdentityAction({
           <Typography component="span" sx={{ fontSize: '0.875rem' }}>
             {fullName}
           </Typography>
-          <Typography
-            component="span"
-            sx={{ fontSize: '0.75rem', opacity: 0.85 }}
-          >
+          <Typography component="span" sx={{ fontSize: '0.75rem', opacity: 0.85 }}>
             {email}
           </Typography>
         </Box>

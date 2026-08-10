@@ -1,11 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import * as userService from '../../src/services/userService.js';
 import * as authUserMapper from '../../src/services/authUserMapper.js';
-import {
-  profileActorId,
-  sampleProfileUser,
-  toAuthUserResponse,
-} from './profile-settings.setup.js';
+import { profileActorId, sampleProfileUser, toAuthUserResponse } from './profile-settings.setup.js';
 import {
   buildProfileSettingsTestApp,
   registerProfileSettingsTestRoutes,

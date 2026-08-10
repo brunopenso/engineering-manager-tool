@@ -21,7 +21,7 @@ Introduce a persisted **Deliverable** portfolio per user (required metadata, opt
 
 ## Constitution Check
 
-*GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
+_GATE: Must pass before Phase 0 research. Re-check after Phase 1 design._
 
 - Principle I (Type-Safe Monorepo Ownership): **PASS**. Changes confined to backend/web packages; OpenAPI contract in `contracts/deliverables-api.yaml`.
 - Principle II (Security-First Authentication, Authorization, and Data Handling): **PASS**. Bearer auth on all routes; explicit owner checks for mutations; DAC helper for reads; stable error codes; no cross-user leakage on deny.
@@ -101,10 +101,10 @@ packages/
 
 ## Complexity Tracking
 
-| Item | Why Needed | Simpler Alternative Rejected Because |
-|------|------------|--------------------------------------|
-| Hierarchy resolver deferral | Org reporting table not shipped yet | Hard-coding leader role only violates clarified spec (position-based visibility) |
-| `GET /tags/catalog` | Collaborators need catalog IDs for system tags | Opening admin `GET /tags` would break administrator-only management contract |
+| Item                        | Why Needed                                     | Simpler Alternative Rejected Because                                             |
+| --------------------------- | ---------------------------------------------- | -------------------------------------------------------------------------------- |
+| Hierarchy resolver deferral | Org reporting table not shipped yet            | Hard-coding leader role only violates clarified spec (position-based visibility) |
+| `GET /tags/catalog`         | Collaborators need catalog IDs for system tags | Opening admin `GET /tags` would break administrator-only management contract     |
 
 No other constitutional violations requiring justification.
 

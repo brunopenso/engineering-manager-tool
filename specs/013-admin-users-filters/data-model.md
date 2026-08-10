@@ -6,25 +6,25 @@ No new database tables or migrations. Extends the **administrator user list quer
 
 ### User
 
-| Field | Type | Notes |
-|-------|------|-------|
+| Field       | Type   | Notes                                      |
+| ----------- | ------ | ------------------------------------------ |
 | `full_name` | string | **Name filter** target (`fullName` in API) |
-| `email` | string | **Email filter** target |
+| `email`     | string | **Email filter** target                    |
 
 ### UserRole (`user_roles`)
 
-| Field | Type | Notes |
-|-------|------|-------|
-| `user_id` | uuid FK | Join to user |
-| `role` | enum | `COLLABORATOR`, `LEADER`, `ADMINISTRATOR` — **role filter** target |
+| Field     | Type    | Notes                                                              |
+| --------- | ------- | ------------------------------------------------------------------ |
+| `user_id` | uuid FK | Join to user                                                       |
+| `role`    | enum    | `COLLABORATOR`, `LEADER`, `ADMINISTRATOR` — **role filter** target |
 
 ## API: GET /users query parameters
 
-| Parameter | Required | Default | Notes |
-|-----------|----------|---------|-------|
-| `name` | no | — | Trimmed; case-insensitive substring on `full_name` |
-| `email` | no | — | Trimmed; case-insensitive substring on `email` |
-| `roles` | no | — | Repeatable enum; OR semantics; omit when empty |
+| Parameter | Required | Default | Notes                                              |
+| --------- | -------- | ------- | -------------------------------------------------- |
+| `name`    | no       | —       | Trimmed; case-insensitive substring on `full_name` |
+| `email`   | no       | —       | Trimmed; case-insensitive substring on `email`     |
+| `roles`   | no       | —       | Repeatable enum; OR semantics; omit when empty     |
 
 **Combined filter**: AND across provided dimensions. Scope: all users (administrator-only endpoint).
 
@@ -34,18 +34,18 @@ No new database tables or migrations. Extends the **administrator user list quer
 
 ### Errors
 
-| Condition | Response |
-|-----------|----------|
-| Invalid `roles` value | 400 `VALIDATION_ERROR` |
-| Non-administrator caller | 403 `FORBIDDEN` |
+| Condition                | Response               |
+| ------------------------ | ---------------------- |
+| Invalid `roles` value    | 400 `VALIDATION_ERROR` |
+| Non-administrator caller | 403 `FORBIDDEN`        |
 
 ## UI filter state (session-local)
 
-| Field | Default | Notes |
-|-------|---------|-------|
-| `name` | `''` | Debounced 300ms before API call |
-| `email` | `''` | Debounced 300ms before API call |
-| `selectedRoles` | `[]` | Empty = omit `roles` from query; immediate refetch on change |
+| Field           | Default | Notes                                                        |
+| --------------- | ------- | ------------------------------------------------------------ |
+| `name`          | `''`    | Debounced 300ms before API call                              |
+| `email`         | `''`    | Debounced 300ms before API call                              |
+| `selectedRoles` | `[]`    | Empty = omit `roles` from query; immediate refetch on change |
 
 **Clear all filters**: reset all fields to defaults → `GET /users` with no filter params.
 
@@ -69,9 +69,9 @@ Unchanged from feature 004: only administrators may call `GET /users`. Filter pa
 
 ## Empty states
 
-| Condition | UI message |
-|-----------|------------|
-| Filters active, zero rows | No users match filters + clear hint |
-| No filters, zero rows | No users in organization (if applicable) |
-| Loading | Loading users... |
-| API error | Existing error alert |
+| Condition                 | UI message                               |
+| ------------------------- | ---------------------------------------- |
+| Filters active, zero rows | No users match filters + clear hint      |
+| No filters, zero rows     | No users in organization (if applicable) |
+| Loading                   | Loading users...                         |
+| API error                 | Existing error alert                     |

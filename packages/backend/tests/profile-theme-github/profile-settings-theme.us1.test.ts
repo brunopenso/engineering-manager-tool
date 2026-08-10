@@ -1,11 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import * as userService from '../../src/services/userService.js';
 import * as authUserMapper from '../../src/services/authUserMapper.js';
-import {
-  profileActorId,
-  sampleProfileUser,
-  toAuthUserResponse,
-} from './profile-settings.setup.js';
+import { profileActorId, sampleProfileUser, toAuthUserResponse } from './profile-settings.setup.js';
 import {
   buildProfileSettingsTestApp,
   registerProfileSettingsTestRoutes,
@@ -38,7 +34,9 @@ describe('US1 profile theme settings', () => {
       .mockResolvedValueOnce({ ...sampleProfileUser, themePreference: 'light' } as never);
     vi.mocked(authUserMapper.mapUserToAuthResponse)
       .mockResolvedValueOnce(toAuthUserResponse({ ...sampleProfileUser, themePreference: 'dark' }))
-      .mockResolvedValueOnce(toAuthUserResponse({ ...sampleProfileUser, themePreference: 'light' }));
+      .mockResolvedValueOnce(
+        toAuthUserResponse({ ...sampleProfileUser, themePreference: 'light' }),
+      );
 
     const darkResponse = await app.inject({
       method: 'PATCH',

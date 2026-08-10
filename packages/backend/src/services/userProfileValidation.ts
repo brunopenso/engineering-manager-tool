@@ -76,10 +76,7 @@ export function parseGithubLogin(value: unknown): string | null {
 }
 
 export function parseLanguagePreference(value: unknown): LanguagePreference {
-  if (
-    typeof value !== 'string' ||
-    !LANGUAGE_PREFERENCES.includes(value as LanguagePreference)
-  ) {
+  if (typeof value !== 'string' || !LANGUAGE_PREFERENCES.includes(value as LanguagePreference)) {
     throw new UserProfileValidationError(
       `Language preference must be one of: ${LANGUAGE_PREFERENCES.join(', ')}.`,
     );

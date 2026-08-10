@@ -11,7 +11,7 @@
 
 - Q: Who can read another collaborator's deliverables under the organizational hierarchy? → A: Peers cannot see each other's deliverables. Any user who is a direct or indirect superior in the reporting hierarchy—up to the top of the chain—can read deliverables for collaborators below them (read-only for non-owners). A user cannot read deliverables belonging to peers, superiors, or users outside their descendant subtree.
 
-## User Scenarios & Testing *(mandatory, with required automated tests)*
+## User Scenarios & Testing _(mandatory, with required automated tests)_
 
 ### User Story 1 - Collaborator records a new deliverable (Priority: P1)
 
@@ -132,7 +132,7 @@ A user who is a direct or indirect superior in the organizational reporting chai
 - A non-owner who is neither peer nor superior in the chain bookmarks another user's deliverable (must be denied consistently).
 - An administrator without ownership attempts to mutate another user's deliverable (denied unless they are the owner; administrator role alone does not grant edit rights in v1).
 
-## Requirements *(mandatory, with required test coverage)*
+## Requirements _(mandatory, with required test coverage)_
 
 ### Functional Requirements
 
@@ -164,13 +164,13 @@ A user who is a direct or indirect superior in the organizational reporting chai
 
 Visibility is determined by **organizational reporting position**, not by role badges alone. "Superior" means any direct or indirect manager in the chain up to the top; "subordinate" means any direct or indirect report in the subtree below the viewer.
 
-| Viewer position relative to owner | List / read owner deliverables | Create / update / delete owner deliverables |
-|-----------------------------------|--------------------------------|---------------------------------------------|
-| Owner (self) | Allowed | Allowed |
-| Direct or indirect superior (up to top of chain) | Allowed (read-only) | Denied in v1 |
-| Direct or indirect subordinate (viewing upward) | Denied | Denied |
-| Peer (same hierarchy level) | Denied | Denied |
-| Unrelated branch (no reporting path) | Denied | Denied |
+| Viewer position relative to owner                | List / read owner deliverables | Create / update / delete owner deliverables |
+| ------------------------------------------------ | ------------------------------ | ------------------------------------------- |
+| Owner (self)                                     | Allowed                        | Allowed                                     |
+| Direct or indirect superior (up to top of chain) | Allowed (read-only)            | Denied in v1                                |
+| Direct or indirect subordinate (viewing upward)  | Denied                         | Denied                                      |
+| Peer (same hierarchy level)                      | Denied                         | Denied                                      |
+| Unrelated branch (no reporting path)             | Denied                         | Denied                                      |
 
 **Validation notes**: Automated tests MUST cover: peer deny; subordinate cannot read superior; direct manager allow; indirect manager at top of chain allow; unrelated branch deny; non-owner mutate deny. Until organizational hierarchy persistence is available, tests MUST use authorization fixtures that assert this matrix so implementation cannot regress when the hierarchy resolver ships.
 
@@ -183,7 +183,7 @@ Visibility is determined by **organizational reporting position**, not by role b
 - **Business impact classification**: Single-valued category describing the deliverable's organizational impact (`LOW`, `MEDIUM`, `HIGH`, `TRANSFORMATIONAL`).
 - **Tag** (existing): Administrator-managed catalog entry used only via system tag references on deliverables; deliverable management does not create or edit catalog tags.
 
-## Success Criteria *(mandatory)*
+## Success Criteria _(mandatory)_
 
 ### Measurable Outcomes
 

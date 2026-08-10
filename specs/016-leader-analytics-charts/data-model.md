@@ -66,16 +66,16 @@
 
 ## DAC test matrix
 
-| Case | Expected |
-|------|----------|
-| Leader loads analytics without `userId` | Aggregates over all descendants only |
-| Leader loads with subtree `userId` | Scoped aggregates |
-| Leader passes out-of-subtree `userId` | 403 |
-| Non-leader analytics API | 403 |
-| Unauthenticated | 401 |
-| Invalid date range | 400 |
+| Case                                                | Expected                               |
+| --------------------------------------------------- | -------------------------------------- |
+| Leader loads analytics without `userId`             | Aggregates over all descendants only   |
+| Leader loads with subtree `userId`                  | Scoped aggregates                      |
+| Leader passes out-of-subtree `userId`               | 403                                    |
+| Non-leader analytics API                            | 403                                    |
+| Unauthenticated                                     | 401                                    |
+| Invalid date range                                  | 400                                    |
 | Actor's own deliverables in subtree-wide engagement | Excluded (not in descendant owner set) |
-| Peer/superior deliverables | Never in aggregates |
+| Peer/superior deliverables                          | Never in aggregates                    |
 
 ## State transitions
 

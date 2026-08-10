@@ -42,9 +42,7 @@ export class AddTags1779762100000 implements MigrationInterface {
       true,
     );
 
-    await queryRunner.query(
-      'CREATE UNIQUE INDEX "UQ_tags_name_lower" ON "tags" (LOWER("name"))',
-    );
+    await queryRunner.query('CREATE UNIQUE INDEX "UQ_tags_name_lower" ON "tags" (LOWER("name"))');
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {

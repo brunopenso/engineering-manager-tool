@@ -2,7 +2,10 @@ import { useMemo } from 'react';
 import { Paper, Typography } from '@mui/material';
 import { BarChart } from '@mui/x-charts/BarChart';
 import { useTranslation } from 'react-i18next';
-import type { EngagementBucketRow, TeamAnalyticsResponse } from '../../services/leaderAnalyticsApi.js';
+import type {
+  EngagementBucketRow,
+  TeamAnalyticsResponse,
+} from '../../services/leaderAnalyticsApi.js';
 import type { DateFormatPreference, LanguagePreference } from '../../types/profilePreferences.js';
 import {
   DEFAULT_DATE_FORMAT_PREFERENCE,
@@ -38,7 +41,10 @@ function topUsersByTotalAdds(rows: EngagementBucketRow[]): string[] {
   }
 
   return [...totals.values()]
-    .sort((left, right) => right.total - left.total || left.displayName.localeCompare(right.displayName))
+    .sort(
+      (left, right) =>
+        right.total - left.total || left.displayName.localeCompare(right.displayName),
+    )
     .slice(0, MAX_LEGEND_USERS)
     .map((entry) => entry.userId);
 }
@@ -51,11 +57,7 @@ export default function EngagementByUserChart({
   const { t } = useTranslation('leader');
   const { weekStarts, labels: weekLabels } = useMemo(
     () =>
-      buildAscendingWeekAxis(
-        analytics?.weekStarts ?? [],
-        dateFormatPreference,
-        languagePreference,
-      ),
+      buildAscendingWeekAxis(analytics?.weekStarts ?? [], dateFormatPreference, languagePreference),
     [analytics?.weekStarts, dateFormatPreference, languagePreference],
   );
   const rows = analytics?.engagementByWeek ?? [];

@@ -5,7 +5,7 @@
 **Status**: Draft  
 **Input**: User description: "Lets create the feature Tags. Create a new entity called Tag, that have an ID, name and color. Add migrations and tests. This tags should only be manage by someone with administrator role in a specific screen for it."
 
-## User Scenarios & Testing *(mandatory, with required automated tests)*
+## User Scenarios & Testing _(mandatory, with required automated tests)_
 
 ### User Story 1 - Administrator creates a tag (Priority: P1)
 
@@ -97,7 +97,7 @@ An administrator can delete a tag that is no longer needed so the catalog stays 
 - An administrator deletes a tag that no longer exists (must return a clear outcome without affecting other tags).
 - The tag catalog grows large (list remains usable on the management screen without unacceptable delay for administrators).
 
-## Requirements *(mandatory, with required test coverage)*
+## Requirements _(mandatory, with required test coverage)_
 
 ### Functional Requirements
 
@@ -118,18 +118,18 @@ An administrator can delete a tag that is no longer needed so the catalog stays 
 
 ### Role-Based Access for Tag Management
 
-| Actor | Tag management screen | Create / update / delete tags | View tag catalog (management) |
-|-------|------------------------|-------------------------------|-------------------------------|
-| Administrator | Allowed | Allowed | Allowed |
-| Leader (without administrator) | Denied | Denied | Denied |
-| Collaborator only | Denied | Denied | Denied |
+| Actor                          | Tag management screen | Create / update / delete tags | View tag catalog (management) |
+| ------------------------------ | --------------------- | ----------------------------- | ----------------------------- |
+| Administrator                  | Allowed               | Allowed                       | Allowed                       |
+| Leader (without administrator) | Denied                | Denied                        | Denied                        |
+| Collaborator only              | Denied                | Denied                        | Denied                        |
 
 ### Key Entities
 
 - **Tag**: A labeled category marker in the product catalog. Attributes: unique identifier (stable for the life of the record), name (human-readable label, unique in the catalog), color (visual distinction for users). Managed only by administrators on the dedicated management screen in this feature.
 - **Administrator**: Existing role from user role profiles; required for all tag management capabilities in this feature.
 
-## Success Criteria *(mandatory)*
+## Success Criteria _(mandatory)_
 
 ### Measurable Outcomes
 

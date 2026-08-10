@@ -102,16 +102,16 @@
 
 ## DAC Test Matrix
 
-| Case | Expected |
-|------|----------|
-| Leader lists team members | Allow; only descendants returned |
-| Leader searches subtree member deliverables | Allow |
-| Leader searches user outside subtree | Deny 403 |
-| Non-leader team-members | Deny 403 |
-| Non-leader search | Deny 403 |
-| Leader toggles reviewed on authorized deliverable | Allow; persists |
-| Leader toggles on out-of-subtree deliverable | Deny 403 |
-| Collaborator toggles reviewed | Deny 403 |
-| Second leader same deliverable | Independent reviewed state |
-| Date filter excludes old deliverable | Not in results |
-| Boundary day deliverable | Included |
+| Case                                              | Expected                         |
+| ------------------------------------------------- | -------------------------------- |
+| Leader lists team members                         | Allow; only descendants returned |
+| Leader searches subtree member deliverables       | Allow                            |
+| Leader searches user outside subtree              | Deny 403                         |
+| Non-leader team-members                           | Deny 403                         |
+| Non-leader search                                 | Deny 403                         |
+| Leader toggles reviewed on authorized deliverable | Allow; persists                  |
+| Leader toggles on out-of-subtree deliverable      | Deny 403                         |
+| Collaborator toggles reviewed                     | Deny 403                         |
+| Second leader same deliverable                    | Independent reviewed state       |
+| Date filter excludes old deliverable              | Not in results                   |
+| Boundary day deliverable                          | Included                         |

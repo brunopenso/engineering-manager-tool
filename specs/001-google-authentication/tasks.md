@@ -7,10 +7,10 @@
 
 **Purpose**: Prepare workspace dependencies and auth configuration scaffolding
 
-- [X] T001 Add backend auth dependencies for Google token verification and app token signing in packages/backend/package.json
-- [X] T002 Add web dependencies for routing and Google login integration in packages/web/package.json
-- [X] T003 [P] Add backend auth environment variable template values in packages/backend/.env.example
-- [X] T004 [P] Add web auth environment variable template values in packages/web/.env.example
+- [x] T001 Add backend auth dependencies for Google token verification and app token signing in packages/backend/package.json
+- [x] T002 Add web dependencies for routing and Google login integration in packages/web/package.json
+- [x] T003 [P] Add backend auth environment variable template values in packages/backend/.env.example
+- [x] T004 [P] Add web auth environment variable template values in packages/web/.env.example
 
 ---
 
@@ -20,13 +20,13 @@
 
 **CRITICAL**: No user story implementation starts before this phase is complete
 
-- [X] T005 Update backend ORM entity/migration wiring for new auth entities in packages/backend/src/database/ormconfig.ts
-- [X] T006 Create shared backend auth session types in packages/backend/src/auth/types.ts
-- [X] T007 [P] Create backend authentication middleware skeleton in packages/backend/src/middleware/auth.ts
-- [X] T008 [P] Create backend token utility/plugin for sign and verify operations in packages/backend/src/plugins/auth.ts
-- [X] T009 Add backend public-route allowlist for /healthcheck and /healthcheck/complete in packages/backend/src/middleware/auth.ts
-- [X] T010 Add web route shell for login-public and protected-route layout in packages/web/src/App.tsx
-- [X] T011 Create frontend auth state provider and bootstrap context in packages/web/src/auth/AuthProvider.tsx
+- [x] T005 Update backend ORM entity/migration wiring for new auth entities in packages/backend/src/database/ormconfig.ts
+- [x] T006 Create shared backend auth session types in packages/backend/src/auth/types.ts
+- [x] T007 [P] Create backend authentication middleware skeleton in packages/backend/src/middleware/auth.ts
+- [x] T008 [P] Create backend token utility/plugin for sign and verify operations in packages/backend/src/plugins/auth.ts
+- [x] T009 Add backend public-route allowlist for /healthcheck and /healthcheck/complete in packages/backend/src/middleware/auth.ts
+- [x] T010 Add web route shell for login-public and protected-route layout in packages/web/src/App.tsx
+- [x] T011 Create frontend auth state provider and bootstrap context in packages/web/src/auth/AuthProvider.tsx
 
 **Checkpoint**: Foundation complete; user stories can proceed
 
@@ -40,16 +40,16 @@
 
 ### Implementation for User Story 1
 
-- [X] T012 [P] [US1] Implement Google ID token validation service in packages/backend/src/services/googleTokenValidator.ts
-- [X] T013 [US1] Implement POST /auth/google/login endpoint contract in packages/backend/src/routes/auth.ts
-- [X] T014 [US1] Register auth route module and middleware usage in packages/backend/src/index.ts
-- [X] T015 [P] [US1] Implement login page with Google-only sign-in action in packages/web/src/pages/LoginPage.tsx
-- [X] T016 [P] [US1] Implement welcome page with required message in packages/web/src/pages/WelcomePage.tsx
-- [X] T017 [US1] Implement protected route component that redirects unauthenticated users in packages/web/src/auth/ProtectedRoute.tsx
-- [X] T018 [US1] Wire app routes to enforce login-only public access in packages/web/src/App.tsx
-- [X] T019 [US1] Implement frontend auth API client for login and session retrieval in packages/web/src/services/authApi.ts
-- [X] T020 [US1] Implement cause-specific auth error code mapping in backend login response in packages/backend/src/routes/auth.ts
-- [X] T021 [US1] Implement detailed per-cause user-facing auth error rendering in packages/web/src/pages/LoginPage.tsx
+- [x] T012 [P] [US1] Implement Google ID token validation service in packages/backend/src/services/googleTokenValidator.ts
+- [x] T013 [US1] Implement POST /auth/google/login endpoint contract in packages/backend/src/routes/auth.ts
+- [x] T014 [US1] Register auth route module and middleware usage in packages/backend/src/index.ts
+- [x] T015 [P] [US1] Implement login page with Google-only sign-in action in packages/web/src/pages/LoginPage.tsx
+- [x] T016 [P] [US1] Implement welcome page with required message in packages/web/src/pages/WelcomePage.tsx
+- [x] T017 [US1] Implement protected route component that redirects unauthenticated users in packages/web/src/auth/ProtectedRoute.tsx
+- [x] T018 [US1] Wire app routes to enforce login-only public access in packages/web/src/App.tsx
+- [x] T019 [US1] Implement frontend auth API client for login and session retrieval in packages/web/src/services/authApi.ts
+- [x] T020 [US1] Implement cause-specific auth error code mapping in backend login response in packages/backend/src/routes/auth.ts
+- [x] T021 [US1] Implement detailed per-cause user-facing auth error rendering in packages/web/src/pages/LoginPage.tsx
 
 **Checkpoint**: User Story 1 should be independently functional and demonstrable
 
@@ -63,11 +63,11 @@
 
 ### Implementation for User Story 2
 
-- [X] T022 [P] [US2] Create User entity mapping with required fields in packages/backend/src/database/entities/User.ts
-- [X] T023 [US2] Create users table migration with unique email and login timestamps in packages/backend/database/migrations/202605130001-create-users-table.ts
-- [X] T024 [US2] Implement user create-or-update service preserving firstLoginAt in packages/backend/src/services/userService.ts
-- [X] T025 [US2] Integrate user upsert into Google login route flow in packages/backend/src/routes/auth.ts
-- [X] T026 [US2] Implement GET /auth/me endpoint returning user profile payload in packages/backend/src/routes/auth.ts
+- [x] T022 [P] [US2] Create User entity mapping with required fields in packages/backend/src/database/entities/User.ts
+- [x] T023 [US2] Create users table migration with unique email and login timestamps in packages/backend/database/migrations/202605130001-create-users-table.ts
+- [x] T024 [US2] Implement user create-or-update service preserving firstLoginAt in packages/backend/src/services/userService.ts
+- [x] T025 [US2] Integrate user upsert into Google login route flow in packages/backend/src/routes/auth.ts
+- [x] T026 [US2] Implement GET /auth/me endpoint returning user profile payload in packages/backend/src/routes/auth.ts
 
 **Checkpoint**: User Story 2 should be independently functional with persisted user lifecycle data
 
@@ -81,11 +81,11 @@
 
 ### Implementation for User Story 3
 
-- [X] T027 [P] [US3] Create LoginAuditEvent entity mapping in packages/backend/src/database/entities/LoginAuditEvent.ts
-- [X] T028 [US3] Create login audit table migration with user foreign key in packages/backend/database/migrations/202605130002-create-login-audit-events-table.ts
-- [X] T029 [US3] Implement audit event creation service for successful logins in packages/backend/src/services/loginAuditService.ts
-- [X] T030 [US3] Integrate audit event write into successful authentication flow in packages/backend/src/routes/auth.ts
-- [X] T031 [US3] Enforce no successful-login audit writes on failed authentication paths in packages/backend/src/routes/auth.ts
+- [x] T027 [P] [US3] Create LoginAuditEvent entity mapping in packages/backend/src/database/entities/LoginAuditEvent.ts
+- [x] T028 [US3] Create login audit table migration with user foreign key in packages/backend/database/migrations/202605130002-create-login-audit-events-table.ts
+- [x] T029 [US3] Implement audit event creation service for successful logins in packages/backend/src/services/loginAuditService.ts
+- [x] T030 [US3] Integrate audit event write into successful authentication flow in packages/backend/src/routes/auth.ts
+- [x] T031 [US3] Enforce no successful-login audit writes on failed authentication paths in packages/backend/src/routes/auth.ts
 
 **Checkpoint**: User Story 3 should be independently functional with complete successful-login audit trail
 
@@ -95,13 +95,13 @@
 
 **Purpose**: Final hardening, documentation, and validation across stories
 
-- [X] T032 [P] Document authentication setup, env vars, and run commands in README.md
-- [X] T033 Harden auth error responses and backend logging consistency in packages/backend/src/routes/auth.ts
-- [X] T034 [P] Validate and refine end-to-end feature runbook in specs/001-google-authentication/quickstart.md
-- [X] T035 Refactor duplicated auth mapping logic into a shared mapper utility in packages/backend/src/services/authUserMapper.ts
-- [X] T036 Validate unauthenticated access for /healthcheck and /healthcheck/complete and record evidence in specs/001-google-authentication/quickstart.md
-- [X] T037 Run monorepo build verification (npm run build) and resolve failures across impacted packages
-- [X] T038 Run monorepo lint verification (npm run lint) and resolve findings across impacted packages
+- [x] T032 [P] Document authentication setup, env vars, and run commands in README.md
+- [x] T033 Harden auth error responses and backend logging consistency in packages/backend/src/routes/auth.ts
+- [x] T034 [P] Validate and refine end-to-end feature runbook in specs/001-google-authentication/quickstart.md
+- [x] T035 Refactor duplicated auth mapping logic into a shared mapper utility in packages/backend/src/services/authUserMapper.ts
+- [x] T036 Validate unauthenticated access for /healthcheck and /healthcheck/complete and record evidence in specs/001-google-authentication/quickstart.md
+- [x] T037 Run monorepo build verification (npm run build) and resolve failures across impacted packages
+- [x] T038 Run monorepo lint verification (npm run lint) and resolve findings across impacted packages
 - [ ] T039 Run feature verification checklist for US1-US3 outcomes and capture results in specs/001-google-authentication/quickstart.md
 
 ---

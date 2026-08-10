@@ -67,7 +67,11 @@ function forbidden(
   };
 }
 
-function validationError(reply: FastifyReply, message: string, code = AUTH_ERROR_CODES.VALIDATION_ERROR) {
+function validationError(
+  reply: FastifyReply,
+  message: string,
+  code = AUTH_ERROR_CODES.VALIDATION_ERROR,
+) {
   reply.code(400);
   return { code, message };
 }
@@ -359,11 +363,7 @@ export async function registerDeliverablesRoutes(app: FastifyInstance): Promise<
       }
 
       try {
-        return await saveReviewNotes(
-          request.params.deliverableId,
-          auth.userId,
-          request.body.notes,
-        );
+        return await saveReviewNotes(request.params.deliverableId, auth.userId, request.body.notes);
       } catch (error) {
         if (error instanceof ReviewNotesValidationError) {
           return validationError(reply, error.message);

@@ -5,7 +5,7 @@
 **Status**: Draft  
 **Input**: User description: "create a screen only available for leaders to create new users. When the leader creates it, make it self the leader of the user."
 
-## User Scenarios & Testing *(mandatory, with required automated tests)*
+## User Scenarios & Testing _(mandatory, with required automated tests)_
 
 ### User Story 1 - Leader creates a new user from UI (Priority: P1)
 
@@ -69,13 +69,13 @@ When creating a user, the leader field is not manually selectable and is always 
 - A user who was previously a leader but no longer has leader permissions attempts creation; access is denied.
 - A repeated submission from the same form request occurs; the system prevents duplicate unintended user creation.
 
-## Requirements *(mandatory, with required test coverage)*
+## Requirements _(mandatory, with required test coverage)_
 
 ### Functional Requirements
 
-*All functional requirements MUST be covered by automated tests. Define the test(s) for each requirement below.*
+_All functional requirements MUST be covered by automated tests. Define the test(s) for each requirement below._
 
-*For features that expose collaborator or organizational data, requirements MUST define a hierarchical DAC matrix that allows only self + descendants (recursive) and denies peer/superior visibility for every API endpoint, report, and visualization in scope.*
+_For features that expose collaborator or organizational data, requirements MUST define a hierarchical DAC matrix that allows only self + descendants (recursive) and denies peer/superior visibility for every API endpoint, report, and visualization in scope._
 
 - **FR-001**: System MUST provide a dedicated user creation screen that is visible and accessible only to authenticated users with leader role.
 - **FR-002**: System MUST allow a leader to create a new user through that screen with required profile fields.
@@ -85,20 +85,20 @@ When creating a user, the leader field is not manually selectable and is always 
 - **FR-006**: System MUST return clear success and error feedback for create attempts (success confirmation, validation errors, permission errors).
 - **FR-007**: System MUST persist an auditable record that links created user and creator leader identity at creation time.
 
-### Access Control Matrix *(required when data visibility is in scope)*
+### Access Control Matrix _(required when data visibility is in scope)_
 
-| Actor | Allowed Data Visibility | Explicitly Denied Visibility | Validation Notes |
-|-------|--------------------------|-------------------------------|------------------|
-| Leader | Can access leader-only create screen and create new users; can set relationship only by creating user | Cannot create users while assigning another leader during creation | UI and API tests verify creator is always stored as leader |
-| Non-leader | No visibility to leader-only create screen | Cannot access route or perform create action | Route guard and API authorization tests must return deny |
+| Actor      | Allowed Data Visibility                                                                               | Explicitly Denied Visibility                                       | Validation Notes                                           |
+| ---------- | ----------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------ | ---------------------------------------------------------- |
+| Leader     | Can access leader-only create screen and create new users; can set relationship only by creating user | Cannot create users while assigning another leader during creation | UI and API tests verify creator is always stored as leader |
+| Non-leader | No visibility to leader-only create screen                                                            | Cannot access route or perform create action                       | Route guard and API authorization tests must return deny   |
 
-### Key Entities *(include if feature involves data)*
+### Key Entities _(include if feature involves data)_
 
 - **User**: Represents a person account in the system, including required onboarding attributes and an assigned leader relationship.
 - **Leader Assignment**: Represents the relationship binding a user to the leader responsible for that user, created automatically at user creation time.
 - **Creation Audit Record**: Represents traceable metadata of who created the user and when.
 
-## Success Criteria *(mandatory)*
+## Success Criteria _(mandatory)_
 
 ### Measurable Outcomes
 

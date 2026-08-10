@@ -8,10 +8,7 @@ import { THEME_COOKIE_NAME } from '../../src/theme/themeCookie.js';
 function clearThemeCookie(): void {
   document.cookie = `${THEME_COOKIE_NAME}=; path=/; max-age=0`;
 }
-import {
-  patchMyProfile,
-  ProfileApiError,
-} from '../../src/services/profileApi.js';
+import { patchMyProfile, ProfileApiError } from '../../src/services/profileApi.js';
 
 vi.mock('../../src/services/profileApi.js', async (importOriginal) => {
   const actual = await importOriginal<typeof import('../../src/services/profileApi.js')>();
@@ -50,9 +47,7 @@ describe('US1 profile page theme', () => {
       });
     });
 
-    expect(
-      screen.getByText('Profile changes saved successfully.'),
-    ).toBeInTheDocument();
+    expect(screen.getByText('Profile changes saved successfully.')).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Dark theme' })).toHaveAttribute(
       'aria-pressed',
       'true',

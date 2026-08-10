@@ -193,9 +193,7 @@ export default function TeamDeliverableReviewModal({
         if (!cancelled) {
           setDeliverable(null);
           setErrorMessage(
-            error instanceof DeliverablesApiError
-              ? error.message
-              : t('reviewModal.loadError'),
+            error instanceof DeliverablesApiError ? error.message : t('reviewModal.loadError'),
           );
         }
       } finally {

@@ -11,12 +11,10 @@ describe('US1 deliverable create validation', () => {
   it('disables save when required fields are missing', async () => {
     vi.stubGlobal(
       'fetch',
-      vi
-        .fn()
-        .mockResolvedValueOnce({
-          ok: true,
-          json: async () => ({ tags: [] }),
-        }),
+      vi.fn().mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({ tags: [] }),
+      }),
     );
 
     renderWithProviders(<App />, {
@@ -36,12 +34,10 @@ describe('US1 deliverable create validation', () => {
   it('enables save when required fields are filled and system tags are empty', async () => {
     vi.stubGlobal(
       'fetch',
-      vi
-        .fn()
-        .mockResolvedValueOnce({
-          ok: true,
-          json: async () => ({ tags: [{ id: 'tag-1', name: 'Platform', color: '#1976D2' }] }),
-        }),
+      vi.fn().mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({ tags: [{ id: 'tag-1', name: 'Platform', color: '#1976D2' }] }),
+      }),
     );
 
     renderWithProviders(<App />, {
