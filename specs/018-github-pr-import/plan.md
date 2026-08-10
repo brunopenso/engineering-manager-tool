@@ -5,18 +5,18 @@
 
 ## Summary
 
-Add an operator-triggered GitHub pull request import that, for every collaborator with a `githubLogin`, queries merged PRs across enabled `github_integrations` organizations for a UTC date range (default: previous day), persists PRs/comments/reviews, and records per-collaborator/org/period collection-control rows to prevent duplicate successful imports. Expose an authenticated retrieve API that accepts GitHub logins + date filter and returns collected data under hierarchical DAC (self + recursive subordinates; administrators may read any collaborator). Backend-only for this feature (no new web UI); root/backend workspace scripts invoke a `tsx` import CLI. Introduce `@octokit/rest` and a `GITHUB_TOKEN` env secret for GitHub API access.
+Add an operator-triggered GitHub pull request import that, for every collaborator with a `githubLogin`, queries merged PRs across enabled `github_integrations` organizations for a UTC date range (default: previous day), persists PRs/comments/reviews, and records per-collaborator/org/period collection-control rows to prevent duplicate successful imports. Expose an authenticated retrieve API that accepts GitHub logins + date filter and returns collected data under hierarchical DAC (self + recursive subordinates; administrators may read any collaborator). Backend-only for this feature (no new web UI); root/backend workspace scripts invoke a `tsx` import CLI. Use `@octokit/rest` with `@octokit/auth-app` and per-org `GITHUB_APP_{org}_*` installation credentials for GitHub API access.
 
 ## Technical Context
 
 **Language/Version**: TypeScript (Node.js 26 backend; React 19 frontend unchanged for this feature)  
-**Primary Dependencies**: Fastify 5, TypeORM, PostgreSQL, Vitest, `tsx` CLI scripts, `@octokit/rest` (latest stable at implementation; currently 22.x)  
+**Primary Dependencies**: Fastify 5, TypeORM, PostgreSQL, Vitest, `tsx` CLI scripts, `@octokit/rest`, `@octokit/auth-app` (latest stable at implementation)  
 **Storage**: PostgreSQL — new tables for imported PRs, comments, reviews, and collection control; migrations under `packages/backend/database/migrations`  
 **Testing**: Vitest; feature tests under `packages/backend/tests/018-github-pr-import/` (and mirrored path expectations from constitution `tests/018-github-pr-import/`)  
 **Target Platform**: Linux-hosted backend + operator CLI; browser SPA consumes retrieve API later (out of scope UI)  
 **Project Type**: Monorepo web application (`packages/backend`, `packages/web`) — **backend-only change set** for 018  
 **Performance Goals**: Import completes for typical team sizes (tens of collaborators × few orgs × one day) within operator-acceptable runtime; retrieve API returns matching PRs with nested comments/reviews within a few seconds for moderate result sets  
-**Constraints**: UTC day boundaries; only enabled orgs; only merged PRs matching author login; no duplicate successful collection for collaborator+org+range; secrets via env (`GITHUB_TOKEN`); hierarchical DAC on retrieve; no new web UI / i18n surface  
+**Constraints**: UTC day boundaries; only enabled orgs; only merged PRs matching author login; no duplicate successful collection for collaborator+org+range; secrets via env (`GITHUB_APP_{org}_*`); hierarchical DAC on retrieve; no new web UI / i18n surface  
 **Scale/Scope**: Four new persistence entities, one import CLI + npm scripts, one retrieve API, GitHub client wrapper; reuses `users.github_login` and `github_integrations`
 
 ## Constitution Check
@@ -24,7 +24,7 @@ Add an operator-triggered GitHub pull request import that, for every collaborato
 *GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
 
 - Principle I (Type-Safe Monorepo Ownership): **PASS** — backend package owns import CLI, entities, routes, and tests; no circular workspace deps.
-- Principle II (Security-First): **PASS** — retrieve API requires app auth; DAC + admin bypass explicit; `GITHUB_TOKEN` from env only; errors must not leak secrets.
+- Principle II (Security-First): **PASS** — retrieve API requires app auth; DAC + admin bypass explicit; GitHub App credentials from env only; errors must not leak secrets.
 - Principle III (Migration-Backed Data Integrity): **PASS** — migrations + TypeORM entities for PR/comment/review/control tables with uniqueness constraints.
 - Principle IV (API and UX Contract Fidelity): **PASS** — `contracts/github-pr-import-api.yaml` + CLI contract in `contracts/github-pr-import-cli.md`.
 - Principle V (Incremental Delivery): **PASS** — stories map to import → control → retrieve.

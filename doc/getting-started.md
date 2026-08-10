@@ -35,8 +35,11 @@ BOOTSTRAP_ADMIN_EMAILS=admin@example.com
 DEV_AUTH_ENABLED=true
 DEV_AUTH_SECRET=local-dev-only-change-me
 
-# Required for the operator GitHub PR import command (npm run github:import-prs)
-GITHUB_TOKEN=ghp_or_fine_grained_token_with_org_repo_read
+# GitHub App installation credentials per enabled organization (npm run github:import-prs)
+# Replace {org} with the github_integrations organization_name (example: brunopenso)
+GITHUB_APP_{org}_APP_ID=123456
+GITHUB_APP_{org}_PRIVATE_KEY="-----BEGIN RSA PRIVATE KEY-----\n...\n-----END RSA PRIVATE KEY-----"
+GITHUB_APP_{org}_INSTALLATION_ID=12345678
 ```
 
 **`packages/web/.env`**

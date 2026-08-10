@@ -37,10 +37,12 @@ Rules:
 
 | Variable | Required | Description |
 |----------|----------|-------------|
-| `GITHUB_TOKEN` | Yes for live GitHub | Token with read access to enabled orgs’ repos, PRs, comments, and reviews |
+| `GITHUB_APP_{org}_APP_ID` | Yes for live GitHub | GitHub App ID for the enabled organization `{org}` |
+| `GITHUB_APP_{org}_PRIVATE_KEY` | Yes for live GitHub | GitHub App private key (PEM; `\n` escapes supported) |
+| `GITHUB_APP_{org}_INSTALLATION_ID` | Yes for live GitHub | Installation ID of the app on that organization |
 | Database env (existing backend `.env`) | Yes | Standard TypeORM / PostgreSQL connection settings |
 
-Missing `GITHUB_TOKEN` when a live fetch is attempted → collection control `failed` with error details (and non-zero CLI exit if all/any failures per implementation exit policy documented in quickstart).
+Missing GitHub App credentials for an organization when a live fetch is attempted → collection control `failed` with error details (and non-zero CLI exit if any collections failed per quickstart).
 
 ## Behavior summary
 

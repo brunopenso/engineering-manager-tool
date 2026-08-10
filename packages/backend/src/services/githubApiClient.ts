@@ -1,3 +1,4 @@
+import { createAppAuth } from '@octokit/auth-app';
 import { Octokit } from '@octokit/rest';
 
 export type GithubMergedPullRequestHit = {
@@ -73,6 +74,19 @@ export interface GithubApiClient {
   ): Promise<GithubReview[]>;
 }
 
+export type GithubAppCredentials = {
+  appId: number;
+  privateKey: string;
+  installationId: number;
+};
+
+export class GithubAppCredentialsError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = 'GithubAppCredentialsError';
+  }
+}
+
 function parseRepoFullName(fullName: string): { organization: string; repository: string } {
   const [organization, repository] = fullName.split('/');
   if (!organization || !repository) {
@@ -81,11 +95,70 @@ function parseRepoFullName(fullName: string): { organization: string; repository
   return { organization, repository };
 }
 
-export function createOctokitGithubApiClient(token: string): GithubApiClient {
-  const octokit = new Octokit({ auth: token });
+export function normalizeGithubAppPrivateKey(raw: string): string {
+  return raw.replace(/\\n/g, '\n');
+}
+
+/**
+ * Resolves GitHub App installation credentials for an organization from env:
+ * `GITHUB_APP_{organization}_APP_ID`, `_PRIVATE_KEY`, `_INSTALLATION_ID`.
+ */
+export function resolveGithubAppCredentials(
+  organization: string,
+  env: NodeJS.ProcessEnv = process.env,
+): GithubAppCredentials {
+  const org = organization.trim();
+  if (!org) {
+    throw new GithubAppCredentialsError('Organization is required for GitHub App authentication');
+  }
+
+  const prefix = `GITHUB_APP_${org}`;
+  const appIdRaw = env[`${prefix}_APP_ID`]?.trim();
+  const privateKeyRaw = env[`${prefix}_PRIVATE_KEY`]?.trim();
+  const installationIdRaw = env[`${prefix}_INSTALLATION_ID`]?.trim();
+
+  if (!appIdRaw || !privateKeyRaw || !installationIdRaw) {
+    throw new GithubAppCredentialsError(
+      `Missing GitHub App credentials for organization "${org}". Expected ${prefix}_APP_ID, ${prefix}_PRIVATE_KEY, and ${prefix}_INSTALLATION_ID.`,
+    );
+  }
+
+  const appId = Number(appIdRaw);
+  const installationId = Number(installationIdRaw);
+  if (!Number.isFinite(appId) || !Number.isFinite(installationId)) {
+    throw new GithubAppCredentialsError(
+      `Invalid GitHub App APP_ID or INSTALLATION_ID for organization "${org}".`,
+    );
+  }
 
   return {
+    appId,
+    privateKey: normalizeGithubAppPrivateKey(privateKeyRaw),
+    installationId,
+  };
+}
+
+export function createOctokitForOrganization(
+  organization: string,
+  env: NodeJS.ProcessEnv = process.env,
+): Octokit {
+  const credentials = resolveGithubAppCredentials(organization, env);
+  return new Octokit({
+    authStrategy: createAppAuth,
+    auth: {
+      appId: credentials.appId,
+      privateKey: credentials.privateKey,
+      installationId: credentials.installationId,
+    },
+  });
+}
+
+function buildGithubApiClient(
+  getOctokit: (organization: string) => Octokit,
+): GithubApiClient {
+  return {
     async searchMergedPullRequests(input) {
+      const octokit = getOctokit(input.organization);
       const query = [
         'is:pr',
         'is:merged',
@@ -125,6 +198,7 @@ export function createOctokitGithubApiClient(token: string): GithubApiClient {
     },
 
     async getPullRequest(organization, repository, number) {
+      const octokit = getOctokit(organization);
       const { data } = await octokit.pulls.get({
         owner: organization,
         repo: repository,
@@ -153,6 +227,7 @@ export function createOctokitGithubApiClient(token: string): GithubApiClient {
     },
 
     async listIssueComments(organization, repository, number) {
+      const octokit = getOctokit(organization);
       const comments: GithubIssueComment[] = [];
       let page = 1;
       for (;;) {
@@ -182,6 +257,7 @@ export function createOctokitGithubApiClient(token: string): GithubApiClient {
     },
 
     async listReviews(organization, repository, number) {
+      const octokit = getOctokit(organization);
       const reviews: GithubReview[] = [];
       let page = 1;
       for (;;) {
@@ -213,12 +289,23 @@ export function createOctokitGithubApiClient(token: string): GithubApiClient {
   };
 }
 
+/**
+ * Creates a GitHub API client that authenticates with a GitHub App installation
+ * per organization using `GITHUB_APP_{org}_APP_ID|PRIVATE_KEY|INSTALLATION_ID`.
+ */
 export function createGithubApiClientFromEnv(
   env: NodeJS.ProcessEnv = process.env,
 ): GithubApiClient {
-  const token = env.GITHUB_TOKEN?.trim();
-  if (!token) {
-    throw new Error('GITHUB_TOKEN is required to query GitHub');
-  }
-  return createOctokitGithubApiClient(token);
+  const cache = new Map<string, Octokit>();
+
+  return buildGithubApiClient((organization) => {
+    const key = organization.trim().toLowerCase();
+    const cached = cache.get(key);
+    if (cached) {
+      return cached;
+    }
+    const octokit = createOctokitForOrganization(organization.trim(), env);
+    cache.set(key, octokit);
+    return octokit;
+  });
 }

@@ -24,7 +24,9 @@ Imports merged GitHub pull requests for collaborators with a githubLogin across
 enabled github_integrations organizations.
 
 Defaults to the previous UTC calendar day when dates are omitted.
-Requires GITHUB_TOKEN and database configuration in packages/backend/.env.
+Requires GitHub App installation credentials per enabled organization
+(GITHUB_APP_{org}_APP_ID, _PRIVATE_KEY, _INSTALLATION_ID) and database
+configuration in packages/backend/.env.
 `);
 }
 

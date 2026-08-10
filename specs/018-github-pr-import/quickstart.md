@@ -12,14 +12,14 @@ Validate the import command, collection control, and retrieve API end-to-end. Se
 - Migrations applied: `npm run db:migration:run --workspace @em-tool/backend`
 - At least one enabled GitHub org (`POST /github-integrations` as admin) — see feature `015-admin-github-orgs`
 - At least one user with `githubLogin` set — see feature `014-profile-theme-github`
-- `GITHUB_TOKEN` set in the environment for live import (tests mock GitHub)
+- GitHub App installation env vars for each enabled org (`GITHUB_APP_{org}_APP_ID`, `_PRIVATE_KEY`, `_INSTALLATION_ID`) for live import (tests mock GitHub)
 
 ## Setup
 
 ```bash
 npm install
 npm run db:migration:run --workspace @em-tool/backend
-export GITHUB_TOKEN=ghp_or_fine_grained_token
+# Ensure packages/backend/.env has GITHUB_APP_{org}_* for each enabled organization
 ```
 
 ## Automated tests
@@ -97,4 +97,4 @@ Expected:
 - Automated tests: `npm run test --workspace @em-tool/backend -- tests/018-github-pr-import` → 10 files / 28 tests passed
 - Migration file added: `packages/backend/database/migrations/1779800000000-AddGithubPullRequestImport.ts`
 - Operator command: `npm run github:import-prs` (root) → `@em-tool/backend` `tsx scripts/github-import-prs.ts`
-- Live GitHub import and DB migration apply require local `GITHUB_TOKEN` + PostgreSQL; CI covers mocked import/query/DAC paths
+- Live GitHub import and DB migration apply require local GitHub App org credentials + PostgreSQL; CI covers mocked import/query/DAC paths

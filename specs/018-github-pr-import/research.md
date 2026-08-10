@@ -5,13 +5,13 @@
 
 ## 1. GitHub API client and authentication
 
-**Decision**: Add `@octokit/rest` as a backend dependency and authenticate with a server-side `GITHUB_TOKEN` environment variable (classic or fine-grained PAT / installation token with read access to org repos, PRs, and comments).
+**Decision**: Add `@octokit/rest` + `@octokit/auth-app` and authenticate with a **GitHub App installation per enabled organization**, using env vars `GITHUB_APP_{organization}_APP_ID`, `GITHUB_APP_{organization}_PRIVATE_KEY`, and `GITHUB_APP_{organization}_INSTALLATION_ID`.
 
-**Rationale**: No first-party GitHub client exists today (only transitive Lerna Octokit). `@octokit/rest` is the standard REST client, actively maintained, and fits TypeScript + Node 26. Env-based secrets match constitution Principle II and existing dotenv patterns.
+**Rationale**: The runtime already provides GitHub App credentials scoped by organization. Installation tokens give org-wide read access without a shared PAT, match Principle II (secrets in env only), and align with multi-org allowlisting from `github_integrations`.
 
 **Alternatives considered**:
+- Server-side `GITHUB_TOKEN` PAT: simpler initially; rejected because GitHub App credentials are already available and preferred.
 - Raw `fetch` against GitHub REST: more boilerplate for pagination/rate limits; rejected for maintainability.
-- GitHub App installation auth: better for production multi-org later, but heavier setup; deferred — PAT/`GITHUB_TOKEN` is enough for manual operator import v1.
 - GraphQL-only client: powerful search, but REST Search + PR detail endpoints are sufficient and simpler to mock in tests.
 
 ## 2. Pull request discovery strategy
