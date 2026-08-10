@@ -23,9 +23,7 @@ function assertIsoDate(value: string, label: string): void {
 }
 
 export function previousUtcCalendarDay(now: Date = new Date()): string {
-  const utc = new Date(
-    Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() - 1),
-  );
+  const utc = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() - 1));
   return utc.toISOString().slice(0, 10);
 }
 
@@ -38,7 +36,9 @@ export function resolveImportDateRange(
   const hasEnd = Boolean(endDate);
 
   if (hasStart !== hasEnd) {
-    throw new GithubPrImportDateRangeError('Both --start and --end are required when either is provided');
+    throw new GithubPrImportDateRangeError(
+      'Both --start and --end are required when either is provided',
+    );
   }
 
   if (!hasStart && !hasEnd) {

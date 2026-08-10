@@ -23,33 +23,35 @@
 
 Persisted merged pull request collected from GitHub.
 
-| Field | Type | Notes |
-|-------|------|--------|
-| `id` | UUID | Internal primary key |
-| `githubPullRequestId` | bigint / string | GitHub node/REST id; **unique** |
-| `organization` | string | Org login/slug (enabled org) |
-| `repository` | string | Repository name |
-| `repositoryId` | bigint / string | GitHub repository id |
-| `title` | string | |
-| `body` | text, nullable | Description |
-| `number` | integer | PR number within repo |
-| `changedFilesCount` | integer | Files changed |
-| `additionsCount` | integer | |
-| `deletionsCount` | integer | |
-| `sourceBranch` | string | Head ref |
-| `targetBranch` | string | Base ref |
-| `authorGithubLogin` | string | Author login as from GitHub |
-| `mergedAt` | timestamptz | Merged date/time |
-| `url` | string, nullable | HTML URL when available |
-| `collaboratorId` | UUID FK → `users.id` | Owning collaborator at import time |
-| `createdAt` / `updatedAt` | timestamptz | Audit |
+| Field                     | Type                 | Notes                              |
+| ------------------------- | -------------------- | ---------------------------------- |
+| `id`                      | UUID                 | Internal primary key               |
+| `githubPullRequestId`     | bigint / string      | GitHub node/REST id; **unique**    |
+| `organization`            | string               | Org login/slug (enabled org)       |
+| `repository`              | string               | Repository name                    |
+| `repositoryId`            | bigint / string      | GitHub repository id               |
+| `title`                   | string               |                                    |
+| `body`                    | text, nullable       | Description                        |
+| `number`                  | integer              | PR number within repo              |
+| `changedFilesCount`       | integer              | Files changed                      |
+| `additionsCount`          | integer              |                                    |
+| `deletionsCount`          | integer              |                                    |
+| `sourceBranch`            | string               | Head ref                           |
+| `targetBranch`            | string               | Base ref                           |
+| `authorGithubLogin`       | string               | Author login as from GitHub        |
+| `mergedAt`                | timestamptz          | Merged date/time                   |
+| `url`                     | string, nullable     | HTML URL when available            |
+| `collaboratorId`          | UUID FK → `users.id` | Owning collaborator at import time |
+| `createdAt` / `updatedAt` | timestamptz          | Audit                              |
 
 **Relationships**:
+
 - Many-to-one → User (`collaboratorId`)
 - One-to-many → `GithubPullRequestComment`
 - One-to-many → `GithubPullRequestReview`
 
 **Validation / rules**:
+
 - Only persisted when author matches collaborator GitHub login, org is enabled, and `mergedAt` is within selected inclusive UTC range
 - Upsert on `githubPullRequestId` on retry after failed collection
 
@@ -57,17 +59,17 @@ Persisted merged pull request collected from GitHub.
 
 Conversation (issue) comment on an imported pull request.
 
-| Field | Type | Notes |
-|-------|------|--------|
-| `id` | UUID | Internal PK |
-| `githubCommentId` | bigint / string | **unique** |
-| `pullRequestId` | UUID FK | → `GithubImportedPullRequest` |
-| `authorGithubLogin` | string | |
-| `body` | text | Full text |
-| `createdAtGithub` | timestamptz | GitHub created |
-| `updatedAtGithub` | timestamptz | GitHub updated |
-| `url` | string, nullable | |
-| `createdAt` / `updatedAt` | timestamptz | Local audit |
+| Field                     | Type             | Notes                         |
+| ------------------------- | ---------------- | ----------------------------- |
+| `id`                      | UUID             | Internal PK                   |
+| `githubCommentId`         | bigint / string  | **unique**                    |
+| `pullRequestId`           | UUID FK          | → `GithubImportedPullRequest` |
+| `authorGithubLogin`       | string           |                               |
+| `body`                    | text             | Full text                     |
+| `createdAtGithub`         | timestamptz      | GitHub created                |
+| `updatedAtGithub`         | timestamptz      | GitHub updated                |
+| `url`                     | string, nullable |                               |
+| `createdAt` / `updatedAt` | timestamptz      | Local audit                   |
 
 **Validation**: Requires parent imported PR; upsert on `githubCommentId`.
 
@@ -75,18 +77,18 @@ Conversation (issue) comment on an imported pull request.
 
 Review on an imported pull request.
 
-| Field | Type | Notes |
-|-------|------|--------|
-| `id` | UUID | Internal PK |
-| `githubReviewId` | bigint / string | **unique** |
-| `pullRequestId` | UUID FK | → `GithubImportedPullRequest` |
-| `reviewerGithubLogin` | string | |
-| `body` | text, nullable | Full text (GitHub may send empty) |
-| `state` | string | e.g. APPROVED, CHANGES_REQUESTED, COMMENTED, DISMISSED, PENDING |
-| `createdAtGithub` | timestamptz | |
-| `updatedAtGithub` | timestamptz, nullable | When available |
-| `url` | string, nullable | |
-| `createdAt` / `updatedAt` | timestamptz | Local audit |
+| Field                     | Type                  | Notes                                                           |
+| ------------------------- | --------------------- | --------------------------------------------------------------- |
+| `id`                      | UUID                  | Internal PK                                                     |
+| `githubReviewId`          | bigint / string       | **unique**                                                      |
+| `pullRequestId`           | UUID FK               | → `GithubImportedPullRequest`                                   |
+| `reviewerGithubLogin`     | string                |                                                                 |
+| `body`                    | text, nullable        | Full text (GitHub may send empty)                               |
+| `state`                   | string                | e.g. APPROVED, CHANGES_REQUESTED, COMMENTED, DISMISSED, PENDING |
+| `createdAtGithub`         | timestamptz           |                                                                 |
+| `updatedAtGithub`         | timestamptz, nullable | When available                                                  |
+| `url`                     | string, nullable      |                                                                 |
+| `createdAt` / `updatedAt` | timestamptz           | Local audit                                                     |
 
 **Validation**: Requires parent imported PR; upsert on `githubReviewId`.
 
@@ -94,22 +96,23 @@ Review on an imported pull request.
 
 Tracks import attempts per collaborator, organization, and date range.
 
-| Field | Type | Notes |
-|-------|------|--------|
-| `id` | UUID | Internal PK |
-| `collaboratorId` | UUID FK → `users.id` | |
-| `githubLogin` | string | Login used for the attempt |
-| `organization` | string | Org slug |
-| `startDate` | date | Inclusive UTC start (calendar day) |
-| `endDate` | date | Inclusive UTC end |
-| `status` | enum/string | `success` \| `failed` \| `skipped` |
-| `executedAt` | timestamptz | Execution timestamp |
-| `errorDetails` | text, nullable | Present when failed |
-| `createdAt` / `updatedAt` | timestamptz | |
+| Field                     | Type                 | Notes                              |
+| ------------------------- | -------------------- | ---------------------------------- |
+| `id`                      | UUID                 | Internal PK                        |
+| `collaboratorId`          | UUID FK → `users.id` |                                    |
+| `githubLogin`             | string               | Login used for the attempt         |
+| `organization`            | string               | Org slug                           |
+| `startDate`               | date                 | Inclusive UTC start (calendar day) |
+| `endDate`                 | date                 | Inclusive UTC end                  |
+| `status`                  | enum/string          | `success` \| `failed` \| `skipped` |
+| `executedAt`              | timestamptz          | Execution timestamp                |
+| `errorDetails`            | text, nullable       | Present when failed                |
+| `createdAt` / `updatedAt` | timestamptz          |                                    |
 
 **Uniqueness**: Unique on `(collaboratorId, organization, startDate, endDate)`.
 
 **State transitions**:
+
 1. First attempt → insert `success` or `failed`
 2. Re-run when existing `success` → mark/return `skipped` (no PR duplicates)
 3. Re-run when existing `failed` → retry import; on success update to `success` and clear `errorDetails`; on failure update `errorDetails` / `executedAt`
@@ -131,11 +134,11 @@ failed --> failed (retry still failing)
 
 ## Table naming (suggested)
 
-| Entity | Table |
-|--------|--------|
+| Entity                    | Table                           |
+| ------------------------- | ------------------------------- |
 | GithubImportedPullRequest | `github_imported_pull_requests` |
-| GithubPullRequestComment | `github_pull_request_comments` |
-| GithubPullRequestReview | `github_pull_request_reviews` |
+| GithubPullRequestComment  | `github_pull_request_comments`  |
+| GithubPullRequestReview   | `github_pull_request_reviews`   |
 | GithubPrCollectionControl | `github_pr_collection_controls` |
 
 ## Out of scope for this model

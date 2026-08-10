@@ -5,7 +5,7 @@
 **Status**: Draft  
 **Input**: User description: "Create a new package.json command to run the github integration manually. This github integration should For each user that have a github login, Query pull requests across all repositories of each configured GitHub organization from the previous day (create a support for specific dates for future needs) and Persist the imported data into the internal database. Pull request selection rules, comment/review storage, collection control table, and a new API endpoint that receives a list of github logins and a filter of dates to retrieve the collected data."
 
-## User Scenarios & Testing *(mandatory, with required automated tests)*
+## User Scenarios & Testing _(mandatory, with required automated tests)_
 
 ### User Story 1 - Operator imports merged pull requests for a date range (Priority: P1)
 
@@ -91,11 +91,11 @@ An authenticated caller uses a new API that accepts a list of GitHub logins and 
 - GitHub login in the retrieve request that does not map to any product collaborator: treated as no matching data for that login for authorized callers, without leaking whether the login exists outside the caller’s visibility scope beyond standard denial rules.
 - Re-import after a failed control record: allowed; on success, status reflects success and pull request data for that period is present once.
 
-## Requirements *(mandatory, with required test coverage)*
+## Requirements _(mandatory, with required test coverage)_
 
 ### Functional Requirements
 
-*All functional requirements MUST be covered by automated tests under `tests/018-github-pr-import/`.*
+_All functional requirements MUST be covered by automated tests under `tests/018-github-pr-import/`._
 
 - **FR-001**: The project MUST provide a documented root-level workspace command that operators can run to trigger the GitHub pull request import manually.
 - **FR-002**: When the command is run without an explicit date range, the system MUST import data for the previous calendar day using UTC day boundaries.
@@ -114,26 +114,26 @@ An authenticated caller uses a new API that accepts a list of GitHub logins and 
 - **FR-015**: The retrieve API MUST enforce hierarchical visibility: callers may access only self and recursive subordinates’ collected data; peer and superior data MUST be denied; administrators MAY access any collaborator’s collected data.
 - **FR-016**: Automated tests for this feature MUST live under `tests/018-github-pr-import/` and cover acceptance scenarios for import, collection control, retrieve filtering, and access control.
 
-### Access Control Matrix *(required when data visibility is in scope)*
+### Access Control Matrix _(required when data visibility is in scope)_
 
-| Actor | Allowed Data Visibility | Explicitly Denied Visibility | Validation Notes |
-|-------|--------------------------|-------------------------------|------------------|
-| Individual contributor | Own collected PRs/comments/reviews (own GitHub login) | Any other collaborator’s collected data | Retrieve API tests for self allow / peer deny |
-| Mid-level leader | Self + recursive subordinate tree collected data | Peers, superiors, other branches | Retrieve API tests for direct and nested subordinate allow; peer/superior deny |
-| Top-level leader | Self + all descendants’ collected data | Non-descendants outside their tree | Same hierarchical rules at full-tree depth |
-| Administrator | Any requested GitHub login that maps to a product collaborator | Unauthenticated access | Admin allow-all within product collaborators; unauthenticated denied |
-| Unauthenticated caller | None | All retrieve and mutation of collected data | Must receive denial |
+| Actor                  | Allowed Data Visibility                                        | Explicitly Denied Visibility                | Validation Notes                                                               |
+| ---------------------- | -------------------------------------------------------------- | ------------------------------------------- | ------------------------------------------------------------------------------ |
+| Individual contributor | Own collected PRs/comments/reviews (own GitHub login)          | Any other collaborator’s collected data     | Retrieve API tests for self allow / peer deny                                  |
+| Mid-level leader       | Self + recursive subordinate tree collected data               | Peers, superiors, other branches            | Retrieve API tests for direct and nested subordinate allow; peer/superior deny |
+| Top-level leader       | Self + all descendants’ collected data                         | Non-descendants outside their tree          | Same hierarchical rules at full-tree depth                                     |
+| Administrator          | Any requested GitHub login that maps to a product collaborator | Unauthenticated access                      | Admin allow-all within product collaborators; unauthenticated denied           |
+| Unauthenticated caller | None                                                           | All retrieve and mutation of collected data | Must receive denial                                                            |
 
-### Key Entities *(include if feature involves data)*
+### Key Entities _(include if feature involves data)_
 
 - **Imported Pull Request**: A merged GitHub pull request collected for a collaborator under an enabled organization, including identity, repository context, change stats, branches, author login, merged date, and URL when available.
 - **Pull Request Comment**: Full-text comment associated with an imported pull request, including GitHub comment identity, author login, timestamps, and URL when available.
 - **Pull Request Review**: Full-text review associated with an imported pull request, including GitHub review identity, reviewer login, review state, timestamps, and URL when available.
 - **Collection Control Record**: Operational record of an import attempt for one collaborator, organization, and date range, including status, execution time, and error details when failed.
-- **Enabled GitHub Organization** *(existing)*: Product configuration of organizations in scope for import; import MUST use only currently enabled entries.
-- **Collaborator GitHub Login** *(existing)*: The GitHub username linked on a collaborator profile; required for a collaborator to be included in import and for retrieve matching.
+- **Enabled GitHub Organization** _(existing)_: Product configuration of organizations in scope for import; import MUST use only currently enabled entries.
+- **Collaborator GitHub Login** _(existing)_: The GitHub username linked on a collaborator profile; required for a collaborator to be included in import and for retrieve matching.
 
-## Success Criteria *(mandatory)*
+## Success Criteria _(mandatory)_
 
 ### Measurable Outcomes
 

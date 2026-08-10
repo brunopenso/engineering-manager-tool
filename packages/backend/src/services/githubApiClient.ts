@@ -67,11 +67,7 @@ export interface GithubApiClient {
     repository: string,
     number: number,
   ): Promise<GithubIssueComment[]>;
-  listReviews(
-    organization: string,
-    repository: string,
-    number: number,
-  ): Promise<GithubReview[]>;
+  listReviews(organization: string, repository: string, number: number): Promise<GithubReview[]>;
 }
 
 export type GithubAppCredentials = {
@@ -153,9 +149,7 @@ export function createOctokitForOrganization(
   });
 }
 
-function buildGithubApiClient(
-  getOctokit: (organization: string) => Octokit,
-): GithubApiClient {
+function buildGithubApiClient(getOctokit: (organization: string) => Octokit): GithubApiClient {
   return {
     async searchMergedPullRequests(input) {
       const octokit = getOctokit(input.organization);

@@ -74,13 +74,13 @@ Expected:
 
 ## DAC smoke matrix
 
-| Caller | Requested login | Expected |
-|--------|-----------------|----------|
-| Self | own `githubLogin` | 200 + own PRs |
-| Leader | direct/nested subordinate | 200 + subordinate PRs |
-| Any | peer or superior | denied |
-| Administrator | any product collaborator login | 200 |
-| None | any | 401 |
+| Caller        | Requested login                | Expected              |
+| ------------- | ------------------------------ | --------------------- |
+| Self          | own `githubLogin`              | 200 + own PRs         |
+| Leader        | direct/nested subordinate      | 200 + subordinate PRs |
+| Any           | peer or superior               | denied                |
+| Administrator | any product collaborator login | 200                   |
+| None          | any                            | 401                   |
 
 ## Done when
 

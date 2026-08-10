@@ -1,6 +1,9 @@
 import { describe, expect, it, vi } from 'vitest';
 import type { GithubApiClient } from '../../src/services/githubApiClient.js';
-import { runGithubPrImport, type GithubPrImportDeps } from '../../src/services/githubPrImportService.js';
+import {
+  runGithubPrImport,
+  type GithubPrImportDeps,
+} from '../../src/services/githubPrImportService.js';
 import { samplePullRequestDetails } from './github-pr-import.setup.js';
 
 describe('US1 import persist fields', () => {

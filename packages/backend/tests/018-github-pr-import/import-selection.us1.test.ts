@@ -1,6 +1,9 @@
 import { describe, expect, it, vi } from 'vitest';
 import type { GithubApiClient } from '../../src/services/githubApiClient.js';
-import { runGithubPrImport, type GithubPrImportDeps } from '../../src/services/githubPrImportService.js';
+import {
+  runGithubPrImport,
+  type GithubPrImportDeps,
+} from '../../src/services/githubPrImportService.js';
 import { samplePullRequestDetails } from './github-pr-import.setup.js';
 
 function createMockApi(overrides: Partial<GithubApiClient> = {}): GithubApiClient {
@@ -72,10 +75,7 @@ describe('US1 import selection and persistence', () => {
           githubPullRequestId: '1002',
         },
       ]),
-      getPullRequest: vi
-        .fn()
-        .mockResolvedValueOnce(matching)
-        .mockResolvedValueOnce(wrongAuthor),
+      getPullRequest: vi.fn().mockResolvedValueOnce(matching).mockResolvedValueOnce(wrongAuthor),
       listIssueComments: vi.fn().mockResolvedValue([
         {
           githubCommentId: 'c1',

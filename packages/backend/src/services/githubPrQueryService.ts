@@ -64,9 +64,7 @@ export class GithubPrQueryValidationError extends Error {
   }
 }
 
-export function validateGithubPullRequestQueryInput(
-  body: unknown,
-): GithubPullRequestQueryInput {
+export function validateGithubPullRequestQueryInput(body: unknown): GithubPullRequestQueryInput {
   if (!body || typeof body !== 'object') {
     throw new GithubPrQueryValidationError('Request body must be an object');
   }

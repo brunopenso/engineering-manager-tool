@@ -9,7 +9,8 @@ describe('GitHub App credential resolution', () => {
   it('resolves APP_ID, PRIVATE_KEY, and INSTALLATION_ID for an organization', () => {
     const credentials = resolveGithubAppCredentials('brunopenso', {
       GITHUB_APP_brunopenso_APP_ID: '4077218',
-      GITHUB_APP_brunopenso_PRIVATE_KEY: '-----BEGIN RSA PRIVATE KEY-----\\nABC\\n-----END RSA PRIVATE KEY-----',
+      GITHUB_APP_brunopenso_PRIVATE_KEY:
+        '-----BEGIN RSA PRIVATE KEY-----\\nABC\\n-----END RSA PRIVATE KEY-----',
       GITHUB_APP_brunopenso_INSTALLATION_ID: '140892037',
     });
 
@@ -26,8 +27,6 @@ describe('GitHub App credential resolution', () => {
 
   it('throws a clear error when credentials are missing', () => {
     expect(() => resolveGithubAppCredentials('acme', {})).toThrow(GithubAppCredentialsError);
-    expect(() => resolveGithubAppCredentials('acme', {})).toThrow(
-      /GITHUB_APP_acme_APP_ID/,
-    );
+    expect(() => resolveGithubAppCredentials('acme', {})).toThrow(/GITHUB_APP_acme_APP_ID/);
   });
 });

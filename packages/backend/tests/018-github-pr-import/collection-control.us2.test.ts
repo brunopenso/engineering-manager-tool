@@ -1,6 +1,9 @@
 import { describe, expect, it, vi } from 'vitest';
 import type { GithubApiClient } from '../../src/services/githubApiClient.js';
-import { runGithubPrImport, type GithubPrImportDeps } from '../../src/services/githubPrImportService.js';
+import {
+  runGithubPrImport,
+  type GithubPrImportDeps,
+} from '../../src/services/githubPrImportService.js';
 import { shouldSkipSuccessfulCollection } from '../../src/services/githubPrCollectionControlService.js';
 import type { GithubPrCollectionControl } from '../../src/database/entities/GithubPrCollectionControl.js';
 import { samplePullRequestDetails } from './github-pr-import.setup.js';
@@ -25,12 +28,12 @@ function baseDeps(overrides: Partial<GithubPrImportDeps> = {}): GithubPrImportDe
 
 describe('US2 collection control', () => {
   it('detects successful collections for skip', () => {
-    expect(
-      shouldSkipSuccessfulCollection({ status: 'success' } as GithubPrCollectionControl),
-    ).toBe(true);
-    expect(
-      shouldSkipSuccessfulCollection({ status: 'failed' } as GithubPrCollectionControl),
-    ).toBe(false);
+    expect(shouldSkipSuccessfulCollection({ status: 'success' } as GithubPrCollectionControl)).toBe(
+      true,
+    );
+    expect(shouldSkipSuccessfulCollection({ status: 'failed' } as GithubPrCollectionControl)).toBe(
+      false,
+    );
     expect(shouldSkipSuccessfulCollection(null)).toBe(false);
   });
 
@@ -72,7 +75,9 @@ describe('US2 collection control', () => {
     const upsertControl = vi.fn().mockResolvedValue({});
     const failingDeps = baseDeps({
       apiClient: {
-        searchMergedPullRequests: vi.fn().mockRejectedValue(new Error('token ghp_secret123 failed')),
+        searchMergedPullRequests: vi
+          .fn()
+          .mockRejectedValue(new Error('token ghp_secret123 failed')),
         getPullRequest: vi.fn(),
         listIssueComments: vi.fn().mockResolvedValue([]),
         listReviews: vi.fn().mockResolvedValue([]),

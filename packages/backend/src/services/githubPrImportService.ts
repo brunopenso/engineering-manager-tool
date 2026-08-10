@@ -15,10 +15,7 @@ import {
   shouldSkipSuccessfulCollection,
   upsertCollectionControl,
 } from './githubPrCollectionControlService.js';
-import {
-  githubLoginsMatch,
-  type ImportDateRange,
-} from './githubPrImportDateRange.js';
+import { githubLoginsMatch, type ImportDateRange } from './githubPrImportDateRange.js';
 
 export type ImportRunSummary = {
   processed: number;
@@ -45,7 +42,9 @@ export type GithubPrImportDeps = {
 
 function sanitizeErrorMessage(error: unknown): string {
   const message = error instanceof Error ? error.message : String(error);
-  return message.replace(/ghp_[A-Za-z0-9]+/g, '[redacted]').replace(/github_pat_[A-Za-z0-9_]+/g, '[redacted]');
+  return message
+    .replace(/ghp_[A-Za-z0-9]+/g, '[redacted]')
+    .replace(/github_pat_[A-Za-z0-9_]+/g, '[redacted]');
 }
 
 async function defaultListUsersWithGithubLogin(): Promise<Array<Pick<User, 'id' | 'githubLogin'>>> {

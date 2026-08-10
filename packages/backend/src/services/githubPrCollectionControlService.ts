@@ -53,8 +53,6 @@ export async function upsertCollectionControl(
   return controlRepository().save(row);
 }
 
-export function shouldSkipSuccessfulCollection(
-  control: GithubPrCollectionControl | null,
-): boolean {
+export function shouldSkipSuccessfulCollection(control: GithubPrCollectionControl | null): boolean {
   return control?.status === 'success';
 }

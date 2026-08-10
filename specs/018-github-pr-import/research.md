@@ -10,6 +10,7 @@
 **Rationale**: The runtime already provides GitHub App credentials scoped by organization. Installation tokens give org-wide read access without a shared PAT, match Principle II (secrets in env only), and align with multi-org allowlisting from `github_integrations`.
 
 **Alternatives considered**:
+
 - Server-side `GITHUB_TOKEN` PAT: simpler initially; rejected because GitHub App credentials are already available and preferred.
 - Raw `fetch` against GitHub REST: more boilerplate for pagination/rate limits; rejected for maintainability.
 - GraphQL-only client: powerful search, but REST Search + PR detail endpoints are sufficient and simpler to mock in tests.
@@ -25,6 +26,7 @@ Then hydrate each hit with PR detail (stats, branches, URL) plus conversation co
 **Rationale**: Search scopes by author + org + merged window in one query, matching FR-006 without listing every repository first. Hydration ensures required fields (additions/deletions/files, branches, body) are complete.
 
 **Alternatives considered**:
+
 - List all org repos then list PRs per repo filtered by author: correct but slower and more API calls for large orgs.
 - Events API / timeline: not suited to historical merged-date ranges.
 
@@ -35,6 +37,7 @@ Then hydrate each hit with PR detail (stats, branches, URL) plus conversation co
 **Rationale**: Spec separates “comment” and “review” entities with distinct IDs and states; conversation comments + reviews cover management-useful text without expanding scope to every review comment thread.
 
 **Alternatives considered**:
+
 - Store inline review comments as comments: useful later; deferred to keep v1 aligned to stated fields.
 - Reviews only: would fail FR-008.
 
@@ -45,6 +48,7 @@ Then hydrate each hit with PR detail (stats, branches, URL) plus conversation co
 **Rationale**: Matches FR-010–FR-012: inspectable history, no duplicate successful collections, retry after failure with a single coherent PR set (unique on GitHub PR ID).
 
 **Alternatives considered**:
+
 - Append-only control log without unique business key: harder to prevent duplicates; rejected.
 - Soft-delete prior PRs on every run: unnecessary when success skip is the default.
 
@@ -60,6 +64,7 @@ Default when dates omitted: previous UTC calendar day for both start and end.
 **Rationale**: Matches existing `tsx scripts/*` migration/seed pattern and FR-001 root-level workspace command expectation.
 
 **Alternatives considered**:
+
 - HTTP admin trigger endpoint: useful later; out of scope (spec asks for package.json/manual command).
 - Separate worker package: overkill for monorepo size.
 
@@ -70,6 +75,7 @@ Default when dates omitted: previous UTC calendar day for both start and end.
 **Rationale**: POST fits multi-login lists; kebab-case resource naming matches `/github-integrations`. Reusing hierarchy helpers preserves Principle VII; admin allow-all matches the spec matrix (stronger than deliverables-only self+descendant for admins).
 
 **Alternatives considered**:
+
 - GET with comma-separated logins: awkward for many logins; rejected.
 - Admin-only retrieve: contradicts collaborator/leader self+subordinate scenarios in the spec.
 
@@ -80,6 +86,7 @@ Default when dates omitted: previous UTC calendar day for both start and end.
 **Rationale**: Profile validation does not force lowercase on `githubLogin`, while org names are lowercased; GitHub logins are case-insensitive. Case-insensitive match avoids missed imports.
 
 **Alternatives considered**:
+
 - Exact case-sensitive match: fragile; rejected.
 
 ## 8. Testing strategy for GitHub I/O
@@ -89,4 +96,5 @@ Default when dates omitted: previous UTC calendar day for both start and end.
 **Rationale**: Stable, offline tests; aligns with existing auth-mocked test patterns.
 
 **Alternatives considered**:
+
 - Recorded HTTP fixtures / nock: acceptable later; interface mock is simpler for v1.

@@ -1,6 +1,9 @@
 import { describe, expect, it, vi } from 'vitest';
 import type { GithubApiClient } from '../../src/services/githubApiClient.js';
-import { runGithubPrImport, type GithubPrImportDeps } from '../../src/services/githubPrImportService.js';
+import {
+  runGithubPrImport,
+  type GithubPrImportDeps,
+} from '../../src/services/githubPrImportService.js';
 
 describe('US1 import user filter', () => {
   it('does not call GitHub for users lacking a github login', async () => {

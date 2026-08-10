@@ -17,10 +17,10 @@
 
 **Purpose**: Dependencies, env documentation, and test scaffolds.
 
-- [X] T001 Add `@octokit/rest` (latest stable compatible with Node 26) to `packages/backend/package.json` dependencies and install
-- [X] T002 [P] Document `GITHUB_TOKEN` requirement for import in `packages/backend/.env` comments or `doc/getting-started.md` / `specs/018-github-pr-import/quickstart.md` (no secrets committed)
-- [X] T003 [P] Create backend test scaffold directory and shared helpers in `packages/backend/tests/018-github-pr-import/` (e.g. `github-pr-import.setup.ts` for DB + mock GitHub client fixtures)
-- [X] T004 [P] Create acceptance test plan stubs under `tests/018-github-pr-import/` (`import.us1.test.md`, `collection-control.us2.test.md`, `query-dac.us3.test.md`) aligned with spec acceptance scenarios
+- [x] T001 Add `@octokit/rest` (latest stable compatible with Node 26) to `packages/backend/package.json` dependencies and install
+- [x] T002 [P] Document `GITHUB_TOKEN` requirement for import in `packages/backend/.env` comments or `doc/getting-started.md` / `specs/018-github-pr-import/quickstart.md` (no secrets committed)
+- [x] T003 [P] Create backend test scaffold directory and shared helpers in `packages/backend/tests/018-github-pr-import/` (e.g. `github-pr-import.setup.ts` for DB + mock GitHub client fixtures)
+- [x] T004 [P] Create acceptance test plan stubs under `tests/018-github-pr-import/` (`import.us1.test.md`, `collection-control.us2.test.md`, `query-dac.us3.test.md`) aligned with spec acceptance scenarios
 
 ---
 
@@ -30,15 +30,15 @@
 
 **⚠️ CRITICAL**: No user story implementation starts until this phase is complete.
 
-- [X] T005 Create TypeORM migration `packages/backend/database/migrations/*-AddGithubPullRequestImport.ts` for tables `github_imported_pull_requests`, `github_pull_request_comments`, `github_pull_request_reviews`, `github_pr_collection_controls` with uniqueness and FKs per `specs/018-github-pr-import/data-model.md`
-- [X] T006 [P] Add entity `GithubImportedPullRequest` in `packages/backend/src/database/entities/GithubImportedPullRequest.ts`
-- [X] T007 [P] Add entity `GithubPullRequestComment` in `packages/backend/src/database/entities/GithubPullRequestComment.ts`
-- [X] T008 [P] Add entity `GithubPullRequestReview` in `packages/backend/src/database/entities/GithubPullRequestReview.ts`
-- [X] T009 [P] Add entity `GithubPrCollectionControl` in `packages/backend/src/database/entities/GithubPrCollectionControl.ts`
-- [X] T010 Implement injectable `githubApiClient` interface + Octokit-backed factory (search merged PRs, hydrate PR, list issue comments, list reviews) in `packages/backend/src/services/githubApiClient.ts`
-- [X] T011 Add `github:import-prs` script to `packages/backend/package.json` invoking `tsx scripts/github-import-prs.ts`
-- [X] T012 Add root `github:import-prs` script in `package.json` that delegates to `@em-tool/backend`
-- [X] T013 Create CLI stub entry that loads dotenv / TypeORM and parses `--start` / `--end` (default previous UTC day) in `packages/backend/scripts/github-import-prs.ts` per `specs/018-github-pr-import/contracts/github-pr-import-cli.md`
+- [x] T005 Create TypeORM migration `packages/backend/database/migrations/*-AddGithubPullRequestImport.ts` for tables `github_imported_pull_requests`, `github_pull_request_comments`, `github_pull_request_reviews`, `github_pr_collection_controls` with uniqueness and FKs per `specs/018-github-pr-import/data-model.md`
+- [x] T006 [P] Add entity `GithubImportedPullRequest` in `packages/backend/src/database/entities/GithubImportedPullRequest.ts`
+- [x] T007 [P] Add entity `GithubPullRequestComment` in `packages/backend/src/database/entities/GithubPullRequestComment.ts`
+- [x] T008 [P] Add entity `GithubPullRequestReview` in `packages/backend/src/database/entities/GithubPullRequestReview.ts`
+- [x] T009 [P] Add entity `GithubPrCollectionControl` in `packages/backend/src/database/entities/GithubPrCollectionControl.ts`
+- [x] T010 Implement injectable `githubApiClient` interface + Octokit-backed factory (search merged PRs, hydrate PR, list issue comments, list reviews) in `packages/backend/src/services/githubApiClient.ts`
+- [x] T011 Add `github:import-prs` script to `packages/backend/package.json` invoking `tsx scripts/github-import-prs.ts`
+- [x] T012 Add root `github:import-prs` script in `package.json` that delegates to `@em-tool/backend`
+- [x] T013 Create CLI stub entry that loads dotenv / TypeORM and parses `--start` / `--end` (default previous UTC day) in `packages/backend/scripts/github-import-prs.ts` per `specs/018-github-pr-import/contracts/github-pr-import-cli.md`
 
 **Checkpoint**: Migration runnable; entities discoverable via ORM glob; CLI parses dates and exits cleanly before import logic; GitHub client mockable in tests.
 
@@ -52,18 +52,18 @@
 
 ### Tests for User Story 1 (MANDATORY)
 
-- [X] T014 [P] [US1] Align acceptance scenarios in `tests/018-github-pr-import/import.us1.test.md` with CLI contract and FR-001–FR-009
-- [X] T015 [P] [US1] Add import tests: default previous-day UTC range and explicit `--start`/`--end` in `packages/backend/tests/018-github-pr-import/import-date-range.us1.test.ts`
-- [X] T016 [P] [US1] Add import tests: only users with `githubLogin` processed; users without login skipped in `packages/backend/tests/018-github-pr-import/import-user-filter.us1.test.ts`
-- [X] T017 [P] [US1] Add import tests: only enabled orgs queried; author + org + merged-date selection rules in `packages/backend/tests/018-github-pr-import/import-selection.us1.test.ts`
-- [X] T018 [P] [US1] Add import tests: persisted PR fields + comments + reviews match required schema in `packages/backend/tests/018-github-pr-import/import-persist.us1.test.ts`
+- [x] T014 [P] [US1] Align acceptance scenarios in `tests/018-github-pr-import/import.us1.test.md` with CLI contract and FR-001–FR-009
+- [x] T015 [P] [US1] Add import tests: default previous-day UTC range and explicit `--start`/`--end` in `packages/backend/tests/018-github-pr-import/import-date-range.us1.test.ts`
+- [x] T016 [P] [US1] Add import tests: only users with `githubLogin` processed; users without login skipped in `packages/backend/tests/018-github-pr-import/import-user-filter.us1.test.ts`
+- [x] T017 [P] [US1] Add import tests: only enabled orgs queried; author + org + merged-date selection rules in `packages/backend/tests/018-github-pr-import/import-selection.us1.test.ts`
+- [x] T018 [P] [US1] Add import tests: persisted PR fields + comments + reviews match required schema in `packages/backend/tests/018-github-pr-import/import-persist.us1.test.ts`
 
 ### Implementation for User Story 1
 
-- [X] T019 [US1] Implement date-range helpers (previous UTC day, inclusive start/end validation) in `packages/backend/src/services/githubPrImportDateRange.ts`
-- [X] T020 [US1] Implement import orchestration: load users with `githubLogin`, load enabled `github_integrations`, call `githubApiClient`, upsert PRs/comments/reviews in `packages/backend/src/services/githubPrImportService.ts`
-- [X] T021 [US1] Wire CLI to call import service and print processed summary in `packages/backend/scripts/github-import-prs.ts`
-- [X] T022 [US1] Ensure case-insensitive author/`githubLogin` matching during import in `packages/backend/src/services/githubPrImportService.ts`
+- [x] T019 [US1] Implement date-range helpers (previous UTC day, inclusive start/end validation) in `packages/backend/src/services/githubPrImportDateRange.ts`
+- [x] T020 [US1] Implement import orchestration: load users with `githubLogin`, load enabled `github_integrations`, call `githubApiClient`, upsert PRs/comments/reviews in `packages/backend/src/services/githubPrImportService.ts`
+- [x] T021 [US1] Wire CLI to call import service and print processed summary in `packages/backend/scripts/github-import-prs.ts`
+- [x] T022 [US1] Ensure case-insensitive author/`githubLogin` matching during import in `packages/backend/src/services/githubPrImportService.ts`
 
 **Checkpoint**: MVP — operator can run `npm run github:import-prs` (with mocked or live GitHub) and persist imported PR data for the selected range.
 
@@ -77,17 +77,17 @@
 
 ### Tests for User Story 2 (MANDATORY)
 
-- [X] T023 [P] [US2] Align acceptance scenarios in `tests/018-github-pr-import/collection-control.us2.test.md` with FR-010–FR-012
-- [X] T024 [P] [US2] Add tests: successful control record fields and skip on re-run (no duplicate PRs) in `packages/backend/tests/018-github-pr-import/collection-control-success.us2.test.ts`
-- [X] T025 [P] [US2] Add tests: failed control stores `errorDetails` and retry succeeds / upserts once in `packages/backend/tests/018-github-pr-import/collection-control-retry.us2.test.ts`
-- [X] T026 [P] [US2] Add tests: empty successful collection (no matching PRs) still records `success` in `packages/backend/tests/018-github-pr-import/collection-control-empty.us2.test.ts`
+- [x] T023 [P] [US2] Align acceptance scenarios in `tests/018-github-pr-import/collection-control.us2.test.md` with FR-010–FR-012
+- [x] T024 [P] [US2] Add tests: successful control record fields and skip on re-run (no duplicate PRs) in `packages/backend/tests/018-github-pr-import/collection-control-success.us2.test.ts`
+- [x] T025 [P] [US2] Add tests: failed control stores `errorDetails` and retry succeeds / upserts once in `packages/backend/tests/018-github-pr-import/collection-control-retry.us2.test.ts`
+- [x] T026 [P] [US2] Add tests: empty successful collection (no matching PRs) still records `success` in `packages/backend/tests/018-github-pr-import/collection-control-empty.us2.test.ts`
 
 ### Implementation for User Story 2
 
-- [X] T027 [US2] Implement collection-control read/write/skip/retry helpers in `packages/backend/src/services/githubPrCollectionControlService.ts`
-- [X] T028 [US2] Integrate control checks and status updates into import loop in `packages/backend/src/services/githubPrImportService.ts` (status `success` | `failed` | `skipped`)
-- [X] T029 [US2] On failed GitHub/API errors, persist `errorDetails` without leaking `GITHUB_TOKEN` in `packages/backend/src/services/githubPrImportService.ts`
-- [X] T030 [US2] Update CLI summary to report success / skipped / failed counts and non-zero exit on failures in `packages/backend/scripts/github-import-prs.ts`
+- [x] T027 [US2] Implement collection-control read/write/skip/retry helpers in `packages/backend/src/services/githubPrCollectionControlService.ts`
+- [x] T028 [US2] Integrate control checks and status updates into import loop in `packages/backend/src/services/githubPrImportService.ts` (status `success` | `failed` | `skipped`)
+- [x] T029 [US2] On failed GitHub/API errors, persist `errorDetails` without leaking `GITHUB_TOKEN` in `packages/backend/src/services/githubPrImportService.ts`
+- [x] T030 [US2] Update CLI summary to report success / skipped / failed counts and non-zero exit on failures in `packages/backend/scripts/github-import-prs.ts`
 
 **Checkpoint**: Re-import of a successful period is a no-op for PR rows; failed periods are retryable.
 
@@ -101,18 +101,18 @@
 
 ### Tests for User Story 3 (MANDATORY)
 
-- [X] T031 [P] [US3] Align acceptance scenarios in `tests/018-github-pr-import/query-dac.us3.test.md` with `specs/018-github-pr-import/contracts/github-pr-import-api.yaml` and FR-013–FR-015
-- [X] T032 [P] [US3] Add contract/integration tests for query filters (logins + date range, empty result, validation errors) in `packages/backend/tests/018-github-pr-import/query-filters.us3.test.ts`
-- [X] T033 [P] [US3] Add DAC allow/deny tests (self, descendant, peer, superior, admin, unauthenticated) in `packages/backend/tests/018-github-pr-import/query-dac.us3.test.ts`
-- [X] T034 [P] [US3] Add tests that response includes nested comments and reviews with required fields in `packages/backend/tests/018-github-pr-import/query-nested.us3.test.ts`
+- [x] T031 [P] [US3] Align acceptance scenarios in `tests/018-github-pr-import/query-dac.us3.test.md` with `specs/018-github-pr-import/contracts/github-pr-import-api.yaml` and FR-013–FR-015
+- [x] T032 [P] [US3] Add contract/integration tests for query filters (logins + date range, empty result, validation errors) in `packages/backend/tests/018-github-pr-import/query-filters.us3.test.ts`
+- [x] T033 [P] [US3] Add DAC allow/deny tests (self, descendant, peer, superior, admin, unauthenticated) in `packages/backend/tests/018-github-pr-import/query-dac.us3.test.ts`
+- [x] T034 [P] [US3] Add tests that response includes nested comments and reviews with required fields in `packages/backend/tests/018-github-pr-import/query-nested.us3.test.ts`
 
 ### Implementation for User Story 3
 
-- [X] T035 [US3] Add/extend authorization helper for GitHub-login visibility (self + recursive subordinates; admin allow-all) in `packages/backend/src/services/authorizationService.ts` (reuse hierarchy helpers as in research)
-- [X] T036 [US3] Implement request validation and query mapping in `packages/backend/src/services/githubPrQueryService.ts`
-- [X] T037 [US3] Implement `POST /github-pull-requests/query` in `packages/backend/src/routes/githubPullRequests.ts` per OpenAPI contract
-- [X] T038 [US3] Register routes in `packages/backend/src/index.ts`
-- [X] T039 [US3] Map entities to response DTOs (`pullRequests` with nested `comments` / `reviews`) in `packages/backend/src/services/githubPrQueryService.ts`
+- [x] T035 [US3] Add/extend authorization helper for GitHub-login visibility (self + recursive subordinates; admin allow-all) in `packages/backend/src/services/authorizationService.ts` (reuse hierarchy helpers as in research)
+- [x] T036 [US3] Implement request validation and query mapping in `packages/backend/src/services/githubPrQueryService.ts`
+- [x] T037 [US3] Implement `POST /github-pull-requests/query` in `packages/backend/src/routes/githubPullRequests.ts` per OpenAPI contract
+- [x] T038 [US3] Register routes in `packages/backend/src/index.ts`
+- [x] T039 [US3] Map entities to response DTOs (`pullRequests` with nested `comments` / `reviews`) in `packages/backend/src/services/githubPrQueryService.ts`
 
 **Checkpoint**: Retrieve API usable by authorized callers; DAC matrix covered by automated tests.
 
@@ -122,11 +122,11 @@
 
 **Purpose**: Cross-story verification and documentation fidelity.
 
-- [X] T040 [P] Add regression tests for CLI argument validation (one-sided dates, end before start) in `packages/backend/tests/018-github-pr-import/cli-args.test.ts`
-- [X] T041 [P] Add regression: retrieve API never mutates collection-control rows in `packages/backend/tests/018-github-pr-import/query-readonly.test.ts`
-- [X] T042 Run `npm run db:migration:run --workspace @em-tool/backend` and confirm schema against `specs/018-github-pr-import/data-model.md`
-- [X] T043 Run verification steps from `specs/018-github-pr-import/quickstart.md` and record outcomes in that file
-- [X] T044 [P] Ensure `npm run lint` and `npm run test --workspace @em-tool/backend -- tests/018-github-pr-import` pass
+- [x] T040 [P] Add regression tests for CLI argument validation (one-sided dates, end before start) in `packages/backend/tests/018-github-pr-import/cli-args.test.ts`
+- [x] T041 [P] Add regression: retrieve API never mutates collection-control rows in `packages/backend/tests/018-github-pr-import/query-readonly.test.ts`
+- [x] T042 Run `npm run db:migration:run --workspace @em-tool/backend` and confirm schema against `specs/018-github-pr-import/data-model.md`
+- [x] T043 Run verification steps from `specs/018-github-pr-import/quickstart.md` and record outcomes in that file
+- [x] T044 [P] Ensure `npm run lint` and `npm run test --workspace @em-tool/backend -- tests/018-github-pr-import` pass
 
 ---
 

@@ -21,7 +21,7 @@ Add an operator-triggered GitHub pull request import that, for every collaborato
 
 ## Constitution Check
 
-*GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
+_GATE: Must pass before Phase 0 research. Re-check after Phase 1 design._
 
 - Principle I (Type-Safe Monorepo Ownership): **PASS** — backend package owns import CLI, entities, routes, and tests; no circular workspace deps.
 - Principle II (Security-First): **PASS** — retrieve API requires app auth; DAC + admin bypass explicit; GitHub App credentials from env only; errors must not leak secrets.
