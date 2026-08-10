@@ -140,13 +140,13 @@ _All functional requirements MUST be covered by automated tests under `tests/019
 
 ### Access Control Matrix _(required when data visibility is in scope)_
 
-| Actor                  | Allowed Data Visibility                                        | Explicitly Denied Visibility            | Validation Notes                                              |
-| ---------------------- | -------------------------------------------------------------- | --------------------------------------- | ------------------------------------------------------------- |
-| Individual contributor | Own collected PRs (author login maps to self)                  | Any other collaborator’s collected data | Retrieve tests: self allow / peer deny                        |
-| Mid-level leader       | Self + recursive subordinate tree collected data               | Peers, superiors, other branches        | Direct and nested subordinate allow; peer/superior deny       |
-| Top-level leader       | Self + all descendants’ collected data                         | Non-descendants outside their tree      | Same hierarchical rules at full-tree depth                    |
-| Administrator          | Any requested GitHub login that maps to a product collaborator | Unauthenticated access                 | Admin allow-all within product collaborators; unauthenticated denied |
-| Unauthenticated caller | None                                                           | All retrieve of collected PR data       | Must receive denial                                           |
+| Actor                  | Allowed Data Visibility                                        | Explicitly Denied Visibility            | Validation Notes                                                     |
+| ---------------------- | -------------------------------------------------------------- | --------------------------------------- | -------------------------------------------------------------------- |
+| Individual contributor | Own collected PRs (author login maps to self)                  | Any other collaborator’s collected data | Retrieve tests: self allow / peer deny                               |
+| Mid-level leader       | Self + recursive subordinate tree collected data               | Peers, superiors, other branches        | Direct and nested subordinate allow; peer/superior deny              |
+| Top-level leader       | Self + all descendants’ collected data                         | Non-descendants outside their tree      | Same hierarchical rules at full-tree depth                           |
+| Administrator          | Any requested GitHub login that maps to a product collaborator | Unauthenticated access                  | Admin allow-all within product collaborators; unauthenticated denied |
+| Unauthenticated caller | None                                                           | All retrieve of collected PR data       | Must receive denial                                                  |
 
 ### Key Entities _(include if feature involves data)_
 
@@ -172,11 +172,11 @@ _All functional requirements MUST be covered by automated tests under `tests/019
 
 ## Assumptions
 
-- This feature changes the identity model of the existing GitHub pull request import capability (`018-github-pr-import`); it does not replace the operator import command, date-range behavior for *searching* GitHub, or retrieve API’s login + date filters.
+- This feature changes the identity model of the existing GitHub pull request import capability (`018-github-pr-import`); it does not replace the operator import command, date-range behavior for _searching_ GitHub, or retrieve API’s login + date filters.
 - “Pull request id” means the GitHub pull request identifier already collected as the pull request’s GitHub id (not the per-repository PR number alone). The natural key is the pair with repository id.
 - Collection-control uniqueness matches pull request uniqueness: `(repositoryId, githubPullRequestId)`.
 - Collection-control is audit/history only; import always refreshes on hit and never skips because a prior control status was successful.
-- Date ranges remain an import *query* parameter for finding merged PRs on GitHub; they are not the uniqueness key for collection-control records.
+- Date ranges remain an import _query_ parameter for finding merged PRs on GitHub; they are not the uniqueness key for collection-control records.
 - Author-based hierarchical visibility remains the retrieve authorization model; removing collaborator from PR and collection-control identity does not remove DAC.
 - No new end-user web screens are in scope.
 - Imported pull request and collection-control tables are empty in target environments; only schema changes are needed—no data backfill or duplicate merge.
