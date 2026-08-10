@@ -66,7 +66,7 @@ misaligned expectations between backend and web changes.
 
 Work MUST be organized into independently deliverable user stories with clear acceptance
 checks. Tasks MUST map to functional requirements and measurable success criteria.
-Before merge, each changed package MUST pass build, lint, and test checks.
+Before merge, each changed package MUST pass build, format, lint, and test checks.
 Feature-critical behavior MUST be verified with repeatable validation steps, and
 automated tests MUST be present for all new or changed functionality.
 

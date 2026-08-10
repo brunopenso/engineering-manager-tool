@@ -1,0 +1,237 @@
+openapi: 3.0.3
+info:
+  title: Engineering Manager Tool GitHub Pull Request Import API
+  version: 0.1.0
+  description: >
+    Authenticated query of previously imported GitHub pull requests (with comments
+    and reviews), filtered by GitHub logins and merged-date range. Hierarchical DAC
+    applies; administrators may query any product collaborator.
+servers:
+  - url: http://localhost:3001
+paths:
+  /github-pull-requests/query:
+    post:
+      summary: Query imported pull requests by GitHub logins and date filter
+      tags: [GitHub Pull Requests]
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GithubPullRequestQueryRequest'
+      responses:
+        '200':
+          description: Matching imported pull requests (may be empty)
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [pullRequests]
+                properties:
+                  pullRequests:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ImportedPullRequest'
+        '400':
+          description: Invalid request (empty logins, bad dates, end before start)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Missing or invalid application token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: >
+            Caller is not allowed to access one or more requested GitHub logins
+            (peer/superior/out-of-tree). Implementations MAY return 403 for the
+            whole request or omit denied logins with an explicit deny signal covered
+            by tests; either approach must not leak unauthorized PR payloads.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    GithubPullRequestQueryRequest:
+      type: object
+      required: [githubLogins, startDate, endDate]
+      properties:
+        githubLogins:
+          type: array
+          minItems: 1
+          items:
+            type: string
+            minLength: 1
+            maxLength: 39
+            description: GitHub usernames to include (case-insensitive match to profiles)
+          example: [alice-dev, bob-eng]
+        startDate:
+          type: string
+          format: date
+          description: Inclusive UTC start calendar day for mergedAt filter
+          example: '2026-08-09'
+        endDate:
+          type: string
+          format: date
+          description: Inclusive UTC end calendar day for mergedAt filter
+          example: '2026-08-09'
+
+    ImportedPullRequest:
+      type: object
+      required:
+        - id
+        - githubPullRequestId
+        - organization
+        - repository
+        - repositoryId
+        - title
+        - number
+        - changedFilesCount
+        - additionsCount
+        - deletionsCount
+        - sourceBranch
+        - targetBranch
+        - authorGithubLogin
+        - mergedAt
+        - comments
+        - reviews
+      properties:
+        id:
+          type: string
+          format: uuid
+        githubPullRequestId:
+          type: string
+          description: GitHub pull request identifier
+        organization:
+          type: string
+        repository:
+          type: string
+        repositoryId:
+          type: string
+        title:
+          type: string
+        body:
+          type: string
+          nullable: true
+        number:
+          type: integer
+        changedFilesCount:
+          type: integer
+        additionsCount:
+          type: integer
+        deletionsCount:
+          type: integer
+        sourceBranch:
+          type: string
+        targetBranch:
+          type: string
+        authorGithubLogin:
+          type: string
+        mergedAt:
+          type: string
+          format: date-time
+        url:
+          type: string
+          format: uri
+          nullable: true
+        comments:
+          type: array
+          items:
+            $ref: '#/components/schemas/ImportedPullRequestComment'
+        reviews:
+          type: array
+          items:
+            $ref: '#/components/schemas/ImportedPullRequestReview'
+
+    ImportedPullRequestComment:
+      type: object
+      required:
+        - id
+        - githubCommentId
+        - authorGithubLogin
+        - body
+        - createdAt
+        - updatedAt
+      properties:
+        id:
+          type: string
+          format: uuid
+        githubCommentId:
+          type: string
+        authorGithubLogin:
+          type: string
+        body:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+          description: GitHub created timestamp
+        updatedAt:
+          type: string
+          format: date-time
+          description: GitHub updated timestamp
+        url:
+          type: string
+          format: uri
+          nullable: true
+
+    ImportedPullRequestReview:
+      type: object
+      required:
+        - id
+        - githubReviewId
+        - reviewerGithubLogin
+        - state
+        - createdAt
+      properties:
+        id:
+          type: string
+          format: uuid
+        githubReviewId:
+          type: string
+        reviewerGithubLogin:
+          type: string
+        body:
+          type: string
+          nullable: true
+        state:
+          type: string
+          description: GitHub review state (e.g. APPROVED, CHANGES_REQUESTED, COMMENTED)
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+          nullable: true
+        url:
+          type: string
+          format: uri
+          nullable: true
+
+    ErrorResponse:
+      type: object
+      required: [code, message]
+      properties:
+        code:
+          type: string
+          enum:
+            - VALIDATION_ERROR
+            - MISSING_APP_TOKEN
+            - INVALID_APP_TOKEN
+            - FORBIDDEN
+        message:
+          type: string
