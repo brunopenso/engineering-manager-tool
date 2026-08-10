@@ -25,7 +25,9 @@ describe('US4 GET /deliverables combined filters', () => {
     const app = buildDeliverablesTestApp({ userId: portfolioOwnerId });
     await registerDeliverablesTestRoutes(app);
 
-    vi.mocked(deliverableService.listDeliverablesForOwner).mockResolvedValue([samplePortfolioSummary]);
+    vi.mocked(deliverableService.listDeliverablesForOwner).mockResolvedValue([
+      samplePortfolioSummary,
+    ]);
     vi.mocked(deliverableService.countDeliverablesForOwner).mockResolvedValue(1);
 
     const response = await app.inject({

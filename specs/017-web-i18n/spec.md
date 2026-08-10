@@ -11,7 +11,7 @@
 
 - Q: Where should language and date-format preferences be persisted? → A: Server-side user profile attributes (`languagePreference`, `dateFormatPreference`) via the same self-service profile API used for theme preference — not client-side storage.
 
-## User Scenarios & Testing *(mandatory, with required automated tests)*
+## User Scenarios & Testing _(mandatory, with required automated tests)_
 
 ### User Story 1 - English baseline across the entire web app (Priority: P1)
 
@@ -99,7 +99,7 @@ As a user viewing deliverables, analytics, and filters, I see dates formatted ac
 - Are API error messages translated? Server-generated error text MAY remain in English in v1; only client-owned messages and known error mappings exposed in the UI MUST be localized.
 - What happens if saving a profile preference fails? The UI MUST show an error, revert the optimistic change, and keep the last known good profile values (same behavior as theme preference save failures).
 
-## Requirements *(mandatory, with required test coverage)*
+## Requirements _(mandatory, with required test coverage)_
 
 ### Functional Requirements
 
@@ -127,7 +127,7 @@ As a user viewing deliverables, analytics, and filters, I see dates formatted ac
 - **Locale**: The active UI language derived from `languagePreference` that controls which translation catalog is loaded.
 - **Translation catalog**: The collection of named messages for a locale, organized so each user-visible string has a stable key shared across locales.
 
-## Success Criteria *(mandatory)*
+## Success Criteria _(mandatory)_
 
 ### Measurable Outcomes
 

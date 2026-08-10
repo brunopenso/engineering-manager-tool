@@ -12,13 +12,13 @@ updates:
     labels:
       - dependencies
     ignore:
-      - dependency-name: "@types/node"
+      - dependency-name: '@types/node'
         versions:
-          - "25.x"
+          - '25.x'
     groups:
       npm-minor-patch:
         patterns:
-          - "*"
+          - '*'
         update-types:
           - minor
           - patch

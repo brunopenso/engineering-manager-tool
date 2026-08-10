@@ -17,9 +17,9 @@ describe('US4 deliverable delete', () => {
       }
 
       if (url.includes('/deliverables?')) {
-        const isAfterDelete = fetchMock.mock.calls.filter((call) =>
-          String(call[0]).includes('/deliverables?'),
-        ).length > 1;
+        const isAfterDelete =
+          fetchMock.mock.calls.filter((call) => String(call[0]).includes('/deliverables?')).length >
+          1;
 
         return {
           ok: true,

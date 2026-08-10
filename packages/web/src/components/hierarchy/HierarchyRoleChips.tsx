@@ -12,12 +12,5 @@ export default function HierarchyRoleChips({ isLeader }: HierarchyRoleChipsProps
     return null;
   }
 
-  return (
-    <Chip
-      size="small"
-      label={t('roles.leader')}
-      color="error"
-      data-testid="role-leader"
-    />
-  );
+  return <Chip size="small" label={t('roles.leader')} color="error" data-testid="role-leader" />;
 }

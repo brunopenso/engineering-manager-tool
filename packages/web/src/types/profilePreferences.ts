@@ -16,5 +16,4 @@ export const DATE_FORMAT_PREFERENCES = [
 
 export type DateFormatPreference = (typeof DATE_FORMAT_PREFERENCES)[number];
 
-export const DEFAULT_DATE_FORMAT_PREFERENCE: DateFormatPreference =
-  DATE_FORMAT_PREFERENCE_MDY;
+export const DEFAULT_DATE_FORMAT_PREFERENCE: DateFormatPreference = DATE_FORMAT_PREFERENCE_MDY;

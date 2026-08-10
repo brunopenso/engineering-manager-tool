@@ -1,8 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import {
-  formatDisplayDate,
-  formatDisplayDateTime,
-} from '../../src/utils/formatDisplayDate.js';
+import { formatDisplayDate, formatDisplayDateTime } from '../../src/utils/formatDisplayDate.js';
 
 describe('US4 formatDisplayDate', () => {
   const sample = new Date('2026-05-15T14:30:00');

@@ -5,10 +5,7 @@ import {
   collaboratorLeaderRoles,
   collaboratorOnlyRoles,
 } from '../../src/test/fixtures/roles.js';
-import {
-  hasAdministratorRole,
-  hasLeaderRole,
-} from '../../src/services/authorizationService.js';
+import { hasAdministratorRole, hasLeaderRole } from '../../src/services/authorizationService.js';
 
 describe('US4 authorization matrix', () => {
   it('allows admin scope check only for administrators', () => {

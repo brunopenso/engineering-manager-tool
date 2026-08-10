@@ -10,11 +10,7 @@ const SYSTEM_TAGS = [
   { name: 'PDI', color: '#607D8B' },
 ] as const;
 
-async function upsertTag(
-  manager: EntityManager,
-  name: string,
-  color: string,
-): Promise<Tag> {
+async function upsertTag(manager: EntityManager, name: string, color: string): Promise<Tag> {
   const normalizedName = validateTagName(name);
   const normalizedColor = validateTagColor(color);
   const repo = manager.getRepository(Tag);

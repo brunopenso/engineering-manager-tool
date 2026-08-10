@@ -21,7 +21,7 @@ Introduce a persisted **Tag** catalog (identifier, name, color) with TypeORM mig
 
 ## Constitution Check
 
-*GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
+_GATE: Must pass before Phase 0 research. Re-check after Phase 1 design._
 
 - Principle I (Type-Safe Monorepo Ownership): **PASS**. Changes confined to existing backend/web packages; OpenAPI contract in feature artifacts.
 - Principle II (Security-First Authentication, Authorization, and Data Handling): **PASS**. Bearer auth + `assertAdministrator` on all tag routes; stable error codes; no sensitive leakage.

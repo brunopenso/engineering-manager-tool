@@ -8,14 +8,10 @@ import {
   type RoleChangeAction,
   type UserRoleType,
 } from '../auth/types.js';
-import {
-  isElevatedRole,
-  rejectCollaboratorRoleChange,
-} from './authorizationService.js';
+import { isElevatedRole, rejectCollaboratorRoleChange } from './authorizationService.js';
 
 const userRoleRepository = () => AppDataSource.getRepository(UserRole);
-const roleAssignmentEventRepository = () =>
-  AppDataSource.getRepository(RoleAssignmentEvent);
+const roleAssignmentEventRepository = () => AppDataSource.getRepository(RoleAssignmentEvent);
 
 const ROLE_SORT_ORDER: UserRoleType[] = [
   USER_ROLE_TYPES.COLLABORATOR,

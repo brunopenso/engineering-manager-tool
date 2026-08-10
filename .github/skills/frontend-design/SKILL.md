@@ -36,6 +36,7 @@ When asked to build a React UI screen:
 10. If the user request is vague, choose a polished enterprise-style UI with Material UI best practices.
 
 Example user intents for this skill:
+
 - create a dashboard screen in react
 - make a beautiful login page with material ui
 - build a profile page using mui

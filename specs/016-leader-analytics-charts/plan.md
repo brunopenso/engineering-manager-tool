@@ -21,7 +21,7 @@ Deliver a leader-only **Team Analytics** dashboard at `/app/leader/team-analytic
 
 ## Constitution Check
 
-*GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
+_GATE: Must pass before Phase 0 research. Re-check after Phase 1 design._
 
 - Principle I (Type-Safe Monorepo Ownership): **PASS**. Backend service + route + types; web page, API client, chart components; OpenAPI contract in `contracts/team-analytics-api.yaml`.
 - Principle II (Security-First Authentication, Authorization, and Data Handling): **PASS**. Bearer auth; leader role guard; optional `userId` validated with `assertUserInLeaderSubtree`; aggregates scoped to descendant owner IDs only.
@@ -96,11 +96,11 @@ packages/web/tests/leader-analytics/
 
 ## Complexity Tracking
 
-| Item | Why Needed | Simpler Alternative Rejected Because |
-|------|------------|-------------------------------------|
+| Item                                              | Why Needed                                                                | Simpler Alternative Rejected Because                                                              |
+| ------------------------------------------------- | ------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------- |
 | New npm deps `@mui/x-charts`, `react-grid-layout` | Spec requires chart library and resizable widgets (user request + FR-013) | Hand-rolled SVG/canvas lacks maintainability; fixed grid fails resize/session layout requirements |
-| Dedicated analytics endpoint | Three charts share filters; SC-002 needs one refresh round-trip | Three separate endpoints triple latency and complicate in-flight abort logic |
-| Server-side weekly aggregation | Correct UTC week buckets and DAC at source | Client-side roll-up of raw deliverables over-fetches and risks leaking out-of-subtree rows |
+| Dedicated analytics endpoint                      | Three charts share filters; SC-002 needs one refresh round-trip           | Three separate endpoints triple latency and complicate in-flight abort logic                      |
+| Server-side weekly aggregation                    | Correct UTC week buckets and DAC at source                                | Client-side roll-up of raw deliverables over-fetches and risks leaking out-of-subtree rows        |
 
 No constitutional violations requiring justification.
 

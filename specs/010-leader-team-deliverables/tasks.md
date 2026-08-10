@@ -13,9 +13,9 @@
 
 **Purpose**: Prepare feature scaffolding and test directories.
 
-- [X] T001 Verify feature test plan files exist in `tests/010-leader-team-deliverables/` (`team-deliverables-search.us1.test.md`, `team-deliverables-date-filter.us2.test.md`, `team-deliverables-reviewed.us3.test.md`, `team-deliverables-access-control.us4.test.md`)
-- [X] T002 Create backend test directory and shared bootstrap in `packages/backend/tests/team-deliverables/team-deliverables.setup.ts`
-- [X] T003 [P] Create web test directory and shared bootstrap in `packages/web/tests/team-deliverables/team-deliverables.setup.test.tsx`
+- [x] T001 Verify feature test plan files exist in `tests/010-leader-team-deliverables/` (`team-deliverables-search.us1.test.md`, `team-deliverables-date-filter.us2.test.md`, `team-deliverables-reviewed.us3.test.md`, `team-deliverables-access-control.us4.test.md`)
+- [x] T002 Create backend test directory and shared bootstrap in `packages/backend/tests/team-deliverables/team-deliverables.setup.ts`
+- [x] T003 [P] Create web test directory and shared bootstrap in `packages/web/tests/team-deliverables/team-deliverables.setup.test.tsx`
 
 ---
 
@@ -25,13 +25,13 @@
 
 **⚠️ CRITICAL**: No user story work starts until this phase is complete.
 
-- [X] T004 Add TypeORM migration for `deliverable_reviews` table in `packages/backend/database/migrations/*-AddDeliverableReviews.ts`
-- [X] T005 [P] Add `DeliverableReview` entity in `packages/backend/src/database/entities/DeliverableReview.ts`
-- [X] T006 Register `DeliverableReview` entity in `packages/backend/src/database/connection.ts`
-- [X] T007 [P] Define team deliverables DTO types in `packages/backend/src/types/teamDeliverables.ts`
-- [X] T008 Implement `getLeaderTeamMembers(actorUserId)` and `assertUserInLeaderSubtree(actorUserId, targetUserId)` using recursive CTE in `packages/backend/src/services/userService.ts`
-- [X] T009 [P] Add `LEADER_TEAM_DELIVERABLES_ROUTE` constant and placeholder nav id in `packages/web/src/routes/shellOptions.ts`
-- [X] T010 [P] Add `teamDeliverablesApi.ts` client module skeleton with typed response shapes in `packages/web/src/services/teamDeliverablesApi.ts`
+- [x] T004 Add TypeORM migration for `deliverable_reviews` table in `packages/backend/database/migrations/*-AddDeliverableReviews.ts`
+- [x] T005 [P] Add `DeliverableReview` entity in `packages/backend/src/database/entities/DeliverableReview.ts`
+- [x] T006 Register `DeliverableReview` entity in `packages/backend/src/database/connection.ts`
+- [x] T007 [P] Define team deliverables DTO types in `packages/backend/src/types/teamDeliverables.ts`
+- [x] T008 Implement `getLeaderTeamMembers(actorUserId)` and `assertUserInLeaderSubtree(actorUserId, targetUserId)` using recursive CTE in `packages/backend/src/services/userService.ts`
+- [x] T009 [P] Add `LEADER_TEAM_DELIVERABLES_ROUTE` constant and placeholder nav id in `packages/web/src/routes/shellOptions.ts`
+- [x] T010 [P] Add `teamDeliverablesApi.ts` client module skeleton with typed response shapes in `packages/web/src/services/teamDeliverablesApi.ts`
 
 **Checkpoint**: Foundation complete — user stories can proceed.
 
@@ -45,21 +45,21 @@
 
 ### Tests for User Story 1 (MANDATORY)
 
-- [X] T011 [P] [US1] Align acceptance test plan with contract in `tests/010-leader-team-deliverables/team-deliverables-search.us1.test.md` and `specs/010-leader-team-deliverables/contracts/team-deliverables-api.yaml`
-- [X] T012 [P] [US1] Add backend integration test for `GET /users/leader/team-members` (descendants only, displayName fallback) in `packages/backend/tests/team-deliverables/team-deliverables-search.us1.test.ts`
-- [X] T013 [P] [US1] Add backend integration test for `GET /users/leader/team-deliverables` with default date window in `packages/backend/tests/team-deliverables/team-deliverables-search.us1.test.ts`
-- [X] T014 [P] [US1] Add web integration test for page load (team select, default dates, empty table until selection) in `packages/web/tests/team-deliverables/team-deliverables-search.us1.test.tsx`
+- [x] T011 [P] [US1] Align acceptance test plan with contract in `tests/010-leader-team-deliverables/team-deliverables-search.us1.test.md` and `specs/010-leader-team-deliverables/contracts/team-deliverables-api.yaml`
+- [x] T012 [P] [US1] Add backend integration test for `GET /users/leader/team-members` (descendants only, displayName fallback) in `packages/backend/tests/team-deliverables/team-deliverables-search.us1.test.ts`
+- [x] T013 [P] [US1] Add backend integration test for `GET /users/leader/team-deliverables` with default date window in `packages/backend/tests/team-deliverables/team-deliverables-search.us1.test.ts`
+- [x] T014 [P] [US1] Add web integration test for page load (team select, default dates, empty table until selection) in `packages/web/tests/team-deliverables/team-deliverables-search.us1.test.tsx`
 
 ### Implementation for User Story 1
 
-- [X] T015 [US1] Implement `listTeamDeliverablesForReview(ownerUserId, reviewerUserId, startDate, endDate)` with `updated_at` filter and reviewed left-join (default `false`) in `packages/backend/src/services/deliverableService.ts`
-- [X] T016 [US1] Register `GET /users/leader/team-members` with leader guard in `packages/backend/src/routes/users.ts`
-- [X] T017 [US1] Register `GET /users/leader/team-deliverables` with leader guard, date validation, and subtree check in `packages/backend/src/routes/users.ts`
-- [X] T018 [US1] Implement `fetchTeamMembers` and `searchTeamDeliverables` in `packages/web/src/services/teamDeliverablesApi.ts`
-- [X] T019 [US1] Create `LeaderTeamDeliverablesPage.tsx` using `frontend-design` skill (person Select, start/end date inputs defaulting to last 30 days, results Table with title/description/reviewed columns, empty/loading/error states) in `packages/web/src/pages/LeaderTeamDeliverablesPage.tsx`
-- [X] T020 [US1] Wire auto-search on team member selection when date range is valid in `packages/web/src/pages/LeaderTeamDeliverablesPage.tsx`
-- [X] T021 [US1] Register `/app/leader/team-deliverables` route behind `LeaderRoute` in `packages/web/src/App.tsx`
-- [X] T022 [US1] Add leader-only shell menu entry **Team Deliverables** pointing to `LEADER_TEAM_DELIVERABLES_ROUTE` in `packages/web/src/routes/shellOptions.ts`
+- [x] T015 [US1] Implement `listTeamDeliverablesForReview(ownerUserId, reviewerUserId, startDate, endDate)` with `updated_at` filter and reviewed left-join (default `false`) in `packages/backend/src/services/deliverableService.ts`
+- [x] T016 [US1] Register `GET /users/leader/team-members` with leader guard in `packages/backend/src/routes/users.ts`
+- [x] T017 [US1] Register `GET /users/leader/team-deliverables` with leader guard, date validation, and subtree check in `packages/backend/src/routes/users.ts`
+- [x] T018 [US1] Implement `fetchTeamMembers` and `searchTeamDeliverables` in `packages/web/src/services/teamDeliverablesApi.ts`
+- [x] T019 [US1] Create `LeaderTeamDeliverablesPage.tsx` using `frontend-design` skill (person Select, start/end date inputs defaulting to last 30 days, results Table with title/description/reviewed columns, empty/loading/error states) in `packages/web/src/pages/LeaderTeamDeliverablesPage.tsx`
+- [x] T020 [US1] Wire auto-search on team member selection when date range is valid in `packages/web/src/pages/LeaderTeamDeliverablesPage.tsx`
+- [x] T021 [US1] Register `/app/leader/team-deliverables` route behind `LeaderRoute` in `packages/web/src/App.tsx`
+- [x] T022 [US1] Add leader-only shell menu entry **Team Deliverables** pointing to `LEADER_TEAM_DELIVERABLES_ROUTE` in `packages/web/src/routes/shellOptions.ts`
 
 **Checkpoint**: User Story 1 is independently functional and testable.
 
@@ -73,17 +73,17 @@
 
 ### Tests for User Story 2 (MANDATORY)
 
-- [X] T023 [P] [US2] Add date-filter acceptance mapping notes in `tests/010-leader-team-deliverables/team-deliverables-date-filter.us2.test.md`
-- [X] T024 [P] [US2] Add backend tests for inclusive date boundaries and out-of-range exclusion in `packages/backend/tests/team-deliverables/team-deliverables-date-filter.us2.test.ts`
-- [X] T025 [P] [US2] Add backend test rejecting invalid range (`endDate < startDate`) with 400 in `packages/backend/tests/team-deliverables/team-deliverables-date-filter.us2.test.ts`
-- [X] T026 [P] [US2] Add web test for default last-30-days inputs and auto-search on date change in `packages/web/tests/team-deliverables/team-deliverables-date-filter.us2.test.tsx`
+- [x] T023 [P] [US2] Add date-filter acceptance mapping notes in `tests/010-leader-team-deliverables/team-deliverables-date-filter.us2.test.md`
+- [x] T024 [P] [US2] Add backend tests for inclusive date boundaries and out-of-range exclusion in `packages/backend/tests/team-deliverables/team-deliverables-date-filter.us2.test.ts`
+- [x] T025 [P] [US2] Add backend test rejecting invalid range (`endDate < startDate`) with 400 in `packages/backend/tests/team-deliverables/team-deliverables-date-filter.us2.test.ts`
+- [x] T026 [P] [US2] Add web test for default last-30-days inputs and auto-search on date change in `packages/web/tests/team-deliverables/team-deliverables-date-filter.us2.test.tsx`
 
 ### Implementation for User Story 2
 
-- [X] T027 [US2] Enforce inclusive UTC day bounds for `updated_at` filtering in `packages/backend/src/services/deliverableService.ts`
-- [X] T028 [US2] Return 400 with clear message for invalid date range in `packages/backend/src/routes/users.ts`
-- [X] T029 [US2] Add client-side date range validation and inline error before search in `packages/web/src/pages/LeaderTeamDeliverablesPage.tsx`
-- [X] T030 [US2] Trigger search when start or end date changes and team member is selected in `packages/web/src/pages/LeaderTeamDeliverablesPage.tsx`
+- [x] T027 [US2] Enforce inclusive UTC day bounds for `updated_at` filtering in `packages/backend/src/services/deliverableService.ts`
+- [x] T028 [US2] Return 400 with clear message for invalid date range in `packages/backend/src/routes/users.ts`
+- [x] T029 [US2] Add client-side date range validation and inline error before search in `packages/web/src/pages/LeaderTeamDeliverablesPage.tsx`
+- [x] T030 [US2] Trigger search when start or end date changes and team member is selected in `packages/web/src/pages/LeaderTeamDeliverablesPage.tsx`
 
 **Checkpoint**: User Stories 1 and 2 are independently functional and testable.
 
@@ -97,17 +97,17 @@
 
 ### Tests for User Story 3 (MANDATORY)
 
-- [X] T031 [P] [US3] Add reviewed acceptance mapping notes in `tests/010-leader-team-deliverables/team-deliverables-reviewed.us3.test.md`
-- [X] T032 [P] [US3] Add backend tests for reviewed upsert, clear, persistence, and leader isolation in `packages/backend/tests/team-deliverables/team-deliverables-reviewed.us3.test.ts`
-- [X] T033 [P] [US3] Add backend deny test for reviewed toggle without read access in `packages/backend/tests/team-deliverables/team-deliverables-reviewed.us3.test.ts`
-- [X] T034 [P] [US3] Add web test for checkbox toggle with optimistic update and error rollback in `packages/web/tests/team-deliverables/team-deliverables-reviewed.us3.test.tsx`
+- [x] T031 [P] [US3] Add reviewed acceptance mapping notes in `tests/010-leader-team-deliverables/team-deliverables-reviewed.us3.test.md`
+- [x] T032 [P] [US3] Add backend tests for reviewed upsert, clear, persistence, and leader isolation in `packages/backend/tests/team-deliverables/team-deliverables-reviewed.us3.test.ts`
+- [x] T033 [P] [US3] Add backend deny test for reviewed toggle without read access in `packages/backend/tests/team-deliverables/team-deliverables-reviewed.us3.test.ts`
+- [x] T034 [P] [US3] Add web test for checkbox toggle with optimistic update and error rollback in `packages/web/tests/team-deliverables/team-deliverables-reviewed.us3.test.tsx`
 
 ### Implementation for User Story 3
 
-- [X] T035 [US3] Implement `setDeliverableReviewed(deliverableId, reviewerUserId, reviewed)` in `packages/backend/src/services/deliverableReviewService.ts`
-- [X] T036 [US3] Register `PUT /deliverables/:deliverableId/reviewed` with leader role and `assertCanReadDeliverables` in `packages/backend/src/routes/deliverables.ts`
-- [X] T037 [US3] Implement `setDeliverableReviewed` client method in `packages/web/src/services/teamDeliverablesApi.ts`
-- [X] T038 [US3] Wire reviewed checkbox toggle with optimistic UI and rollback on failure in `packages/web/src/pages/LeaderTeamDeliverablesPage.tsx`
+- [x] T035 [US3] Implement `setDeliverableReviewed(deliverableId, reviewerUserId, reviewed)` in `packages/backend/src/services/deliverableReviewService.ts`
+- [x] T036 [US3] Register `PUT /deliverables/:deliverableId/reviewed` with leader role and `assertCanReadDeliverables` in `packages/backend/src/routes/deliverables.ts`
+- [x] T037 [US3] Implement `setDeliverableReviewed` client method in `packages/web/src/services/teamDeliverablesApi.ts`
+- [x] T038 [US3] Wire reviewed checkbox toggle with optimistic UI and rollback on failure in `packages/web/src/pages/LeaderTeamDeliverablesPage.tsx`
 
 **Checkpoint**: User Story 3 is independently functional and testable.
 
@@ -121,15 +121,15 @@
 
 ### Tests for User Story 4 (MANDATORY)
 
-- [X] T039 [P] [US4] Add access-control acceptance mapping notes in `tests/010-leader-team-deliverables/team-deliverables-access-control.us4.test.md`
-- [X] T040 [P] [US4] Add backend deny tests (401 unauthenticated, 403 non-leader) for team-members and team-deliverables in `packages/backend/tests/team-deliverables/team-deliverables-access-control.us4.test.ts`
-- [X] T041 [P] [US4] Add backend deny test for out-of-subtree `userId` on team-deliverables search in `packages/backend/tests/team-deliverables/team-deliverables-access-control.us4.test.ts`
-- [X] T042 [P] [US4] Add web route-guard tests (non-leader redirect, no data fetch) in `packages/web/tests/team-deliverables/team-deliverables-access-control.us4.test.tsx`
+- [x] T039 [P] [US4] Add access-control acceptance mapping notes in `tests/010-leader-team-deliverables/team-deliverables-access-control.us4.test.md`
+- [x] T040 [P] [US4] Add backend deny tests (401 unauthenticated, 403 non-leader) for team-members and team-deliverables in `packages/backend/tests/team-deliverables/team-deliverables-access-control.us4.test.ts`
+- [x] T041 [P] [US4] Add backend deny test for out-of-subtree `userId` on team-deliverables search in `packages/backend/tests/team-deliverables/team-deliverables-access-control.us4.test.ts`
+- [x] T042 [P] [US4] Add web route-guard tests (non-leader redirect, no data fetch) in `packages/web/tests/team-deliverables/team-deliverables-access-control.us4.test.tsx`
 
 ### Implementation for User Story 4
 
-- [X] T043 [US4] Verify consistent 401/403 payloads on all team deliverables endpoints in `packages/backend/src/routes/users.ts` and `packages/backend/src/routes/deliverables.ts`
-- [X] T044 [US4] Confirm `LeaderRoute` blocks non-leaders and page skips API calls when not leader in `packages/web/src/App.tsx` and `packages/web/src/pages/LeaderTeamDeliverablesPage.tsx`
+- [x] T043 [US4] Verify consistent 401/403 payloads on all team deliverables endpoints in `packages/backend/src/routes/users.ts` and `packages/backend/src/routes/deliverables.ts`
+- [x] T044 [US4] Confirm `LeaderRoute` blocks non-leaders and page skips API calls when not leader in `packages/web/src/App.tsx` and `packages/web/src/pages/LeaderTeamDeliverablesPage.tsx`
 
 **Checkpoint**: User Story 4 is independently functional and testable.
 
@@ -139,10 +139,10 @@
 
 **Purpose**: Edge cases, DAC evidence, contract alignment, and full verification.
 
-- [X] T045 [P] Add backend test for empty team member list when leader has no reports in `packages/backend/tests/team-deliverables/team-deliverables-empty-team.test.ts`
-- [X] T046 [P] Add backend DAC test proving peers and out-of-branch users are excluded from team-members payload in `packages/backend/tests/team-deliverables/team-deliverables-dac.test.ts`
-- [X] T047 Validate contract/spec/plan alignment for team deliverables endpoints in `specs/010-leader-team-deliverables/contracts/team-deliverables-api.yaml`
-- [X] T048 Run full feature verification (`npm test` backend/web team-deliverables suites) and record outcomes in `specs/010-leader-team-deliverables/quickstart.md`
+- [x] T045 [P] Add backend test for empty team member list when leader has no reports in `packages/backend/tests/team-deliverables/team-deliverables-empty-team.test.ts`
+- [x] T046 [P] Add backend DAC test proving peers and out-of-branch users are excluded from team-members payload in `packages/backend/tests/team-deliverables/team-deliverables-dac.test.ts`
+- [x] T047 Validate contract/spec/plan alignment for team deliverables endpoints in `specs/010-leader-team-deliverables/contracts/team-deliverables-api.yaml`
+- [x] T048 Run full feature verification (`npm test` backend/web team-deliverables suites) and record outcomes in `specs/010-leader-team-deliverables/quickstart.md`
 
 ---
 

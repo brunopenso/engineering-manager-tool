@@ -1,6 +1,11 @@
 import { AppDataSource } from '../database/connection.js';
 import { Tag } from '../database/entities/Tag.js';
-import { TagDuplicateNameError, TagValidationError, validateTagColor, validateTagName } from './tagValidation.js';
+import {
+  TagDuplicateNameError,
+  TagValidationError,
+  validateTagColor,
+  validateTagName,
+} from './tagValidation.js';
 
 type CreateTagInput = {
   name: string;

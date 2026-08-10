@@ -131,12 +131,12 @@
 
 ## DAC Test Matrix (fixtures until org persistence)
 
-| Case | Expected |
-|------|----------|
-| Owner reads self | Allow |
-| Direct manager reads report | Allow |
-| Top-of-chain reads deep report | Allow |
-| Peer reads peer | Deny |
-| Report reads manager | Deny |
-| User in other branch | Deny |
-| Superior PATCH/DELETE | Deny |
+| Case                           | Expected |
+| ------------------------------ | -------- |
+| Owner reads self               | Allow    |
+| Direct manager reads report    | Allow    |
+| Top-of-chain reads deep report | Allow    |
+| Peer reads peer                | Deny     |
+| Report reads manager           | Deny     |
+| User in other branch           | Deny     |
+| Superior PATCH/DELETE          | Deny     |

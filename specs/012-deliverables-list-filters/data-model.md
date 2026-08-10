@@ -6,20 +6,20 @@ No new database tables or migrations. Extends the **owner list query** with serv
 
 ### Deliverable
 
-| Field | Type | Notes |
-|-------|------|-------|
-| `created_at` | timestamptz | **Date filter axis** |
-| `business_impact` | enum | Optional filter (OR when multiple) |
-| `deliverable_system_tags` | join | Optional filter (OR when multiple tag ids) |
+| Field                     | Type        | Notes                                      |
+| ------------------------- | ----------- | ------------------------------------------ |
+| `created_at`              | timestamptz | **Date filter axis**                       |
+| `business_impact`         | enum        | Optional filter (OR when multiple)         |
+| `deliverable_system_tags` | join        | Optional filter (OR when multiple tag ids) |
 
 ## API: GET /deliverables query parameters
 
-| Parameter | Required | Default | Notes |
-|-----------|----------|---------|-------|
-| `startDate` | no* | last 30 days start | `YYYY-MM-DD`; *server defaults if omitted |
-| `endDate` | no* | today | `YYYY-MM-DD`; inclusive end day |
-| `businessImpact` | no | — | Repeatable or comma-separated; OR semantics |
-| `systemTagIds` | no | — | Repeatable UUIDs; OR semantics; validate against catalog |
+| Parameter        | Required | Default            | Notes                                                    |
+| ---------------- | -------- | ------------------ | -------------------------------------------------------- |
+| `startDate`      | no*      | last 30 days start | `YYYY-MM-DD`; *server defaults if omitted                |
+| `endDate`        | no*      | today              | `YYYY-MM-DD`; inclusive end day                          |
+| `businessImpact` | no       | —                  | Repeatable or comma-separated; OR semantics              |
+| `systemTagIds`   | no       | —                  | Repeatable UUIDs; OR semantics; validate against catalog |
 
 **Combined filter**: AND across provided dimensions. Owner scope: `user_id = authenticated user`.
 
@@ -29,18 +29,18 @@ No new database tables or migrations. Extends the **owner list query** with serv
 
 ### Errors
 
-| Condition | Response |
-|-----------|----------|
-| `endDate < startDate` | 400 validation |
+| Condition              | Response        |
+| ---------------------- | --------------- |
+| `endDate < startDate`  | 400 validation  |
 | Unknown `systemTagIds` | 400 invalid tag |
 
 ## UI filter state (session-local)
 
-| Field | Default | Notes |
-|-------|---------|-------|
+| Field                   | Default      | Notes                                           |
+| ----------------------- | ------------ | ----------------------------------------------- |
 | `startDate` / `endDate` | Last 30 days | Pre-filled on mount; sent on every list request |
-| `selectedImpacts` | `[]` | Empty = omit from query |
-| `selectedTagIds` | `[]` | Empty = omit from query |
+| `selectedImpacts`       | `[]`         | Empty = omit from query                         |
+| `selectedTagIds`        | `[]`         | Empty = omit from query                         |
 
 ## State transitions
 

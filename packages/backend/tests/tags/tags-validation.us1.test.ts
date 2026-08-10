@@ -54,7 +54,9 @@ describe('US1 create tag validation', () => {
     });
     await registerTagsRoutes(app);
 
-    vi.mocked(tagService.createTag).mockRejectedValue(new TagValidationError('Tag color must be valid.'));
+    vi.mocked(tagService.createTag).mockRejectedValue(
+      new TagValidationError('Tag color must be valid.'),
+    );
 
     const response = await app.inject({
       method: 'POST',

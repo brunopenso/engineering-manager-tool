@@ -39,7 +39,9 @@ async function importSeed(filePath: string): Promise<DatabaseSeed> {
   const seed = module.default ?? module.seed;
 
   if (!isDatabaseSeed(seed)) {
-    throw new Error(`Seed file ${path.basename(filePath)} must export a DatabaseSeed as default or named "seed"`);
+    throw new Error(
+      `Seed file ${path.basename(filePath)} must export a DatabaseSeed as default or named "seed"`,
+    );
   }
 
   return seed;

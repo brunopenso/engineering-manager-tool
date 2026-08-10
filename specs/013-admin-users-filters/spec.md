@@ -5,7 +5,7 @@
 **Status**: Draft  
 **Input**: User description: "in the route /app/admin/users I need to filter the users, lets create the option to filter by name(full or parcial), email (full or parcial) and role."
 
-## User Scenarios & Testing *(mandatory, with required automated tests)*
+## User Scenarios & Testing _(mandatory, with required automated tests)_
 
 ### User Story 1 - Administrator filters users by name (Priority: P1)
 
@@ -99,11 +99,11 @@ An administrator applies name, email, and role filters together, receives the in
 - Non-administrator navigates to `/app/admin/users`: access denied as today; filter controls are not usable.
 - Filter active while list is loading: show loading state without flashing unfiltered data as the final result.
 
-## Requirements *(mandatory, with required test coverage)*
+## Requirements _(mandatory, with required test coverage)_
 
 ### Functional Requirements
 
-*All functional requirements MUST be covered by automated tests. This feature extends the existing administrator-only Admin Users screen; it does not change who may grant or revoke roles.*
+_All functional requirements MUST be covered by automated tests. This feature extends the existing administrator-only Admin Users screen; it does not change who may grant or revoke roles._
 
 - **FR-001**: The system MUST expose filter controls on the **Admin Users screen** (`/app/admin/users`) above the users table, without removing existing role grant/revoke actions.
 - **FR-002**: The system MUST provide a **name filter** as a free-text field supporting **full or partial** match against each user’s display name.
@@ -119,20 +119,20 @@ An administrator applies name, email, and role filters together, receives the in
 - **FR-012**: The administrator user list MUST accept filter parameters (optional name text, optional email text, optional role selections) and return only matching rows; the screen MUST NOT download the full user list for client-side filtering only.
 - **FR-013**: After grant or revoke role actions, the list MUST refresh using the **current** filter parameters.
 
-### Access Control Matrix *(required when data visibility is in scope)*
+### Access Control Matrix _(required when data visibility is in scope)_
 
-| Actor | Allowed Data Visibility | Explicitly Denied Visibility | Validation Notes |
-|-------|--------------------------|-------------------------------|------------------|
-| Administrator | Full organization user list on `/app/admin/users`, filtered by backend query | N/A within admin scope | API and UI tests with administrator session |
-| Leader (non-admin) | Unchanged—no access to admin user list | All users on admin screen | Regression: forbidden on list and filtered list |
-| Collaborator (non-admin) | Unchanged—no access to admin user list | All users on admin screen | Regression: forbidden on list and filtered list |
+| Actor                    | Allowed Data Visibility                                                      | Explicitly Denied Visibility | Validation Notes                                |
+| ------------------------ | ---------------------------------------------------------------------------- | ---------------------------- | ----------------------------------------------- |
+| Administrator            | Full organization user list on `/app/admin/users`, filtered by backend query | N/A within admin scope       | API and UI tests with administrator session     |
+| Leader (non-admin)       | Unchanged—no access to admin user list                                       | All users on admin screen    | Regression: forbidden on list and filtered list |
+| Collaborator (non-admin) | Unchanged—no access to admin user list                                       | All users on admin screen    | Regression: forbidden on list and filtered list |
 
 ### Key Entities
 
 - **User (admin list row)**: Organization member shown on the Admin Users screen; attributes relevant to filtering include **display name**, **email**, and **active roles** (Collaborator, Leader, Administrator).
 - **Filter criteria**: Optional name text, optional email text, optional set of role selections; sent to the backend on each list request.
 
-## Success Criteria *(mandatory)*
+## Success Criteria _(mandatory)_
 
 ### Measurable Outcomes
 

@@ -11,10 +11,10 @@
 
 **Purpose**: Establish web test/tooling baseline required for story-level automated validation.
 
-- [X] T001 Add web test scripts and test dependencies in packages/web/package.json
-- [X] T002 Create Vitest configuration for React/browser tests in packages/web/vitest.config.ts
-- [X] T003 Create testing library setup entrypoint in packages/web/src/test/setup.ts
-- [X] T004 Create shared render helpers with router/auth wrappers in packages/web/src/test/renderWithProviders.tsx
+- [x] T001 Add web test scripts and test dependencies in packages/web/package.json
+- [x] T002 Create Vitest configuration for React/browser tests in packages/web/vitest.config.ts
+- [x] T003 Create testing library setup entrypoint in packages/web/src/test/setup.ts
+- [x] T004 Create shared render helpers with router/auth wrappers in packages/web/src/test/renderWithProviders.tsx
 
 ---
 
@@ -24,12 +24,12 @@
 
 **CRITICAL**: No user story work starts until this phase is complete.
 
-- [X] T005 Create shell route option model and default route constants in packages/web/src/routes/shellOptions.ts
-- [X] T006 Create base shell layout with header, left-nav container, and outlet region in packages/web/src/components/shell/AppShellLayout.tsx
-- [X] T007 Add nested protected shell route tree (`/app`) in packages/web/src/App.tsx
-- [X] T008 Add reusable session-shape validator utilities for shell identity requirements in packages/web/src/auth/sessionGuards.ts
-- [X] T009 Enforce protected-route redirects for missing token or missing email in packages/web/src/auth/ProtectedRoute.tsx
-- [X] T010 Add contract fixture for shell route expectations in packages/web/src/test/fixtures/shellRouteContract.ts
+- [x] T005 Create shell route option model and default route constants in packages/web/src/routes/shellOptions.ts
+- [x] T006 Create base shell layout with header, left-nav container, and outlet region in packages/web/src/components/shell/AppShellLayout.tsx
+- [x] T007 Add nested protected shell route tree (`/app`) in packages/web/src/App.tsx
+- [x] T008 Add reusable session-shape validator utilities for shell identity requirements in packages/web/src/auth/sessionGuards.ts
+- [x] T009 Enforce protected-route redirects for missing token or missing email in packages/web/src/auth/ProtectedRoute.tsx
+- [x] T010 Add contract fixture for shell route expectations in packages/web/src/test/fixtures/shellRouteContract.ts
 
 **Checkpoint**: Foundation complete. User stories can proceed.
 
@@ -43,17 +43,17 @@
 
 ### Tests for User Story 1 (MANDATORY)
 
-- [X] T011 [US1] Add protected-route redirect tests (unauthenticated + missing email) in packages/web/src/__tests__/auth-guard.us1.test.tsx
-- [X] T012 [US1] Add shell header rendering test (system name + user email) in packages/web/src/__tests__/shell-header.us1.test.tsx
-- [X] T013 [US1] Add fixed post-login default route and `/` + `/login` alias tests in packages/web/src/__tests__/default-route.us1.test.tsx
+- [x] T011 [US1] Add protected-route redirect tests (unauthenticated + missing email) in packages/web/src/**tests**/auth-guard.us1.test.tsx
+- [x] T012 [US1] Add shell header rendering test (system name + user email) in packages/web/src/**tests**/shell-header.us1.test.tsx
+- [x] T013 [US1] Add fixed post-login default route and `/` + `/login` alias tests in packages/web/src/**tests**/default-route.us1.test.tsx
 
 ### Implementation for User Story 1
 
-- [X] T014 [US1] Implement fixed top banner and system-name region in packages/web/src/components/shell/AppShellLayout.tsx
-- [X] T015 [US1] Implement header user-email rendering with required identity checks in packages/web/src/components/shell/AppShellLayout.tsx
-- [X] T016 [US1] Normalize login success navigation to configured shell default route in packages/web/src/pages/LoginPage.tsx
-- [X] T017 [US1] Align route-guard behavior with session utilities in packages/web/src/auth/ProtectedRoute.tsx
-- [X] T018 [US1] Add shell route contract assertions for `/app` default behavior in packages/web/src/__tests__/shell-route-contract.us1.test.tsx
+- [x] T014 [US1] Implement fixed top banner and system-name region in packages/web/src/components/shell/AppShellLayout.tsx
+- [x] T015 [US1] Implement header user-email rendering with required identity checks in packages/web/src/components/shell/AppShellLayout.tsx
+- [x] T016 [US1] Normalize login success navigation to configured shell default route in packages/web/src/pages/LoginPage.tsx
+- [x] T017 [US1] Align route-guard behavior with session utilities in packages/web/src/auth/ProtectedRoute.tsx
+- [x] T018 [US1] Add shell route contract assertions for `/app` default behavior in packages/web/src/**tests**/shell-route-contract.us1.test.tsx
 
 **Checkpoint**: User Story 1 is independently functional and testable.
 
@@ -67,17 +67,17 @@
 
 ### Tests for User Story 2 (MANDATORY)
 
-- [X] T019 [US2] Add menu default-collapsed and expand interaction tests in packages/web/src/__tests__/menu-toggle.us2.test.tsx
-- [X] T020 [US2] Add menu selection route-transition and auto-collapse tests in packages/web/src/__tests__/menu-selection.us2.test.tsx
-- [X] T021 [US2] Add deep-link route render tests for menu option routes in packages/web/src/__tests__/deep-link-routing.us2.test.tsx
+- [x] T019 [US2] Add menu default-collapsed and expand interaction tests in packages/web/src/**tests**/menu-toggle.us2.test.tsx
+- [x] T020 [US2] Add menu selection route-transition and auto-collapse tests in packages/web/src/**tests**/menu-selection.us2.test.tsx
+- [x] T021 [US2] Add deep-link route render tests for menu option routes in packages/web/src/**tests**/deep-link-routing.us2.test.tsx
 
 ### Implementation for User Story 2
 
-- [X] T022 [US2] Implement left navigation menu interactions and option list rendering in packages/web/src/components/shell/ShellNavigation.tsx
-- [X] T023 [US2] Integrate route-driven menu state and outlet content switching in packages/web/src/components/shell/AppShellLayout.tsx
-- [X] T024 [US2] Add unavailable-option fallback content view in packages/web/src/pages/OptionUnavailablePage.tsx
-- [X] T025 [US2] Register menu option routes and route metadata in packages/web/src/routes/shellOptions.ts
-- [X] T026 [US2] Add route contract assertions for `/`, `/login`, `/app`, and explicit absence of `/app/welcome` in packages/web/src/__tests__/shell-route-contract.us2.test.tsx
+- [x] T022 [US2] Implement left navigation menu interactions and option list rendering in packages/web/src/components/shell/ShellNavigation.tsx
+- [x] T023 [US2] Integrate route-driven menu state and outlet content switching in packages/web/src/components/shell/AppShellLayout.tsx
+- [x] T024 [US2] Add unavailable-option fallback content view in packages/web/src/pages/OptionUnavailablePage.tsx
+- [x] T025 [US2] Register menu option routes and route metadata in packages/web/src/routes/shellOptions.ts
+- [x] T026 [US2] Add route contract assertions for `/`, `/login`, `/app`, and explicit absence of `/app/welcome` in packages/web/src/**tests**/shell-route-contract.us2.test.tsx
 
 **Checkpoint**: User Stories 1 and 2 work independently.
 
@@ -91,16 +91,16 @@
 
 ### Tests for User Story 3 (MANDATORY)
 
-- [X] T027 [US3] Add first-click inline confirmation visibility test in packages/web/src/__tests__/logout-confirm.us3.test.tsx
-- [X] T028 [US3] Add confirm-logout session-clear and redirect test in packages/web/src/__tests__/logout-confirm.us3.test.tsx
-- [X] T029 [US3] Add cancel-logout state-preservation test in packages/web/src/__tests__/logout-confirm.us3.test.tsx
+- [x] T027 [US3] Add first-click inline confirmation visibility test in packages/web/src/**tests**/logout-confirm.us3.test.tsx
+- [x] T028 [US3] Add confirm-logout session-clear and redirect test in packages/web/src/**tests**/logout-confirm.us3.test.tsx
+- [x] T029 [US3] Add cancel-logout state-preservation test in packages/web/src/**tests**/logout-confirm.us3.test.tsx
 
 ### Implementation for User Story 3
 
-- [X] T030 [US3] Implement inline two-step header identity action component in packages/web/src/components/shell/HeaderIdentityAction.tsx
-- [X] T031 [US3] Wire confirm/cancel logout flow to auth session state in packages/web/src/components/shell/AppShellLayout.tsx
-- [X] T032 [US3] Ensure logout confirmation state resets correctly on route/session changes in packages/web/src/components/shell/useHeaderIdentityAction.ts
-- [X] T033 [US3] Add logout interaction contract assertions in packages/web/src/__tests__/shell-route-contract.us3.test.tsx
+- [x] T030 [US3] Implement inline two-step header identity action component in packages/web/src/components/shell/HeaderIdentityAction.tsx
+- [x] T031 [US3] Wire confirm/cancel logout flow to auth session state in packages/web/src/components/shell/AppShellLayout.tsx
+- [x] T032 [US3] Ensure logout confirmation state resets correctly on route/session changes in packages/web/src/components/shell/useHeaderIdentityAction.ts
+- [x] T033 [US3] Add logout interaction contract assertions in packages/web/src/**tests**/shell-route-contract.us3.test.tsx
 
 **Checkpoint**: All user stories are independently functional.
 
@@ -110,10 +110,10 @@
 
 **Purpose**: Final hardening and documentation updates spanning all stories.
 
-- [X] T034 Document final shell behavior verification matrix in specs/003-authenticated-app-shell/quickstart.md
-- [X] T035 Sync finalized shell contract details and examples in specs/003-authenticated-app-shell/contracts/app-shell-routes.yaml
-- [X] T036 Add route-validation notes for `/` + `/login` alias, `/app` default, and `/app/welcome` absence in specs/003-authenticated-app-shell/quickstart.md
-- [X] T037 Record final validation outcomes (lint/build/test + story checks) in specs/003-authenticated-app-shell/quickstart.md
+- [x] T034 Document final shell behavior verification matrix in specs/003-authenticated-app-shell/quickstart.md
+- [x] T035 Sync finalized shell contract details and examples in specs/003-authenticated-app-shell/contracts/app-shell-routes.yaml
+- [x] T036 Add route-validation notes for `/` + `/login` alias, `/app` default, and `/app/welcome` absence in specs/003-authenticated-app-shell/quickstart.md
+- [x] T037 Record final validation outcomes (lint/build/test + story checks) in specs/003-authenticated-app-shell/quickstart.md
 
 ---
 

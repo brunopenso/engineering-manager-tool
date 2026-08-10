@@ -8,11 +8,7 @@ import { AUTH_ERROR_CODES, type AppTokenPayload } from '../../src/auth/types.js'
 import { registerAuthRoutes } from '../../src/routes/auth.js';
 import * as userService from '../../src/services/userService.js';
 import * as authUserMapper from '../../src/services/authUserMapper.js';
-import {
-  profileActorId,
-  sampleProfileUser,
-  toAuthUserResponse,
-} from './profile-settings.setup.js';
+import { profileActorId, sampleProfileUser, toAuthUserResponse } from './profile-settings.setup.js';
 
 vi.mock('../../src/services/userService.js', () => ({
   findUserById: vi.fn(),

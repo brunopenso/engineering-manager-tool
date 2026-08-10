@@ -19,7 +19,8 @@ vi.mock('../../src/services/deliverableReviewService.js', () => ({
 }));
 
 vi.mock('../../src/services/authorizationService.js', async (importOriginal) => {
-  const actual = await importOriginal<typeof import('../../src/services/authorizationService.js')>();
+  const actual =
+    await importOriginal<typeof import('../../src/services/authorizationService.js')>();
   return {
     ...actual,
     assertCanReadDeliverables: vi.fn(),

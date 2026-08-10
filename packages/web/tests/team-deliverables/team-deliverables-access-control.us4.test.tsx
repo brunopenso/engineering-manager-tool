@@ -20,8 +20,6 @@ describe('US4 team deliverables route guards', () => {
       isAuthenticated: false,
     });
 
-    expect(
-      await screen.findByText(/sign in with google to access/i),
-    ).toBeInTheDocument();
+    expect(await screen.findByText(/sign in with google to access/i)).toBeInTheDocument();
   });
 });

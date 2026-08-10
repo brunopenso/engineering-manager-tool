@@ -320,9 +320,7 @@ export default function LeaderTeamDeliverablesPage() {
           onClose={() => setSelectedDeliverableId(null)}
           onReviewedChange={(deliverableId, reviewed) => {
             setDeliverables((current) =>
-              current.map((item) =>
-                item.id === deliverableId ? { ...item, reviewed } : item,
-              ),
+              current.map((item) => (item.id === deliverableId ? { ...item, reviewed } : item)),
             );
           }}
         />

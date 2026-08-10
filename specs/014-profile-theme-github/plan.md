@@ -21,7 +21,7 @@ Persist each user's **appearance preference** (`light` | `dark`) and optional **
 
 ## Constitution Check
 
-*GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
+_GATE: Must pass before Phase 0 research. Re-check after Phase 1 design._
 
 - Principle I (Type-Safe Monorepo Ownership): **PASS**. Shared `UserProfile` shape extended in contract; backend mapper and web `AuthUser` stay aligned.
 - Principle II (Security-First): **PASS**. `PATCH /users/me` requires bearer auth; updates scoped to `request.auth.userId`; validation on input; no cross-user path.
@@ -79,10 +79,10 @@ packages/web/tests/profile-theme-github/
 
 ## Complexity Tracking
 
-| Item | Why Needed | Simpler Alternative Rejected Because |
-|------|------------|-------------------------------------|
-| Server + cookie for theme | Spec FR-014: account is source of truth when signed in | Cookie-only fails cross-device requirement |
-| `PATCH /users/me` | Spec FR-012 self-service update | Overloading admin `PATCH /users/:id/roles` wrong semantics and ACL |
+| Item                      | Why Needed                                             | Simpler Alternative Rejected Because                               |
+| ------------------------- | ------------------------------------------------------ | ------------------------------------------------------------------ |
+| Server + cookie for theme | Spec FR-014: account is source of truth when signed in | Cookie-only fails cross-device requirement                         |
+| `PATCH /users/me`         | Spec FR-012 self-service update                        | Overloading admin `PATCH /users/:id/roles` wrong semantics and ACL |
 
 No constitutional violations.
 

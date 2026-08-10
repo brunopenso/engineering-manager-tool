@@ -397,11 +397,19 @@ export default function DeliverableFormPage({ mode }: { mode: DeliverableFormMod
           ) : (
             <Stack spacing={3}>
               <DeliverableFormFields form={form} tagCatalog={tagCatalog} onChange={setForm} />
-              <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1} sx={{ justifyContent: 'flex-end' }}>
+              <Stack
+                direction={{ xs: 'column', sm: 'row' }}
+                spacing={1}
+                sx={{ justifyContent: 'flex-end' }}
+              >
                 <Button onClick={() => navigate('/app/deliverables')}>
                   {t('actions.cancel', { ns: 'common' })}
                 </Button>
-                <Button variant="contained" disabled={isSaveDisabled} onClick={() => void handleSubmit()}>
+                <Button
+                  variant="contained"
+                  disabled={isSaveDisabled}
+                  onClick={() => void handleSubmit()}
+                >
                   {isSubmitting ? t('form.saving') : saveLabel}
                 </Button>
               </Stack>

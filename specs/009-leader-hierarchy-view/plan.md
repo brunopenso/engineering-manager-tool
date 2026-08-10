@@ -21,7 +21,7 @@ Deliver a leader-only, read-only organizational hierarchy screen that shows the 
 
 ## Constitution Check
 
-*GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
+_GATE: Must pass before Phase 0 research. Re-check after Phase 1 design._
 
 - Principle I (Type-Safe Monorepo Ownership): **PASS**. Changes stay in existing backend/web packages with shared DTO types.
 - Principle II (Security-First Authentication, Authorization, and Data Handling): **PASS**. Server-side leader guard on hierarchy-view endpoint; scoped query never returns out-of-subtree users.
@@ -88,9 +88,9 @@ packages/web/tests/hierarchy-view/
 
 ## Complexity Tracking
 
-| Violation | Why Needed | Simpler Alternative Rejected Because |
-|-----------|------------|-------------------------------------|
+| Violation                                                        | Why Needed                                                                                    | Simpler Alternative Rejected Because                                                                                                   |
+| ---------------------------------------------------------------- | --------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
 | Principle VII: limited superior visibility (direct manager only) | Explicit product requirement in spec FR-002 and stakeholder input for “1 level above” context | Strict downward-only model would hide the leader’s direct manager and fail acceptance scenarios for leaders who report to someone else |
-| New dependency `@mui/x-tree-view` | Accessible tree expand/collapse semantics (keyboard, ARIA) for nested subtree | Hand-rolled nested lists are harder to make accessible and to keep expand-one-layer behavior consistent |
+| New dependency `@mui/x-tree-view`                                | Accessible tree expand/collapse semantics (keyboard, ARIA) for nested subtree                 | Hand-rolled nested lists are harder to make accessible and to keep expand-one-layer behavior consistent                                |
 
 **Exception bounds**: API returns at most one `manager` object; never walks `manager.leaderId`. Descendants loaded only where `leader_id` chain originates from actor. Tests must prove second-level managers and peer branches are absent from payload and UI.

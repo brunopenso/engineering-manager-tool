@@ -11,11 +11,7 @@ describe('US3 logout contract assertions', () => {
     renderWithProviders(<App />, { initialPath: '/app', isAuthenticated: true });
 
     await user.click(getIdentityButton());
-    expect(
-      screen.getByRole('dialog', { name: 'Confirm Logout' }),
-    ).toBeInTheDocument();
-    expect(
-      screen.getByText(/Are you sure you want to log out\?/i),
-    ).toBeInTheDocument();
+    expect(screen.getByRole('dialog', { name: 'Confirm Logout' })).toBeInTheDocument();
+    expect(screen.getByText(/Are you sure you want to log out\?/i)).toBeInTheDocument();
   });
 });

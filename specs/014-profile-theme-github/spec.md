@@ -5,7 +5,7 @@
 **Status**: Draft  
 **Input**: User description: "lets change the user profile screen and APIs. Save user preference for dark or light theme in the backend; add a new field called github login to save the user data (screens, migrations, apis)."
 
-## User Scenarios & Testing *(mandatory, with required automated tests)*
+## User Scenarios & Testing _(mandatory, with required automated tests)_
 
 ### User Story 1 - Persist appearance preference across sessions (Priority: P1)
 
@@ -75,11 +75,11 @@ After sign-in or when refreshing session identity, the signed-in user receives t
 - Local browser theme cookie disagrees with server preference on sign-in: server preference takes precedence for signed-in experience; local cookie may be updated to match after load.
 - Profile page opened while not signed in: user is redirected or blocked by existing authentication guards; no preference is exposed.
 
-## Requirements *(mandatory, with required test coverage)*
+## Requirements _(mandatory, with required test coverage)_
 
 ### Functional Requirements
 
-*All functional requirements MUST be covered by automated tests. This feature extends the existing Profile screen and authenticated user identity; it does not change role grant/revoke or administrator user directory behavior.*
+_All functional requirements MUST be covered by automated tests. This feature extends the existing Profile screen and authenticated user identity; it does not change role grant/revoke or administrator user directory behavior._
 
 - **FR-001**: The system MUST store each user's appearance preference as exactly one of **light** or **dark** on their account record.
 - **FR-002**: The system MUST default appearance preference to **light** when no value has been saved for that user.
@@ -98,20 +98,20 @@ After sign-in or when refreshing session identity, the signed-in user receives t
 - **FR-015**: The Profile screen MUST continue to show existing read-only identity fields (name, email, active roles) and MUST add GitHub login as an editable field without removing current capabilities.
 - **FR-016**: Existing user accounts MUST receive the new stored fields without data loss to name, email, roles, or login history.
 
-### Access Control Matrix *(required when data visibility is in scope)*
+### Access Control Matrix _(required when data visibility is in scope)_
 
-| Actor | Allowed | Explicitly denied | Validation notes |
-|-------|---------|-------------------|------------------|
-| Signed-in user (any role) | Read and update own appearance preference and GitHub login via Profile and self-service APIs | Reading or updating another user's appearance or GitHub login | Tests for self-only update success and cross-user denial |
-| Unauthenticated | None | All profile preference and GitHub login access | 401/403 on API and no profile screen access |
-| Administrator (via admin user directory) | Unchanged: manage roles on other users as today | Editing another user's GitHub login or theme via admin directory in this feature | Out of scope; no new admin columns required |
+| Actor                                    | Allowed                                                                                      | Explicitly denied                                                                | Validation notes                                         |
+| ---------------------------------------- | -------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- | -------------------------------------------------------- |
+| Signed-in user (any role)                | Read and update own appearance preference and GitHub login via Profile and self-service APIs | Reading or updating another user's appearance or GitHub login                    | Tests for self-only update success and cross-user denial |
+| Unauthenticated                          | None                                                                                         | All profile preference and GitHub login access                                   | 401/403 on API and no profile screen access              |
+| Administrator (via admin user directory) | Unchanged: manage roles on other users as today                                              | Editing another user's GitHub login or theme via admin directory in this feature | Out of scope; no new admin columns required              |
 
 ### Key Entities
 
 - **User account**: Existing person record; gains **appearance preference** (light or dark) and optional **GitHub login** (username/handle).
 - **Profile settings (logical)**: The subset of user account fields the owner may view and edit on the Profile screen—appearance preference and GitHub login in this feature.
 
-## Success Criteria *(mandatory)*
+## Success Criteria _(mandatory)_
 
 ### Measurable Outcomes
 

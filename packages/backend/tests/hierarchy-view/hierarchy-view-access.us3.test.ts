@@ -1,7 +1,10 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { USER_ROLE_TYPES } from '../../src/auth/types.js';
 import * as userService from '../../src/services/userService.js';
-import { buildHierarchyTestApp, registerHierarchyTestRoutes } from '../hierarchy-management/hierarchy-test-app.js';
+import {
+  buildHierarchyTestApp,
+  registerHierarchyTestRoutes,
+} from '../hierarchy-management/hierarchy-test-app.js';
 
 vi.mock('../../src/services/userService.js', async (importOriginal) => {
   const actual = await importOriginal<typeof import('../../src/services/userService.js')>();

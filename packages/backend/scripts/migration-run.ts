@@ -11,7 +11,6 @@ dotenv.config({ path: envPath });
 
 import 'reflect-metadata';
 
-
 async function runMigrations() {
   try {
     const { AppDataSource } = await import('../src/database/connection.js');

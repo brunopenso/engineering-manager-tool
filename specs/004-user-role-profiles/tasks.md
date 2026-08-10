@@ -163,12 +163,12 @@
 
 ### User Story Dependencies
 
-| Story | Priority | Depends on | Can start after |
-|-------|----------|------------|-----------------|
-| US1 | P1 | Foundational | Phase 2 checkpoint |
-| US2 | P1 | US1 (roles in session/API) | US1 checkpoint (T025 recommended) |
-| US3 | P2 | US1 + Foundational | Phase 2; full admin UI after T032 |
-| US4 | P2 | US3 (admin routes exist) | US3 checkpoint for matrix tests |
+| Story | Priority | Depends on                 | Can start after                   |
+| ----- | -------- | -------------------------- | --------------------------------- |
+| US1   | P1       | Foundational               | Phase 2 checkpoint                |
+| US2   | P1       | US1 (roles in session/API) | US1 checkpoint (T025 recommended) |
+| US3   | P2       | US1 + Foundational         | Phase 2; full admin UI after T032 |
+| US4   | P2       | US3 (admin routes exist)   | US3 checkpoint for matrix tests   |
 
 US1 is the MVP slice. US2 can proceed once auth payloads include `roles`. US3 and US4 can overlap after foundational work, but US4 authorization matrix tests need admin endpoints from US3.
 
@@ -224,29 +224,29 @@ US1 is the MVP slice. US2 can proceed once auth payloads include `roles`. US3 an
 
 ### MVP First (User Story 1 only)
 
-1. Complete Phase 1: Setup  
-2. Complete Phase 2: Foundational  
-3. Complete Phase 3: User Story 1  
-4. **Stop and validate**: login/me return `COLLABORATOR`; tests pass  
+1. Complete Phase 1: Setup
+2. Complete Phase 2: Foundational
+3. Complete Phase 3: User Story 1
+4. **Stop and validate**: login/me return `COLLABORATOR`; tests pass
 5. Demo/deploy baseline role model
 
 ### Incremental Delivery
 
-1. Setup + Foundational → role infrastructure ready  
-2. US1 → collaborator default everywhere (MVP)  
-3. US2 → profile visibility for signed-in users  
-4. US3 → administrator role management  
-5. US4 → authorization matrix + DAC fixtures  
+1. Setup + Foundational → role infrastructure ready
+2. US1 → collaborator default everywhere (MVP)
+3. US2 → profile visibility for signed-in users
+4. US3 → administrator role management
+5. US4 → authorization matrix + DAC fixtures
 6. Polish → build/lint/test + quickstart evidence
 
 ### Parallel Team Strategy
 
-1. Team completes Phases 1–2 together  
+1. Team completes Phases 1–2 together
 2. After checkpoint:
-   - **Dev A**: US1 backend (T019–T023)  
-   - **Dev B**: US1 web (T024–T025)  
-3. US2 profile UI after US1 web merge  
-4. US3 backend + US3 frontend in parallel  
+   - **Dev A**: US1 backend (T019–T023)
+   - **Dev B**: US1 web (T024–T025)
+3. US2 profile UI after US1 web merge
+4. US3 backend + US3 frontend in parallel
 5. US4 authorization tests once US3 routes exist
 
 ---

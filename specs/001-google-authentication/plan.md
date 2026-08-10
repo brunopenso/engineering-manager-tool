@@ -21,7 +21,7 @@ Refactor the existing Lerna web and backend workspaces to implement Google-only 
 
 ## Constitution Check
 
-*GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
+_GATE: Must pass before Phase 0 research. Re-check after Phase 1 design._
 
 - Principle I (Type-Safe Monorepo Ownership): PASS. Design keeps existing package boundaries and TypeScript-first implementation.
 - Principle II (Security-First Authentication and Data Handling): PASS with constraint. Detailed user-facing error messages are allowed only as controlled error categories (invalid, expired, issuer/audience mismatch) and must avoid sensitive internals.

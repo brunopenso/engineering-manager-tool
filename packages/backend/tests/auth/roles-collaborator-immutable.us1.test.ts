@@ -11,8 +11,6 @@ describe('US1 collaborator immutability', () => {
 
   it('allows elevated role change validation paths', () => {
     expect(() => rejectCollaboratorRoleChange(USER_ROLE_TYPES.LEADER)).not.toThrow();
-    expect(() =>
-      rejectCollaboratorRoleChange(USER_ROLE_TYPES.ADMINISTRATOR),
-    ).not.toThrow();
+    expect(() => rejectCollaboratorRoleChange(USER_ROLE_TYPES.ADMINISTRATOR)).not.toThrow();
   });
 });

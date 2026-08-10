@@ -39,9 +39,7 @@ describe('LoginPage Google button theme', () => {
     renderWithProviders(<LoginPage />);
 
     expect(screen.getByTestId('google-login')).toHaveAttribute('data-theme', 'outline');
-    expect(googleLoginMock).toHaveBeenLastCalledWith(
-      expect.objectContaining({ theme: 'outline' }),
-    );
+    expect(googleLoginMock).toHaveBeenLastCalledWith(expect.objectContaining({ theme: 'outline' }));
   });
 
   it('uses the dark Google button in dark mode', () => {
@@ -49,10 +47,7 @@ describe('LoginPage Google button theme', () => {
 
     renderWithProviders(<LoginPage />);
 
-    expect(screen.getByTestId('google-login')).toHaveAttribute(
-      'data-theme',
-      'filled_black',
-    );
+    expect(screen.getByTestId('google-login')).toHaveAttribute('data-theme', 'filled_black');
     expect(googleLoginMock).toHaveBeenLastCalledWith(
       expect.objectContaining({ theme: 'filled_black' }),
     );

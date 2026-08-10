@@ -123,10 +123,10 @@ Restart `npm run dev`. The development login section disappears from the login p
 Dev login is **disabled in production** (`NODE_ENV=production`), even if env vars
 are set. Never enable it in deployed environments.
 
-| Guard | Purpose |
-|-------|---------|
-| `NODE_ENV !== 'production'` | Hard block in production |
-| `DEV_AUTH_ENABLED=true` | Explicit opt-in on the backend |
-| `VITE_DEV_AUTH_ENABLED=true` | Explicit opt-in on the web app |
-| `X-Dev-Auth-Secret` header | Required on every dev auth API request |
-| No role override in login body | Roles remain DB-authoritative |
+| Guard                          | Purpose                                |
+| ------------------------------ | -------------------------------------- |
+| `NODE_ENV !== 'production'`    | Hard block in production               |
+| `DEV_AUTH_ENABLED=true`        | Explicit opt-in on the backend         |
+| `VITE_DEV_AUTH_ENABLED=true`   | Explicit opt-in on the web app         |
+| `X-Dev-Auth-Secret` header     | Required on every dev auth API request |
+| No role override in login body | Roles remain DB-authoritative          |

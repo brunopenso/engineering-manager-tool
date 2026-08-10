@@ -13,13 +13,13 @@
 - Q: Should transfer-leadership remain in scope? -> A: No, remove transfer-leadership from requirements.
 - Q: Are contracts/plan aligned with clarified scope? -> A: Yes, contracts and plan include only orphan search and assignment.
 
-## User Scenarios & Testing *(mandatory, with required automated tests)*
+## User Scenarios & Testing _(mandatory, with required automated tests)_
 
 <!--
   IMPORTANT: User stories should be PRIORITIZED as user journeys ordered by importance.
   Each user story/journey must be INDEPENDENTLY TESTABLE - meaning if you implement just ONE of them,
   you should still have a viable MVP (Minimum Viable Product) that delivers value.
-  
+
   Assign priorities (P1, P2, P3, etc.) to each story, where P1 is the most critical.
   Think of each story as a standalone slice of functionality that can be:
   - Developed independently
@@ -73,13 +73,13 @@ As the business owner, I need hierarchy changes to be limited to authorized lead
 - Search query returns no orphan users.
 - Query has only partial text and still needs to match correctly.
 
-## Requirements *(mandatory, with required test coverage)*
+## Requirements _(mandatory, with required test coverage)_
 
 ### Functional Requirements
 
-*All functional requirements MUST be covered by automated tests. Define the test(s) for each requirement below.*
+_All functional requirements MUST be covered by automated tests. Define the test(s) for each requirement below._
 
-*For features that expose collaborator or organizational data, requirements MUST define a hierarchical DAC matrix that allows only self + descendants (recursive) and denies peer/superior visibility for every API endpoint, report, and visualization in scope.*
+_For features that expose collaborator or organizational data, requirements MUST define a hierarchical DAC matrix that allows only self + descendants (recursive) and denies peer/superior visibility for every API endpoint, report, and visualization in scope._
 
 - **FR-001**: The system MUST provide a hierarchy management screen that is accessible only to authenticated users with leader role.
 - **FR-002**: The system MUST allow a leader to search users who currently do not have a leader assigned using name or email, with both partial and full matching.
@@ -88,20 +88,20 @@ As the business owner, I need hierarchy changes to be limited to authorized lead
 - **FR-005**: The system MUST show a clear success or error message for assignment actions.
 - **FR-006**: The system MUST record an auditable event for each successful assignment, including actor, affected user, previous leader state, new leader state, and timestamp.
 
-### Access Control Matrix *(required when data visibility is in scope)*
+### Access Control Matrix _(required when data visibility is in scope)_
 
-| Actor | Allowed Data Visibility | Explicitly Denied Visibility | Validation Notes |
-|-------|--------------------------|-------------------------------|------------------|
-| Leader (logged in) | Orphan users for assignment | Users that already have a leader | Validate with Story 1 and Story 2 tests |
-| Collaborator (non-leader) | None for this screen and actions | All hierarchy-management datasets and actions | Validate with Story 2 deny tests |
-| Unauthenticated user | None | All hierarchy-management datasets and actions | Validate with Story 2 deny tests |
+| Actor                     | Allowed Data Visibility          | Explicitly Denied Visibility                  | Validation Notes                        |
+| ------------------------- | -------------------------------- | --------------------------------------------- | --------------------------------------- |
+| Leader (logged in)        | Orphan users for assignment      | Users that already have a leader              | Validate with Story 1 and Story 2 tests |
+| Collaborator (non-leader) | None for this screen and actions | All hierarchy-management datasets and actions | Validate with Story 2 deny tests        |
+| Unauthenticated user      | None                             | All hierarchy-management datasets and actions | Validate with Story 2 deny tests        |
 
-### Key Entities *(include if feature involves data)*
+### Key Entities _(include if feature involves data)_
 
 - **Hierarchy Assignment Action**: A leader-initiated operation that links an orphan user to the acting leader as direct manager.
 - **Hierarchy Assignment Audit Event**: An immutable record of a completed assignment with actor, target user, previous leader state, new leader state, and time of change.
 
-## Success Criteria *(mandatory)*
+## Success Criteria _(mandatory)_
 
 ### Measurable Outcomes
 

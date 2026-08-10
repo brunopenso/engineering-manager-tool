@@ -169,12 +169,9 @@ export async function listDeliverablesForOwner(
       .leftJoinAndSelect('systemTagRow.tag', 'tag')
       .where('deliverable.userId = :ownerUserId', { ownerUserId })
       .andWhere('deliverable.createdAt BETWEEN :start AND :end', { start, end })
-      .innerJoin(
-        'deliverable.systemTags',
-        'filterTag',
-        'filterTag.tagId IN (:...systemTagIds)',
-        { systemTagIds: filters.systemTagIds },
-      )
+      .innerJoin('deliverable.systemTags', 'filterTag', 'filterTag.tagId IN (:...systemTagIds)', {
+        systemTagIds: filters.systemTagIds,
+      })
       .distinct(true)
       .orderBy('deliverable.updatedAt', 'DESC');
 

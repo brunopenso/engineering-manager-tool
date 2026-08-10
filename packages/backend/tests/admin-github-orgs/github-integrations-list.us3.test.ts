@@ -8,12 +8,14 @@ vi.mock('../../src/services/githubIntegrationService.js', () => ({
   listGithubIntegrations: vi.fn(),
   enableGithubIntegration: vi.fn(),
   disableGithubIntegration: vi.fn(),
-  mapGithubIntegration: vi.fn((entity: { id: string; organizationName: string; createdAt: Date; updatedAt: Date }) => ({
-    id: entity.id,
-    organizationName: entity.organizationName,
-    createdAt: entity.createdAt.toISOString(),
-    updatedAt: entity.updatedAt.toISOString(),
-  })),
+  mapGithubIntegration: vi.fn(
+    (entity: { id: string; organizationName: string; createdAt: Date; updatedAt: Date }) => ({
+      id: entity.id,
+      organizationName: entity.organizationName,
+      createdAt: entity.createdAt.toISOString(),
+      updatedAt: entity.updatedAt.toISOString(),
+    }),
+  ),
 }));
 
 describe('US3 GET /github-integrations list', () => {

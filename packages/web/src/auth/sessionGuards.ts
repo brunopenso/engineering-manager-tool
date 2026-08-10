@@ -8,9 +8,6 @@ export function hasUserEmail(user: AuthUser | null): boolean {
   return Boolean(user?.email?.trim());
 }
 
-export function hasValidShellSession(
-  accessToken: string | null,
-  user: AuthUser | null,
-): boolean {
+export function hasValidShellSession(accessToken: string | null, user: AuthUser | null): boolean {
   return hasAuthToken(accessToken) && hasUserEmail(user);
 }

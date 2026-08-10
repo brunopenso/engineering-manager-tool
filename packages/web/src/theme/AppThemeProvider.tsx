@@ -1,11 +1,4 @@
-import {
-  createContext,
-  useCallback,
-  useContext,
-  useMemo,
-  useState,
-  type ReactNode,
-} from 'react';
+import { createContext, useCallback, useContext, useMemo, useState, type ReactNode } from 'react';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { enUS, ptBR } from '@mui/material/locale';
 import CssBaseline from '@mui/material/CssBaseline';

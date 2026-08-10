@@ -27,7 +27,9 @@ describe('US1 GET /deliverables date filters', () => {
     await registerDeliverablesTestRoutes(app);
     const defaults = defaultLast30DayRange();
 
-    vi.mocked(deliverableService.listDeliverablesForOwner).mockResolvedValue([samplePortfolioSummary]);
+    vi.mocked(deliverableService.listDeliverablesForOwner).mockResolvedValue([
+      samplePortfolioSummary,
+    ]);
     vi.mocked(deliverableService.countDeliverablesForOwner).mockResolvedValue(1);
 
     const response = await app.inject({ method: 'GET', url: '/deliverables' });

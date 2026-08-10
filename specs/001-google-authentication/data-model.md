@@ -1,6 +1,7 @@
 # Data Model: Google-only Authentication
 
 ## Entity: User
+
 - Purpose: Stores the canonical authenticated person profile for application access.
 - Fields:
   - id: UUID, primary key.
@@ -19,6 +20,7 @@
   - One-to-many with LoginAuditEvent.
 
 ## Entity: LoginAuditEvent
+
 - Purpose: Records each successful authentication event for traceability.
 - Fields:
   - id: UUID, primary key.
@@ -33,6 +35,7 @@
   - Many-to-one with User.
 
 ## Value Object: AuthenticatedSession (non-persistent)
+
 - Purpose: Represents the authenticated context returned by backend after successful login.
 - Fields:
   - userId: UUID.
@@ -45,6 +48,7 @@
   - session payload must map to an existing User at issuance time.
 
 ## Value Object: AuthFailureFeedback (non-persistent)
+
 - Purpose: Represents user-facing authentication error payload for failed login attempts.
 - Fields:
   - code: enum (INVALID_TOKEN, EXPIRED_TOKEN, ISSUER_MISMATCH, AUDIENCE_MISMATCH).
@@ -54,6 +58,7 @@
   - message must be human-readable and MUST NOT include sensitive validation internals.
 
 ## State Transitions
+
 - New Google user authenticates successfully:
   - User does not exist by email -> create User with firstLoginAt = now and lastLoginAt = now.
   - Create LoginAuditEvent.

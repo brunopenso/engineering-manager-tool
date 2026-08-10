@@ -3,7 +3,11 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import App from '../../src/App.js';
 import { defaultLast60DayRange } from '../../src/services/leaderAnalyticsApi.js';
 import { LEADER_TEAM_ANALYTICS_ROUTE } from '../../src/routes/shellOptions.js';
-import { renderWithProviders, testLeaderUser, testUser } from '../../src/test/renderWithProviders.js';
+import {
+  renderWithProviders,
+  testLeaderUser,
+  testUser,
+} from '../../src/test/renderWithProviders.js';
 import { getVisibleShellMenuOptions } from '../../src/routes/shellOptions.js';
 
 describe('US1 leader team analytics access', () => {

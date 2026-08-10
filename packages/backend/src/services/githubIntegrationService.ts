@@ -36,9 +36,7 @@ export async function enableGithubIntegration(
 
   const existing = await integrationRepository().findOne({ where: { organizationName } });
   if (existing) {
-    throw new GithubIntegrationDuplicateLoginError(
-      'This GitHub organization is already enabled.',
-    );
+    throw new GithubIntegrationDuplicateLoginError('This GitHub organization is already enabled.');
   }
 
   const integration = integrationRepository().create({ organizationName });

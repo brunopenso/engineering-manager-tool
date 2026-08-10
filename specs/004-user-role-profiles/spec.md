@@ -5,7 +5,7 @@
 **Status**: Draft  
 **Input**: User description: "lets create profiles. The current system have an entitu called user and now we need to implement that this user have 3 roles: 1. All users by default are collaborators 2. An user can be a leader 3. An user can be a administrator. All 3 roles can coexists at the same time."
 
-## User Scenarios & Testing *(mandatory, with required automated tests)*
+## User Scenarios & Testing _(mandatory, with required automated tests)_
 
 ### User Story 1 - Default collaborator profile on sign-in (Priority: P1)
 
@@ -96,7 +96,7 @@ Product behavior respects the combination of roles on a user so that having mult
 - Existing users created before this feature receive collaborator automatically with no manual onboarding step.
 - Session and profile responses stay consistent immediately after a role change (no stale role display for the affected user on next profile load).
 
-## Requirements *(mandatory, with required test coverage)*
+## Requirements _(mandatory, with required test coverage)_
 
 ### Functional Requirements
 
@@ -116,14 +116,14 @@ Product behavior respects the combination of roles on a user so that having mult
 - **FR-014**: Users with only the collaborator role MUST NOT receive leader or administrator data visibility or management capabilities.
 - **FR-015**: Users with the administrator role MUST be able to view and manage role assignments for other users.
 
-### Access Control Matrix *(required when data visibility is in scope)*
+### Access Control Matrix _(required when data visibility is in scope)_
 
-| Actor | Allowed Data Visibility | Explicitly Denied Visibility | Validation Notes |
-|-------|--------------------------|-------------------------------|------------------|
-| Collaborator only | Own identity and profile; self-scoped product data | Peer, superior, and other-branch organizational data; role management for others | Automated tests for self-only reads and denied lateral/superior access |
-| Collaborator + Leader | Own identity and profile; self plus direct and indirect subordinates in assigned hierarchy | Peer, superior, and users outside descendant subtree; role management for others | Recursive descendant allow tests; peer/superior deny tests |
-| Collaborator + Administrator | Own identity and profile; user directory and role assignments needed for administration | N/A for role-management scope; non-administrative hierarchical rules apply only when leader is also present | Tests for grant/revoke and denied actions without administrator |
-| Collaborator + Leader + Administrator | Union of leader visibility rules for hierarchical data and administrator visibility for user/role administration | Peer/superior organizational data outside leader subtree rules | Combined-role authorization tests |
+| Actor                                 | Allowed Data Visibility                                                                                          | Explicitly Denied Visibility                                                                                | Validation Notes                                                       |
+| ------------------------------------- | ---------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------- |
+| Collaborator only                     | Own identity and profile; self-scoped product data                                                               | Peer, superior, and other-branch organizational data; role management for others                            | Automated tests for self-only reads and denied lateral/superior access |
+| Collaborator + Leader                 | Own identity and profile; self plus direct and indirect subordinates in assigned hierarchy                       | Peer, superior, and users outside descendant subtree; role management for others                            | Recursive descendant allow tests; peer/superior deny tests             |
+| Collaborator + Administrator          | Own identity and profile; user directory and role assignments needed for administration                          | N/A for role-management scope; non-administrative hierarchical rules apply only when leader is also present | Tests for grant/revoke and denied actions without administrator        |
+| Collaborator + Leader + Administrator | Union of leader visibility rules for hierarchical data and administrator visibility for user/role administration | Peer/superior organizational data outside leader subtree rules                                              | Combined-role authorization tests                                      |
 
 ### Key Entities
 
@@ -131,7 +131,7 @@ Product behavior respects the combination of roles on a user so that having mult
 - **Role profile**: The set of active roles for a user; always includes collaborator; may additionally include leader and/or administrator.
 - **Role assignment event**: Historical record of a grant or revoke of leader or administrator, including actor, target user, role affected, action type, and timestamp.
 
-## Success Criteria *(mandatory)*
+## Success Criteria _(mandatory)_
 
 ### Measurable Outcomes
 

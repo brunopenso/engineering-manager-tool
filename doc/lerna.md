@@ -4,10 +4,10 @@ This repository is an [npm workspaces](https://docs.npmjs.com/cli/using-npm/work
 monorepo orchestrated by [Lerna](https://lerna.js.org/). Packages live under
 `packages/`:
 
-| Package | Name |
-|---------|------|
+| Package     | Name               |
+| ----------- | ------------------ |
 | Backend API | `@em-tool/backend` |
-| Web SPA | `@em-tool/web` |
+| Web SPA     | `@em-tool/web`     |
 
 Run all commands below from the **repository root** unless noted otherwise.
 
@@ -147,12 +147,12 @@ npx lerna run db:seed --scope=@em-tool/backend
 
 ## Other root scripts
 
-| Script | What it does |
-|--------|----------------|
-| `npm run dev` | Start web and backend dev servers in parallel |
-| `npm run build` | Build all packages |
-| `npm run clean` | Clean build artifacts in all packages and remove root `node_modules` |
-| `npm run lerna:repair` | Repair Lerna metadata if the monorepo gets out of sync |
+| Script                 | What it does                                                         |
+| ---------------------- | -------------------------------------------------------------------- |
+| `npm run dev`          | Start web and backend dev servers in parallel                        |
+| `npm run build`        | Build all packages                                                   |
+| `npm run clean`        | Clean build artifacts in all packages and remove root `node_modules` |
+| `npm run lerna:repair` | Repair Lerna metadata if the monorepo gets out of sync               |
 
 Per-package build:
 
