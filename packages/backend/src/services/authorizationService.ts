@@ -86,6 +86,26 @@ export async function assertCanReadDeliverables(
   }
 }
 
+/**
+ * Hierarchical visibility for imported GitHub PR data.
+ * Self + recursive subordinates; administrators may access any collaborator.
+ */
+export async function assertCanReadGithubImportedDataForUser(
+  actorUserId: string,
+  actorRoles: UserRoleType[],
+  targetUserId: string,
+): Promise<void> {
+  if (hasAdministratorRole(actorRoles)) {
+    return;
+  }
+  if (await canReadDeliverablesForOwner(actorUserId, targetUserId)) {
+    return;
+  }
+  const error = new Error('You do not have permission to view this GitHub activity.');
+  error.name = AUTH_ERROR_CODES.FORBIDDEN;
+  throw error;
+}
+
 export function isElevatedRole(role: string): role is ElevatedRoleType {
   return role === USER_ROLE_TYPES.LEADER || role === USER_ROLE_TYPES.ADMINISTRATOR;
 }

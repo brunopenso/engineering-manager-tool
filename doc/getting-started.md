@@ -34,6 +34,9 @@ BOOTSTRAP_ADMIN_EMAILS=admin@example.com
 # Development-only login bypass (disabled when NODE_ENV=production)
 DEV_AUTH_ENABLED=true
 DEV_AUTH_SECRET=local-dev-only-change-me
+
+# Required for the operator GitHub PR import command (npm run github:import-prs)
+GITHUB_TOKEN=ghp_or_fine_grained_token_with_org_repo_read
 ```
 
 **`packages/web/.env`**

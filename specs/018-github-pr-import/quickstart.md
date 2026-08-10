@@ -84,9 +84,17 @@ Expected:
 
 ## Done when
 
-- [ ] Migrations create the four new tables with uniqueness constraints
-- [ ] `npm run github:import-prs` documented at root and backend
-- [ ] Re-import of a successful period does not duplicate PRs
-- [ ] Failed control rows are retryable
-- [ ] `POST /github-pull-requests/query` matches the OpenAPI contract
-- [ ] DAC matrix tests green under `tests/018-github-pr-import/`
+- [x] Migrations create the four new tables with uniqueness constraints
+- [x] `npm run github:import-prs` documented at root and backend
+- [x] Re-import of a successful period does not duplicate PRs
+- [x] Failed control rows are retryable
+- [x] `POST /github-pull-requests/query` matches the OpenAPI contract
+- [x] DAC matrix tests green under `tests/018-github-pr-import/`
+
+## Verification record (2026-08-10)
+
+- Backend lint (`tsc --noEmit`): pass
+- Automated tests: `npm run test --workspace @em-tool/backend -- tests/018-github-pr-import` → 10 files / 28 tests passed
+- Migration file added: `packages/backend/database/migrations/1779800000000-AddGithubPullRequestImport.ts`
+- Operator command: `npm run github:import-prs` (root) → `@em-tool/backend` `tsx scripts/github-import-prs.ts`
+- Live GitHub import and DB migration apply require local `GITHUB_TOKEN` + PostgreSQL; CI covers mocked import/query/DAC paths

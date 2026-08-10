@@ -13,6 +13,7 @@
     "clean": "lerna run clean --parallel && rm -rf node_modules",
     "lerna:repair": "lerna repair",
     "prepare": "husky",
+    "github:import-prs": "npm run github:import-prs --workspace @em-tool/backend --",
     "cleanforce": "rm -rf node_modules && rm -rf packages/*/node_modules && rm -rf packages/*/dist && rm -rf packages/*/tsconfig.tsbuildinfo && rm package-lock.json && npm rm packages/*/package-lock.json"
   },
   "devDependencies": {
