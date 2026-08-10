@@ -13,10 +13,10 @@ Date range remains a **search** filter for finding merged PRs on GitHub. It is *
 
 ## Persistence identity
 
-| Entity            | Unique key                                         |
-| ----------------- | -------------------------------------------------- |
-| Imported PR       | `(repositoryId, githubPullRequestId)`              |
-| Collection control| `(repositoryId, githubPullRequestId)` (audit row)  |
+| Entity             | Unique key                                        |
+| ------------------ | ------------------------------------------------- |
+| Imported PR        | `(repositoryId, githubPullRequestId)`             |
+| Collection control | `(repositoryId, githubPullRequestId)` (audit row) |
 
 - Collaborator/user is **not** part of either unique key.
 - Missing/blank `repositoryId` or `githubPullRequestId` → do not persist that PR; record a clear item failure reason.

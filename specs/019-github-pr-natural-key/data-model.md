@@ -66,15 +66,15 @@ Unchanged field shapes from 018. Parent FK remains `pullRequestId` → imported 
 
 Audit/history of the latest collection outcome for one PR natural key.
 
-| Field                     | Type             | Notes                                      |
-| ------------------------- | ---------------- | ------------------------------------------ |
-| `id`                      | UUID             | Internal PK                                |
-| `repositoryId`            | string           | Part of unique key                         |
-| `githubPullRequestId`     | string           | Part of unique key                         |
-| `status`                  | string           | `success` \| `failed` (primary values)     |
-| `executedAt`              | timestamptz      | Latest attempt                             |
-| `errorDetails`            | text, nullable   | Present when failed                        |
-| `createdAt` / `updatedAt` | timestamptz      |                                            |
+| Field                     | Type           | Notes                                  |
+| ------------------------- | -------------- | -------------------------------------- |
+| `id`                      | UUID           | Internal PK                            |
+| `repositoryId`            | string         | Part of unique key                     |
+| `githubPullRequestId`     | string         | Part of unique key                     |
+| `status`                  | string         | `success` \| `failed` (primary values) |
+| `executedAt`              | timestamptz    | Latest attempt                         |
+| `errorDetails`            | text, nullable | Present when failed                    |
+| `createdAt` / `updatedAt` | timestamptz    |                                        |
 
 **Removed vs 018 (from uniqueness / required identity)**:
 
