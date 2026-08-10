@@ -61,10 +61,7 @@ function ShellNavItem({ option, matchEnd, onOptionSelected }: ShellNavItemProps)
   );
 }
 
-export default function ShellNavigation({
-  sections,
-  onOptionSelected,
-}: ShellNavigationProps) {
+export default function ShellNavigation({ sections, onOptionSelected }: ShellNavigationProps) {
   const exactMatchRoutes = getExactMatchRoutes(sections);
 
   return (

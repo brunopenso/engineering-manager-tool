@@ -2,12 +2,12 @@
 
 ## Database: `github_integrations`
 
-| Column | Type | Constraints | Notes |
-|--------|------|-------------|-------|
-| `id` | uuid | PK, generated | Stable identifier |
+| Column              | Type        | Constraints          | Notes                               |
+| ------------------- | ----------- | -------------------- | ----------------------------------- |
+| `id`                | uuid        | PK, generated        | Stable identifier                   |
 | `organization_name` | varchar(39) | NOT NULL, **UNIQUE** | Organization slug; stored lowercase |
-| `created_at` | timestamptz | NOT NULL | Audit |
-| `updated_at` | timestamptz | NOT NULL | Audit |
+| `created_at`        | timestamptz | NOT NULL             | Audit                               |
+| `updated_at`        | timestamptz | NOT NULL             | Audit                               |
 
 **Migration**: Create `github_integrations` table with unique index on `organization_name`.
 
@@ -17,12 +17,12 @@
 
 ## API: GithubIntegration (response shape)
 
-| Field | Type | Required | Notes |
-|-------|------|----------|-------|
-| `id` | uuid | yes | |
-| `organizationName` | string | yes | Canonical lowercase slug (`organization_name` column) |
-| `createdAt` | date-time | yes | ISO string in JSON |
-| `updatedAt` | date-time | optional in list | ISO string if exposed |
+| Field              | Type      | Required         | Notes                                                 |
+| ------------------ | --------- | ---------------- | ----------------------------------------------------- |
+| `id`               | uuid      | yes              |                                                       |
+| `organizationName` | string    | yes              | Canonical lowercase slug (`organization_name` column) |
+| `createdAt`        | date-time | yes              | ISO string in JSON                                    |
+| `updatedAt`        | date-time | optional in list | ISO string if exposed                                 |
 
 ### List response
 
@@ -34,8 +34,8 @@
 
 ### Create request
 
-| Field | Type | Validation |
-|-------|------|------------|
+| Field              | Type   | Validation                                                        |
+| ------------------ | ------ | ----------------------------------------------------------------- |
 | `organizationName` | string | Trim; slug rules; lowercase persist; unique (`organization_name`) |
 
 ### Create response
@@ -54,31 +54,31 @@ Status **201** on success.
 
 ## Errors
 
-| Condition | HTTP | Code |
-|-----------|------|------|
-| Invalid organization name format | 400 | `VALIDATION_ERROR` |
-| Duplicate organization name | 409 | `DUPLICATE_GITHUB_INTEGRATION_LOGIN` |
-| Non-administrator | 403 | `FORBIDDEN` |
-| Missing auth | 401 | `MISSING_APP_TOKEN` |
-| Unknown id on delete | 404 | `NOT_FOUND` |
+| Condition                        | HTTP | Code                                 |
+| -------------------------------- | ---- | ------------------------------------ |
+| Invalid organization name format | 400  | `VALIDATION_ERROR`                   |
+| Duplicate organization name      | 409  | `DUPLICATE_GITHUB_INTEGRATION_LOGIN` |
+| Non-administrator                | 403  | `FORBIDDEN`                          |
+| Missing auth                     | 401  | `MISSING_APP_TOKEN`                  |
+| Unknown id on delete             | 404  | `NOT_FOUND`                          |
 
 ## UI state (AdminGithubIntegrationsPage)
 
-| State | Notes |
-|-------|-------|
-| `integrations` | From `GET /github-integrations` |
-| `organizationNameDraft` | Add form input |
-| `errorMessage` | API errors |
-| `disableTarget` | Row pending confirmation dialog |
-| `isLoading` | Initial list fetch |
+| State                   | Notes                           |
+| ----------------------- | ------------------------------- |
+| `integrations`          | From `GET /github-integrations` |
+| `organizationNameDraft` | Add form input                  |
+| `errorMessage`          | API errors                      |
+| `disableTarget`         | Row pending confirmation dialog |
+| `isLoading`             | Initial list fetch              |
 
 ## Access control
 
-| Actor | GET list | POST enable | DELETE disable | Menu / screen |
-|-------|----------|-------------|----------------|---------------|
-| Administrator | Allow | Allow | Allow | Visible |
-| Other authenticated | Deny | Deny | Deny | Hidden / blocked |
-| Unauthenticated | Deny | Deny | Deny | Redirect login |
+| Actor               | GET list | POST enable | DELETE disable | Menu / screen    |
+| ------------------- | -------- | ----------- | -------------- | ---------------- |
+| Administrator       | Allow    | Allow       | Allow          | Visible          |
+| Other authenticated | Deny     | Deny        | Deny           | Hidden / blocked |
+| Unauthenticated     | Deny     | Deny        | Deny           | Redirect login   |
 
 ## Relationships
 

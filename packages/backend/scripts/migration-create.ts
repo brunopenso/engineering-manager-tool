@@ -27,9 +27,11 @@ function generateTimestamp(): number {
 
 async function createMigration() {
   const migrationName = process.argv[2];
-  
+
   if (!migrationName) {
-    console.error('Please provide a migration name: npm run db:migration:create -- YourMigrationName');
+    console.error(
+      'Please provide a migration name: npm run db:migration:create -- YourMigrationName',
+    );
     process.exit(1);
   }
 
@@ -39,7 +41,7 @@ async function createMigration() {
     const migrationsDir = path.join(__dirname, '..', 'database', 'migrations');
     const fileName = `${new Date().getTime()}-${migrationName}.ts`;
     const filePath = path.join(migrationsDir, fileName);
-    
+
     const template = `import { MigrationInterface, QueryRunner } from "typeorm";
 
 export class ${migrationClassBase}${timestamp} implements MigrationInterface {

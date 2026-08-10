@@ -7,22 +7,22 @@ describe('US4 engagement chart', () => {
   it('renders engagement chart for per-user series', () => {
     renderWithI18n(
       <EngagementByUserChart
-          analytics={{
-            startDate: '2026-04-01',
-            endDate: '2026-05-15',
-            weekStarts: ['2026-04-07'],
-            deliverablesByWeekAndImpact: [],
-            engagementByWeek: [
-              {
-                weekStart: '2026-04-07',
-                userId: 'report-1',
-                displayName: 'Alice',
-                count: 1,
-              },
-            ],
-            pendingReviewCount: 0,
-          }}
-        />
+        analytics={{
+          startDate: '2026-04-01',
+          endDate: '2026-05-15',
+          weekStarts: ['2026-04-07'],
+          deliverablesByWeekAndImpact: [],
+          engagementByWeek: [
+            {
+              weekStart: '2026-04-07',
+              userId: 'report-1',
+              displayName: 'Alice',
+              count: 1,
+            },
+          ],
+          pendingReviewCount: 0,
+        }}
+      />,
     );
 
     expect(screen.getByTestId('engagement-chart')).toBeInTheDocument();

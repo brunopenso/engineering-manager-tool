@@ -44,9 +44,7 @@ describe('US1 leader create user form', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Create user' }));
 
     await waitFor(() => {
-      expect(
-        screen.getByText(/Leader assigned automatically to you/i),
-      ).toBeInTheDocument();
+      expect(screen.getByText(/Leader assigned automatically to you/i)).toBeInTheDocument();
     });
   });
 });

@@ -21,7 +21,7 @@ Extend the existing `User` identity model with concurrent roles (`COLLABORATOR` 
 
 ## Constitution Check
 
-*GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
+_GATE: Must pass before Phase 0 research. Re-check after Phase 1 design._
 
 - Principle I (Type-Safe Monorepo Ownership): **PASS**. Changes stay in existing backend/web packages with shared contract artifact.
 - Principle II (Security-First Authentication, Authorization, and Data Handling): **PASS**. Server-side role resolution, explicit `requireAdministrator` on management routes, stable error codes without leaking internals.

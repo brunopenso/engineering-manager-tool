@@ -1,5 +1,8 @@
 import { MigrationInterface, QueryRunner } from 'typeorm';
-import { DEFAULT_DATE_FORMAT_PREFERENCE, DEFAULT_LANGUAGE_PREFERENCE } from '../../src/types/profilePreferences.js';
+import {
+  DEFAULT_DATE_FORMAT_PREFERENCE,
+  DEFAULT_LANGUAGE_PREFERENCE,
+} from '../../src/types/profilePreferences.js';
 
 export class AddUserProfileLocalePreferences1779770000000 implements MigrationInterface {
   name = 'AddUserProfileLocalePreferences1779770000000';

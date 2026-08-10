@@ -55,9 +55,7 @@ export default function AdminGithubIntegrationsPage() {
       setIntegrations(response);
     } catch (error) {
       setErrorMessage(
-        error instanceof GithubIntegrationsApiError
-          ? error.message
-          : t('github.loadError'),
+        error instanceof GithubIntegrationsApiError ? error.message : t('github.loadError'),
       );
     } finally {
       setIsLoading(false);
@@ -81,9 +79,7 @@ export default function AdminGithubIntegrationsPage() {
       await refreshIntegrations();
     } catch (error) {
       setErrorMessage(
-        error instanceof GithubIntegrationsApiError
-          ? error.message
-          : t('github.enableError'),
+        error instanceof GithubIntegrationsApiError ? error.message : t('github.enableError'),
       );
     }
   }
@@ -101,9 +97,7 @@ export default function AdminGithubIntegrationsPage() {
       await refreshIntegrations();
     } catch (error) {
       setErrorMessage(
-        error instanceof GithubIntegrationsApiError
-          ? error.message
-          : t('github.disableError'),
+        error instanceof GithubIntegrationsApiError ? error.message : t('github.disableError'),
       );
     }
   }
@@ -145,7 +139,9 @@ export default function AdminGithubIntegrationsPage() {
             </Box>
 
             {isLoading ? (
-              <Typography color="text.secondary">{t('loading.organizations', { ns: 'common' })}</Typography>
+              <Typography color="text.secondary">
+                {t('loading.organizations', { ns: 'common' })}
+              </Typography>
             ) : !hasIntegrations ? (
               <Typography color="text.secondary">{t('github.empty')}</Typography>
             ) : (

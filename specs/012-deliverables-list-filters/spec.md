@@ -12,7 +12,7 @@
 - Q: Where should portfolio filtering execute (client vs server)? → A: **All filtering MUST occur on the backend**; the screen requests a filtered list from the server rather than filtering a full client-side download.
 - Q: What is the default date range when the Deliverables management screen loads? → A: **Last 30 days** (rolling window ending today), matching the Team Deliverables date-range default pattern; the screen always loads with this range applied via the backend.
 
-## User Scenarios & Testing *(mandatory, with required automated tests)*
+## User Scenarios & Testing _(mandatory, with required automated tests)_
 
 ### User Story 1 - Collaborator narrows portfolio by creation date (Priority: P1)
 
@@ -105,11 +105,11 @@ A collaborator applies creation date, impact, and system tag filters together, r
 - Collaborator changes filters while delete confirmation is open: list refresh after delete uses current filter parameters.
 - Deliverables exist outside the last 30 days but none inside: show filtered/period empty messaging, not "add your first deliverable" unless the user has no deliverables at all.
 
-## Requirements *(mandatory, with required test coverage)*
+## Requirements _(mandatory, with required test coverage)_
 
 ### Functional Requirements
 
-*All functional requirements MUST be covered by automated tests. This feature extends the collaborator-only Deliverables management screen; it does not change who may read or write deliverables.*
+_All functional requirements MUST be covered by automated tests. This feature extends the collaborator-only Deliverables management screen; it does not change who may read or write deliverables._
 
 - **FR-001**: The system MUST expose filter controls on the **Deliverables management screen** (`/app/deliverables`) above the deliverables table, without removing existing list, add, edit, or delete capabilities.
 - **FR-002**: The system MUST provide a **creation date range filter** with separate **start date** and **end date** inputs (date picker UX).
@@ -126,13 +126,13 @@ A collaborator applies creation date, impact, and system tag filters together, r
 - **FR-013**: Filtering MUST apply only to deliverables owned by the authenticated collaborator; hierarchical read paths for superiors are out of scope for this feature.
 - **FR-014**: The owner portfolio list endpoint MUST accept filter parameters (creation date range, optional impact levels, optional system tag identifiers) and return only matching rows; the screen MUST NOT download the full unfiltered portfolio for client-side filtering.
 
-### Access Control Matrix *(required when data visibility is in scope)*
+### Access Control Matrix _(required when data visibility is in scope)_
 
-| Actor | Allowed Data Visibility | Explicitly Denied Visibility | Validation Notes |
-|-------|--------------------------|-------------------------------|------------------|
+| Actor                | Allowed Data Visibility                                                           | Explicitly Denied Visibility  | Validation Notes                                                                  |
+| -------------------- | --------------------------------------------------------------------------------- | ----------------------------- | --------------------------------------------------------------------------------- |
 | Collaborator (owner) | Own deliverables on `/app/deliverables`, filtered by backend query scoped to self | Any other user's deliverables | API tests with two-user fixtures; peer cannot obtain another user's filtered list |
-| Leader / superior | Unchanged from existing deliverable read rules (not this screen) | N/A for this feature | No new read surfaces |
-| Peer | Unchanged (no access to other's portfolios) | Other peers' deliverables | Regression tests on list ownership |
+| Leader / superior    | Unchanged from existing deliverable read rules (not this screen)                  | N/A for this feature          | No new read surfaces                                                              |
+| Peer                 | Unchanged (no access to other's portfolios)                                       | Other peers' deliverables     | Regression tests on list ownership                                                |
 
 ### Key Entities
 
@@ -140,7 +140,7 @@ A collaborator applies creation date, impact, and system tag filters together, r
 - **System tag (catalog)**: Organization-defined label used on deliverables; filter options are drawn from the same catalog as create/edit.
 - **Filter criteria**: Creation date range (default last 30 days), optional selected impact levels, optional selected system tag identifiers; sent to the backend on each list request.
 
-## Success Criteria *(mandatory)*
+## Success Criteria _(mandatory)_
 
 ### Measurable Outcomes
 

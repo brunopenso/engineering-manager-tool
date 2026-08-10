@@ -118,9 +118,7 @@ function DevLoginSection() {
                 {t('dev.userOption', {
                   fullName: user.fullName,
                   email: user.email,
-                  roles: user.roles
-                    .map((role) => t(`roles.${role}`, { ns: 'common' }))
-                    .join(', '),
+                  roles: user.roles.map((role) => t(`roles.${role}`, { ns: 'common' })).join(', '),
                 })}
               </MenuItem>
             ))}

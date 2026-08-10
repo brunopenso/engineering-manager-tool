@@ -20,9 +20,7 @@ describe('US4 deliverable review notes DAC UI', () => {
       }),
     );
 
-    render(
-      <DeliverableReviewNotesPanel deliverableId="del-1" accessToken="token-1" active />,
-    );
+    render(<DeliverableReviewNotesPanel deliverableId="del-1" accessToken="token-1" active />);
 
     await waitFor(() => {
       expect(

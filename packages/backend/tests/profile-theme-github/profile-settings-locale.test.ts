@@ -1,11 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import * as userService from '../../src/services/userService.js';
 import * as authUserMapper from '../../src/services/authUserMapper.js';
-import {
-  profileActorId,
-  sampleProfileUser,
-  toAuthUserResponse,
-} from './profile-settings.setup.js';
+import { profileActorId, sampleProfileUser, toAuthUserResponse } from './profile-settings.setup.js';
 import {
   buildProfileSettingsTestApp,
   registerProfileSettingsTestRoutes,
@@ -39,11 +35,21 @@ describe('profile language preference settings', () => {
     await registerProfileSettingsTestRoutes(app);
 
     vi.mocked(userService.updateUserProfileSettings)
-      .mockResolvedValueOnce({ ...sampleProfileUser, languagePreference: LANGUAGE_PREFERENCES[1] } as never)
-      .mockResolvedValueOnce({ ...sampleProfileUser, languagePreference: LANGUAGE_PREFERENCES[0] } as never);
+      .mockResolvedValueOnce({
+        ...sampleProfileUser,
+        languagePreference: LANGUAGE_PREFERENCES[1],
+      } as never)
+      .mockResolvedValueOnce({
+        ...sampleProfileUser,
+        languagePreference: LANGUAGE_PREFERENCES[0],
+      } as never);
     vi.mocked(authUserMapper.mapUserToAuthResponse)
-      .mockResolvedValueOnce(toAuthUserResponse({ ...sampleProfileUser, languagePreference: LANGUAGE_PREFERENCES[1] }))
-      .mockResolvedValueOnce(toAuthUserResponse({ ...sampleProfileUser, languagePreference: LANGUAGE_PREFERENCES[0] }));
+      .mockResolvedValueOnce(
+        toAuthUserResponse({ ...sampleProfileUser, languagePreference: LANGUAGE_PREFERENCES[1] }),
+      )
+      .mockResolvedValueOnce(
+        toAuthUserResponse({ ...sampleProfileUser, languagePreference: LANGUAGE_PREFERENCES[0] }),
+      );
 
     const portugueseResponse = await app.inject({
       method: 'PATCH',
@@ -91,11 +97,27 @@ describe('profile date format preference settings', () => {
     await registerProfileSettingsTestRoutes(app);
 
     vi.mocked(userService.updateUserProfileSettings)
-      .mockResolvedValueOnce({ ...sampleProfileUser, dateFormatPreference: DATE_FORMAT_PREFERENCE_DMY } as never)
-      .mockResolvedValueOnce({ ...sampleProfileUser, dateFormatPreference: DATE_FORMAT_PREFERENCE_YMD } as never);
+      .mockResolvedValueOnce({
+        ...sampleProfileUser,
+        dateFormatPreference: DATE_FORMAT_PREFERENCE_DMY,
+      } as never)
+      .mockResolvedValueOnce({
+        ...sampleProfileUser,
+        dateFormatPreference: DATE_FORMAT_PREFERENCE_YMD,
+      } as never);
     vi.mocked(authUserMapper.mapUserToAuthResponse)
-      .mockResolvedValueOnce(toAuthUserResponse({ ...sampleProfileUser, dateFormatPreference: DATE_FORMAT_PREFERENCE_DMY }))
-      .mockResolvedValueOnce(toAuthUserResponse({ ...sampleProfileUser, dateFormatPreference: DATE_FORMAT_PREFERENCE_YMD }));
+      .mockResolvedValueOnce(
+        toAuthUserResponse({
+          ...sampleProfileUser,
+          dateFormatPreference: DATE_FORMAT_PREFERENCE_DMY,
+        }),
+      )
+      .mockResolvedValueOnce(
+        toAuthUserResponse({
+          ...sampleProfileUser,
+          dateFormatPreference: DATE_FORMAT_PREFERENCE_YMD,
+        }),
+      );
 
     const dmyResponse = await app.inject({
       method: 'PATCH',

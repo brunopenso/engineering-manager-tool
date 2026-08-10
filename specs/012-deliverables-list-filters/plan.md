@@ -21,7 +21,7 @@ Add filter controls to the collaborator **Deliverables** management screen (`/ap
 
 ## Constitution Check
 
-*GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
+_GATE: Must pass before Phase 0 research. Re-check after Phase 1 design._
 
 - Principle I (Type-Safe Monorepo Ownership): **PASS**. Backend service + route + web API client + page.
 - Principle II (Security-First): **PASS**. Bearer auth; owner-only query; validate tag ids server-side.
@@ -73,10 +73,10 @@ packages/web/tests/deliverables-portfolio-filters/
 
 ## Complexity Tracking
 
-| Item | Why Needed | Simpler Alternative Rejected Because |
-|------|------------|-------------------------------------|
-| Query params on `GET /deliverables` | Clarification requires backend filtering (FR-014) | Client-side filter rejected by user |
-| Default last 30 days | Clarification; consistent with Team Deliverables | Full-history default rejected |
+| Item                                | Why Needed                                        | Simpler Alternative Rejected Because |
+| ----------------------------------- | ------------------------------------------------- | ------------------------------------ |
+| Query params on `GET /deliverables` | Clarification requires backend filtering (FR-014) | Client-side filter rejected by user  |
+| Default last 30 days                | Clarification; consistent with Team Deliverables  | Full-history default rejected        |
 
 No constitutional violations.
 

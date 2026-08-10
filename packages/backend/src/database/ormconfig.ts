@@ -14,9 +14,7 @@ const ormConfig: DataSourceOptions = {
   database: process.env.DB_NAME || 'engineering_manager_tool',
   synchronize: false,
   logging: process.env.NODE_ENV !== 'production',
-  entities: [
-    path.join(__dirname, 'entities', '*.ts')
-  ],
+  entities: [path.join(__dirname, 'entities', '*.ts')],
   migrations: [path.join(__dirname, '..', '..', 'database', 'migrations', '*.ts')],
   subscribers: [],
   migrationsRun: false,

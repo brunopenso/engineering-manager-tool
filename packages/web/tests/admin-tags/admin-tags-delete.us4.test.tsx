@@ -36,7 +36,9 @@ describe('US4 delete tag flow', () => {
     await userEvent.click(screen.getByRole('button', { name: 'Delete', hidden: false }));
 
     await waitFor(() => {
-      expect(screen.getByText('No tags yet. Create your first tag to start the catalog.')).toBeInTheDocument();
+      expect(
+        screen.getByText('No tags yet. Create your first tag to start the catalog.'),
+      ).toBeInTheDocument();
     });
   });
 });

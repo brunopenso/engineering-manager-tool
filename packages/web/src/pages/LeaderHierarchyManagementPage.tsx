@@ -1,13 +1,5 @@
 import { useState } from 'react';
-import {
-  Box,
-  Container,
-  Paper,
-  Stack,
-  Tab,
-  Tabs,
-  Typography,
-} from '@mui/material';
+import { Box, Container, Paper, Stack, Tab, Tabs, Typography } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import LeaderAssignUsersPanel from '../components/leader-hierarchy/LeaderAssignUsersPanel.js';
 import LeaderCreateUserPanel from '../components/leader-hierarchy/LeaderCreateUserPanel.js';

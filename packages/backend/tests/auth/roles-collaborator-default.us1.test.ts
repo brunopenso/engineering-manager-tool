@@ -18,8 +18,6 @@ describe('US1 default collaborator role model', () => {
   });
 
   it('defaults to collaborator-only shape for new users', () => {
-    expect(sortRoles([USER_ROLE_TYPES.COLLABORATOR])).toEqual([
-      USER_ROLE_TYPES.COLLABORATOR,
-    ]);
+    expect(sortRoles([USER_ROLE_TYPES.COLLABORATOR])).toEqual([USER_ROLE_TYPES.COLLABORATOR]);
   });
 });

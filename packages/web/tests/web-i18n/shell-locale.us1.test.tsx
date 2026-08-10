@@ -8,10 +8,11 @@ describe('US1 shell locale English', () => {
   it('shows English navigation labels for a leader', async () => {
     const user = userEvent.setup();
 
-    renderWithProviders(
-      <AppShellLayout />,
-      { isAuthenticated: true, user: testLeaderUser, initialPath: '/app' },
-    );
+    renderWithProviders(<AppShellLayout />, {
+      isAuthenticated: true,
+      user: testLeaderUser,
+      initialPath: '/app',
+    });
 
     await user.click(screen.getByRole('button', { name: 'open drawer' }));
 

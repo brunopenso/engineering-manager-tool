@@ -13,7 +13,7 @@
 - Q: Should auto-reviewed on notes save apply only to the direct leader or to any leader who writes a review? → A: **Any authorized leader** who successfully saves review notes MUST have that deliverable automatically marked **reviewed for that leader** on the Team Deliverables table. Reviewed state remains per leader—one leader saving notes does not change another leader's reviewed indicator.
 - Q: Confirm uniform reviewed behaviour for all leaders in the chain? → A: **Same behaviour for any leader** — direct manager, indirect superior, or any other authorized leader in the reporting chain who saves review notes gets their own reviewed indicator auto-updated; no leader type is treated differently.
 
-## User Scenarios & Testing *(mandatory, with required automated tests)*
+## User Scenarios & Testing _(mandatory, with required automated tests)_
 
 ### User Story 1 - Leader writes and saves review notes (Priority: P1)
 
@@ -114,11 +114,11 @@ As the business owner, I need review notes accessible only through the same hier
 - Leader clears notes to empty: reviewed indicator is **not** automatically cleared; the leader must use the table toggle to unmark reviewed if desired.
 - Leader marks deliverable reviewed from the table without opening Notes: allowed for all leaders; auto-reviewed on note save is additive and does not remove manual toggle capability.
 
-## Requirements *(mandatory, with required test coverage)*
+## Requirements _(mandatory, with required test coverage)_
 
 ### Functional Requirements
 
-*All functional requirements MUST be covered by automated tests. This feature stores leader coaching notes tied to deliverables and MUST enforce hierarchical DAC on every read and write path.*
+_All functional requirements MUST be covered by automated tests. This feature stores leader coaching notes tied to deliverables and MUST enforce hierarchical DAC on every read and write path._
 
 - **FR-001**: The system MUST implement the **Notes** tab inside the existing Team Deliverables **Review deliverable** modal (second tab after Details).
 - **FR-002**: The Notes tab MUST provide a multiline editable area where an authorized leader can compose review notes for the currently selected deliverable.
@@ -139,29 +139,29 @@ As the business owner, I need review notes accessible only through the same hier
 - **FR-017**: When a deliverable is removed, associated review notes for all leaders MUST no longer be accessible.
 - **FR-018**: The system MUST cover all functional requirements with automated tests, including authorization negative cases, per-leader isolation, persistence, per-leader auto-reviewed on notes save, and empty/clear scenarios.
 
-### Access Control Matrix *(required when data visibility is in scope)*
+### Access Control Matrix _(required when data visibility is in scope)_
 
 Review notes follow the same hierarchical deliverable read authorization as deliverable detail. Notes are **leader-authored, leader-private**: even authorized superiors in the same chain cannot read another leader's notes—each leader sees and edits only their own.
 
-| Actor | Open Notes tab (authorized deliverable) | Read own notes | Save/update own notes | Read another leader's notes | Deliverable owner reads notes |
-|-------|-------------------------------------------|----------------|------------------------|-----------------------------|-------------------------------|
-| Leader authorized to read deliverable | Allowed | Allowed (own only) | Allowed (own only) | Denied | N/A |
-| Leader not authorized to read deliverable | Denied | Denied | Denied | Denied | N/A |
-| Collaborator (non-leader) | Denied | Denied | Denied | Denied | Denied |
-| Deliverable owner (subordinate) | Denied via modal path | Denied | Denied | Denied | Denied |
-| Peer (same level, not in chain) | Denied | Denied | Denied | Denied | Denied |
-| Unauthenticated user | Denied | Denied | Denied | Denied | Denied |
+| Actor                                     | Open Notes tab (authorized deliverable) | Read own notes     | Save/update own notes | Read another leader's notes | Deliverable owner reads notes |
+| ----------------------------------------- | --------------------------------------- | ------------------ | --------------------- | --------------------------- | ----------------------------- |
+| Leader authorized to read deliverable     | Allowed                                 | Allowed (own only) | Allowed (own only)    | Denied                      | N/A                           |
+| Leader not authorized to read deliverable | Denied                                  | Denied             | Denied                | Denied                      | N/A                           |
+| Collaborator (non-leader)                 | Denied                                  | Denied             | Denied                | Denied                      | Denied                        |
+| Deliverable owner (subordinate)           | Denied via modal path                   | Denied             | Denied                | Denied                      | Denied                        |
+| Peer (same level, not in chain)           | Denied                                  | Denied             | Denied                | Denied                      | Denied                        |
+| Unauthenticated user                      | Denied                                  | Denied             | Denied                | Denied                      | Denied                        |
 
 **Validation notes**: Automated tests MUST cover: authorized leader save/load allow; second leader isolation on same deliverable; per-leader auto-reviewed on notes save without cross-leader reviewed side effects; peer deny; subordinate-upward deny; non-leader deny; unauthenticated deny; out-of-subtree deliverable deny; owner cannot access notes.
 
-### Key Entities *(include if feature involves data)*
+### Key Entities _(include if feature involves data)_
 
 - **Deliverable review (extended)**: A per-leader, per-deliverable record that already tracks reviewed status; extended in this feature to store optional private **review notes** text authored by the reviewing leader, with last-updated timestamp. One record per `(reviewing leader, deliverable)` pair. A successful notes save sets reviewed to true for that reviewing leader.
 - **Review notes**: Free-form text content within a deliverable review, visible and editable only by the leader who wrote them; used for coaching feedback and follow-up context.
 - **Deliverable (existing)**: The subordinate-owned work item being reviewed; provides context for the modal and scopes authorization.
 - **Reviewing leader**: The authenticated leader saving or loading notes; distinct from the deliverable owner. Each reviewing leader maintains independent notes and reviewed state per deliverable.
 
-## Success Criteria *(mandatory)*
+## Success Criteria _(mandatory)_
 
 ### Measurable Outcomes
 

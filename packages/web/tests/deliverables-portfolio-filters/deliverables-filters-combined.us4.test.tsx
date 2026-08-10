@@ -81,7 +81,9 @@ describe('US4 deliverables portfolio combined filters', { timeout: 15000 }, () =
     await userEvent.click(screen.getByTestId('clear-filters-button'));
 
     await waitFor(() => {
-      const latestListCall = [...fetchCalls].reverse().find((url) => url.includes('/deliverables?'));
+      const latestListCall = [...fetchCalls]
+        .reverse()
+        .find((url) => url.includes('/deliverables?'));
       expect(latestListCall).toBeDefined();
       expect(latestListCall).not.toContain('businessImpact=');
     });

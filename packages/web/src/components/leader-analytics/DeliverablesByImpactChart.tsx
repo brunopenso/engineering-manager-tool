@@ -65,11 +65,7 @@ export default function DeliverablesByImpactChart({
   const { t } = useTranslation(['leader', 'common']);
   const { weekStarts, labels: weekLabels } = useMemo(
     () =>
-      buildAscendingWeekAxis(
-        analytics?.weekStarts ?? [],
-        dateFormatPreference,
-        languagePreference,
-      ),
+      buildAscendingWeekAxis(analytics?.weekStarts ?? [], dateFormatPreference, languagePreference),
     [analytics?.weekStarts, dateFormatPreference, languagePreference],
   );
 
@@ -101,7 +97,9 @@ export default function DeliverablesByImpactChart({
 
   return (
     <Paper variant="outlined" sx={{ ...analyticsWidgetPaperSx, overflow: 'hidden' }}>
-      <AnalyticsWidgetTitle sx={{ mb: 1 }}>{t('charts.deliverablesByWeekTitle')}</AnalyticsWidgetTitle>
+      <AnalyticsWidgetTitle sx={{ mb: 1 }}>
+        {t('charts.deliverablesByWeekTitle')}
+      </AnalyticsWidgetTitle>
       <ChartResizeContainer minHeight={200}>
         {(containerHeight) => (
           <ChartWithLegendLayout

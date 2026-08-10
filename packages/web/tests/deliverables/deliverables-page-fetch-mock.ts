@@ -7,10 +7,7 @@ type ListResponse = {
   hasAnyDeliverables?: boolean;
 };
 
-export function stubDeliverablesPageFetch(options: {
-  list: ListResponse;
-  tags?: Tag[];
-}) {
+export function stubDeliverablesPageFetch(options: { list: ListResponse; tags?: Tag[] }) {
   const hasAnyDeliverables =
     options.list.hasAnyDeliverables ?? options.list.deliverables.length > 0;
 

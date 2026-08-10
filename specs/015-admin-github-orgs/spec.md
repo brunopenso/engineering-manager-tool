@@ -11,7 +11,7 @@
 
 - Q: What are the canonical persistence and administration API names for enabled GitHub organizations? → A: Use the **github_integrations** table (persistence) and the **github-integrations** administration API resource (list, enable, disable).
 
-## User Scenarios & Testing *(mandatory, with required automated tests)*
+## User Scenarios & Testing _(mandatory, with required automated tests)_
 
 ### User Story 1 - Administrator opens GitHub integration configuration (Priority: P1)
 
@@ -84,11 +84,11 @@ An administrator can review all enabled GitHub organizations on the configuratio
 - Configuration screen accessed while session expires: user is redirected to sign-in without exposing organization data.
 - Very long but valid organization login at maximum allowed length: accepted if format rules pass.
 
-## Requirements *(mandatory, with required test coverage)*
+## Requirements _(mandatory, with required test coverage)_
 
 ### Functional Requirements
 
-*All functional requirements MUST be covered by automated tests. This feature establishes the **enabled GitHub organization allowlist** only; it does not include OAuth credentials, repository sync, webhooks, or end-user GitHub profile linking.*
+_All functional requirements MUST be covered by automated tests. This feature establishes the **enabled GitHub organization allowlist** only; it does not include OAuth credentials, repository sync, webhooks, or end-user GitHub profile linking._
 
 - **FR-001**: The system MUST provide an **Administration** menu entry for **GitHub integration configuration** visible only to users with the **administrator** role.
 - **FR-002**: The system MUST provide a dedicated **GitHub integration configuration screen** reachable from that menu entry.
@@ -106,23 +106,23 @@ An administrator can review all enabled GitHub organizations on the configuratio
 - **FR-013**: The configuration screen MUST show an appropriate **empty state** when no organizations are enabled.
 - **FR-014**: The system MUST retain enabled organization data across application restarts (durable persistence).
 
-### Access Control Matrix *(required when data visibility is in scope)*
+### Access Control Matrix _(required when data visibility is in scope)_
 
-| Actor | Allowed | Explicitly denied | Validation notes |
-|-------|---------|-------------------|------------------|
-| Administrator | View configuration screen; list, add, and disable enabled GitHub organizations | N/A for this feature’s admin scope | Tests for menu visibility, screen access, and CRUD allow |
-| Collaborator | None | GitHub integration menu, screen, and organization configuration data | Deny navigation and data operations |
-| Leader (without administrator) | None | Same as collaborator | Deny navigation and data operations |
-| Unauthenticated | None | All configuration access | Redirect or block without data leak |
+| Actor                          | Allowed                                                                        | Explicitly denied                                                    | Validation notes                                         |
+| ------------------------------ | ------------------------------------------------------------------------------ | -------------------------------------------------------------------- | -------------------------------------------------------- |
+| Administrator                  | View configuration screen; list, add, and disable enabled GitHub organizations | N/A for this feature’s admin scope                                   | Tests for menu visibility, screen access, and CRUD allow |
+| Collaborator                   | None                                                                           | GitHub integration menu, screen, and organization configuration data | Deny navigation and data operations                      |
+| Leader (without administrator) | None                                                                           | Same as collaborator                                                 | Deny navigation and data operations                      |
+| Unauthenticated                | None                                                                           | All configuration access                                             | Redirect or block without data leak                      |
 
-*This feature manages **global integration configuration**, not per-user or hierarchical organizational data; hierarchical DAC rules for collaborator records do not apply.*
+_This feature manages **global integration configuration**, not per-user or hierarchical organizational data; hierarchical DAC rules for collaborator records do not apply._
 
 ### Key Entities
 
 - **GitHub integration** (persisted): One enabled GitHub organization stored in **github_integrations**—stable identifier plus organization login (slug).
 - **GitHub integration configuration (logical)**: The administrator-managed allowlist (backed by **github_integrations**) and the screen used to maintain it; accessed via the **github-integrations** administration API.
 
-## Success Criteria *(mandatory)*
+## Success Criteria _(mandatory)_
 
 ### Measurable Outcomes
 

@@ -1,9 +1,4 @@
-export const BUSINESS_IMPACT_LEVELS = [
-  'LOW',
-  'MEDIUM',
-  'HIGH',
-  'TRANSFORMATIONAL',
-] as const;
+export const BUSINESS_IMPACT_LEVELS = ['LOW', 'MEDIUM', 'HIGH', 'TRANSFORMATIONAL'] as const;
 
 export type BusinessImpactLevel = (typeof BUSINESS_IMPACT_LEVELS)[number];
 

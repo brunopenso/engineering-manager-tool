@@ -132,7 +132,8 @@ describe('US4 admin users combined filters', { timeout: 15000 }, () => {
     );
 
     const isUserListGet = (call: { url: string; init?: RequestInit }) =>
-      call.url.match(/\/users(\?|$)/) !== null && (!call.init?.method || call.init.method === 'GET');
+      call.url.match(/\/users(\?|$)/) !== null &&
+      (!call.init?.method || call.init.method === 'GET');
 
     const callsBeforeGrant = fetchCalls.filter(isUserListGet).length;
 

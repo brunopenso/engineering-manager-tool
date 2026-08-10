@@ -1,14 +1,6 @@
 import { useState } from 'react';
 import type { FormEvent } from 'react';
-import {
-  Alert,
-  Box,
-  Button,
-  MenuItem,
-  Stack,
-  TextField,
-  Typography,
-} from '@mui/material';
+import { Alert, Box, Button, MenuItem, Stack, TextField, Typography } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../auth/AuthProvider.js';
 import { createUser, UsersApiError } from '../../services/usersApi.js';

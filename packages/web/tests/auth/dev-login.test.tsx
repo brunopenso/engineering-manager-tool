@@ -5,11 +5,7 @@ import LoginPage from '../../src/pages/LoginPage.js';
 import { renderWithProviders } from '../../src/test/renderWithProviders.js';
 import type { ReactNode } from 'react';
 
-const {
-  listDevUsersMock,
-  loginWithDevUserMock,
-  isDevAuthEnabledInWebMock,
-} = vi.hoisted(() => ({
+const { listDevUsersMock, loginWithDevUserMock, isDevAuthEnabledInWebMock } = vi.hoisted(() => ({
   listDevUsersMock: vi.fn(),
   loginWithDevUserMock: vi.fn(),
   isDevAuthEnabledInWebMock: vi.fn(),
@@ -22,7 +18,11 @@ vi.mock('@react-oauth/google', async () => {
     GoogleOAuthProvider: ({ children }: { children: ReactNode }) =>
       React.createElement(React.Fragment, null, children),
     GoogleLogin: () =>
-      React.createElement('button', { type: 'button', 'data-testid': 'google-login' }, 'Google login'),
+      React.createElement(
+        'button',
+        { type: 'button', 'data-testid': 'google-login' },
+        'Google login',
+      ),
   };
 });
 
@@ -47,7 +47,9 @@ describe('LoginPage dev auth', () => {
     renderWithProviders(<LoginPage />);
 
     expect(screen.queryByText(/Development-only login/i)).not.toBeInTheDocument();
-    expect(screen.queryByRole('button', { name: 'Sign in as selected user' })).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole('button', { name: 'Sign in as selected user' }),
+    ).not.toBeInTheDocument();
   });
 
   it('signs in as a selected dev user and navigates to the app', async () => {

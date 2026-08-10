@@ -18,7 +18,6 @@ import { registerUsersRoutes } from './routes/users.js';
 import { registerOrganizationalHierarchyResolver } from './services/organizationalHierarchy.js';
 import { databaseOrganizationalHierarchyResolver } from './services/databaseOrganizationalHierarchyResolver.js';
 
-
 const app = Fastify({ logger: true });
 const PORT = Number(process.env.PORT ?? 3001);
 

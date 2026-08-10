@@ -1,6 +1,7 @@
 # Data Model: Authenticated Application Shell
 
 ## Entity: AppShellSessionView (non-persistent)
+
 - Purpose: Represents authenticated context required to render protected shell layout.
 - Fields:
   - accessToken: string, required, non-empty.
@@ -12,6 +13,7 @@
   - email must be present; absence triggers redirect to login.
 
 ## Entity: NavigationOption (configuration)
+
 - Purpose: Defines each selectable left-menu item and its route target.
 - Fields:
   - key: string, unique option identifier.
@@ -25,6 +27,7 @@
   - unavailable options must map to a defined unavailable-state content view.
 
 ## Entity: ShellLayoutState (client state)
+
 - Purpose: Tracks visual behavior of shared shell elements.
 - Fields:
   - isMenuExpanded: boolean.
@@ -36,6 +39,7 @@
   - logoutConfirmVisible is true only after first click on email action.
 
 ## Entity: HeaderIdentityAction (interaction model)
+
 - Purpose: Describes user identity display and logout interaction in top-right header area.
 - Fields:
   - displayEmail: string.
@@ -47,6 +51,7 @@
   - confirm action terminates session and routes user to login.
 
 ## State Transitions
+
 - Login success:
   - Session becomes authenticated with valid email.
   - User is routed to configured default shell route.

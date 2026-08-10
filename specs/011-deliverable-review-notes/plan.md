@@ -21,7 +21,7 @@ Implement the **Notes** tab in the existing Team Deliverables **Review deliverab
 
 ## Constitution Check
 
-*GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
+_GATE: Must pass before Phase 0 research. Re-check after Phase 1 design._
 
 - Principle I (Type-Safe Monorepo Ownership): **PASS**. Changes confined to backend/web packages; OpenAPI contract in `contracts/deliverable-review-notes-api.yaml`; shared DTO types in backend `types/` and web API client.
 - Principle II (Security-First Authentication, Authorization, and Data Handling): **PASS**. Bearer auth on all routes; leader role guard; deliverable read authorization via `assertCanReadDeliverables`; notes returned only for `(actor, deliverable)` pair; stable error codes without note content leakage on deny.
@@ -90,12 +90,12 @@ packages/web/tests/deliverable-review-notes/
 
 ## Complexity Tracking
 
-| Item | Why Needed | Simpler Alternative Rejected Because |
-|------|------------|--------------------------------------|
-| `notes` column on `deliverable_reviews` | Persist private per-leader note text with reviewed state (FR-003, FR-010) | Separate `deliverable_review_notes` table adds join complexity without business benefit |
-| Dedicated GET/PUT `/review-notes` endpoints | Load/save notes with leader-only scoping and validation (FR-004, FR-005) | Embedding notes in `GET /deliverables/:id` leaks notes into deliverable detail responses used elsewhere |
-| `onReviewedChange` callback on modal | Table reviewed column reflects auto-reviewed after save without full search refresh (FR-010, SC-004) | Full table re-search works but slower and loses scroll/filter context |
-| Non-empty trim gate for auto-reviewed | Distinguish “clear notes” from “write review” (edge case) | Auto-marking on empty save would contradict “clearing notes does not clear reviewed” UX |
+| Item                                        | Why Needed                                                                                           | Simpler Alternative Rejected Because                                                                    |
+| ------------------------------------------- | ---------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------- |
+| `notes` column on `deliverable_reviews`     | Persist private per-leader note text with reviewed state (FR-003, FR-010)                            | Separate `deliverable_review_notes` table adds join complexity without business benefit                 |
+| Dedicated GET/PUT `/review-notes` endpoints | Load/save notes with leader-only scoping and validation (FR-004, FR-005)                             | Embedding notes in `GET /deliverables/:id` leaks notes into deliverable detail responses used elsewhere |
+| `onReviewedChange` callback on modal        | Table reviewed column reflects auto-reviewed after save without full search refresh (FR-010, SC-004) | Full table re-search works but slower and loses scroll/filter context                                   |
+| Non-empty trim gate for auto-reviewed       | Distinguish “clear notes” from “write review” (edge case)                                            | Auto-marking on empty save would contradict “clearing notes does not clear reviewed” UX                 |
 
 No constitutional violations requiring justification.
 

@@ -45,7 +45,13 @@ function HierarchyNode({ node, depth, expandedItems, onToggle }: HierarchyNodePr
         aria-expanded={hasChildren ? isExpanded : undefined}
       >
         <Box sx={{ width: 28, display: 'flex', alignItems: 'center' }}>
-          {hasChildren ? (isExpanded ? <ExpandLess fontSize="small" /> : <ExpandMore fontSize="small" />) : null}
+          {hasChildren ? (
+            isExpanded ? (
+              <ExpandLess fontSize="small" />
+            ) : (
+              <ExpandMore fontSize="small" />
+            )
+          ) : null}
         </Box>
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
           <Typography
@@ -59,7 +65,12 @@ function HierarchyNode({ node, depth, expandedItems, onToggle }: HierarchyNodePr
             {node.displayName}
           </Typography>
           {node.isCurrentPosition && (
-            <Chip size="small" label={t('hierarchy.you')} color="primary" data-testid="current-position-marker" />
+            <Chip
+              size="small"
+              label={t('hierarchy.you')}
+              color="primary"
+              data-testid="current-position-marker"
+            />
           )}
           <HierarchyRoleChips isLeader={node.isLeader} />
         </Box>

@@ -56,10 +56,7 @@ export function renderWithI18n(ui: ReactElement) {
   );
 }
 
-export function renderWithProviders(
-  ui: ReactElement,
-  options?: RenderOptions,
-) {
+export function renderWithProviders(ui: ReactElement, options?: RenderOptions) {
   const initialPath = options?.initialPath ?? '/';
   const isAuthenticated = options?.isAuthenticated ?? false;
   const user = options?.user ?? testUser;

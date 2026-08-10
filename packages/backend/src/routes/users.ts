@@ -202,36 +202,39 @@ export async function registerUsersRoutes(app: FastifyInstance): Promise<void> {
     return { users };
   });
 
-  app.post<{ Params: { userId: string } }>('/users/:userId/assign-leader', async (request, reply) => {
-    const auth = requireAuth(request, reply);
-    if (!auth) {
-      return {
-        code: AUTH_ERROR_CODES.MISSING_APP_TOKEN,
-        message: 'Authentication token is missing.',
-      };
-    }
-
-    try {
-      assertLeaderForHierarchyManagement(auth.roles);
-    } catch {
-      return forbidden(reply);
-    }
-
-    try {
-      const assignment = await assignLeaderToOrphanUser(auth.userId, request.params.userId);
-      return assignment;
-    } catch (error) {
-      if (error instanceof Error && error.name === AUTH_ERROR_CODES.NOT_FOUND) {
-        return notFound(reply);
+  app.post<{ Params: { userId: string } }>(
+    '/users/:userId/assign-leader',
+    async (request, reply) => {
+      const auth = requireAuth(request, reply);
+      if (!auth) {
+        return {
+          code: AUTH_ERROR_CODES.MISSING_APP_TOKEN,
+          message: 'Authentication token is missing.',
+        };
       }
 
-      if (error instanceof Error && error.name === AUTH_ERROR_CODES.VALIDATION_ERROR) {
-        return validationError(reply, error.message);
+      try {
+        assertLeaderForHierarchyManagement(auth.roles);
+      } catch {
+        return forbidden(reply);
       }
 
-      throw error;
-    }
-  });
+      try {
+        const assignment = await assignLeaderToOrphanUser(auth.userId, request.params.userId);
+        return assignment;
+      } catch (error) {
+        if (error instanceof Error && error.name === AUTH_ERROR_CODES.NOT_FOUND) {
+          return notFound(reply);
+        }
+
+        if (error instanceof Error && error.name === AUTH_ERROR_CODES.VALIDATION_ERROR) {
+          return validationError(reply, error.message);
+        }
+
+        throw error;
+      }
+    },
+  );
 
   app.get<{ Querystring: AdminUserListQuery }>('/users', async (request, reply) => {
     const auth = requireAuth(request, reply);
@@ -444,10 +447,7 @@ export async function registerUsersRoutes(app: FastifyInstance): Promise<void> {
       const userId = request.query.userId?.trim();
 
       if (!startDate || !endDate) {
-        return validationError(
-          reply,
-          'startDate and endDate query parameters are required.',
-        );
+        return validationError(reply, 'startDate and endDate query parameters are required.');
       }
 
       if (userId) {
@@ -515,7 +515,8 @@ export async function registerUsersRoutes(app: FastifyInstance): Promise<void> {
 
     return {
       allowed: true,
-      message: 'Leader role is active. Organizational hierarchy access is available for this session.',
+      message:
+        'Leader role is active. Organizational hierarchy access is available for this session.',
     };
   });
 

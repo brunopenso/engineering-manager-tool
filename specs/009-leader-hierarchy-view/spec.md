@@ -5,7 +5,7 @@
 **Status**: Draft  
 **Input**: User description: "create a screen only available for leaders to show the current hierarchy above(limit to 1 level) and bellow(all hierachy). This screen should show with collapsable itens but only the current position should be open to see the next layer. And each item on this list should have the name of the person"
 
-## User Scenarios & Testing *(mandatory, with required automated tests)*
+## User Scenarios & Testing _(mandatory, with required automated tests)_
 
 ### User Story 1 - View Organizational Tree Around Current Position (Priority: P1)
 
@@ -75,11 +75,11 @@ As the business owner, I need the hierarchy view to be available only to leaders
 - A person in the subtree has a missing or blank display name: show a clear fallback label (for example email) so every node remains identifiable.
 - Direct manager exists but their display name is unavailable: apply the same fallback labeling rule as for other nodes.
 
-## Requirements *(mandatory, with required test coverage)*
+## Requirements _(mandatory, with required test coverage)_
 
 ### Functional Requirements
 
-*All functional requirements MUST be covered by automated tests.*
+_All functional requirements MUST be covered by automated tests._
 
 - **FR-001**: The system MUST provide a leader-only hierarchy view screen separate from hierarchy management (assignment) workflows.
 - **FR-002**: The system MUST display at most one level above the logged-in leader—their direct manager only—and MUST NOT display higher ancestors, peers, or users in other branches.
@@ -91,21 +91,21 @@ As the business owner, I need the hierarchy view to be available only to leaders
 - **FR-008**: The system MUST deny access to the hierarchy view screen and its data for non-leader and unauthenticated users.
 - **FR-009**: The hierarchy view MUST be read-only on this screen; it MUST NOT expose assignment or hierarchy-editing actions (those remain on the existing hierarchy management feature).
 
-### Access Control Matrix *(required when data visibility is in scope)*
+### Access Control Matrix _(required when data visibility is in scope)_
 
-| Actor | Allowed Data Visibility | Explicitly Denied Visibility | Validation Notes |
-|-------|--------------------------|-------------------------------|------------------|
-| Leader (logged in) | Direct manager (max 1 up), self, all descendants | Peers, second-level+ managers, other branches, orphan users outside subtree | Story 1, 2, and 3 tests |
-| Collaborator (non-leader) | None for this screen | Entire organizational tree | Story 3 deny tests |
-| Unauthenticated user | None | Entire organizational tree | Story 3 deny tests |
+| Actor                     | Allowed Data Visibility                          | Explicitly Denied Visibility                                                | Validation Notes        |
+| ------------------------- | ------------------------------------------------ | --------------------------------------------------------------------------- | ----------------------- |
+| Leader (logged in)        | Direct manager (max 1 up), self, all descendants | Peers, second-level+ managers, other branches, orphan users outside subtree | Story 1, 2, and 3 tests |
+| Collaborator (non-leader) | None for this screen                             | Entire organizational tree                                                  | Story 3 deny tests      |
+| Unauthenticated user      | None                                             | Entire organizational tree                                                  | Story 3 deny tests      |
 
-### Key Entities *(include if feature involves data)*
+### Key Entities _(include if feature involves data)_
 
 - **Hierarchy Tree Node**: A person shown in the tree with display name (or fallback), relationship to the viewer (manager, self, or report), and expand/collapse state.
 - **Current Position**: The tree node representing the authenticated leader; drives initial expand behavior and visual emphasis.
 - **Reporting Subtree**: The set of all users who report to the leader directly or indirectly, used to populate nodes below the current position.
 
-## Success Criteria *(mandatory)*
+## Success Criteria _(mandatory)_
 
 ### Measurable Outcomes
 

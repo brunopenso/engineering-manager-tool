@@ -1,13 +1,8 @@
 import type { AuthUser } from '../auth/AuthProvider.js';
 
-const API_BASE_URL =
-  import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:3001';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:3001';
 
-type ApiErrorCode =
-  | 'VALIDATION_ERROR'
-  | 'MISSING_APP_TOKEN'
-  | 'INVALID_APP_TOKEN'
-  | 'NOT_FOUND';
+type ApiErrorCode = 'VALIDATION_ERROR' | 'MISSING_APP_TOKEN' | 'INVALID_APP_TOKEN' | 'NOT_FOUND';
 
 export class ProfileApiError extends Error {
   code: ApiErrorCode;
@@ -24,10 +19,7 @@ type ErrorResponse = {
   message: string;
 };
 
-import type {
-  DateFormatPreference,
-  LanguagePreference,
-} from '../types/profilePreferences.js';
+import type { DateFormatPreference, LanguagePreference } from '../types/profilePreferences.js';
 
 export type ProfileSettingsUpdate = {
   themePreference?: 'light' | 'dark';

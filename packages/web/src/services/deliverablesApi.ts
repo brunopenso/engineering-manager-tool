@@ -177,7 +177,10 @@ export async function createDeliverable(
 export async function updateDeliverable(
   accessToken: string,
   deliverableId: string,
-  input: DeliverableWriteInput & { userTags: string[]; links: { url: string; label?: string | null }[] },
+  input: DeliverableWriteInput & {
+    userTags: string[];
+    links: { url: string; label?: string | null }[];
+  },
 ): Promise<DeliverableDetail> {
   const response = await fetch(`${API_BASE_URL}/deliverables/${deliverableId}`, {
     method: 'PATCH',

@@ -26,10 +26,7 @@ export const USER_ROLE_TYPES = {
 
 export type UserRoleType = (typeof USER_ROLE_TYPES)[keyof typeof USER_ROLE_TYPES];
 
-export const ELEVATED_ROLE_TYPES = [
-  USER_ROLE_TYPES.LEADER,
-  USER_ROLE_TYPES.ADMINISTRATOR,
-] as const;
+export const ELEVATED_ROLE_TYPES = [USER_ROLE_TYPES.LEADER, USER_ROLE_TYPES.ADMINISTRATOR] as const;
 
 export type ElevatedRoleType = (typeof ELEVATED_ROLE_TYPES)[number];
 

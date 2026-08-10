@@ -24,7 +24,9 @@ describe('US2 empty tags state', () => {
     });
 
     await waitFor(() => {
-      expect(screen.getByText('No tags yet. Create your first tag to start the catalog.')).toBeInTheDocument();
+      expect(
+        screen.getByText('No tags yet. Create your first tag to start the catalog.'),
+      ).toBeInTheDocument();
     });
   });
 });

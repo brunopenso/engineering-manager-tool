@@ -2,10 +2,7 @@ import i18n from 'i18next';
 import type { InitOptions } from 'i18next';
 import { initReactI18next } from 'react-i18next';
 import LanguageDetector from 'i18next-browser-languagedetector';
-import {
-  DEFAULT_LANGUAGE_PREFERENCE,
-  LANGUAGE_PREFERENCES,
-} from '../types/profilePreferences.js';
+import { DEFAULT_LANGUAGE_PREFERENCE, LANGUAGE_PREFERENCES } from '../types/profilePreferences.js';
 
 import enUSCommon from '../locales/en-US/common.json';
 import enUSShell from '../locales/en-US/shell.json';

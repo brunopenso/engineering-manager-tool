@@ -17,9 +17,7 @@ async function findSeedUser(manager: EntityManager, email: string): Promise<User
   const user = await manager.getRepository(User).findOne({ where: { email } });
 
   if (!user) {
-    throw new Error(
-      `Seed user ${email} not found. Run 001-leadership-hierarchy seed first.`,
-    );
+    throw new Error(`Seed user ${email} not found. Run 001-leadership-hierarchy seed first.`);
   }
 
   return user;

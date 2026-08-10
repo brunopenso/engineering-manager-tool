@@ -1,9 +1,4 @@
-import {
-  MigrationInterface,
-  QueryRunner,
-  Table,
-  TableForeignKey,
-} from 'typeorm';
+import { MigrationInterface, QueryRunner, Table, TableForeignKey } from 'typeorm';
 
 export class AddUserLeaderRelationship1779765000000 implements MigrationInterface {
   name = 'AddUserLeaderRelationship1779765000000';

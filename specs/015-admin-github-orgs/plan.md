@@ -21,7 +21,7 @@ Introduce a persisted **enabled GitHub organization** allowlist in table **`gith
 
 ## Constitution Check
 
-*GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
+_GATE: Must pass before Phase 0 research. Re-check after Phase 1 design._
 
 - Principle I (Type-Safe Monorepo Ownership): **PASS**.
 - Principle II (Security-First): **PASS**.

@@ -21,7 +21,7 @@ Add filter controls to the administrator **Admin Users** screen (`/app/admin/use
 
 ## Constitution Check
 
-*GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
+_GATE: Must pass before Phase 0 research. Re-check after Phase 1 design._
 
 - Principle I (Type-Safe Monorepo Ownership): **PASS**. Backend query parser + service + route; web API client + page filters.
 - Principle II (Security-First): **PASS**. Bearer auth; `assertAdministrator` unchanged; validate role query values against `USER_ROLE_TYPES`.
@@ -74,10 +74,10 @@ packages/web/tests/admin-users-filters/
 
 ## Complexity Tracking
 
-| Item | Why Needed | Simpler Alternative Rejected Because |
-|------|------------|-------------------------------------|
-| Query params on `GET /users` | Spec FR-012 requires backend filtering | Client-side filter on full download violates spec |
-| Debounced name/email refetch | Avoid API storm on every keystroke | Immediate per-keystroke refetch rejected for UX/perf |
+| Item                         | Why Needed                             | Simpler Alternative Rejected Because                 |
+| ---------------------------- | -------------------------------------- | ---------------------------------------------------- |
+| Query params on `GET /users` | Spec FR-012 requires backend filtering | Client-side filter on full download violates spec    |
+| Debounced name/email refetch | Avoid API storm on every keystroke     | Immediate per-keystroke refetch rejected for UX/perf |
 
 No constitutional violations.
 

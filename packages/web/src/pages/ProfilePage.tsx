@@ -27,10 +27,7 @@ import {
   ProfileApiError,
   type ProfileSettingsUpdate,
 } from '../services/profileApi.js';
-import type {
-  DateFormatPreference,
-  LanguagePreference,
-} from '../types/profilePreferences.js';
+import type { DateFormatPreference, LanguagePreference } from '../types/profilePreferences.js';
 import i18n from '../i18n/index.js';
 import { DEFAULT_APP_ROUTE } from '../routes/shellOptions.js';
 
@@ -64,10 +61,7 @@ export default function ProfilePage() {
   const profileUser = user;
   const sessionToken = accessToken;
 
-  function handleThemeChange(
-    _event: React.MouseEvent<HTMLElement>,
-    nextMode: ThemeMode | null,
-  ) {
+  function handleThemeChange(_event: React.MouseEvent<HTMLElement>, nextMode: ThemeMode | null) {
     if (!nextMode) {
       return;
     }
@@ -136,10 +130,7 @@ export default function ProfilePage() {
       await i18n.changeLanguage(updatedUser.languagePreference);
       setSaveSuccess(t('messages.saveSuccess'));
     } catch (error) {
-      const message =
-        error instanceof ProfileApiError
-          ? error.message
-          : t('errors.profileSave');
+      const message = error instanceof ProfileApiError ? error.message : t('errors.profileSave');
       setSaveError(message);
     } finally {
       setIsSavingProfile(false);
@@ -260,10 +251,7 @@ export default function ProfilePage() {
             {saveError ? <Alert severity="error">{saveError}</Alert> : null}
             {saveSuccess ? <Alert severity="success">{saveSuccess}</Alert> : null}
             <Stack direction="row" spacing={2} sx={{ justifyContent: 'flex-end' }}>
-              <Button
-                variant="outlined"
-                onClick={() => navigate(DEFAULT_APP_ROUTE)}
-              >
+              <Button variant="outlined" onClick={() => navigate(DEFAULT_APP_ROUTE)}>
                 {tCommon('actions.cancel')}
               </Button>
               <Button

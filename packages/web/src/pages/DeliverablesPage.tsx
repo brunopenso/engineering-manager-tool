@@ -131,9 +131,7 @@ export default function DeliverablesPage() {
 
       setDeliverables([]);
       setHasAnyDeliverables(false);
-      setErrorMessage(
-        error instanceof DeliverablesApiError ? error.message : t('list.loadError'),
-      );
+      setErrorMessage(error instanceof DeliverablesApiError ? error.message : t('list.loadError'));
     } finally {
       if (requestId === listRequestId.current) {
         setIsLoading(false);
@@ -271,9 +269,7 @@ export default function DeliverablesPage() {
                 onChange={handleImpactChange}
                 input={<OutlinedInput label={t('fields.impact', { ns: 'common' })} />}
                 renderValue={(selected) =>
-                  selected
-                    .map((value) => t(`impact.${value}`, { ns: 'common' }))
-                    .join(', ')
+                  selected.map((value) => t(`impact.${value}`, { ns: 'common' })).join(', ')
                 }
                 data-testid="impact-filter-select"
               >
@@ -403,7 +399,11 @@ export default function DeliverablesPage() {
                       {formatDisplayDate(item.createdAt, dateFormatPreference, languagePreference)}
                     </TableCell>
                     <TableCell>
-                      {formatDisplayDateTime(item.updatedAt, dateFormatPreference, languagePreference)}
+                      {formatDisplayDateTime(
+                        item.updatedAt,
+                        dateFormatPreference,
+                        languagePreference,
+                      )}
                     </TableCell>
                     <TableCell align="right">
                       <Stack direction="row" spacing={1} sx={{ justifyContent: 'flex-end' }}>

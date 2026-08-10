@@ -115,8 +115,4 @@ export async function setDeliverableReviewed(
   return (await response.json()) as { deliverableId: string; reviewed: boolean };
 }
 
-export {
-  defaultLast30DayRange,
-  formatDateInput,
-  isValidDateRange,
-} from '../utils/dateRange.js';
+export { defaultLast30DayRange, formatDateInput, isValidDateRange } from '../utils/dateRange.js';

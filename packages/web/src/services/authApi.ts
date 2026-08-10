@@ -1,5 +1,4 @@
-const API_BASE_URL =
-  import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:3001';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:3001';
 
 const DEV_AUTH_ENABLED = import.meta.env.VITE_DEV_AUTH_ENABLED === 'true';
 const DEV_AUTH_SECRET = import.meta.env.VITE_DEV_AUTH_SECRET ?? '';
@@ -21,10 +20,7 @@ type AuthErrorCode =
 
 export type UserRoleType = 'COLLABORATOR' | 'LEADER' | 'ADMINISTRATOR';
 
-import type {
-  DateFormatPreference,
-  LanguagePreference,
-} from '../types/profilePreferences.js';
+import type { DateFormatPreference, LanguagePreference } from '../types/profilePreferences.js';
 
 export type AuthUser = {
   id: string;

@@ -5,7 +5,7 @@
 **Status**: Draft  
 **Input**: User description: "Create a chart dashboard with a new menu option for leaders (leader section only). Top of page: optional date filter defaulting to last 60 days and optional team member selection (same as Team Deliverables). Page is a resizable widget layout. Charts: (1) deliverables added per week versus business impact, (2) user engagement as new deliverables added per week per person (lower is worse), (3) count of deliverables the logged-in leader still needs to review."
 
-## User Scenarios & Testing *(mandatory, with required automated tests)*
+## User Scenarios & Testing _(mandatory, with required automated tests)_
 
 ### User Story 1 - Leader opens analytics dashboard (Priority: P1)
 
@@ -147,11 +147,11 @@ As a leader, I can resize and rearrange chart widgets on the dashboard so I can 
 - Leader loses leader role while on page: refresh or navigation denies access consistently with other leader routes.
 - Unauthenticated API requests for analytics aggregates: rejected with no data leakage.
 
-## Requirements *(mandatory, with required test coverage)*
+## Requirements _(mandatory, with required test coverage)_
 
 ### Functional Requirements
 
-*All functional requirements MUST be covered by automated tests. This feature aggregates subordinate deliverable and review data and MUST enforce hierarchical DAC on every analytics endpoint.*
+_All functional requirements MUST be covered by automated tests. This feature aggregates subordinate deliverable and review data and MUST enforce hierarchical DAC on every analytics endpoint._
 
 - **FR-001**: The system MUST expose a **Team Analytics** screen in the authenticated application shell under the **Leader** section, visible only to users with the leader role.
 - **FR-002**: The system MUST deny access to Team Analytics for non-leader collaborators and unauthenticated users, consistent with other leader-only screens.
@@ -170,15 +170,15 @@ As a leader, I can resize and rearrange chart widgets on the dashboard so I can 
 - **FR-015**: All analytics data MUST be served through leader-authorized endpoints that reject requests for users outside the leader's reporting subtree.
 - **FR-016**: Chart data MUST NOT include deliverables owned by peers, superiors, users in other branches, or the leader's own deliverables when aggregating team engagement (consistent with team picker scope).
 
-### Access Control Matrix *(required when data visibility is in scope)*
+### Access Control Matrix _(required when data visibility is in scope)_
 
-| Actor | Allowed Data Visibility | Explicitly Denied Visibility | Validation Notes |
-|-------|--------------------------|-------------------------------|------------------|
-| Leader | Metrics and counts for deliverables owned by self plus all direct and indirect reports within the selected filters; reviewed state for the logged-in leader only | Peers, superiors, users outside reporting subtree, other leaders' reviewed flags | `tests/016-leader-analytics-charts/` access and filter tests |
-| Collaborator (non-leader) | None via Team Analytics | All team analytics and leader menu entry | Menu hidden; route denied |
-| Unauthenticated user | None | All analytics endpoints and screen | Standard auth rejection |
+| Actor                     | Allowed Data Visibility                                                                                                                                          | Explicitly Denied Visibility                                                     | Validation Notes                                             |
+| ------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- | ------------------------------------------------------------ |
+| Leader                    | Metrics and counts for deliverables owned by self plus all direct and indirect reports within the selected filters; reviewed state for the logged-in leader only | Peers, superiors, users outside reporting subtree, other leaders' reviewed flags | `tests/016-leader-analytics-charts/` access and filter tests |
+| Collaborator (non-leader) | None via Team Analytics                                                                                                                                          | All team analytics and leader menu entry                                         | Menu hidden; route denied                                    |
+| Unauthenticated user      | None                                                                                                                                                             | All analytics endpoints and screen                                               | Standard auth rejection                                      |
 
-### Key Entities *(include if feature involves data)*
+### Key Entities _(include if feature involves data)_
 
 - **Deliverable**: Work item owned by a collaborator; attributes relevant to analytics include creation date, business impact level, and owner.
 - **Business impact level**: Categorical value (low, medium, high, transformational) used to segment weekly add counts.
@@ -187,7 +187,7 @@ As a leader, I can resize and rearrange chart widgets on the dashboard so I can 
 - **Analytics filter context**: Combined optional team member selection and inclusive calendar date range (default last 60 days) applied uniformly to all widgets.
 - **Widget layout state**: Leader's chosen sizes and positions of chart panels for the session.
 
-## Success Criteria *(mandatory)*
+## Success Criteria _(mandatory)_
 
 ### Measurable Outcomes
 

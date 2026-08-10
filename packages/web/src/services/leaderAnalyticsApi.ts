@@ -93,8 +93,4 @@ export async function fetchTeamAnalytics(
   return (await response.json()) as TeamAnalyticsResponse;
 }
 
-export {
-  defaultLast60DayRange,
-  formatDateInput,
-  isValidDateRange,
-} from '../utils/dateRange.js';
+export { defaultLast60DayRange, formatDateInput, isValidDateRange } from '../utils/dateRange.js';

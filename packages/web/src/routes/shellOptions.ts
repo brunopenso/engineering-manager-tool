@@ -135,10 +135,7 @@ export function useVisibleShellMenuSections(user: AuthUser | null): ShellMenuSec
   const { t } = useTranslation('shell');
   const sectionDefs = useMemo(() => getVisibleShellMenuSectionDefs(user), [user]);
 
-  return useMemo(
-    () => translateSections(sectionDefs, (key) => t(key)),
-    [sectionDefs, t],
-  );
+  return useMemo(() => translateSections(sectionDefs, (key) => t(key)), [sectionDefs, t]);
 }
 
 export function getVisibleShellMenuSections(user: AuthUser | null): ShellMenuSection[] {

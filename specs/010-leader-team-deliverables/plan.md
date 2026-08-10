@@ -21,7 +21,7 @@ Deliver a leader-only **Team Deliverables** screen where leaders pick a direct o
 
 ## Constitution Check
 
-*GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
+_GATE: Must pass before Phase 0 research. Re-check after Phase 1 design._
 
 - Principle I (Type-Safe Monorepo Ownership): **PASS**. Changes stay in backend/web packages; OpenAPI contract in `contracts/team-deliverables-api.yaml`.
 - Principle II (Security-First Authentication, Authorization, and Data Handling): **PASS**. Bearer auth on all routes; leader role guard; subtree membership validated server-side via DB CTE before returning deliverables or accepting reviewed updates.
@@ -93,11 +93,11 @@ packages/web/tests/team-deliverables/
 
 ## Complexity Tracking
 
-| Item | Why Needed | Simpler Alternative Rejected Because |
-|------|------------|--------------------------------------|
-| New `deliverable_reviews` table | Per-leader reviewed state must persist independently (FR-013, FR-014) | Client-only or session storage fails cross-session requirement and multi-leader isolation |
-| Dedicated `GET /users/leader/team-deliverables` | Combines date filter + reviewed join in one authorized query | Extending `GET /users/:userId/deliverables` with many query params leaks leader-workflow semantics into collaborator API |
-| DB subtree validation on team endpoints | Production `organizationalHierarchy` resolver is test-only today | Reusing fixture resolver would deny all superior reads in production despite persisted `leader_id` |
+| Item                                            | Why Needed                                                            | Simpler Alternative Rejected Because                                                                                     |
+| ----------------------------------------------- | --------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
+| New `deliverable_reviews` table                 | Per-leader reviewed state must persist independently (FR-013, FR-014) | Client-only or session storage fails cross-session requirement and multi-leader isolation                                |
+| Dedicated `GET /users/leader/team-deliverables` | Combines date filter + reviewed join in one authorized query          | Extending `GET /users/:userId/deliverables` with many query params leaks leader-workflow semantics into collaborator API |
+| DB subtree validation on team endpoints         | Production `organizationalHierarchy` resolver is test-only today      | Reusing fixture resolver would deny all superior reads in production despite persisted `leader_id`                       |
 
 No constitutional violations requiring justification.
 

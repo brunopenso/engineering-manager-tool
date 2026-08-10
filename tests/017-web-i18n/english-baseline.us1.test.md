@@ -13,6 +13,7 @@ Verify all in-scope routes render English copy from `en-US` catalogs.
 
 - `packages/web/tests/web-i18n/english-routes.us1.test.tsx`
 - `packages/web/tests/web-i18n/shell-locale.us1.test.tsx`
+
 # US1 English baseline — automated acceptance
 
 Verify all in-scope routes render English copy from `en-US` catalogs.
