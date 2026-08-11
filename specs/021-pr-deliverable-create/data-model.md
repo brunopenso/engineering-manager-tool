@@ -11,66 +11,66 @@ This feature introduces **no new persisted tables**. It reads existing imported 
 
 ### GithubImportedPullRequest (read)
 
-| Field | Use in this feature |
-| ----- | ------------------- |
-| `id` (UUID) | Selection key and analyze request identifier |
-| `title`, `body`, `number`, `organization`, `repository`, `url` | Mock proposal text and optional links |
-| `authorGithubLogin` | Role suggestion + authorization |
-| nested `comments` / `reviews` | Authorization (involved eligibility) |
+| Field                                                          | Use in this feature                          |
+| -------------------------------------------------------------- | -------------------------------------------- |
+| `id` (UUID)                                                    | Selection key and analyze request identifier |
+| `title`, `body`, `number`, `organization`, `repository`, `url` | Mock proposal text and optional links        |
+| `authorGithubLogin`                                            | Role suggestion + authorization              |
+| nested `comments` / `reviews`                                  | Authorization (involved eligibility)         |
 
 ### Deliverable (write on confirm)
 
 Created with existing fields from 006:
 
-| Field | Source in this flow |
-| ----- | ------------------- |
-| `userId` | Authenticated user (server-set on `POST /deliverables`) |
-| `title`, `description`, `roleInDeliverable`, `businessImpact`, `improvementPoints` | From confirmed proposal |
-| `technicalDescription`, `userTags`, `systemTagIds`, `links` | From proposal (may be empty / sparse) |
-| `id`, `createdAt`, `updatedAt` | Server-generated |
+| Field                                                                              | Source in this flow                                     |
+| ---------------------------------------------------------------------------------- | ------------------------------------------------------- |
+| `userId`                                                                           | Authenticated user (server-set on `POST /deliverables`) |
+| `title`, `description`, `roleInDeliverable`, `businessImpact`, `improvementPoints` | From confirmed proposal                                 |
+| `technicalDescription`, `userTags`, `systemTagIds`, `links`                        | From proposal (may be empty / sparse)                   |
+| `id`, `createdAt`, `updatedAt`                                                     | Server-generated                                        |
 
 No association row between deliverable and source PRs in v1.
 
 ### User (read)
 
-| Field | Use |
-| ----- | --- |
-| `id` | Auth actor / deliverable owner |
+| Field         | Use                                  |
+| ------------- | ------------------------------------ |
+| `id`          | Auth actor / deliverable owner       |
 | `githubLogin` | Authorize PR involvement for analyze |
 
 ## Ephemeral / API models (not persisted)
 
 ### AnalyzeFromPullRequestsRequest
 
-| Field | Type | Validation |
-| ----- | ---- | ---------- |
+| Field            | Type   | Validation                                                           |
+| ---------------- | ------ | -------------------------------------------------------------------- |
 | `pullRequestIds` | UUID[] | Required; min 1; max 50 (practical UI/API guard); unique recommended |
 
 ### DeliverableProposal
 
 Non-persisted preview returned by analyze. Field set mirrors `DeliverableCreateRequest`:
 
-| Field | Required in proposal | Notes |
-| ----- | -------------------- | ----- |
-| `title` | yes | Mock-derived; ≤ 200 |
-| `description` | yes | Mock-derived; ≤ 5000 |
-| `roleInDeliverable` | yes | `Author` or `Contributor` |
-| `businessImpact` | yes | Default `MEDIUM` |
-| `improvementPoints` | yes | Placeholder inviting edit |
-| `systemTagIds` | yes (may be `[]`) | Empty allowed by current create rules |
-| `technicalDescription` | no | Optional |
-| `userTags` | no | Optional derived labels |
-| `links` | no | PR URLs when present |
+| Field                  | Required in proposal | Notes                                 |
+| ---------------------- | -------------------- | ------------------------------------- |
+| `title`                | yes                  | Mock-derived; ≤ 200                   |
+| `description`          | yes                  | Mock-derived; ≤ 5000                  |
+| `roleInDeliverable`    | yes                  | `Author` or `Contributor`             |
+| `businessImpact`       | yes                  | Default `MEDIUM`                      |
+| `improvementPoints`    | yes                  | Placeholder inviting edit             |
+| `systemTagIds`         | yes (may be `[]`)    | Empty allowed by current create rules |
+| `technicalDescription` | no                   | Optional                              |
+| `userTags`             | no                   | Optional derived labels               |
+| `links`                | no                   | PR URLs when present                  |
 
 ### CreateDeliverableSession (UI only)
 
-| Phase | Meaning |
-| ----- | ------- |
-| `loading` | Analyze in flight |
-| `review` | Proposal visible; Confirm/Cancel |
-| `creating` | `POST /deliverables` in flight |
-| `success` | Deliverable id available; complement link shown |
-| `error` | Recoverable failure; no success claim |
+| Phase      | Meaning                                         |
+| ---------- | ----------------------------------------------- |
+| `loading`  | Analyze in flight                               |
+| `review`   | Proposal visible; Confirm/Cancel                |
+| `creating` | `POST /deliverables` in flight                  |
+| `success`  | Deliverable id available; complement link shown |
+| `error`    | Recoverable failure; no success claim           |
 
 ## State transitions
 

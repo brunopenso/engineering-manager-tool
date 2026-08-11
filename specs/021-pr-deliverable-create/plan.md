@@ -88,9 +88,9 @@ packages/web/tests/021-pr-deliverable-create/
 
 ## Complexity Tracking
 
-| Item | Why Needed | Simpler Alternative Rejected Because |
-| ---- | ---------- | ------------------------------------ |
-| Separate analyze endpoint + existing create | Spec requires review-before-persist and server DAC on PR IDs | Client-only mock cannot enforce FR-010 |
-| Modal multi-phase UI | Loading, review, success/error are distinct user states | Immediate create without review violates FR-006 |
+| Item                                        | Why Needed                                                   | Simpler Alternative Rejected Because            |
+| ------------------------------------------- | ------------------------------------------------------------ | ----------------------------------------------- |
+| Separate analyze endpoint + existing create | Spec requires review-before-persist and server DAC on PR IDs | Client-only mock cannot enforce FR-010          |
+| Modal multi-phase UI                        | Loading, review, success/error are distinct user states      | Immediate create without review violates FR-006 |
 
 No constitutional violations requiring justification.
