@@ -10,7 +10,9 @@
   "filters": {
     "repository": "Repository",
     "allRepositories": "All repositories",
-    "period": "Period"
+    "period": "Period",
+    "search": "Search",
+    "searching": "Searching…"
   },
   "empty": {
     "title": "No pull requests in this period",

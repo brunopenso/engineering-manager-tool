@@ -10,7 +10,9 @@
   "filters": {
     "repository": "Repositório",
     "allRepositories": "Todos os repositórios",
-    "period": "Período"
+    "period": "Período",
+    "search": "Buscar",
+    "searching": "Buscando…"
   },
   "empty": {
     "title": "Nenhum pull request neste período",

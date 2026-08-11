@@ -43,6 +43,10 @@ describe('US2 my pull requests filters', () => {
 
     await user.click(screen.getByLabelText('Repository'));
     await user.click(await screen.findByRole('option', { name: 'acme/tools' }));
+    // Draft filter does not apply until Search
+    expect(screen.getByText('Widgets PR')).toBeInTheDocument();
+
+    await user.click(screen.getByTestId('pr-activity-search'));
 
     await waitFor(() => {
       expect(screen.queryByText('Widgets PR')).not.toBeInTheDocument();
@@ -50,15 +54,13 @@ describe('US2 my pull requests filters', () => {
     expect(screen.getByText('Tools PR')).toBeInTheDocument();
   });
 
-  it('shows date validation when end is before start', async () => {
+  it('shows date validation when searching with end before start', async () => {
     const user = userEvent.setup();
-    vi.stubGlobal(
-      'fetch',
-      vi.fn(async () => ({
-        ok: true,
-        json: async () => ({ pullRequests: [sampleActivityPr()] }),
-      })),
-    );
+    const fetchMock = vi.fn(async () => ({
+      ok: true,
+      json: async () => ({ pullRequests: [sampleActivityPr()] }),
+    }));
+    vi.stubGlobal('fetch', fetchMock);
 
     renderWithProviders(<App />, {
       initialPath: MY_PULL_REQUESTS_ROUTE,
@@ -67,11 +69,18 @@ describe('US2 my pull requests filters', () => {
     });
 
     expect(await screen.findByTestId('pr-activity-start-date')).toBeInTheDocument();
+    const initialCalls = fetchMock.mock.calls.length;
+
     await user.clear(screen.getByTestId('pr-activity-start-date'));
     await user.type(screen.getByTestId('pr-activity-start-date'), '2026-08-20');
     await user.clear(screen.getByTestId('pr-activity-end-date'));
     await user.type(screen.getByTestId('pr-activity-end-date'), '2026-08-01');
 
+    expect(screen.queryByTestId('pr-activity-date-error')).not.toBeInTheDocument();
+
+    await user.click(screen.getByTestId('pr-activity-search'));
+
     expect(await screen.findByTestId('pr-activity-date-error')).toBeInTheDocument();
+    expect(fetchMock.mock.calls.length).toBe(initialCalls);
   });
 });

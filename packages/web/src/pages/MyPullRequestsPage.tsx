@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Alert, Box, CircularProgress, Container, Paper, Stack, Typography } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../auth/AuthProvider.js';
@@ -37,64 +37,81 @@ export default function MyPullRequestsPage() {
   const defaultRange = useMemo(() => defaultLast60DayRange(), []);
   const [startDate, setStartDate] = useState(defaultRange.startDate);
   const [endDate, setEndDate] = useState(defaultRange.endDate);
+  const [repositoryFilter, setRepositoryFilter] = useState('');
   const [appliedStartDate, setAppliedStartDate] = useState(defaultRange.startDate);
   const [appliedEndDate, setAppliedEndDate] = useState(defaultRange.endDate);
-  const [repositoryFilter, setRepositoryFilter] = useState('');
+  const [appliedRepositoryFilter, setAppliedRepositoryFilter] = useState('');
   const [pullRequests, setPullRequests] = useState<MyActivityPullRequest[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [dateRangeError, setDateRangeError] = useState<string | null>(null);
   const [selectedPr, setSelectedPr] = useState<MyActivityPullRequest | null>(null);
   const fetchRequestId = useRef(0);
+  const initialSearchDone = useRef(false);
 
-  useEffect(() => {
-    if (!isValidDateRange(startDate, endDate)) {
-      setDateRangeError(t('validation.endDateBeforeStart', { ns: 'common' }));
-      return;
-    }
-    setDateRangeError(null);
-    setAppliedStartDate(startDate);
-    setAppliedEndDate(endDate);
-  }, [startDate, endDate, t]);
+  const runSearch = useCallback(
+    async (params: { startDate: string; endDate: string; repositoryKey: string }) => {
+      if (!accessToken || !githubLogin) {
+        setPullRequests([]);
+        setIsLoading(false);
+        return;
+      }
 
-  useEffect(() => {
-    if (!accessToken || !githubLogin) {
-      setPullRequests([]);
-      setIsLoading(false);
-      return;
-    }
+      if (!isValidDateRange(params.startDate, params.endDate)) {
+        setDateRangeError(t('validation.endDateBeforeStart', { ns: 'common' }));
+        return;
+      }
 
-    const requestId = ++fetchRequestId.current;
-    let cancelled = false;
+      setDateRangeError(null);
+      setAppliedStartDate(params.startDate);
+      setAppliedEndDate(params.endDate);
+      setAppliedRepositoryFilter(params.repositoryKey);
 
-    async function load() {
+      const requestId = ++fetchRequestId.current;
       setIsLoading(true);
       setErrorMessage(null);
+
       try {
-        const response = await fetchMyPullRequestActivity(accessToken!, {
-          startDate: appliedStartDate,
-          endDate: appliedEndDate,
+        const response = await fetchMyPullRequestActivity(accessToken, {
+          startDate: params.startDate,
+          endDate: params.endDate,
         });
-        if (!cancelled && requestId === fetchRequestId.current) {
+        if (requestId === fetchRequestId.current) {
           setPullRequests(response.pullRequests);
         }
       } catch (error) {
-        if (!cancelled && requestId === fetchRequestId.current) {
+        if (requestId === fetchRequestId.current) {
           setErrorMessage(error instanceof MyPullRequestsApiError ? error.message : t('loadError'));
           setPullRequests([]);
         }
       } finally {
-        if (!cancelled && requestId === fetchRequestId.current) {
+        if (requestId === fetchRequestId.current) {
           setIsLoading(false);
         }
       }
-    }
+    },
+    [accessToken, githubLogin, t],
+  );
 
-    void load();
-    return () => {
-      cancelled = true;
-    };
-  }, [accessToken, githubLogin, appliedStartDate, appliedEndDate, t]);
+  const handleSearch = useCallback(() => {
+    void runSearch({
+      startDate,
+      endDate,
+      repositoryKey: repositoryFilter,
+    });
+  }, [runSearch, startDate, endDate, repositoryFilter]);
+
+  useEffect(() => {
+    if (!accessToken || !githubLogin || initialSearchDone.current) {
+      return;
+    }
+    initialSearchDone.current = true;
+    void runSearch({
+      startDate: defaultRange.startDate,
+      endDate: defaultRange.endDate,
+      repositoryKey: '',
+    });
+  }, [accessToken, githubLogin, defaultRange, runSearch]);
 
   const repositoryOptions = useMemo(() => deriveRepositoryOptions(pullRequests), [pullRequests]);
 
@@ -104,9 +121,18 @@ export default function MyPullRequestsPage() {
     }
   }, [repositoryFilter, repositoryOptions]);
 
+  useEffect(() => {
+    if (
+      appliedRepositoryFilter &&
+      !repositoryOptions.some((option) => option.key === appliedRepositoryFilter)
+    ) {
+      setAppliedRepositoryFilter('');
+    }
+  }, [appliedRepositoryFilter, repositoryOptions]);
+
   const filtered = useMemo(
-    () => sortByMergedAtDesc(filterByRepository(pullRequests, repositoryFilter || null)),
-    [pullRequests, repositoryFilter],
+    () => sortByMergedAtDesc(filterByRepository(pullRequests, appliedRepositoryFilter || null)),
+    [pullRequests, appliedRepositoryFilter],
   );
 
   const chartSeries = useMemo(
@@ -151,9 +177,17 @@ export default function MyPullRequestsPage() {
                 repositoryKey={repositoryFilter}
                 repositoryOptions={repositoryOptions}
                 dateRangeError={dateRangeError}
-                onStartDateChange={setStartDate}
-                onEndDateChange={setEndDate}
+                isSearching={isLoading}
+                onStartDateChange={(value) => {
+                  setStartDate(value);
+                  setDateRangeError(null);
+                }}
+                onEndDateChange={(value) => {
+                  setEndDate(value);
+                  setDateRangeError(null);
+                }}
                 onRepositoryChange={setRepositoryFilter}
+                onSearch={handleSearch}
               />
             </Paper>
 

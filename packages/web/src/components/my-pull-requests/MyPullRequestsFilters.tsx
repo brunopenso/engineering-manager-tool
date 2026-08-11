@@ -1,4 +1,5 @@
 import {
+  Button,
   FormControl,
   InputLabel,
   MenuItem,
@@ -16,9 +17,11 @@ type MyPullRequestsFiltersProps = {
   repositoryKey: string;
   repositoryOptions: RepositoryOption[];
   dateRangeError: string | null;
+  isSearching: boolean;
   onStartDateChange: (value: string) => void;
   onEndDateChange: (value: string) => void;
   onRepositoryChange: (value: string) => void;
+  onSearch: () => void;
 };
 
 export default function MyPullRequestsFilters({
@@ -27,14 +30,23 @@ export default function MyPullRequestsFilters({
   repositoryKey,
   repositoryOptions,
   dateRangeError,
+  isSearching,
   onStartDateChange,
   onEndDateChange,
   onRepositoryChange,
+  onSearch,
 }: MyPullRequestsFiltersProps) {
   const { t } = useTranslation(['prActivity', 'common']);
 
   return (
-    <Stack spacing={2}>
+    <Stack
+      spacing={2}
+      component="form"
+      onSubmit={(event) => {
+        event.preventDefault();
+        onSearch();
+      }}
+    >
       <Typography variant="subtitle2" color="text.secondary">
         {t('filters.period')}
       </Typography>
@@ -42,7 +54,7 @@ export default function MyPullRequestsFilters({
         direction={{ xs: 'column', sm: 'row' }}
         spacing={2}
         useFlexGap
-        sx={{ flexWrap: 'wrap' }}
+        sx={{ flexWrap: 'wrap', alignItems: { sm: 'flex-start' } }}
       >
         <TextField
           label={t('fields.startDate', { ns: 'common' })}
@@ -87,6 +99,15 @@ export default function MyPullRequestsFilters({
             ))}
           </Select>
         </FormControl>
+        <Button
+          type="submit"
+          variant="contained"
+          disabled={isSearching}
+          data-testid="pr-activity-search"
+          sx={{ minWidth: 140, alignSelf: { xs: 'stretch', sm: 'center' } }}
+        >
+          {isSearching ? t('filters.searching') : t('filters.search')}
+        </Button>
       </Stack>
       {dateRangeError ? (
         <Typography color="error" variant="body2" role="alert" data-testid="pr-activity-date-error">
