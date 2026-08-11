@@ -137,12 +137,12 @@ _For features that expose collaborator or organizational data, requirements MUST
 
 ### Access Control Matrix _(required when data visibility is in scope)_
 
-| Actor                          | Allowed Data Visibility                         | Explicitly Denied Visibility                         | Validation Notes                                      |
-| ------------------------------ | ----------------------------------------------- | ---------------------------------------------------- | ----------------------------------------------------- |
-| Individual contributor         | Own imported PR activity only                   | All other users                                      | Screen + data tests for self-only                     |
-| Leader                         | Own imported PR activity only (this screen)     | Subordinates, peers, superiors on this screen        | Leaders use other features for team views if needed   |
-| Administrator                  | Own imported PR activity only (this screen)     | Other users' activity on this screen                 | Admin privilege does not broaden this personal screen |
-| Unauthenticated user           | None                                            | All PR activity                                      | Route/data access denied                              |
+| Actor                  | Allowed Data Visibility                     | Explicitly Denied Visibility                  | Validation Notes                                      |
+| ---------------------- | ------------------------------------------- | --------------------------------------------- | ----------------------------------------------------- |
+| Individual contributor | Own imported PR activity only               | All other users                               | Screen + data tests for self-only                     |
+| Leader                 | Own imported PR activity only (this screen) | Subordinates, peers, superiors on this screen | Leaders use other features for team views if needed   |
+| Administrator          | Own imported PR activity only (this screen) | Other users' activity on this screen          | Admin privilege does not broaden this personal screen |
+| Unauthenticated user   | None                                        | All PR activity                               | Route/data access denied                              |
 
 ### Key Entities _(include if feature involves data)_
 
