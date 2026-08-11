@@ -227,6 +227,9 @@ export async function analyzeDeliverableFromPullRequests(
   const byId = new Map(pullRequests.map((pr) => [pr.id, pr]));
   const ordered = input.pullRequestIds.map((id) => byId.get(id)!);
 
+  // TODO(llm): Replace mock proposal generation with an external LLM API call that
+  // analyzes `ordered` pull requests (title, body, repo, links, etc.) and returns a
+  // DeliverableProposal. Keep authorization above; only swap this generation step.
   return {
     proposal: buildMockDeliverableProposal(ordered, rawLogin),
     sourcePullRequestIds: input.pullRequestIds,
