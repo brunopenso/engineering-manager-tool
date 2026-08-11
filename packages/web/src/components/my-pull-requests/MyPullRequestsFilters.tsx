@@ -11,16 +11,23 @@ import {
 import { useTranslation } from 'react-i18next';
 import type { RepositoryOption } from '../../utils/myPullRequestActivity.js';
 
+export const CLASSIFICATION_TYPE_OPTIONS = ['feature', 'fix', 'documentation'] as const;
+export const COMPLEXITY_INDEX_OPTIONS = [1, 2, 3, 4, 5] as const;
+
 type MyPullRequestsFiltersProps = {
   startDate: string;
   endDate: string;
   repositoryKey: string;
   repositoryOptions: RepositoryOption[];
+  classificationType: string;
+  complexityIndex: string;
   dateRangeError: string | null;
   isSearching: boolean;
   onStartDateChange: (value: string) => void;
   onEndDateChange: (value: string) => void;
   onRepositoryChange: (value: string) => void;
+  onClassificationTypeChange: (value: string) => void;
+  onComplexityIndexChange: (value: string) => void;
   onSearch: () => void;
 };
 
@@ -29,11 +36,15 @@ export default function MyPullRequestsFilters({
   endDate,
   repositoryKey,
   repositoryOptions,
+  classificationType,
+  complexityIndex,
   dateRangeError,
   isSearching,
   onStartDateChange,
   onEndDateChange,
   onRepositoryChange,
+  onClassificationTypeChange,
+  onComplexityIndexChange,
   onSearch,
 }: MyPullRequestsFiltersProps) {
   const { t } = useTranslation(['prActivity', 'common']);
@@ -95,6 +106,44 @@ export default function MyPullRequestsFilters({
             {repositoryOptions.map((option) => (
               <MenuItem key={option.key} value={option.key}>
                 {option.label}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+        <FormControl size="small" sx={{ minWidth: 180 }}>
+          <InputLabel id="pr-activity-type-label">{t('filters.classificationType')}</InputLabel>
+          <Select
+            labelId="pr-activity-type-label"
+            label={t('filters.classificationType')}
+            value={classificationType}
+            onChange={(event) => onClassificationTypeChange(event.target.value)}
+            data-testid="pr-activity-classification-type"
+          >
+            <MenuItem value="">
+              <em>{t('filters.allClassificationTypes')}</em>
+            </MenuItem>
+            {CLASSIFICATION_TYPE_OPTIONS.map((type) => (
+              <MenuItem key={type} value={type}>
+                {t(`classification.${type}`)}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+        <FormControl size="small" sx={{ minWidth: 160 }}>
+          <InputLabel id="pr-activity-complexity-label">{t('filters.complexityIndex')}</InputLabel>
+          <Select
+            labelId="pr-activity-complexity-label"
+            label={t('filters.complexityIndex')}
+            value={complexityIndex}
+            onChange={(event) => onComplexityIndexChange(event.target.value)}
+            data-testid="pr-activity-complexity-index"
+          >
+            <MenuItem value="">
+              <em>{t('filters.allComplexityIndexes')}</em>
+            </MenuItem>
+            {COMPLEXITY_INDEX_OPTIONS.map((index) => (
+              <MenuItem key={index} value={String(index)}>
+                {index}
               </MenuItem>
             ))}
           </Select>

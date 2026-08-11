@@ -48,6 +48,8 @@ describe('query DTO mapping', () => {
       authorGithubLogin: 'alice',
       mergedAt: new Date('2026-08-09T12:00:00.000Z'),
       url: null,
+      classificationType: 'fix',
+      complexityIndex: 2,
       comments: [
         {
           id: 'c1',
@@ -75,5 +77,35 @@ describe('query DTO mapping', () => {
 
     expect(dto.comments).toHaveLength(1);
     expect(dto.reviews[0].state).toBe('COMMENTED');
+    expect(dto.classificationType).toBe('fix');
+    expect(dto.complexityIndex).toBe(2);
+  });
+
+  it('maps null classification fields for legacy rows', () => {
+    const dto = mapImportedPullRequest({
+      id: 'pr-2',
+      githubPullRequestId: '1002',
+      organization: 'acme',
+      repository: 'widgets',
+      repositoryId: '500',
+      title: 'Legacy',
+      body: null,
+      number: 2,
+      changedFilesCount: 1,
+      additionsCount: 1,
+      deletionsCount: 0,
+      sourceBranch: 'a',
+      targetBranch: 'b',
+      authorGithubLogin: 'alice',
+      mergedAt: new Date('2026-08-09T12:00:00.000Z'),
+      url: null,
+      classificationType: null,
+      complexityIndex: null,
+      comments: [],
+      reviews: [],
+    } as unknown as GithubImportedPullRequest);
+
+    expect(dto.classificationType).toBeNull();
+    expect(dto.complexityIndex).toBeNull();
   });
 });

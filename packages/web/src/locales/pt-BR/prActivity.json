@@ -10,9 +10,18 @@
   "filters": {
     "repository": "Repositório",
     "allRepositories": "Todos os repositórios",
+    "classificationType": "Tipo",
+    "allClassificationTypes": "Todos os tipos",
+    "complexityIndex": "Complexidade",
+    "allComplexityIndexes": "Todas as complexidades",
     "period": "Período",
     "search": "Buscar",
     "searching": "Buscando…"
+  },
+  "classification": {
+    "feature": "Funcionalidade",
+    "fix": "Correção",
+    "documentation": "Documentação"
   },
   "empty": {
     "title": "Nenhum pull request neste período",
@@ -34,7 +43,10 @@
     "owner": "Dono",
     "involved": "Envolvido",
     "empty": "Nenhum pull request para exibir",
-    "titleColumn": "Título"
+    "titleColumn": "Título",
+    "classificationType": "Tipo",
+    "complexityIndex": "Complexidade",
+    "unknownValue": "—"
   },
   "modal": {
     "title": "Detalhes do pull request",

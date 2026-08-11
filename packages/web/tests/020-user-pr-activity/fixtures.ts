@@ -20,6 +20,8 @@ export function sampleActivityPr(
     authorGithubLogin: 'alice-dev',
     mergedAt: '2026-08-01T12:00:00.000Z',
     url: 'https://github.com/acme/widgets/pull/42',
+    classificationType: 'fix',
+    complexityIndex: 2,
     comments: [],
     reviews: [],
     involvementRole: 'owner',

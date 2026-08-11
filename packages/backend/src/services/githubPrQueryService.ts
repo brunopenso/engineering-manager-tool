@@ -63,6 +63,8 @@ export type ImportedPullRequestDto = {
   authorGithubLogin: string;
   mergedAt: string;
   url: string | null;
+  classificationType: 'feature' | 'fix' | 'documentation' | null;
+  complexityIndex: number | null;
   comments: ImportedPullRequestCommentDto[];
   reviews: ImportedPullRequestReviewDto[];
 };
@@ -282,6 +284,8 @@ export function mapImportedPullRequest(pr: GithubImportedPullRequest): ImportedP
     authorGithubLogin: pr.authorGithubLogin,
     mergedAt: pr.mergedAt.toISOString(),
     url: pr.url,
+    classificationType: pr.classificationType ?? null,
+    complexityIndex: pr.complexityIndex ?? null,
     comments: (pr.comments ?? []).map((comment) => ({
       id: comment.id,
       githubCommentId: comment.githubCommentId,

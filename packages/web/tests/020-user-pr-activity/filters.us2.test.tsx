@@ -54,6 +54,48 @@ describe('US2 my pull requests filters', () => {
     expect(screen.getByText('Tools PR')).toBeInTheDocument();
   });
 
+  it('filters table by classification type', async () => {
+    const user = userEvent.setup();
+    const fetchMock = vi.fn(async () => ({
+      ok: true,
+      json: async () => ({
+        pullRequests: [
+          sampleActivityPr({
+            id: 'pr-feat',
+            title: 'Feature PR',
+            classificationType: 'feature',
+            complexityIndex: 2,
+          }),
+          sampleActivityPr({
+            id: 'pr-fix',
+            title: 'Fix PR',
+            classificationType: 'fix',
+            complexityIndex: 3,
+          }),
+        ],
+      }),
+    }));
+    vi.stubGlobal('fetch', fetchMock);
+
+    renderWithProviders(<App />, {
+      initialPath: MY_PULL_REQUESTS_ROUTE,
+      isAuthenticated: true,
+      user: userWithGithub,
+    });
+
+    expect(await screen.findByText('Feature PR')).toBeInTheDocument();
+    expect(screen.getByText('Fix PR')).toBeInTheDocument();
+
+    await user.click(screen.getByLabelText('Type'));
+    await user.click(await screen.findByRole('option', { name: 'Fix' }));
+    await user.click(screen.getByTestId('pr-activity-search'));
+
+    await waitFor(() => {
+      expect(screen.queryByText('Feature PR')).not.toBeInTheDocument();
+    });
+    expect(screen.getByText('Fix PR')).toBeInTheDocument();
+  });
+
   it('shows date validation when searching with end before start', async () => {
     const user = userEvent.setup();
     const fetchMock = vi.fn(async () => ({

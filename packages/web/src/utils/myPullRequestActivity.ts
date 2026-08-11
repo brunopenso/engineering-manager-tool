@@ -62,6 +62,43 @@ export function filterByRepository(
   return pullRequests.filter((pr) => repositoryKey(pr) === repositoryFilterKey);
 }
 
+export function filterByClassificationType(
+  pullRequests: MyActivityPullRequest[],
+  classificationType: string | null,
+): MyActivityPullRequest[] {
+  if (!classificationType) {
+    return pullRequests;
+  }
+  return pullRequests.filter((pr) => pr.classificationType === classificationType);
+}
+
+export function filterByComplexityIndex(
+  pullRequests: MyActivityPullRequest[],
+  complexityIndex: number | null,
+): MyActivityPullRequest[] {
+  if (complexityIndex === null) {
+    return pullRequests;
+  }
+  return pullRequests.filter((pr) => pr.complexityIndex === complexityIndex);
+}
+
+export function applyActivityFilters(
+  pullRequests: MyActivityPullRequest[],
+  filters: {
+    repositoryKey: string | null;
+    classificationType: string | null;
+    complexityIndex: number | null;
+  },
+): MyActivityPullRequest[] {
+  return filterByComplexityIndex(
+    filterByClassificationType(
+      filterByRepository(pullRequests, filters.repositoryKey),
+      filters.classificationType,
+    ),
+    filters.complexityIndex,
+  );
+}
+
 export function buildAuthoredWeeklySeries(
   pullRequests: MyActivityPullRequest[],
   range: { startDate: string; endDate: string },

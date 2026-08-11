@@ -19,7 +19,7 @@ import {
   countActorComments,
   countActorReviews,
   deriveRepositoryOptions,
-  filterByRepository,
+  applyActivityFilters,
   sortByMergedAtDesc,
 } from '../utils/myPullRequestActivity.js';
 import {
@@ -38,9 +38,13 @@ export default function MyPullRequestsPage() {
   const [startDate, setStartDate] = useState(defaultRange.startDate);
   const [endDate, setEndDate] = useState(defaultRange.endDate);
   const [repositoryFilter, setRepositoryFilter] = useState('');
+  const [classificationTypeFilter, setClassificationTypeFilter] = useState('');
+  const [complexityIndexFilter, setComplexityIndexFilter] = useState('');
   const [appliedStartDate, setAppliedStartDate] = useState(defaultRange.startDate);
   const [appliedEndDate, setAppliedEndDate] = useState(defaultRange.endDate);
   const [appliedRepositoryFilter, setAppliedRepositoryFilter] = useState('');
+  const [appliedClassificationTypeFilter, setAppliedClassificationTypeFilter] = useState('');
+  const [appliedComplexityIndexFilter, setAppliedComplexityIndexFilter] = useState('');
   const [pullRequests, setPullRequests] = useState<MyActivityPullRequest[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -50,7 +54,13 @@ export default function MyPullRequestsPage() {
   const initialSearchDone = useRef(false);
 
   const runSearch = useCallback(
-    async (params: { startDate: string; endDate: string; repositoryKey: string }) => {
+    async (params: {
+      startDate: string;
+      endDate: string;
+      repositoryKey: string;
+      classificationType: string;
+      complexityIndex: string;
+    }) => {
       if (!accessToken || !githubLogin) {
         setPullRequests([]);
         setIsLoading(false);
@@ -66,6 +76,8 @@ export default function MyPullRequestsPage() {
       setAppliedStartDate(params.startDate);
       setAppliedEndDate(params.endDate);
       setAppliedRepositoryFilter(params.repositoryKey);
+      setAppliedClassificationTypeFilter(params.classificationType);
+      setAppliedComplexityIndexFilter(params.complexityIndex);
 
       const requestId = ++fetchRequestId.current;
       setIsLoading(true);
@@ -98,8 +110,17 @@ export default function MyPullRequestsPage() {
       startDate,
       endDate,
       repositoryKey: repositoryFilter,
+      classificationType: classificationTypeFilter,
+      complexityIndex: complexityIndexFilter,
     });
-  }, [runSearch, startDate, endDate, repositoryFilter]);
+  }, [
+    runSearch,
+    startDate,
+    endDate,
+    repositoryFilter,
+    classificationTypeFilter,
+    complexityIndexFilter,
+  ]);
 
   useEffect(() => {
     if (!accessToken || !githubLogin || initialSearchDone.current) {
@@ -110,6 +131,8 @@ export default function MyPullRequestsPage() {
       startDate: defaultRange.startDate,
       endDate: defaultRange.endDate,
       repositoryKey: '',
+      classificationType: '',
+      complexityIndex: '',
     });
   }, [accessToken, githubLogin, defaultRange, runSearch]);
 
@@ -130,10 +153,25 @@ export default function MyPullRequestsPage() {
     }
   }, [appliedRepositoryFilter, repositoryOptions]);
 
-  const filtered = useMemo(
-    () => sortByMergedAtDesc(filterByRepository(pullRequests, appliedRepositoryFilter || null)),
-    [pullRequests, appliedRepositoryFilter],
-  );
+  const filtered = useMemo(() => {
+    const complexityIndex =
+      appliedComplexityIndexFilter === ''
+        ? null
+        : Number.parseInt(appliedComplexityIndexFilter, 10);
+    return sortByMergedAtDesc(
+      applyActivityFilters(pullRequests, {
+        repositoryKey: appliedRepositoryFilter || null,
+        classificationType: appliedClassificationTypeFilter || null,
+        complexityIndex:
+          complexityIndex !== null && Number.isFinite(complexityIndex) ? complexityIndex : null,
+      }),
+    );
+  }, [
+    pullRequests,
+    appliedRepositoryFilter,
+    appliedClassificationTypeFilter,
+    appliedComplexityIndexFilter,
+  ]);
 
   const chartSeries = useMemo(
     () =>
@@ -176,6 +214,8 @@ export default function MyPullRequestsPage() {
                 endDate={endDate}
                 repositoryKey={repositoryFilter}
                 repositoryOptions={repositoryOptions}
+                classificationType={classificationTypeFilter}
+                complexityIndex={complexityIndexFilter}
                 dateRangeError={dateRangeError}
                 isSearching={isLoading}
                 onStartDateChange={(value) => {
@@ -187,6 +227,8 @@ export default function MyPullRequestsPage() {
                   setDateRangeError(null);
                 }}
                 onRepositoryChange={setRepositoryFilter}
+                onClassificationTypeChange={setClassificationTypeFilter}
+                onComplexityIndexChange={setComplexityIndexFilter}
                 onSearch={handleSearch}
               />
             </Paper>
