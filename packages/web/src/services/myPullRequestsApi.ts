@@ -48,11 +48,7 @@ export type MyPullRequestActivityResponse = {
 };
 
 type ApiErrorCode =
-  | 'FORBIDDEN'
-  | 'NOT_FOUND'
-  | 'VALIDATION_ERROR'
-  | 'MISSING_APP_TOKEN'
-  | 'INVALID_APP_TOKEN';
+  'FORBIDDEN' | 'NOT_FOUND' | 'VALIDATION_ERROR' | 'MISSING_APP_TOKEN' | 'INVALID_APP_TOKEN';
 
 type ErrorResponse = {
   code: ApiErrorCode;
