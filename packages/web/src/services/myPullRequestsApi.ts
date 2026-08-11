@@ -41,6 +41,7 @@ export type MyActivityPullRequest = {
   mergedAt: string;
   url: string | null;
   classificationType: PullRequestClassificationType | null;
+  userReclassification: PullRequestClassificationType | null;
   complexityIndex: number | null;
   comments: MyActivityComment[];
   reviews: MyActivityReview[];
@@ -49,6 +50,17 @@ export type MyActivityPullRequest = {
 
 export type MyPullRequestActivityResponse = {
   pullRequests: MyActivityPullRequest[];
+};
+
+export type ClassificationTypesResponse = {
+  types: PullRequestClassificationType[];
+};
+
+export type ReclassifyPullRequestsResponse = {
+  updatedCount: number;
+  pullRequests: Array<
+    Omit<MyActivityPullRequest, 'involvementRole'> & { involvementRole?: InvolvementRole }
+  >;
 };
 
 type ApiErrorCode =
@@ -104,6 +116,43 @@ export async function fetchMyPullRequestActivity(
   }
 
   return (await response.json()) as MyPullRequestActivityResponse;
+}
+
+export async function fetchClassificationTypes(
+  accessToken: string,
+): Promise<ClassificationTypesResponse> {
+  const response = await fetch(`${API_BASE_URL}/github-pull-requests/classification-types`, {
+    method: 'GET',
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  });
+
+  if (!response.ok) {
+    throw await parseError(response);
+  }
+
+  return (await response.json()) as ClassificationTypesResponse;
+}
+
+export async function reclassifyPullRequests(
+  accessToken: string,
+  params: { pullRequestIds: string[]; classification: PullRequestClassificationType },
+): Promise<ReclassifyPullRequestsResponse> {
+  const response = await fetch(`${API_BASE_URL}/github-pull-requests/reclassify`, {
+    method: 'PATCH',
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(params),
+  });
+
+  if (!response.ok) {
+    throw await parseError(response);
+  }
+
+  return (await response.json()) as ReclassifyPullRequestsResponse;
 }
 
 export { defaultLast60DayRange, formatDateInput, isValidDateRange } from '../utils/dateRange.js';

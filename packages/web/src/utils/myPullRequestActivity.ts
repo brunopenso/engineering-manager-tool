@@ -62,6 +62,12 @@ export function filterByRepository(
   return pullRequests.filter((pr) => repositoryKey(pr) === repositoryFilterKey);
 }
 
+export function effectiveClassification(
+  pr: Pick<MyActivityPullRequest, 'userReclassification' | 'classificationType'>,
+): MyActivityPullRequest['classificationType'] {
+  return pr.userReclassification ?? pr.classificationType;
+}
+
 export function filterByClassificationType(
   pullRequests: MyActivityPullRequest[],
   classificationType: string | null,
@@ -69,7 +75,7 @@ export function filterByClassificationType(
   if (!classificationType) {
     return pullRequests;
   }
-  return pullRequests.filter((pr) => pr.classificationType === classificationType);
+  return pullRequests.filter((pr) => effectiveClassification(pr) === classificationType);
 }
 
 export function filterByComplexityIndex(

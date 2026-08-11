@@ -34,6 +34,12 @@ describe('US2 activity filter helpers', () => {
       sampleActivityPr({ id: '1', classificationType: 'feature', complexityIndex: 2 }),
       sampleActivityPr({ id: '2', classificationType: 'fix', complexityIndex: 4 }),
       sampleActivityPr({ id: '3', classificationType: 'documentation', complexityIndex: 1 }),
+      sampleActivityPr({
+        id: '4',
+        classificationType: 'feature',
+        userReclassification: 'fix',
+        complexityIndex: 2,
+      }),
     ];
     expect(
       applyActivityFilters(rows, {
@@ -41,7 +47,7 @@ describe('US2 activity filter helpers', () => {
         classificationType: 'fix',
         complexityIndex: null,
       }).map((pr) => pr.id),
-    ).toEqual(['2']);
+    ).toEqual(['2', '4']);
     expect(
       applyActivityFilters(rows, {
         repositoryKey: null,

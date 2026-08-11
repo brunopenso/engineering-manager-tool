@@ -66,6 +66,9 @@ export class GithubImportedPullRequest {
   @Column({ type: 'varchar', length: 32, name: 'classification_type', nullable: true })
   classificationType!: PullRequestClassificationType | null;
 
+  @Column({ type: 'varchar', length: 32, name: 'user_reclassification', nullable: true })
+  userReclassification!: PullRequestClassificationType | null;
+
   @Column({ type: 'smallint', name: 'complexity_index', nullable: true })
   complexityIndex!: number | null;
 

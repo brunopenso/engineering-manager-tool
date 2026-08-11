@@ -1,5 +1,12 @@
 export type PullRequestClassificationType = 'feature' | 'fix' | 'documentation' | 'maintenance';
 
+export const PULL_REQUEST_CLASSIFICATION_TYPES: readonly PullRequestClassificationType[] = [
+  'feature',
+  'fix',
+  'documentation',
+  'maintenance',
+] as const;
+
 export type ClassifyPullRequestTypeInput = {
   sourceBranch: string;
   title: string;

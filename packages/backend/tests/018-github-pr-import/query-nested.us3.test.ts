@@ -78,6 +78,7 @@ describe('query DTO mapping', () => {
     expect(dto.comments).toHaveLength(1);
     expect(dto.reviews[0].state).toBe('COMMENTED');
     expect(dto.classificationType).toBe('fix');
+    expect(dto.userReclassification).toBeNull();
     expect(dto.complexityIndex).toBe(2);
   });
 
@@ -100,12 +101,14 @@ describe('query DTO mapping', () => {
       mergedAt: new Date('2026-08-09T12:00:00.000Z'),
       url: null,
       classificationType: null,
+      userReclassification: null,
       complexityIndex: null,
       comments: [],
       reviews: [],
     } as unknown as GithubImportedPullRequest);
 
     expect(dto.classificationType).toBeNull();
+    expect(dto.userReclassification).toBeNull();
     expect(dto.complexityIndex).toBeNull();
   });
 });
