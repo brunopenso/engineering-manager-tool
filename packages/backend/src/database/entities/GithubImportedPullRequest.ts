@@ -10,11 +10,7 @@ import {
 import { GithubPullRequestComment } from './GithubPullRequestComment.js';
 import { GithubPullRequestReview } from './GithubPullRequestReview.js';
 
-export type PullRequestClassificationType =
-  | 'feature'
-  | 'fix'
-  | 'documentation'
-  | 'maintenance';
+export type PullRequestClassificationType = 'feature' | 'fix' | 'documentation' | 'maintenance';
 
 @Entity({ name: 'github_imported_pull_requests' })
 @Unique('UQ_github_imported_pull_requests_repo_pr', ['repositoryId', 'githubPullRequestId'])

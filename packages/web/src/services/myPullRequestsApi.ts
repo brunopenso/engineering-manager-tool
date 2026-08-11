@@ -21,11 +21,7 @@ export type MyActivityReview = {
   url: string | null;
 };
 
-export type PullRequestClassificationType =
-  | 'feature'
-  | 'fix'
-  | 'documentation'
-  | 'maintenance';
+export type PullRequestClassificationType = 'feature' | 'fix' | 'documentation' | 'maintenance';
 
 export type MyActivityPullRequest = {
   id: string;

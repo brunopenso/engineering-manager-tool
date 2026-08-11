@@ -1,8 +1,4 @@
-export type PullRequestClassificationType =
-  | 'feature'
-  | 'fix'
-  | 'documentation'
-  | 'maintenance';
+export type PullRequestClassificationType = 'feature' | 'fix' | 'documentation' | 'maintenance';
 
 export type ClassifyPullRequestTypeInput = {
   sourceBranch: string;
