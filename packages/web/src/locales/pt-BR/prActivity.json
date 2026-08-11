@@ -87,5 +87,32 @@
   },
   "pagination": {
     "rowsPerPage": "Linhas por página"
+  },
+  "createDeliverable": {
+    "button": "Criar entregável",
+    "title": "Criar entregável a partir de pull requests",
+    "loading": "Analisando os pull requests selecionados…",
+    "creating": "Criando entregável…",
+    "cancel": "Cancelar",
+    "confirm": "Confirmar",
+    "close": "Fechar",
+    "retry": "Voltar à proposta",
+    "emptySelectionHint": "Selecione um ou mais pull requests para criar um entregável.",
+    "review": {
+      "intro": "Revise o entregável proposto antes de criá-lo.",
+      "title": "Título",
+      "description": "Descrição",
+      "role": "Papel no entregável",
+      "businessImpact": "Impacto no negócio",
+      "improvementPoints": "Pontos de melhoria"
+    },
+    "success": {
+      "message": "Entregável criado. Complemente as informações faltantes na tela de edição.",
+      "complement": "Complementar informações do entregável"
+    },
+    "errors": {
+      "analyzeFailed": "Não foi possível analisar os pull requests selecionados. Tente novamente.",
+      "createFailed": "Não foi possível criar o entregável. Tente novamente."
+    }
   }
 }

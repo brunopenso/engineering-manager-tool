@@ -14,6 +14,7 @@ import { useAuth } from '../auth/AuthProvider.js';
 import ActivitySummaryCards from '../components/my-pull-requests/ActivitySummaryCards.js';
 import AuthoredPrsChart from '../components/my-pull-requests/AuthoredPrsChart.js';
 import ChangeClassificationModal from '../components/my-pull-requests/ChangeClassificationModal.js';
+import CreateDeliverableFromPrsModal from '../components/my-pull-requests/CreateDeliverableFromPrsModal.js';
 import MyPullRequestsFilters from '../components/my-pull-requests/MyPullRequestsFilters.js';
 import MyPullRequestsTable from '../components/my-pull-requests/MyPullRequestsTable.js';
 import PullRequestDetailModal from '../components/my-pull-requests/PullRequestDetailModal.js';
@@ -63,6 +64,8 @@ export default function MyPullRequestsPage() {
   const [dateRangeError, setDateRangeError] = useState<string | null>(null);
   const [selectedPr, setSelectedPr] = useState<MyActivityPullRequest | null>(null);
   const [reclassifyOpen, setReclassifyOpen] = useState(false);
+  const [createDeliverableOpen, setCreateDeliverableOpen] = useState(false);
+  const [createDeliverableIds, setCreateDeliverableIds] = useState<string[]>([]);
   const fetchRequestId = useRef(0);
   const initialSearchDone = useRef(false);
 
@@ -318,17 +321,36 @@ export default function MyPullRequestsPage() {
                   </Box>
                 </Stack>
 
-                {selectedIds.size > 0 ? (
-                  <Box>
+                <Stack
+                  direction={{ xs: 'column', sm: 'row' }}
+                  spacing={1}
+                  sx={{ alignItems: 'flex-start' }}
+                >
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    disabled={selectedIds.size === 0}
+                    onClick={() => {
+                      setCreateDeliverableIds([...selectedIds]);
+                      setCreateDeliverableOpen(true);
+                    }}
+                    data-testid="create-deliverable-button"
+                    title={
+                      selectedIds.size === 0 ? t('createDeliverable.emptySelectionHint') : undefined
+                    }
+                  >
+                    {t('createDeliverable.button')}
+                  </Button>
+                  {selectedIds.size > 0 ? (
                     <Button
-                      variant="contained"
+                      variant="outlined"
                       onClick={() => setReclassifyOpen(true)}
                       data-testid="change-classification-button"
                     >
                       {t('reclassify.button')}
                     </Button>
-                  </Box>
-                ) : null}
+                  ) : null}
+                </Stack>
 
                 <MyPullRequestsTable
                   pullRequests={filtered}
@@ -361,6 +383,16 @@ export default function MyPullRequestsPage() {
           pullRequestIds={[...selectedIds]}
           onClose={() => setReclassifyOpen(false)}
           onSaved={handleReclassifySaved}
+        />
+      ) : null}
+
+      {accessToken ? (
+        <CreateDeliverableFromPrsModal
+          open={createDeliverableOpen}
+          accessToken={accessToken}
+          pullRequestIds={createDeliverableIds}
+          onClose={() => setCreateDeliverableOpen(false)}
+          onCreated={() => setSelectedIds(new Set())}
         />
       ) : null}
     </Container>

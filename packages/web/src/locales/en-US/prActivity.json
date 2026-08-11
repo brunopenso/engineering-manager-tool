@@ -87,5 +87,32 @@
   },
   "pagination": {
     "rowsPerPage": "Rows per page"
+  },
+  "createDeliverable": {
+    "button": "Create deliverable",
+    "title": "Create deliverable from pull requests",
+    "loading": "Analyzing selected pull requests…",
+    "creating": "Creating deliverable…",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "close": "Close",
+    "retry": "Back to proposal",
+    "emptySelectionHint": "Select one or more pull requests to create a deliverable.",
+    "review": {
+      "intro": "Review the proposed deliverable before creating it.",
+      "title": "Title",
+      "description": "Description",
+      "role": "Role in deliverable",
+      "businessImpact": "Business impact",
+      "improvementPoints": "Improvement points"
+    },
+    "success": {
+      "message": "Deliverable created. Complement any missing information on the edit screen.",
+      "complement": "Complement deliverable information"
+    },
+    "errors": {
+      "analyzeFailed": "Could not analyze the selected pull requests. Please try again.",
+      "createFailed": "Could not create the deliverable. Please try again."
+    }
   }
 }
