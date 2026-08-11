@@ -1,0 +1,62 @@
+{
+  "title": "Meus pull requests",
+  "subtitle": "Veja os pull requests que você autorou ou em que participou.",
+  "loading": "Carregando atividade de pull requests…",
+  "loadError": "Não foi possível carregar a atividade de pull requests. Tente novamente.",
+  "noGithub": {
+    "title": "Login do GitHub necessário",
+    "body": "Vincule seu usuário do GitHub em Perfil para ver sua atividade de pull requests."
+  },
+  "filters": {
+    "repository": "Repositório",
+    "allRepositories": "Todos os repositórios",
+    "period": "Período"
+  },
+  "empty": {
+    "title": "Nenhum pull request neste período",
+    "body": "Tente outro intervalo de datas ou filtro de repositório."
+  },
+  "chart": {
+    "title": "Pull requests autorados",
+    "series": "Autorados",
+    "empty": "Nenhum pull request autorado neste período"
+  },
+  "cards": {
+    "comments": "Comentários",
+    "reviews": "Revisões"
+  },
+  "table": {
+    "repository": "Repositório",
+    "prDate": "Data do PR",
+    "role": "Seu papel",
+    "owner": "Dono",
+    "involved": "Envolvido",
+    "empty": "Nenhum pull request para exibir",
+    "titleColumn": "Título"
+  },
+  "modal": {
+    "title": "Detalhes do pull request",
+    "close": "Fechar",
+    "fields": {
+      "title": "Título",
+      "repository": "Repositório",
+      "organization": "Organização",
+      "number": "Número",
+      "author": "Autor",
+      "mergedAt": "Mesclado em",
+      "role": "Seu papel",
+      "branches": "Branches",
+      "changes": "Alterações",
+      "body": "Descrição",
+      "url": "Abrir no GitHub",
+      "comments": "Comentários",
+      "reviews": "Revisões",
+      "noBody": "Sem descrição",
+      "noComments": "Sem comentários",
+      "noReviews": "Sem revisões"
+    }
+  },
+  "pagination": {
+    "rowsPerPage": "Linhas por página"
+  }
+}

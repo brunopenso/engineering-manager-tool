@@ -1,3 +1,4 @@
+import { Brackets } from 'typeorm';
 import type { UserRoleType } from '../auth/types.js';
 import { AppDataSource } from '../database/connection.js';
 import { GithubImportedPullRequest } from '../database/entities/GithubImportedPullRequest.js';
@@ -11,6 +12,17 @@ export type GithubPullRequestQueryInput = {
   githubLogins: string[];
   startDate: string;
   endDate: string;
+};
+
+export type MyPullRequestActivityInput = {
+  startDate: string;
+  endDate: string;
+};
+
+export type InvolvementRole = 'owner' | 'involved';
+
+export type MyActivityPullRequestDto = ImportedPullRequestDto & {
+  involvementRole: InvolvementRole;
 };
 
 export type ImportedPullRequestCommentDto = {
@@ -97,6 +109,107 @@ export function validateGithubPullRequestQueryInput(body: unknown): GithubPullRe
     startDate: candidate.startDate,
     endDate: candidate.endDate,
   };
+}
+
+export function validateMyPullRequestActivityInput(body: unknown): MyPullRequestActivityInput {
+  if (!body || typeof body !== 'object') {
+    throw new GithubPrQueryValidationError('Request body must be an object');
+  }
+  const candidate = body as Record<string, unknown>;
+
+  if (typeof candidate.startDate !== 'string' || !ISO_DATE.test(candidate.startDate)) {
+    throw new GithubPrQueryValidationError('startDate must be YYYY-MM-DD');
+  }
+  if (typeof candidate.endDate !== 'string' || !ISO_DATE.test(candidate.endDate)) {
+    throw new GithubPrQueryValidationError('endDate must be YYYY-MM-DD');
+  }
+  if (candidate.endDate < candidate.startDate) {
+    throw new GithubPrQueryValidationError('endDate must be on or after startDate');
+  }
+
+  return {
+    startDate: candidate.startDate,
+    endDate: candidate.endDate,
+  };
+}
+
+export function deriveInvolvementRole(
+  authorGithubLogin: string,
+  actorGithubLogin: string,
+): InvolvementRole {
+  return normalizeGithubLogin(authorGithubLogin) === normalizeGithubLogin(actorGithubLogin)
+    ? 'owner'
+    : 'involved';
+}
+
+export function isActorInvolvedInPullRequest(
+  pr: Pick<ImportedPullRequestDto, 'authorGithubLogin' | 'comments' | 'reviews'>,
+  actorGithubLogin: string,
+): boolean {
+  const login = normalizeGithubLogin(actorGithubLogin);
+  if (normalizeGithubLogin(pr.authorGithubLogin) === login) {
+    return true;
+  }
+  if (pr.comments.some((comment) => normalizeGithubLogin(comment.authorGithubLogin) === login)) {
+    return true;
+  }
+  if (pr.reviews.some((review) => normalizeGithubLogin(review.reviewerGithubLogin) === login)) {
+    return true;
+  }
+  return false;
+}
+
+export async function queryMyPullRequestActivity(
+  actorUserId: string,
+  input: MyPullRequestActivityInput,
+): Promise<MyActivityPullRequestDto[]> {
+  const actor = await AppDataSource.getRepository(User).findOne({ where: { id: actorUserId } });
+  const rawLogin = actor?.githubLogin?.trim();
+  if (!rawLogin) {
+    return [];
+  }
+
+  const login = normalizeGithubLogin(rawLogin);
+  const start = new Date(`${input.startDate}T00:00:00.000Z`);
+  const end = new Date(`${input.endDate}T23:59:59.999Z`);
+
+  const pullRequests = await AppDataSource.getRepository(GithubImportedPullRequest)
+    .createQueryBuilder('pr')
+    .leftJoinAndSelect('pr.comments', 'comments')
+    .leftJoinAndSelect('pr.reviews', 'reviews')
+    .where('pr.merged_at BETWEEN :start AND :end', { start, end })
+    .andWhere(
+      new Brackets((qb) => {
+        qb.where('LOWER(pr.author_github_login) = :login', { login })
+          .orWhere(
+            `EXISTS (
+              SELECT 1 FROM github_pull_request_comments c
+              WHERE c.pull_request_id = pr.id AND LOWER(c.author_github_login) = :login
+            )`,
+          )
+          .orWhere(
+            `EXISTS (
+              SELECT 1 FROM github_pull_request_reviews r
+              WHERE r.pull_request_id = pr.id AND LOWER(r.reviewer_github_login) = :login
+            )`,
+          );
+      }),
+    )
+    .orderBy('pr.merged_at', 'DESC')
+    .getMany();
+
+  return pullRequests
+    .filter((pr) => {
+      const day = pr.mergedAt.toISOString().slice(0, 10);
+      return day >= input.startDate && day <= input.endDate;
+    })
+    .map((pr) => {
+      const dto = mapImportedPullRequest(pr);
+      return {
+        ...dto,
+        involvementRole: deriveInvolvementRole(dto.authorGithubLogin, login),
+      };
+    });
 }
 
 export async function queryImportedPullRequests(

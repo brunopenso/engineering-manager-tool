@@ -11,6 +11,7 @@ import enUSProfile from '../locales/en-US/profile.json';
 import enUSDeliverables from '../locales/en-US/deliverables.json';
 import enUSLeader from '../locales/en-US/leader.json';
 import enUSAdmin from '../locales/en-US/admin.json';
+import enUSPrActivity from '../locales/en-US/prActivity.json';
 
 import ptBRCommon from '../locales/pt-BR/common.json';
 import ptBRShell from '../locales/pt-BR/shell.json';
@@ -19,6 +20,7 @@ import ptBRProfile from '../locales/pt-BR/profile.json';
 import ptBRDeliverables from '../locales/pt-BR/deliverables.json';
 import ptBRLeader from '../locales/pt-BR/leader.json';
 import ptBRAdmin from '../locales/pt-BR/admin.json';
+import ptBRPrActivity from '../locales/pt-BR/prActivity.json';
 
 export const I18N_NAMESPACES = [
   'common',
@@ -28,6 +30,7 @@ export const I18N_NAMESPACES = [
   'deliverables',
   'leader',
   'admin',
+  'prActivity',
 ] as const;
 
 const resources = {
@@ -39,6 +42,7 @@ const resources = {
     deliverables: enUSDeliverables,
     leader: enUSLeader,
     admin: enUSAdmin,
+    prActivity: enUSPrActivity,
   },
   'pt-BR': {
     common: ptBRCommon,
@@ -48,6 +52,7 @@ const resources = {
     deliverables: ptBRDeliverables,
     leader: ptBRLeader,
     admin: ptBRAdmin,
+    prActivity: ptBRPrActivity,
   },
 } as const;
 

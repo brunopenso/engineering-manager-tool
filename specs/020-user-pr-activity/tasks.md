@@ -17,11 +17,11 @@
 
 **Purpose**: Feature scaffolds, i18n namespace registration, and shared test folders.
 
-- [ ] T001 Create feature test doc stubs under `tests/020-user-pr-activity/` (`screen-access.us1.test.md`, `filters.us2.test.md`, `summaries.us3.test.md`, `table-detail.us4.test.md`) aligned with spec US1–US4
-- [ ] T002 [P] Create backend test directory scaffold in `packages/backend/tests/020-user-pr-activity/` (reuse fixtures/patterns from `packages/backend/tests/018-github-pr-import/` where useful)
-- [ ] T003 [P] Create web test directory scaffold in `packages/web/tests/020-user-pr-activity/`
-- [ ] T004 [P] Add `prActivity` locale catalogs `packages/web/src/locales/en-US/prActivity.json` and `packages/web/src/locales/pt-BR/prActivity.json` (placeholder keys for page title, empty states, errors) and register namespace in `packages/web/src/i18n/config.ts`
-- [ ] T005 [P] Add `menu.myPullRequests` keys to `packages/web/src/locales/en-US/shell.json` and `packages/web/src/locales/pt-BR/shell.json`
+- [x] T001 Create feature test doc stubs under `tests/020-user-pr-activity/` (`screen-access.us1.test.md`, `filters.us2.test.md`, `summaries.us3.test.md`, `table-detail.us4.test.md`) aligned with spec US1–US4
+- [x] T002 [P] Create backend test directory scaffold in `packages/backend/tests/020-user-pr-activity/` (reuse fixtures/patterns from `packages/backend/tests/018-github-pr-import/` where useful)
+- [x] T003 [P] Create web test directory scaffold in `packages/web/tests/020-user-pr-activity/`
+- [x] T004 [P] Add `prActivity` locale catalogs `packages/web/src/locales/en-US/prActivity.json` and `packages/web/src/locales/pt-BR/prActivity.json` (placeholder keys for page title, empty states, errors) and register namespace in `packages/web/src/i18n/config.ts`
+- [x] T005 [P] Add `menu.myPullRequests` keys to `packages/web/src/locales/en-US/shell.json` and `packages/web/src/locales/pt-BR/shell.json`
 
 ---
 
@@ -31,11 +31,11 @@
 
 **⚠️ CRITICAL**: No user story UI work that depends on live activity data starts until this phase is complete.
 
-- [ ] T006 Add request validation + DTO types for my-activity (`startDate`/`endDate`, `involvementRole`) in `packages/backend/src/services/githubPrQueryService.ts` (or adjacent types module) per `specs/020-user-pr-activity/contracts/user-pr-activity-api.yaml` and `data-model.md`
-- [ ] T007 Implement `queryMyPullRequestActivity(actorUserId, { startDate, endDate })` in `packages/backend/src/services/githubPrQueryService.ts`: resolve actor `githubLogin`; empty login → `[]`; select PRs in `mergedAt` range where actor matches author OR comment author OR review reviewer; map with `mapImportedPullRequest` + `involvementRole`
-- [ ] T008 Register `POST /github-pull-requests/my-activity` (auth required; no client-supplied login) in `packages/backend/src/routes/githubPullRequests.ts`
-- [ ] T009 [P] Add backend foundational tests for date validation (400), unauthenticated (401), empty GitHub login → empty list in `packages/backend/tests/020-user-pr-activity/my-activity-validation.test.ts`
-- [ ] T010 [P] Add backend foundational tests for authored + involved-via-comment + involved-via-review inclusion and self-only exclusion of others’ authored-only PRs in `packages/backend/tests/020-user-pr-activity/my-activity-query.test.ts`
+- [x] T006 Add request validation + DTO types for my-activity (`startDate`/`endDate`, `involvementRole`) in `packages/backend/src/services/githubPrQueryService.ts` (or adjacent types module) per `specs/020-user-pr-activity/contracts/user-pr-activity-api.yaml` and `data-model.md`
+- [x] T007 Implement `queryMyPullRequestActivity(actorUserId, { startDate, endDate })` in `packages/backend/src/services/githubPrQueryService.ts`: resolve actor `githubLogin`; empty login → `[]`; select PRs in `mergedAt` range where actor matches author OR comment author OR review reviewer; map with `mapImportedPullRequest` + `involvementRole`
+- [x] T008 Register `POST /github-pull-requests/my-activity` (auth required; no client-supplied login) in `packages/backend/src/routes/githubPullRequests.ts`
+- [x] T009 [P] Add backend foundational tests for date validation (400), unauthenticated (401), empty GitHub login → empty list in `packages/backend/tests/020-user-pr-activity/my-activity-validation.test.ts`
+- [x] T010 [P] Add backend foundational tests for authored + involved-via-comment + involved-via-review inclusion and self-only exclusion of others’ authored-only PRs in `packages/backend/tests/020-user-pr-activity/my-activity-query.test.ts`
 
 **Checkpoint**: `POST /github-pull-requests/my-activity` returns self activity with roles; contract behaviors covered by backend tests.
 
@@ -49,16 +49,16 @@
 
 ### Tests for User Story 1 (MANDATORY)
 
-- [ ] T011 [P] [US1] Add web tests for menu visibility, route access, default 60-day range, and no-GitHub empty state in `packages/web/tests/020-user-pr-activity/screen-access.us1.test.tsx`
-- [ ] T012 [P] [US1] Add i18n key-parity / no hard-coded copy smoke for shell menu + page shell strings in `packages/web/tests/020-user-pr-activity/i18n-parity.us1.test.ts`
+- [x] T011 [P] [US1] Add web tests for menu visibility, route access, default 60-day range, and no-GitHub empty state in `packages/web/tests/020-user-pr-activity/screen-access.us1.test.tsx`
+- [x] T012 [P] [US1] Add i18n key-parity / no hard-coded copy smoke for shell menu + page shell strings in `packages/web/tests/020-user-pr-activity/i18n-parity.us1.test.ts`
 
 ### Implementation for User Story 1
 
-- [ ] T013 [P] [US1] Add `MY_PULL_REQUESTS_ROUTE` and base-menu entry in `packages/web/src/routes/shellOptions.ts`
-- [ ] T014 [P] [US1] Add `fetchMyPullRequestActivity` client in `packages/web/src/services/myPullRequestsApi.ts`
-- [ ] T015 [US1] Create initial `MyPullRequestsPage` in `packages/web/src/pages/MyPullRequestsPage.tsx` using `frontend-design` skill + Material UI (responsive breakpoints, accessible headings, clear hierarchy): title/subtitle, default `defaultLast60DayRange()` load via auth token, loading/error/no-GitHub empty states; all copy via `prActivity` / `common` i18n keys
-- [ ] T016 [US1] Register protected route `/app/my-pull-requests` in `packages/web/src/App.tsx`
-- [ ] T017 [US1] Expand `packages/web/src/locales/{en-US,pt-BR}/prActivity.json` with US1 strings (title, subtitle, loading, errors, no-GitHub guidance)
+- [x] T013 [P] [US1] Add `MY_PULL_REQUESTS_ROUTE` and base-menu entry in `packages/web/src/routes/shellOptions.ts`
+- [x] T014 [P] [US1] Add `fetchMyPullRequestActivity` client in `packages/web/src/services/myPullRequestsApi.ts`
+- [x] T015 [US1] Create initial `MyPullRequestsPage` in `packages/web/src/pages/MyPullRequestsPage.tsx` using `frontend-design` skill + Material UI (responsive breakpoints, accessible headings, clear hierarchy): title/subtitle, default `defaultLast60DayRange()` load via auth token, loading/error/no-GitHub empty states; all copy via `prActivity` / `common` i18n keys
+- [x] T016 [US1] Register protected route `/app/my-pull-requests` in `packages/web/src/App.tsx`
+- [x] T017 [US1] Expand `packages/web/src/locales/{en-US,pt-BR}/prActivity.json` with US1 strings (title, subtitle, loading, errors, no-GitHub guidance)
 
 **Checkpoint**: MVP — user can open My Pull Requests and see default-period activity shell (or guidance empty state).
 
@@ -72,15 +72,15 @@
 
 ### Tests for User Story 2 (MANDATORY)
 
-- [ ] T018 [P] [US2] Add unit tests for repository option derivation and client-side repository filtering in `packages/web/tests/020-user-pr-activity/activity-filters.us2.test.ts`
-- [ ] T019 [P] [US2] Add web UI tests for period change, repository select/clear, invalid range, and empty filtered results in `packages/web/tests/020-user-pr-activity/filters.us2.test.tsx`
+- [x] T018 [P] [US2] Add unit tests for repository option derivation and client-side repository filtering in `packages/web/tests/020-user-pr-activity/activity-filters.us2.test.ts`
+- [x] T019 [P] [US2] Add web UI tests for period change, repository select/clear, invalid range, and empty filtered results in `packages/web/tests/020-user-pr-activity/filters.us2.test.tsx`
 
 ### Implementation for User Story 2
 
-- [ ] T020 [P] [US2] Implement filter/aggregation helpers (repo options from period payload, apply repository filter) in `packages/web/src/utils/myPullRequestActivity.ts`
-- [ ] T021 [US2] Create `MyPullRequestsFilters` in `packages/web/src/components/my-pull-requests/MyPullRequestsFilters.tsx` using `frontend-design` + MUI (accessible date inputs, repository select, validation messaging via i18n)
-- [ ] T022 [US2] Wire filters into `packages/web/src/pages/MyPullRequestsPage.tsx` so period changes refetch my-activity and repository filter applies to the shared in-memory set without a separate search button
-- [ ] T023 [US2] Add filter-related keys to `packages/web/src/locales/{en-US,pt-BR}/prActivity.json` (and reuse `common.validation.endDateBeforeStart` where applicable)
+- [x] T020 [P] [US2] Implement filter/aggregation helpers (repo options from period payload, apply repository filter) in `packages/web/src/utils/myPullRequestActivity.ts`
+- [x] T021 [US2] Create `MyPullRequestsFilters` in `packages/web/src/components/my-pull-requests/MyPullRequestsFilters.tsx` using `frontend-design` + MUI (accessible date inputs, repository select, validation messaging via i18n)
+- [x] T022 [US2] Wire filters into `packages/web/src/pages/MyPullRequestsPage.tsx` so period changes refetch my-activity and repository filter applies to the shared in-memory set without a separate search button
+- [x] T023 [US2] Add filter-related keys to `packages/web/src/locales/{en-US,pt-BR}/prActivity.json` (and reuse `common.validation.endDateBeforeStart` where applicable)
 
 **Checkpoint**: Filters drive a single consistent activity set for downstream widgets/table.
 
@@ -94,16 +94,16 @@
 
 ### Tests for User Story 3 (MANDATORY)
 
-- [ ] T024 [P] [US3] Add unit tests for weekly authored series and comment/review counts in `packages/web/tests/020-user-pr-activity/summaries.us3.test.ts`
-- [ ] T025 [P] [US3] Add web UI tests that chart/cards refresh with filters and respect owner vs involvement rules in `packages/web/tests/020-user-pr-activity/summaries-ui.us3.test.tsx`
+- [x] T024 [P] [US3] Add unit tests for weekly authored series and comment/review counts in `packages/web/tests/020-user-pr-activity/summaries.us3.test.ts`
+- [x] T025 [P] [US3] Add web UI tests that chart/cards refresh with filters and respect owner vs involvement rules in `packages/web/tests/020-user-pr-activity/summaries-ui.us3.test.tsx`
 
 ### Implementation for User Story 3
 
-- [ ] T026 [US3] Extend `packages/web/src/utils/myPullRequestActivity.ts` with weekly authored bucketing (reuse week label helpers) and comment/review count aggregators keyed by actor `githubLogin`
-- [ ] T027 [P] [US3] Create `AuthoredPrsChart` in `packages/web/src/components/my-pull-requests/AuthoredPrsChart.tsx` using `@mui/x-charts` `BarChart` + `frontend-design` / MUI theming (responsive, accessible title)
-- [ ] T028 [P] [US3] Create `ActivitySummaryCards` in `packages/web/src/components/my-pull-requests/ActivitySummaryCards.tsx` for comment and review counts (Material UI Cards, clear visual hierarchy)
-- [ ] T029 [US3] Render chart + cards below filters in `packages/web/src/pages/MyPullRequestsPage.tsx` bound to the filtered activity set
-- [ ] T030 [US3] Add chart/card i18n keys to `packages/web/src/locales/{en-US,pt-BR}/prActivity.json`
+- [x] T026 [US3] Extend `packages/web/src/utils/myPullRequestActivity.ts` with weekly authored bucketing (reuse week label helpers) and comment/review count aggregators keyed by actor `githubLogin`
+- [x] T027 [P] [US3] Create `AuthoredPrsChart` in `packages/web/src/components/my-pull-requests/AuthoredPrsChart.tsx` using `@mui/x-charts` `BarChart` + `frontend-design` / MUI theming (responsive, accessible title)
+- [x] T028 [P] [US3] Create `ActivitySummaryCards` in `packages/web/src/components/my-pull-requests/ActivitySummaryCards.tsx` for comment and review counts (Material UI Cards, clear visual hierarchy)
+- [x] T029 [US3] Render chart + cards below filters in `packages/web/src/pages/MyPullRequestsPage.tsx` bound to the filtered activity set
+- [x] T030 [US3] Add chart/card i18n keys to `packages/web/src/locales/{en-US,pt-BR}/prActivity.json`
 
 **Checkpoint**: Summaries give at-a-glance authored volume and involvement counts.
 
@@ -117,15 +117,15 @@
 
 ### Tests for User Story 4 (MANDATORY)
 
-- [ ] T031 [P] [US4] Add unit/UI tests for role labeling, default sort, and empty table in `packages/web/tests/020-user-pr-activity/table.us4.test.tsx`
-- [ ] T032 [P] [US4] Add UI tests for row-click modal open/close with detail fields and filter persistence in `packages/web/tests/020-user-pr-activity/table-detail.us4.test.tsx`
+- [x] T031 [P] [US4] Add unit/UI tests for role labeling, default sort, and empty table in `packages/web/tests/020-user-pr-activity/table.us4.test.tsx`
+- [x] T032 [P] [US4] Add UI tests for row-click modal open/close with detail fields and filter persistence in `packages/web/tests/020-user-pr-activity/table-detail.us4.test.tsx`
 
 ### Implementation for User Story 4
 
-- [ ] T033 [P] [US4] Create `MyPullRequestsTable` in `packages/web/src/components/my-pull-requests/MyPullRequestsTable.tsx` using MUI `Table` (+ pagination if needed), accessible row activation, i18n headers/role labels
-- [ ] T034 [P] [US4] Create `PullRequestDetailModal` in `packages/web/src/components/my-pull-requests/PullRequestDetailModal.tsx` using MUI `Dialog` (patterned after team deliverable review modal) with full PR fields + comments/reviews sections via i18n
-- [ ] T035 [US4] Integrate table + modal into `packages/web/src/pages/MyPullRequestsPage.tsx` below summaries; ensure row click opens modal and dismiss restores filtered table context
-- [ ] T036 [US4] Add table/modal i18n keys to `packages/web/src/locales/{en-US,pt-BR}/prActivity.json`
+- [x] T033 [P] [US4] Create `MyPullRequestsTable` in `packages/web/src/components/my-pull-requests/MyPullRequestsTable.tsx` using MUI `Table` (+ pagination if needed), accessible row activation, i18n headers/role labels
+- [x] T034 [P] [US4] Create `PullRequestDetailModal` in `packages/web/src/components/my-pull-requests/PullRequestDetailModal.tsx` using MUI `Dialog` (patterned after team deliverable review modal) with full PR fields + comments/reviews sections via i18n
+- [x] T035 [US4] Integrate table + modal into `packages/web/src/pages/MyPullRequestsPage.tsx` below summaries; ensure row click opens modal and dismiss restores filtered table context
+- [x] T036 [US4] Add table/modal i18n keys to `packages/web/src/locales/{en-US,pt-BR}/prActivity.json`
 
 **Checkpoint**: Users can browse involvement and inspect full PR detail without leaving the screen.
 
@@ -135,10 +135,10 @@
 
 **Purpose**: End-to-end validation, consistency, and docs.
 
-- [ ] T037 [P] Verify en-US/pt-BR key parity for `prActivity` + `shell.menu.myPullRequests` and extend `packages/web/tests/020-user-pr-activity/i18n-parity.us1.test.ts` (or dedicated parity test) if needed
-- [ ] T038 [P] Confirm feature markdown acceptance docs under `tests/020-user-pr-activity/` match implemented behaviors
-- [ ] T039 Run quickstart verification commands from `specs/020-user-pr-activity/quickstart.md` (`npm run test --workspace @em-tool/backend -- --run 020-user-pr-activity`, web counterpart, `npm run lint`) and fix failures
-- [ ] T040 Manual smoke per quickstart § Manual (menu, default range, filters, roles, modal, no-GitHub, self-only)
+- [x] T037 [P] Verify en-US/pt-BR key parity for `prActivity` + `shell.menu.myPullRequests` and extend `packages/web/tests/020-user-pr-activity/i18n-parity.us1.test.ts` (or dedicated parity test) if needed
+- [x] T038 [P] Confirm feature markdown acceptance docs under `tests/020-user-pr-activity/` match implemented behaviors
+- [x] T039 Run quickstart verification commands from `specs/020-user-pr-activity/quickstart.md` (`npm run test --workspace @em-tool/backend -- --run 020-user-pr-activity`, web counterpart, `npm run lint`) and fix failures
+- [x] T040 Manual smoke per quickstart § Manual (menu, default range, filters, roles, modal, no-GitHub, self-only)
 
 ---
 
