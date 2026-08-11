@@ -11,7 +11,12 @@ import {
 import { useTranslation } from 'react-i18next';
 import type { RepositoryOption } from '../../utils/myPullRequestActivity.js';
 
-export const CLASSIFICATION_TYPE_OPTIONS = ['feature', 'fix', 'documentation'] as const;
+export const CLASSIFICATION_TYPE_OPTIONS = [
+  'feature',
+  'fix',
+  'documentation',
+  'maintenance',
+] as const;
 export const COMPLEXITY_INDEX_OPTIONS = [1, 2, 3, 4, 5] as const;
 
 type MyPullRequestsFiltersProps = {

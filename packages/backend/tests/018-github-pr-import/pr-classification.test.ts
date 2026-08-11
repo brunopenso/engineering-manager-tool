@@ -86,6 +86,44 @@ describe('classifyPullRequestType', () => {
       }),
     ).toBe('fix');
   });
+
+  it('classifies maintenance for deps and upgrades', () => {
+    expect(
+      classifyPullRequestType({
+        sourceBranch: 'chore/deps-react',
+        title: 'feat: unrelated',
+        body: null,
+      }),
+    ).toBe('maintenance');
+    expect(
+      classifyPullRequestType({
+        sourceBranch: 'deps/upgrade-lodash',
+        title: 'misc',
+        body: null,
+      }),
+    ).toBe('maintenance');
+    expect(
+      classifyPullRequestType({
+        sourceBranch: 'alice/work-item-12',
+        title: 'chore(deps): bump typescript',
+        body: null,
+      }),
+    ).toBe('maintenance');
+    expect(
+      classifyPullRequestType({
+        sourceBranch: 'alice/work-item-12',
+        title: 'build(deps): update eslint',
+        body: null,
+      }),
+    ).toBe('maintenance');
+    expect(
+      classifyPullRequestType({
+        sourceBranch: 'alice/work',
+        title: 'Upgrade dependencies to latest',
+        body: null,
+      }),
+    ).toBe('maintenance');
+  });
 });
 
 describe('computeComplexityIndex', () => {

@@ -26,7 +26,7 @@ type MyPullRequestsTableProps = {
 
 function classificationChipColor(
   type: MyActivityPullRequest['classificationType'],
-): 'primary' | 'warning' | 'info' | 'default' {
+): 'primary' | 'warning' | 'info' | 'secondary' | 'default' {
   if (type === 'feature') {
     return 'primary';
   }
@@ -35,6 +35,9 @@ function classificationChipColor(
   }
   if (type === 'documentation') {
     return 'info';
+  }
+  if (type === 'maintenance') {
+    return 'secondary';
   }
   return 'default';
 }

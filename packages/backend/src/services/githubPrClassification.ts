@@ -1,4 +1,8 @@
-export type PullRequestClassificationType = 'feature' | 'fix' | 'documentation';
+export type PullRequestClassificationType =
+  | 'feature'
+  | 'fix'
+  | 'documentation'
+  | 'maintenance';
 
 export type ClassifyPullRequestTypeInput = {
   sourceBranch: string;
@@ -15,14 +19,52 @@ export type ComplexityMetrics = {
 const PREFIX_TO_TYPE: Array<{ pattern: RegExp; type: PullRequestClassificationType }> = [
   { pattern: /^(docs|doc|documentation)(\b|[/_(:-]|$)/i, type: 'documentation' },
   { pattern: /^(fix|bugfix|bug|hotfix)(\b|[/_(:-]|$)/i, type: 'fix' },
+  {
+    pattern: /^(chore|deps|dependencies|maintenance|bump|upgrade)(\b|[/_(:-]|$)/i,
+    type: 'maintenance',
+  },
   { pattern: /^(feat|feature)(\b|[/_(:-]|$)/i, type: 'feature' },
 ];
 
 const KEYWORD_TO_TYPE: Array<{ pattern: RegExp; type: PullRequestClassificationType }> = [
   { pattern: /\b(docs?|documentation|readme)\b/i, type: 'documentation' },
   { pattern: /\b(fix|bugfixes?|bugs?|hotfixes?|patches?)\b/i, type: 'fix' },
+  {
+    pattern:
+      /\b(maintenance|dependencies|dependency|dependabot|renovate|upgrad(?:e|es|ing)|bump(?:s|ed|ing)?|libraries|libs)\b/i,
+    type: 'maintenance',
+  },
   { pattern: /\b(features?|feats?|enhance(?:ment)?s?)\b/i, type: 'feature' },
 ];
+
+function classificationFromToken(token: string): PullRequestClassificationType | null {
+  const normalized = token.toLowerCase();
+  if (normalized === 'docs' || normalized === 'doc' || normalized === 'documentation') {
+    return 'documentation';
+  }
+  if (
+    normalized === 'fix' ||
+    normalized === 'bugfix' ||
+    normalized === 'bug' ||
+    normalized === 'hotfix'
+  ) {
+    return 'fix';
+  }
+  if (
+    normalized === 'chore' ||
+    normalized === 'deps' ||
+    normalized === 'dependencies' ||
+    normalized === 'maintenance' ||
+    normalized === 'bump' ||
+    normalized === 'upgrade'
+  ) {
+    return 'maintenance';
+  }
+  if (normalized === 'feat' || normalized === 'feature') {
+    return 'feature';
+  }
+  return null;
+}
 
 function matchPrefix(text: string): PullRequestClassificationType | null {
   const trimmed = text.trim();
@@ -32,7 +74,8 @@ function matchPrefix(text: string): PullRequestClassificationType | null {
 
   const firstLine = trimmed.split(/\r?\n/, 1)[0] ?? trimmed;
   const firstSegment = firstLine.split(/[/_-]/, 1)[0]?.trim() ?? '';
-  const candidates = firstSegment && firstSegment !== firstLine ? [firstLine, firstSegment] : [firstLine];
+  const candidates =
+    firstSegment && firstSegment !== firstLine ? [firstLine, firstSegment] : [firstLine];
 
   for (const candidate of candidates) {
     for (const { pattern, type } of PREFIX_TO_TYPE) {
@@ -42,19 +85,17 @@ function matchPrefix(text: string): PullRequestClassificationType | null {
     }
   }
 
-  // Conventional commit with optional scope: feat(api): ...
+  // Conventional commit with optional scope: feat(api): ... / chore(deps): ...
   const conventional = firstLine.match(
-    /^(feat|feature|fix|bugfix|bug|hotfix|docs|doc|documentation)(\([^)]*\))?\s*:/i,
+    /^(feat|feature|fix|bugfix|bug|hotfix|docs|doc|documentation|chore|deps|dependencies|maintenance|bump|upgrade|build)(\([^)]*\))?\s*:/i,
   );
   if (conventional) {
     const token = conventional[1].toLowerCase();
-    if (token === 'docs' || token === 'doc' || token === 'documentation') {
-      return 'documentation';
+    const scope = conventional[2]?.toLowerCase() ?? '';
+    if (token === 'build') {
+      return scope.includes('deps') || scope.includes('dependencies') ? 'maintenance' : null;
     }
-    if (token === 'fix' || token === 'bugfix' || token === 'bug' || token === 'hotfix') {
-      return 'fix';
-    }
-    return 'feature';
+    return classificationFromToken(conventional[1]) ?? 'feature';
   }
 
   return null;

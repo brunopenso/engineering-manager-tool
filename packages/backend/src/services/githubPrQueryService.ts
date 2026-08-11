@@ -63,7 +63,7 @@ export type ImportedPullRequestDto = {
   authorGithubLogin: string;
   mergedAt: string;
   url: string | null;
-  classificationType: 'feature' | 'fix' | 'documentation' | null;
+  classificationType: 'feature' | 'fix' | 'documentation' | 'maintenance' | null;
   complexityIndex: number | null;
   comments: ImportedPullRequestCommentDto[];
   reviews: ImportedPullRequestReviewDto[];

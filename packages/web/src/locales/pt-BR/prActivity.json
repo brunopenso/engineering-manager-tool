@@ -21,7 +21,8 @@
   "classification": {
     "feature": "Funcionalidade",
     "fix": "Correção",
-    "documentation": "Documentação"
+    "documentation": "Documentação",
+    "maintenance": "Manutenção"
   },
   "empty": {
     "title": "Nenhum pull request neste período",

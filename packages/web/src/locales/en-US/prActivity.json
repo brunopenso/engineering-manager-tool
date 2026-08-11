@@ -21,7 +21,8 @@
   "classification": {
     "feature": "Feature",
     "fix": "Fix",
-    "documentation": "Documentation"
+    "documentation": "Documentation",
+    "maintenance": "Maintenance"
   },
   "empty": {
     "title": "No pull requests in this period",
