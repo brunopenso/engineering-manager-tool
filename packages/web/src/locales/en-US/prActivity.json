@@ -1,0 +1,64 @@
+{
+  "title": "My Pull Requests",
+  "subtitle": "Review pull requests you authored or were involved in.",
+  "loading": "Loading pull request activity…",
+  "loadError": "Could not load pull request activity. Please try again.",
+  "noGithub": {
+    "title": "GitHub login required",
+    "body": "Link your GitHub username in Profile to see your pull request activity."
+  },
+  "filters": {
+    "repository": "Repository",
+    "allRepositories": "All repositories",
+    "period": "Period",
+    "search": "Search",
+    "searching": "Searching…"
+  },
+  "empty": {
+    "title": "No pull requests in this period",
+    "body": "Try a different date range or repository filter."
+  },
+  "chart": {
+    "title": "Authored pull requests",
+    "series": "Authored",
+    "empty": "No authored pull requests in this period"
+  },
+  "cards": {
+    "comments": "Comments",
+    "reviews": "Reviews"
+  },
+  "table": {
+    "repository": "Repository",
+    "prDate": "PR date",
+    "role": "Your role",
+    "owner": "Owner",
+    "involved": "Involved",
+    "empty": "No pull requests to display",
+    "titleColumn": "Title"
+  },
+  "modal": {
+    "title": "Pull request details",
+    "close": "Close",
+    "fields": {
+      "title": "Title",
+      "repository": "Repository",
+      "organization": "Organization",
+      "number": "Number",
+      "author": "Author",
+      "mergedAt": "Merged at",
+      "role": "Your role",
+      "branches": "Branches",
+      "changes": "Changes",
+      "body": "Description",
+      "url": "Open on GitHub",
+      "comments": "Comments",
+      "reviews": "Reviews",
+      "noBody": "No description",
+      "noComments": "No comments",
+      "noReviews": "No reviews"
+    }
+  },
+  "pagination": {
+    "rowsPerPage": "Rows per page"
+  }
+}

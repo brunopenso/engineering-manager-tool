@@ -20,6 +20,7 @@ import AuthLocaleSync from './auth/AuthLocaleSync.js';
 import LeaderHierarchyManagementPage from './pages/LeaderHierarchyManagementPage.js';
 import LeaderTeamDeliverablesPage from './pages/LeaderTeamDeliverablesPage.js';
 import LeaderTeamAnalyticsPage from './pages/LeaderTeamAnalyticsPage.js';
+import MyPullRequestsPage from './pages/MyPullRequestsPage.js';
 
 function DefaultRouteRedirect() {
   const { accessToken, user, sessionStatus } = useAuth();
@@ -61,6 +62,7 @@ export default function App() {
             element={<DeliverableFormPage mode="edit" />}
           />
           <Route path="deliverables/view/:userId" element={<DeliverablesViewPage />} />
+          <Route path="my-pull-requests" element={<MyPullRequestsPage />} />
           <Route
             path="leader/team-deliverables"
             element={

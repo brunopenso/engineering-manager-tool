@@ -3,7 +3,9 @@ import { AUTH_ERROR_CODES } from '../auth/types.js';
 import {
   GithubPrQueryValidationError,
   queryImportedPullRequests,
+  queryMyPullRequestActivity,
   validateGithubPullRequestQueryInput,
+  validateMyPullRequestActivityInput,
 } from '../services/githubPrQueryService.js';
 
 function requireAuth(request: FastifyRequest, reply: FastifyReply) {
@@ -50,6 +52,41 @@ export async function registerGithubPullRequestsRoutes(app: FastifyInstance): Pr
       if (error instanceof Error && error.name === AUTH_ERROR_CODES.FORBIDDEN) {
         return forbidden(reply);
       }
+      if (error instanceof GithubPrQueryValidationError) {
+        reply.code(400);
+        return {
+          code: AUTH_ERROR_CODES.VALIDATION_ERROR,
+          message: error.message,
+        };
+      }
+      throw error;
+    }
+  });
+
+  app.post('/github-pull-requests/my-activity', async (request, reply) => {
+    const auth = requireAuth(request, reply);
+    if (!auth) {
+      return {
+        code: AUTH_ERROR_CODES.MISSING_APP_TOKEN,
+        message: 'Application token is required',
+      };
+    }
+
+    let input;
+    try {
+      input = validateMyPullRequestActivityInput(request.body);
+    } catch (error) {
+      reply.code(400);
+      return {
+        code: AUTH_ERROR_CODES.VALIDATION_ERROR,
+        message: error instanceof Error ? error.message : 'Invalid request',
+      };
+    }
+
+    try {
+      const pullRequests = await queryMyPullRequestActivity(auth.userId, input);
+      return { pullRequests };
+    } catch (error) {
       if (error instanceof GithubPrQueryValidationError) {
         reply.code(400);
         return {

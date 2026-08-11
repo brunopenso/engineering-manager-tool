@@ -16,6 +16,7 @@ export const LEADER_TEAM_DELIVERABLES_ROUTE = '/app/leader/team-deliverables';
 export const LEADER_TEAM_ANALYTICS_ROUTE = '/app/leader/team-analytics';
 export const DELIVERABLES_ROUTE = '/app/deliverables';
 export const DELIVERABLES_VIEW_ROUTE = '/app/deliverables/view';
+export const MY_PULL_REQUESTS_ROUTE = '/app/my-pull-requests';
 
 export type ShellMenuOption = {
   id: string;
@@ -50,6 +51,12 @@ const BASE_SHELL_MENU_OPTIONS: ShellMenuOptionDef[] = [
     id: 'deliverables',
     labelKey: 'menu.deliverables',
     route: DELIVERABLES_ROUTE,
+    available: true,
+  },
+  {
+    id: 'my-pull-requests',
+    labelKey: 'menu.myPullRequests',
+    route: MY_PULL_REQUESTS_ROUTE,
     available: true,
   },
 ];
