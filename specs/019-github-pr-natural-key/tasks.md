@@ -17,8 +17,8 @@
 
 **Purpose**: Feature test scaffold and shared fixtures for natural-key work.
 
-- [ ] T001 Create test directory and shared helpers/fixtures in `packages/backend/tests/019-github-pr-natural-key/` (reuse patterns from `packages/backend/tests/018-github-pr-import/github-pr-import.setup.ts` where useful)
-- [ ] T002 [P] Add acceptance scenario stubs under `tests/019-github-pr-natural-key/` aligned with spec US1–US4 (`natural-key.us1.test.md`, `author-identity.us2.test.md`, `collection-control.us3.test.md`, `nested.us4.test.md`)
+- [x] T001 Create test directory and shared helpers/fixtures in `packages/backend/tests/019-github-pr-natural-key/` (reuse patterns from `packages/backend/tests/018-github-pr-import/github-pr-import.setup.ts` where useful)
+- [x] T002 [P] Add acceptance scenario stubs under `tests/019-github-pr-natural-key/` aligned with spec US1–US4 (`natural-key.us1.test.md`, `author-identity.us2.test.md`, `collection-control.us3.test.md`, `nested.us4.test.md`)
 
 ---
 
@@ -28,10 +28,10 @@
 
 **⚠️ CRITICAL**: No user story implementation starts until this phase is complete.
 
-- [ ] T003 Create TypeORM migration `packages/backend/database/migrations/*-GithubPrNaturalKey.ts` that: drops `UQ_github_imported_pull_requests_github_pr_id`; adds unique `(repository_id, github_pull_request_id)`; removes `collaborator_id` FK/column from `github_imported_pull_requests`; rebuilds `github_pr_collection_controls` unique key as `(repository_id, github_pull_request_id)` and removes collaborator/org/date-range identity columns per `specs/019-github-pr-natural-key/data-model.md`
-- [ ] T004 [P] Update entity `GithubImportedPullRequest` in `packages/backend/src/database/entities/GithubImportedPullRequest.ts` (remove `collaboratorId` / User relation; document natural key fields)
-- [ ] T005 [P] Update entity `GithubPrCollectionControl` in `packages/backend/src/database/entities/GithubPrCollectionControl.ts` to key by `repositoryId` + `githubPullRequestId` (drop collaborator/org/date identity fields)
-- [ ] T006 Fix GitHub client search/detail mapping so `repositoryId` and `githubPullRequestId` are distinct and non-blank in `packages/backend/src/services/githubApiClient.ts` (reject incomplete natural keys before persist callers use them)
+- [x] T003 Create TypeORM migration `packages/backend/database/migrations/*-GithubPrNaturalKey.ts` that: drops `UQ_github_imported_pull_requests_github_pr_id`; adds unique `(repository_id, github_pull_request_id)`; removes `collaborator_id` FK/column from `github_imported_pull_requests`; rebuilds `github_pr_collection_controls` unique key as `(repository_id, github_pull_request_id)` and removes collaborator/org/date-range identity columns per `specs/019-github-pr-natural-key/data-model.md`
+- [x] T004 [P] Update entity `GithubImportedPullRequest` in `packages/backend/src/database/entities/GithubImportedPullRequest.ts` (remove `collaboratorId` / User relation; document natural key fields)
+- [x] T005 [P] Update entity `GithubPrCollectionControl` in `packages/backend/src/database/entities/GithubPrCollectionControl.ts` to key by `repositoryId` + `githubPullRequestId` (drop collaborator/org/date identity fields)
+- [x] T006 Fix GitHub client search/detail mapping so `repositoryId` and `githubPullRequestId` are distinct and non-blank in `packages/backend/src/services/githubApiClient.ts` (reject incomplete natural keys before persist callers use them)
 
 **Checkpoint**: Migration applies on empty tables; entities compile; client returns correct ids for natural-key upserts.
 
@@ -45,14 +45,14 @@
 
 ### Tests for User Story 1 (MANDATORY)
 
-- [ ] T007 [P] [US1] Add tests: upsert by `(repositoryId, githubPullRequestId)` and no duplicate on re-import in `packages/backend/tests/019-github-pr-natural-key/natural-key-persist.us1.test.ts`
-- [ ] T008 [P] [US1] Add tests: refuse persist when `repositoryId` or `githubPullRequestId` missing/blank in `packages/backend/tests/019-github-pr-natural-key/natural-key-validation.us1.test.ts`
-- [ ] T009 [P] [US1] Add tests: field refresh on upsert (title/counts update, same natural key) in `packages/backend/tests/019-github-pr-natural-key/natural-key-upsert-refresh.us1.test.ts`
+- [x] T007 [P] [US1] Add tests: upsert by `(repositoryId, githubPullRequestId)` and no duplicate on re-import in `packages/backend/tests/019-github-pr-natural-key/natural-key-persist.us1.test.ts`
+- [x] T008 [P] [US1] Add tests: refuse persist when `repositoryId` or `githubPullRequestId` missing/blank in `packages/backend/tests/019-github-pr-natural-key/natural-key-validation.us1.test.ts`
+- [x] T009 [P] [US1] Add tests: field refresh on upsert (title/counts update, same natural key) in `packages/backend/tests/019-github-pr-natural-key/natural-key-upsert-refresh.us1.test.ts`
 
 ### Implementation for User Story 1
 
-- [ ] T010 [US1] Change PR upsert lookup/save to natural key `(repositoryId, githubPullRequestId)` and stop setting `collaboratorId` in `packages/backend/src/services/githubPrImportService.ts`
-- [ ] T011 [US1] Add pre-persist validation that rejects incomplete natural keys with a clear failure reason in `packages/backend/src/services/githubPrImportService.ts`
+- [x] T010 [US1] Change PR upsert lookup/save to natural key `(repositoryId, githubPullRequestId)` and stop setting `collaboratorId` in `packages/backend/src/services/githubPrImportService.ts`
+- [x] T011 [US1] Add pre-persist validation that rejects incomplete natural keys with a clear failure reason in `packages/backend/src/services/githubPrImportService.ts`
 
 **Checkpoint**: MVP — PR identity is natural-key based; re-import does not duplicate rows.
 
@@ -66,14 +66,14 @@
 
 ### Tests for User Story 2 (MANDATORY)
 
-- [ ] T012 [P] [US2] Add tests: uniqueness not scoped by collaborator; author login stored as attribute in `packages/backend/tests/019-github-pr-natural-key/author-not-identity.us2.test.ts`
-- [ ] T013 [P] [US2] Add retrieve filter tests by author login + date (no `collaborator_id` dependency) in `packages/backend/tests/019-github-pr-natural-key/query-author-filter.us2.test.ts`
-- [ ] T014 [P] [US2] Add DAC allow/deny tests (self, descendant, peer, superior, admin, unauthenticated) in `packages/backend/tests/019-github-pr-natural-key/query-dac.us2.test.ts`
+- [x] T012 [P] [US2] Add tests: uniqueness not scoped by collaborator; author login stored as attribute in `packages/backend/tests/019-github-pr-natural-key/author-not-identity.us2.test.ts`
+- [x] T013 [P] [US2] Add retrieve filter tests by author login + date (no `collaborator_id` dependency) in `packages/backend/tests/019-github-pr-natural-key/query-author-filter.us2.test.ts`
+- [x] T014 [P] [US2] Add DAC allow/deny tests (self, descendant, peer, superior, admin, unauthenticated) in `packages/backend/tests/019-github-pr-natural-key/query-dac.us2.test.ts`
 
 ### Implementation for User Story 2
 
-- [ ] T015 [US2] Update `queryImportedPullRequests` to filter by `author_github_login` (normalized) instead of `collaborator_id` in `packages/backend/src/services/githubPrQueryService.ts` while keeping DAC checks on mapped users
-- [ ] T016 [US2] Adjust any remaining import/query call sites that assume `collaboratorId` on imported PRs (including `packages/backend/tests/018-github-pr-import/` fixtures that break under the new entity) so 019 + existing suites stay coherent
+- [x] T015 [US2] Update `queryImportedPullRequests` to filter by `author_github_login` (normalized) instead of `collaborator_id` in `packages/backend/src/services/githubPrQueryService.ts` while keeping DAC checks on mapped users
+- [x] T016 [US2] Adjust any remaining import/query call sites that assume `collaboratorId` on imported PRs (including `packages/backend/tests/018-github-pr-import/` fixtures that break under the new entity) so 019 + existing suites stay coherent
 
 **Checkpoint**: Retrieve works without PR ownership FK; DAC matrix still enforced.
 
@@ -87,15 +87,15 @@
 
 ### Tests for User Story 3 (MANDATORY)
 
-- [ ] T017 [P] [US3] Add tests: control unique on PR natural key; prior success does not skip refresh in `packages/backend/tests/019-github-pr-natural-key/collection-control-audit.us3.test.ts`
-- [ ] T018 [P] [US3] Add tests: failed control stores `errorDetails` and later hit still attempts refresh in `packages/backend/tests/019-github-pr-natural-key/collection-control-retry.us3.test.ts`
-- [ ] T019 [P] [US3] Add tests: search-level failure without PR key does not invent collaborator-period control rows in `packages/backend/tests/019-github-pr-natural-key/collection-control-search-failure.us3.test.ts`
+- [x] T017 [P] [US3] Add tests: control unique on PR natural key; prior success does not skip refresh in `packages/backend/tests/019-github-pr-natural-key/collection-control-audit.us3.test.ts`
+- [x] T018 [P] [US3] Add tests: failed control stores `errorDetails` and later hit still attempts refresh in `packages/backend/tests/019-github-pr-natural-key/collection-control-retry.us3.test.ts`
+- [x] T019 [P] [US3] Add tests: search-level failure without PR key does not invent collaborator-period control rows in `packages/backend/tests/019-github-pr-natural-key/collection-control-search-failure.us3.test.ts`
 
 ### Implementation for User Story 3
 
-- [ ] T020 [US3] Rewrite collection-control find/upsert APIs to key by `(repositoryId, githubPullRequestId)` and remove `shouldSkipSuccessfulCollection` skip path in `packages/backend/src/services/githubPrCollectionControlService.ts`
-- [ ] T021 [US3] Integrate per-PR always-refresh control updates into the import loop in `packages/backend/src/services/githubPrImportService.ts` (upsert control after each PR hit; search failures → run summary only)
-- [ ] T022 [US3] Update CLI summary in `packages/backend/scripts/github-import-prs.ts` so it no longer treats “already successfully collected period” as skipped; report refresh/import outcomes per `contracts/github-pr-natural-key-import.md`
+- [x] T020 [US3] Rewrite collection-control find/upsert APIs to key by `(repositoryId, githubPullRequestId)` and remove `shouldSkipSuccessfulCollection` skip path in `packages/backend/src/services/githubPrCollectionControlService.ts`
+- [x] T021 [US3] Integrate per-PR always-refresh control updates into the import loop in `packages/backend/src/services/githubPrImportService.ts` (upsert control after each PR hit; search failures → run summary only)
+- [x] T022 [US3] Update CLI summary in `packages/backend/scripts/github-import-prs.ts` so it no longer treats “already successfully collected period” as skipped; report refresh/import outcomes per `contracts/github-pr-natural-key-import.md`
 
 **Checkpoint**: Control is PR-keyed audit; import always refreshes on hit.
 
@@ -109,13 +109,13 @@
 
 ### Tests for User Story 4 (MANDATORY)
 
-- [ ] T023 [P] [US4] Add tests: comments/reviews link to single parent; re-import does not duplicate parent in `packages/backend/tests/019-github-pr-natural-key/nested-attach.us4.test.ts`
-- [ ] T024 [P] [US4] Add retrieve nested payload tests for natural-keyed parent in `packages/backend/tests/019-github-pr-natural-key/query-nested.us4.test.ts`
+- [x] T023 [P] [US4] Add tests: comments/reviews link to single parent; re-import does not duplicate parent in `packages/backend/tests/019-github-pr-natural-key/nested-attach.us4.test.ts`
+- [x] T024 [P] [US4] Add retrieve nested payload tests for natural-keyed parent in `packages/backend/tests/019-github-pr-natural-key/query-nested.us4.test.ts`
 
 ### Implementation for User Story 4
 
-- [ ] T025 [US4] Verify/adjust comment and review upsert attachment in `packages/backend/src/services/githubPrImportService.ts` so nested rows always use the natural-key-resolved parent `id`
-- [ ] T026 [US4] Confirm DTO mapping still returns nested `comments`/`reviews` for the single parent in `packages/backend/src/services/githubPrQueryService.ts`
+- [x] T025 [US4] Verify/adjust comment and review upsert attachment in `packages/backend/src/services/githubPrImportService.ts` so nested rows always use the natural-key-resolved parent `id`
+- [x] T026 [US4] Confirm DTO mapping still returns nested `comments`/`reviews` for the single parent in `packages/backend/src/services/githubPrQueryService.ts`
 
 **Checkpoint**: Nested activity stable under natural-key parent identity.
 
@@ -125,10 +125,10 @@
 
 **Purpose**: Regression hygiene and quickstart validation.
 
-- [ ] T027 [P] Update any broken references in `packages/backend/tests/018-github-pr-import/` that still assume collaborator-owned PRs or period skip control so the full backend suite stays green
-- [ ] T028 [P] Align operator notes in `specs/019-github-pr-natural-key/quickstart.md` with final CLI summary wording if implementation differs
-- [ ] T029 Run `npm run test --workspace @em-tool/backend -- tests/019-github-pr-natural-key` and confirm FR coverage from `specs/019-github-pr-natural-key/spec.md`
-- [ ] T030 Run format/lint for touched backend packages (`npm run format` / `npm run lint` as applicable) before merge
+- [x] T027 [P] Update any broken references in `packages/backend/tests/018-github-pr-import/` that still assume collaborator-owned PRs or period skip control so the full backend suite stays green
+- [x] T028 [P] Align operator notes in `specs/019-github-pr-natural-key/quickstart.md` with final CLI summary wording if implementation differs
+- [x] T029 Run `npm run test --workspace @em-tool/backend -- tests/019-github-pr-natural-key` and confirm FR coverage from `specs/019-github-pr-natural-key/spec.md`
+- [x] T030 Run format/lint for touched backend packages (`npm run format` / `npm run lint` as applicable) before merge
 
 ---
 

@@ -18,7 +18,6 @@ describe('US1 import user filter', () => {
       apiClient,
       listUsersWithGithubLogin: async () => [{ id: 'u2', githubLogin: '   ' }],
       listEnabledOrganizations: async () => ['acme'],
-      findControl: async () => null,
       upsertControl: vi.fn().mockResolvedValue({}),
       upsertPullRequestBundle: vi.fn(),
     };

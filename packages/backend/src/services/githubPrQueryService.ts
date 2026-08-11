@@ -125,13 +125,20 @@ export async function queryImportedPullRequests(
 
   const start = new Date(`${input.startDate}T00:00:00.000Z`);
   const end = new Date(`${input.endDate}T23:59:59.999Z`);
-  const collaboratorIds = matchedUsers.map((user) => user.id);
+  const authorLogins = matchedUsers
+    .map((user) => user.githubLogin)
+    .filter((login): login is string => Boolean(login?.trim()))
+    .map((login) => normalizeGithubLogin(login));
+
+  if (authorLogins.length === 0) {
+    return [];
+  }
 
   const pullRequests = await AppDataSource.getRepository(GithubImportedPullRequest)
     .createQueryBuilder('pr')
     .leftJoinAndSelect('pr.comments', 'comments')
     .leftJoinAndSelect('pr.reviews', 'reviews')
-    .where('pr.collaborator_id IN (:...collaboratorIds)', { collaboratorIds })
+    .where('LOWER(pr.author_github_login) IN (:...authorLogins)', { authorLogins })
     .andWhere('pr.merged_at BETWEEN :start AND :end', { start, end })
     .orderBy('pr.merged_at', 'DESC')
     .getMany();

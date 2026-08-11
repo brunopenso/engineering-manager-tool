@@ -4,8 +4,6 @@ import {
   runGithubPrImport,
   type GithubPrImportDeps,
 } from '../../src/services/githubPrImportService.js';
-import { shouldSkipSuccessfulCollection } from '../../src/services/githubPrCollectionControlService.js';
-import type { GithubPrCollectionControl } from '../../src/database/entities/GithubPrCollectionControl.js';
 import { samplePullRequestDetails } from './github-pr-import.setup.js';
 
 function baseDeps(overrides: Partial<GithubPrImportDeps> = {}): GithubPrImportDeps {
@@ -19,59 +17,53 @@ function baseDeps(overrides: Partial<GithubPrImportDeps> = {}): GithubPrImportDe
     apiClient,
     listUsersWithGithubLogin: async () => [{ id: 'u1', githubLogin: 'alice-dev' }],
     listEnabledOrganizations: async () => ['acme'],
-    findControl: async () => null,
     upsertControl: vi.fn().mockResolvedValue({}),
     upsertPullRequestBundle: vi.fn().mockResolvedValue(undefined),
     ...overrides,
   };
 }
 
-describe('US2 collection control', () => {
-  it('detects successful collections for skip', () => {
-    expect(shouldSkipSuccessfulCollection({ status: 'success' } as GithubPrCollectionControl)).toBe(
-      true,
-    );
-    expect(shouldSkipSuccessfulCollection({ status: 'failed' } as GithubPrCollectionControl)).toBe(
-      false,
-    );
-    expect(shouldSkipSuccessfulCollection(null)).toBe(false);
-  });
-
-  it('skips re-import when prior success exists without importing PRs', async () => {
-    const upsertPullRequestBundle = vi.fn();
+describe('US2 collection control (018 regression under natural key)', () => {
+  it('always refreshes on re-import and audits by PR natural key', async () => {
+    const upsertPullRequestBundle = vi.fn().mockResolvedValue(undefined);
     const upsertControl = vi.fn().mockResolvedValue({});
-    const search = vi.fn();
     const deps = baseDeps({
       apiClient: {
-        searchMergedPullRequests: search,
-        getPullRequest: vi.fn(),
+        searchMergedPullRequests: vi.fn().mockResolvedValue([
+          {
+            organization: 'acme',
+            repository: 'widgets',
+            repositoryId: '500',
+            number: 42,
+            githubPullRequestId: '1001',
+          },
+        ]),
+        getPullRequest: vi.fn().mockResolvedValue(samplePullRequestDetails()),
         listIssueComments: vi.fn().mockResolvedValue([]),
         listReviews: vi.fn().mockResolvedValue([]),
       },
-      findControl: async () =>
-        ({
-          status: 'success',
-          collaboratorId: 'u1',
-          organization: 'acme',
-          startDate: '2026-08-09',
-          endDate: '2026-08-09',
-        }) as GithubPrCollectionControl,
       upsertControl,
       upsertPullRequestBundle,
     });
 
-    const summary = await runGithubPrImport(
+    const first = await runGithubPrImport({ startDate: '2026-08-09', endDate: '2026-08-09' }, deps);
+    const second = await runGithubPrImport(
       { startDate: '2026-08-09', endDate: '2026-08-09' },
       deps,
     );
 
-    expect(summary.skipped).toBe(1);
-    expect(search).not.toHaveBeenCalled();
-    expect(upsertPullRequestBundle).not.toHaveBeenCalled();
-    expect(upsertControl).not.toHaveBeenCalled();
+    expect(first.pullRequestsImported).toBe(1);
+    expect(second.pullRequestsImported).toBe(1);
+    expect(second.skipped).toBe(0);
+    expect(upsertPullRequestBundle).toHaveBeenCalledTimes(2);
+    expect(upsertControl).toHaveBeenCalledWith(
+      { repositoryId: '500', githubPullRequestId: '1001' },
+      'success',
+      null,
+    );
   });
 
-  it('records failed control with sanitized error and allows later success', async () => {
+  it('records search failures in the run summary without control rows', async () => {
     const upsertControl = vi.fn().mockResolvedValue({});
     const failingDeps = baseDeps({
       apiClient: {
@@ -90,47 +82,11 @@ describe('US2 collection control', () => {
       failingDeps,
     );
     expect(failed.failed).toBe(1);
-    expect(upsertControl).toHaveBeenCalledWith(
-      expect.any(Object),
-      'failed',
-      expect.stringContaining('[redacted]'),
-    );
-
-    const upsertPullRequestBundle = vi.fn().mockResolvedValue(undefined);
-    const retryDeps = baseDeps({
-      apiClient: {
-        searchMergedPullRequests: vi.fn().mockResolvedValue([
-          {
-            organization: 'acme',
-            repository: 'widgets',
-            repositoryId: '500',
-            number: 42,
-            githubPullRequestId: '1001',
-          },
-        ]),
-        getPullRequest: vi.fn().mockResolvedValue(samplePullRequestDetails()),
-        listIssueComments: vi.fn().mockResolvedValue([]),
-        listReviews: vi.fn().mockResolvedValue([]),
-      },
-      findControl: async () =>
-        ({
-          status: 'failed',
-          errorDetails: 'previous',
-        }) as GithubPrCollectionControl,
-      upsertControl: vi.fn().mockResolvedValue({}),
-      upsertPullRequestBundle,
-    });
-
-    const retry = await runGithubPrImport(
-      { startDate: '2026-08-09', endDate: '2026-08-09' },
-      retryDeps,
-    );
-    expect(retry.succeeded).toBe(1);
-    expect(retry.pullRequestsImported).toBe(1);
-    expect(upsertPullRequestBundle).toHaveBeenCalledTimes(1);
+    expect(failed.failures[0].error).toContain('[redacted]');
+    expect(upsertControl).not.toHaveBeenCalled();
   });
 
-  it('records success for empty collections', async () => {
+  it('records success for empty collections without control upsert', async () => {
     const upsertControl = vi.fn().mockResolvedValue({});
     const summary = await runGithubPrImport(
       { startDate: '2026-08-09', endDate: '2026-08-09' },
@@ -138,6 +94,6 @@ describe('US2 collection control', () => {
     );
     expect(summary.succeeded).toBe(1);
     expect(summary.pullRequestsImported).toBe(0);
-    expect(upsertControl).toHaveBeenCalledWith(expect.any(Object), 'success', null);
+    expect(upsertControl).not.toHaveBeenCalled();
   });
 });

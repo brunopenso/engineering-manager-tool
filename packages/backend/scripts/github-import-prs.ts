@@ -70,7 +70,6 @@ async function main(): Promise<void> {
           range,
           processed: summary.processed,
           succeeded: summary.succeeded,
-          skipped: summary.skipped,
           failed: summary.failed,
           pullRequestsImported: summary.pullRequestsImported,
           failures: summary.failures,

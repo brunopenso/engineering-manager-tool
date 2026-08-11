@@ -3,24 +3,19 @@ import { GithubPrCollectionControl } from '../database/entities/GithubPrCollecti
 import type { GithubPrCollectionStatus } from '../database/entities/GithubPrCollectionControl.js';
 
 export type CollectionControlKey = {
-  collaboratorId: string;
-  githubLogin: string;
-  organization: string;
-  startDate: string;
-  endDate: string;
+  repositoryId: string;
+  githubPullRequestId: string;
 };
 
 const controlRepository = () => AppDataSource.getRepository(GithubPrCollectionControl);
 
 export async function findCollectionControl(
-  key: Omit<CollectionControlKey, 'githubLogin'>,
+  key: CollectionControlKey,
 ): Promise<GithubPrCollectionControl | null> {
   return controlRepository().findOne({
     where: {
-      collaboratorId: key.collaboratorId,
-      organization: key.organization,
-      startDate: key.startDate,
-      endDate: key.endDate,
+      repositoryId: key.repositoryId,
+      githubPullRequestId: key.githubPullRequestId,
     },
   });
 }
@@ -33,7 +28,6 @@ export async function upsertCollectionControl(
 ): Promise<GithubPrCollectionControl> {
   const existing = await findCollectionControl(key);
   if (existing) {
-    existing.githubLogin = key.githubLogin;
     existing.status = status;
     existing.executedAt = executedAt;
     existing.errorDetails = errorDetails;
@@ -41,18 +35,11 @@ export async function upsertCollectionControl(
   }
 
   const row = controlRepository().create({
-    collaboratorId: key.collaboratorId,
-    githubLogin: key.githubLogin,
-    organization: key.organization,
-    startDate: key.startDate,
-    endDate: key.endDate,
+    repositoryId: key.repositoryId,
+    githubPullRequestId: key.githubPullRequestId,
     status,
     executedAt,
     errorDetails,
   });
   return controlRepository().save(row);
-}
-
-export function shouldSkipSuccessfulCollection(control: GithubPrCollectionControl | null): boolean {
-  return control?.status === 'success';
 }

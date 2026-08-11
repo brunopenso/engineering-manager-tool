@@ -27,7 +27,6 @@ describe('US1 import user and org filters', () => {
         { id: 'u2', githubLogin: null },
       ],
       listEnabledOrganizations: async () => ['acme'],
-      findControl: async () => null,
       upsertControl: vi.fn().mockResolvedValue({}),
       upsertPullRequestBundle,
     };
@@ -103,7 +102,6 @@ describe('US1 import selection and persistence', () => {
       apiClient,
       listUsersWithGithubLogin: async () => [{ id: 'u1', githubLogin: 'alice-dev' }],
       listEnabledOrganizations: async () => ['acme'],
-      findControl: async () => null,
       upsertControl: vi.fn().mockResolvedValue({}),
       upsertPullRequestBundle,
     };
@@ -115,8 +113,8 @@ describe('US1 import selection and persistence', () => {
 
     expect(summary.pullRequestsImported).toBe(1);
     expect(upsertPullRequestBundle).toHaveBeenCalledTimes(1);
-    expect(upsertPullRequestBundle.mock.calls[0][1].githubPullRequestId).toBe('1001');
+    expect(upsertPullRequestBundle.mock.calls[0][0].githubPullRequestId).toBe('1001');
+    expect(upsertPullRequestBundle.mock.calls[0][1]).toHaveLength(1);
     expect(upsertPullRequestBundle.mock.calls[0][2]).toHaveLength(1);
-    expect(upsertPullRequestBundle.mock.calls[0][3]).toHaveLength(1);
   });
 });

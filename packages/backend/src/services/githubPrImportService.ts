@@ -10,11 +10,7 @@ import {
   type GithubApiClient,
   type GithubPullRequestDetails,
 } from './githubApiClient.js';
-import {
-  findCollectionControl,
-  shouldSkipSuccessfulCollection,
-  upsertCollectionControl,
-} from './githubPrCollectionControlService.js';
+import { upsertCollectionControl } from './githubPrCollectionControlService.js';
 import { githubLoginsMatch, type ImportDateRange } from './githubPrImportDateRange.js';
 
 export type ImportRunSummary = {
@@ -26,14 +22,29 @@ export type ImportRunSummary = {
   failures: Array<{ collaboratorId: string; organization: string; error: string }>;
 };
 
+export class GithubPrNaturalKeyError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = 'GithubPrNaturalKeyError';
+  }
+}
+
+export function assertPullRequestNaturalKey(
+  details: Pick<GithubPullRequestDetails, 'repositoryId' | 'githubPullRequestId'>,
+): void {
+  if (!details.repositoryId?.trim() || !details.githubPullRequestId?.trim()) {
+    throw new GithubPrNaturalKeyError(
+      'Pull request natural key requires non-blank repositoryId and githubPullRequestId',
+    );
+  }
+}
+
 export type GithubPrImportDeps = {
   apiClient: GithubApiClient;
   listUsersWithGithubLogin: () => Promise<Array<Pick<User, 'id' | 'githubLogin'>>>;
   listEnabledOrganizations: () => Promise<string[]>;
-  findControl: typeof findCollectionControl;
   upsertControl: typeof upsertCollectionControl;
   upsertPullRequestBundle: (
-    collaboratorId: string,
     details: GithubPullRequestDetails,
     comments: Awaited<ReturnType<GithubApiClient['listIssueComments']>>,
     reviews: Awaited<ReturnType<GithubApiClient['listReviews']>>,
@@ -60,26 +71,33 @@ async function defaultListEnabledOrganizations(): Promise<string[]> {
 }
 
 async function defaultUpsertPullRequestBundle(
-  collaboratorId: string,
   details: GithubPullRequestDetails,
   comments: Awaited<ReturnType<GithubApiClient['listIssueComments']>>,
   reviews: Awaited<ReturnType<GithubApiClient['listReviews']>>,
 ): Promise<void> {
+  assertPullRequestNaturalKey(details);
+
   const prRepo = AppDataSource.getRepository(GithubImportedPullRequest);
   const commentRepo = AppDataSource.getRepository(GithubPullRequestComment);
   const reviewRepo = AppDataSource.getRepository(GithubPullRequestReview);
 
-  let pr = await prRepo.findOne({ where: { githubPullRequestId: details.githubPullRequestId } });
+  let pr = await prRepo.findOne({
+    where: {
+      repositoryId: details.repositoryId,
+      githubPullRequestId: details.githubPullRequestId,
+    },
+  });
   if (!pr) {
     pr = prRepo.create({
       githubPullRequestId: details.githubPullRequestId,
-      collaboratorId,
+      repositoryId: details.repositoryId,
     });
   }
 
   pr.organization = details.organization;
   pr.repository = details.repository;
   pr.repositoryId = details.repositoryId;
+  pr.githubPullRequestId = details.githubPullRequestId;
   pr.title = details.title;
   pr.body = details.body;
   pr.number = details.number;
@@ -91,7 +109,6 @@ async function defaultUpsertPullRequestBundle(
   pr.authorGithubLogin = details.authorGithubLogin;
   pr.mergedAt = details.mergedAt;
   pr.url = details.url;
-  pr.collaboratorId = collaboratorId;
   pr = await prRepo.save(pr);
 
   for (const comment of comments) {
@@ -131,7 +148,6 @@ export function createDefaultGithubPrImportDeps(
     apiClient,
     listUsersWithGithubLogin: defaultListUsersWithGithubLogin,
     listEnabledOrganizations: defaultListEnabledOrganizations,
-    findControl: findCollectionControl,
     upsertControl: upsertCollectionControl,
     upsertPullRequestBundle: defaultUpsertPullRequestBundle,
   };
@@ -170,25 +186,6 @@ export async function runGithubPrImport(
 
     for (const organization of organizations) {
       summary.processed += 1;
-      const key = {
-        collaboratorId: user.id,
-        githubLogin,
-        organization,
-        startDate: range.startDate,
-        endDate: range.endDate,
-      };
-
-      const existing = await deps.findControl({
-        collaboratorId: user.id,
-        organization,
-        startDate: range.startDate,
-        endDate: range.endDate,
-      });
-
-      if (shouldSkipSuccessfulCollection(existing)) {
-        summary.skipped += 1;
-        continue;
-      }
 
       try {
         const hits = await deps.apiClient.searchMergedPullRequests({
@@ -199,41 +196,66 @@ export async function runGithubPrImport(
         });
 
         for (const hit of hits) {
-          const details = await deps.apiClient.getPullRequest(
-            hit.organization,
-            hit.repository,
-            hit.number,
-          );
+          let details: GithubPullRequestDetails | null = null;
+          try {
+            details = await deps.apiClient.getPullRequest(
+              hit.organization,
+              hit.repository,
+              hit.number,
+            );
 
-          if (!githubLoginsMatch(details.authorGithubLogin, githubLogin)) {
-            continue;
-          }
-          if (details.organization.toLowerCase() !== organization.toLowerCase()) {
-            continue;
-          }
-          if (!mergedAtWithinInclusiveUtcRange(details.mergedAt, range)) {
-            continue;
-          }
+            if (!githubLoginsMatch(details.authorGithubLogin, githubLogin)) {
+              continue;
+            }
+            if (details.organization.toLowerCase() !== organization.toLowerCase()) {
+              continue;
+            }
+            if (!mergedAtWithinInclusiveUtcRange(details.mergedAt, range)) {
+              continue;
+            }
 
-          const comments = await deps.apiClient.listIssueComments(
-            hit.organization,
-            hit.repository,
-            hit.number,
-          );
-          const reviews = await deps.apiClient.listReviews(
-            hit.organization,
-            hit.repository,
-            hit.number,
-          );
-          await deps.upsertPullRequestBundle(user.id, details, comments, reviews);
-          summary.pullRequestsImported += 1;
+            assertPullRequestNaturalKey(details);
+
+            const comments = await deps.apiClient.listIssueComments(
+              hit.organization,
+              hit.repository,
+              hit.number,
+            );
+            const reviews = await deps.apiClient.listReviews(
+              hit.organization,
+              hit.repository,
+              hit.number,
+            );
+            await deps.upsertPullRequestBundle(details, comments, reviews);
+            await deps.upsertControl(
+              {
+                repositoryId: details.repositoryId,
+                githubPullRequestId: details.githubPullRequestId,
+              },
+              'success',
+              null,
+            );
+            summary.pullRequestsImported += 1;
+          } catch (error) {
+            const message = sanitizeErrorMessage(error);
+            const repositoryId = details?.repositoryId?.trim() || hit.repositoryId?.trim();
+            const githubPullRequestId =
+              details?.githubPullRequestId?.trim() || hit.githubPullRequestId?.trim();
+            if (repositoryId && githubPullRequestId) {
+              await deps.upsertControl({ repositoryId, githubPullRequestId }, 'failed', message);
+            }
+            summary.failed += 1;
+            summary.failures.push({
+              collaboratorId: user.id,
+              organization,
+              error: message,
+            });
+          }
         }
 
-        await deps.upsertControl(key, 'success', null);
         summary.succeeded += 1;
       } catch (error) {
         const message = sanitizeErrorMessage(error);
-        await deps.upsertControl(key, 'failed', message);
         summary.failed += 1;
         summary.failures.push({
           collaboratorId: user.id,

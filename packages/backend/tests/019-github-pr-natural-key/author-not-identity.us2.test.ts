@@ -4,12 +4,12 @@ import {
   runGithubPrImport,
   type GithubPrImportDeps,
 } from '../../src/services/githubPrImportService.js';
-import { samplePullRequestDetails } from './github-pr-import.setup.js';
+import { samplePullRequestDetails } from '../018-github-pr-import/github-pr-import.setup.js';
 
-describe('US1 import persist fields', () => {
-  it('passes required PR fields through to the persistence adapter', async () => {
-    const details = samplePullRequestDetails();
+describe('US2 author is not identity', () => {
+  it('keeps a single natural-key upsert regardless of discovering collaborator context', async () => {
     const upsertPullRequestBundle = vi.fn().mockResolvedValue(undefined);
+    const details = samplePullRequestDetails({ authorGithubLogin: 'alice-dev' });
     const apiClient: GithubApiClient = {
       searchMergedPullRequests: vi.fn().mockResolvedValue([
         {
@@ -26,7 +26,10 @@ describe('US1 import persist fields', () => {
     };
     const deps: GithubPrImportDeps = {
       apiClient,
-      listUsersWithGithubLogin: async () => [{ id: 'u1', githubLogin: 'alice-dev' }],
+      listUsersWithGithubLogin: async () => [
+        { id: 'u1', githubLogin: 'alice-dev' },
+        { id: 'u2', githubLogin: 'alice-dev' },
+      ],
       listEnabledOrganizations: async () => ['acme'],
       upsertControl: vi.fn().mockResolvedValue({}),
       upsertPullRequestBundle,
@@ -34,24 +37,15 @@ describe('US1 import persist fields', () => {
 
     await runGithubPrImport({ startDate: '2026-08-09', endDate: '2026-08-09' }, deps);
 
-    expect(upsertPullRequestBundle).toHaveBeenCalledWith(
-      expect.objectContaining({
-        githubPullRequestId: '1001',
-        organization: 'acme',
-        repository: 'widgets',
-        repositoryId: '500',
-        title: 'Fix widgets',
-        number: 42,
-        changedFilesCount: 3,
-        additionsCount: 10,
-        deletionsCount: 2,
-        sourceBranch: 'feature/fix',
-        targetBranch: 'main',
-        authorGithubLogin: 'alice-dev',
-        url: 'https://github.com/acme/widgets/pull/42',
-      }),
-      [],
-      [],
-    );
+    for (const call of upsertPullRequestBundle.mock.calls) {
+      expect(call[0]).toEqual(
+        expect.objectContaining({
+          repositoryId: '500',
+          githubPullRequestId: '1001',
+          authorGithubLogin: 'alice-dev',
+        }),
+      );
+      expect(call).toHaveLength(3);
+    }
   });
 });
