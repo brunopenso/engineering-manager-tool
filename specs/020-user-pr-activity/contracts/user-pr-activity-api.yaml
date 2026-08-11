@@ -1,0 +1,226 @@
+openapi: 3.0.3
+info:
+  title: Engineering Manager Tool — User Pull Request Activity API
+  version: 0.1.0
+  description: >
+    Authenticated, self-only retrieval of imported GitHub pull requests where the
+    caller is the author or was involved via comment or review within a merged-date
+    range. Powers the My Pull Requests screen (filters, chart, cards, table, modal).
+servers:
+  - url: http://localhost:3001
+paths:
+  /github-pull-requests/my-activity:
+    post:
+      summary: Query the authenticated user's imported PR activity by date range
+      tags: [GitHub Pull Requests]
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MyPullRequestActivityRequest'
+      responses:
+        '200':
+          description: >
+            Pull requests in range where the caller is owner or involved.
+            Empty array when the caller has no GitHub login or no matching imports.
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [pullRequests]
+                properties:
+                  pullRequests:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/MyActivityPullRequest'
+        '400':
+          description: Invalid request (bad dates, end before start)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Missing or invalid application token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    MyPullRequestActivityRequest:
+      type: object
+      required: [startDate, endDate]
+      properties:
+        startDate:
+          type: string
+          format: date
+          description: Inclusive UTC start calendar day for mergedAt filter
+          example: '2026-06-13'
+        endDate:
+          type: string
+          format: date
+          description: Inclusive UTC end calendar day for mergedAt filter
+          example: '2026-08-11'
+      additionalProperties: false
+
+    MyActivityPullRequest:
+      allOf:
+        - $ref: '#/components/schemas/ImportedPullRequest'
+        - type: object
+          required: [involvementRole]
+          properties:
+            involvementRole:
+              type: string
+              enum: [owner, involved]
+              description: >
+                owner when the authenticated user's GitHub login matches
+                authorGithubLogin; otherwise involved (comment and/or review).
+
+    ImportedPullRequest:
+      type: object
+      required:
+        - id
+        - githubPullRequestId
+        - organization
+        - repository
+        - repositoryId
+        - title
+        - number
+        - changedFilesCount
+        - additionsCount
+        - deletionsCount
+        - sourceBranch
+        - targetBranch
+        - authorGithubLogin
+        - mergedAt
+        - comments
+        - reviews
+      properties:
+        id:
+          type: string
+          format: uuid
+        githubPullRequestId:
+          type: string
+        organization:
+          type: string
+        repository:
+          type: string
+        repositoryId:
+          type: string
+        title:
+          type: string
+        body:
+          type: string
+          nullable: true
+        number:
+          type: integer
+        changedFilesCount:
+          type: integer
+        additionsCount:
+          type: integer
+        deletionsCount:
+          type: integer
+        sourceBranch:
+          type: string
+        targetBranch:
+          type: string
+        authorGithubLogin:
+          type: string
+        mergedAt:
+          type: string
+          format: date-time
+        url:
+          type: string
+          format: uri
+          nullable: true
+        comments:
+          type: array
+          items:
+            $ref: '#/components/schemas/ImportedPullRequestComment'
+        reviews:
+          type: array
+          items:
+            $ref: '#/components/schemas/ImportedPullRequestReview'
+
+    ImportedPullRequestComment:
+      type: object
+      required:
+        - id
+        - githubCommentId
+        - authorGithubLogin
+        - body
+        - createdAt
+        - updatedAt
+      properties:
+        id:
+          type: string
+          format: uuid
+        githubCommentId:
+          type: string
+        authorGithubLogin:
+          type: string
+        body:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        url:
+          type: string
+          format: uri
+          nullable: true
+
+    ImportedPullRequestReview:
+      type: object
+      required:
+        - id
+        - githubReviewId
+        - reviewerGithubLogin
+        - state
+        - createdAt
+      properties:
+        id:
+          type: string
+          format: uuid
+        githubReviewId:
+          type: string
+        reviewerGithubLogin:
+          type: string
+        body:
+          type: string
+          nullable: true
+        state:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+          nullable: true
+        url:
+          type: string
+          format: uri
+          nullable: true
+
+    ErrorResponse:
+      type: object
+      required: [message]
+      properties:
+        message:
+          type: string
+        code:
+          type: string
+          nullable: true
