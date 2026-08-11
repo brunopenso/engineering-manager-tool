@@ -36,8 +36,10 @@ describe('query endpoint is read-only for collection control', () => {
     expect(response.statusCode).toBe(200);
     expect(vi.mocked(queryService.queryImportedPullRequests)).toHaveBeenCalled();
     // Route registration only includes query; no collection-control write endpoints.
+    // Fastify printRoutes() emits a tree (e.g. "github-pull-requests/" then "query (POST)").
     const routes = app.printRoutes();
-    expect(routes).toContain('github-pull-requests/query');
+    expect(routes).toContain('github-pull-requests/');
+    expect(routes).toMatch(/query\s*\(POST\)/);
     expect(routes).not.toContain('collection-control');
     await app.close();
   });
