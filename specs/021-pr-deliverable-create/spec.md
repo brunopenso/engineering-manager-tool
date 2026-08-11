@@ -130,13 +130,13 @@ _All functional requirements MUST be covered by automated tests. Define the test
 
 ### Access Control Matrix _(required when data visibility is in scope)_
 
-| Actor                          | Allowed Data Visibility / Actions                                      | Explicitly Denied Visibility / Actions                         | Validation Notes                                      |
-| ------------------------------ | ---------------------------------------------------------------------- | -------------------------------------------------------------- | ----------------------------------------------------- |
-| Individual collaborator (self) | Select own PR activity; run analysis; create own deliverable; open it  | Other users' PRs as analysis input; create for others          | Self-only selection + owner create tests             |
-| Peer                           | Own PR flow only                                                       | Another peer's PRs or deliverables via this flow               | Cross-user PR ID rejection                            |
-| Superior                       | Own PR flow only (this feature)                                        | Subordinate PRs as input to this personal create flow          | Leaders use other features for team coaching views    |
-| Subordinate                    | Own PR flow only                                                       | Superior PR activity                                           | Upward access denied                                  |
-| Unauthenticated user           | None                                                                   | Analysis, create, navigation into protected deliverable screens | Route/API denial                                      |
+| Actor                          | Allowed Data Visibility / Actions                                     | Explicitly Denied Visibility / Actions                          | Validation Notes                                   |
+| ------------------------------ | --------------------------------------------------------------------- | --------------------------------------------------------------- | -------------------------------------------------- |
+| Individual collaborator (self) | Select own PR activity; run analysis; create own deliverable; open it | Other users' PRs as analysis input; create for others           | Self-only selection + owner create tests           |
+| Peer                           | Own PR flow only                                                      | Another peer's PRs or deliverables via this flow                | Cross-user PR ID rejection                         |
+| Superior                       | Own PR flow only (this feature)                                       | Subordinate PRs as input to this personal create flow           | Leaders use other features for team coaching views |
+| Subordinate                    | Own PR flow only                                                      | Superior PR activity                                            | Upward access denied                               |
+| Unauthenticated user           | None                                                                  | Analysis, create, navigation into protected deliverable screens | Route/API denial                                   |
 
 ### Key Entities
 
