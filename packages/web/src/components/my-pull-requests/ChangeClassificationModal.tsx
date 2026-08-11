@@ -130,7 +130,9 @@ export default function ChangeClassificationModal({
             <CircularProgress size={28} aria-label={t('reclassify.loadingOptions')} />
           ) : (
             <FormControl fullWidth disabled={isSaving || types.length === 0}>
-              <InputLabel id="reclassify-type-label">{t('reclassify.classificationLabel')}</InputLabel>
+              <InputLabel id="reclassify-type-label">
+                {t('reclassify.classificationLabel')}
+              </InputLabel>
               <Select
                 labelId="reclassify-type-label"
                 label={t('reclassify.classificationLabel')}

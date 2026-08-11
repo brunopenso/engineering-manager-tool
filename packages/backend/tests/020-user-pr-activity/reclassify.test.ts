@@ -13,10 +13,9 @@ import { GithubPrQueryValidationError } from '../../src/services/githubPrQuerySe
 import { SELF_AUTH } from '../018-github-pr-import/github-pr-import.setup.js';
 
 vi.mock('../../src/services/githubPrReclassifyService.js', async () => {
-  const actual =
-    await vi.importActual<typeof import('../../src/services/githubPrReclassifyService.js')>(
-      '../../src/services/githubPrReclassifyService.js',
-    );
+  const actual = await vi.importActual<
+    typeof import('../../src/services/githubPrReclassifyService.js')
+  >('../../src/services/githubPrReclassifyService.js');
   return {
     ...actual,
     reclassifyPullRequests: vi.fn(),
@@ -105,12 +104,7 @@ describe('validateReclassifyPullRequestsInput', () => {
 
 describe('listClassificationTypes', () => {
   it('returns the fixed classification allowlist', () => {
-    expect(listClassificationTypes()).toEqual([
-      'feature',
-      'fix',
-      'documentation',
-      'maintenance',
-    ]);
+    expect(listClassificationTypes()).toEqual(['feature', 'fix', 'documentation', 'maintenance']);
   });
 });
 
@@ -134,12 +128,7 @@ describe('reclassify API routes', () => {
       url: '/github-pull-requests/classification-types',
     });
     expect(response.statusCode).toBe(200);
-    expect(response.json().types).toEqual([
-      'feature',
-      'fix',
-      'documentation',
-      'maintenance',
-    ]);
+    expect(response.json().types).toEqual(['feature', 'fix', 'documentation', 'maintenance']);
     await app.close();
   });
 
@@ -179,10 +168,9 @@ describe('reclassifyPullRequests service involvement', () => {
   });
 
   it('rejects when actor is not involved in a PR', async () => {
-    const actual =
-      await vi.importActual<typeof import('../../src/services/githubPrReclassifyService.js')>(
-        '../../src/services/githubPrReclassifyService.js',
-      );
+    const actual = await vi.importActual<
+      typeof import('../../src/services/githubPrReclassifyService.js')
+    >('../../src/services/githubPrReclassifyService.js');
 
     vi.spyOn(AppDataSource, 'getRepository').mockImplementation((entity) => {
       const name = typeof entity === 'function' ? entity.name : String(entity);
