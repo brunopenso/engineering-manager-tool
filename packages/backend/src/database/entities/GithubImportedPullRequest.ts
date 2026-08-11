@@ -2,17 +2,16 @@ import {
   Column,
   CreateDateColumn,
   Entity,
-  JoinColumn,
-  ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
+  Unique,
   UpdateDateColumn,
 } from 'typeorm';
-import { User } from './User.js';
 import { GithubPullRequestComment } from './GithubPullRequestComment.js';
 import { GithubPullRequestReview } from './GithubPullRequestReview.js';
 
 @Entity({ name: 'github_imported_pull_requests' })
+@Unique('UQ_github_imported_pull_requests_repo_pr', ['repositoryId', 'githubPullRequestId'])
 export class GithubImportedPullRequest {
   @PrimaryGeneratedColumn('uuid')
   id!: string;
@@ -61,13 +60,6 @@ export class GithubImportedPullRequest {
 
   @Column({ type: 'varchar', length: 1000, nullable: true })
   url!: string | null;
-
-  @Column({ type: 'uuid', name: 'collaborator_id' })
-  collaboratorId!: string;
-
-  @ManyToOne(() => User, { onDelete: 'CASCADE' })
-  @JoinColumn({ name: 'collaborator_id' })
-  collaborator!: User;
 
   @OneToMany(() => GithubPullRequestComment, (comment) => comment.pullRequest)
   comments!: GithubPullRequestComment[];

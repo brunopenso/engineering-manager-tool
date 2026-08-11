@@ -2,38 +2,24 @@ import {
   Column,
   CreateDateColumn,
   Entity,
-  JoinColumn,
-  ManyToOne,
   PrimaryGeneratedColumn,
+  Unique,
   UpdateDateColumn,
 } from 'typeorm';
-import { User } from './User.js';
 
 export type GithubPrCollectionStatus = 'success' | 'failed' | 'skipped';
 
 @Entity({ name: 'github_pr_collection_controls' })
+@Unique('UQ_github_pr_collection_controls_repo_pr', ['repositoryId', 'githubPullRequestId'])
 export class GithubPrCollectionControl {
   @PrimaryGeneratedColumn('uuid')
   id!: string;
 
-  @Column({ type: 'uuid', name: 'collaborator_id' })
-  collaboratorId!: string;
+  @Column({ type: 'varchar', length: 64, name: 'repository_id' })
+  repositoryId!: string;
 
-  @ManyToOne(() => User, { onDelete: 'CASCADE' })
-  @JoinColumn({ name: 'collaborator_id' })
-  collaborator!: User;
-
-  @Column({ type: 'varchar', length: 39, name: 'github_login' })
-  githubLogin!: string;
-
-  @Column({ type: 'varchar', length: 39 })
-  organization!: string;
-
-  @Column({ type: 'date', name: 'start_date' })
-  startDate!: string;
-
-  @Column({ type: 'date', name: 'end_date' })
-  endDate!: string;
+  @Column({ type: 'varchar', length: 64, name: 'github_pull_request_id' })
+  githubPullRequestId!: string;
 
   @Column({ type: 'varchar', length: 32 })
   status!: GithubPrCollectionStatus;

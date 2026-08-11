@@ -1,0 +1,173 @@
+openapi: 3.0.3
+info:
+  title: Engineering Manager Tool GitHub PR Natural Key (API delta)
+  version: 0.1.0
+  description: >
+    Delta contract for feature 019. The retrieve endpoint path, auth, request body,
+    and response shape remain those of 018 (`POST /github-pull-requests/query`).
+    This document records identity and filtering semantics that change with
+    natural-key persistence. Full field schemas: see
+    specs/018-github-pr-import/contracts/github-pr-import-api.yaml.
+servers:
+  - url: http://localhost:3001
+paths:
+  /github-pull-requests/query:
+    post:
+      summary: Query imported pull requests by GitHub logins and date filter
+      description: >
+        Behavior unchanged at the HTTP boundary: authenticated POST with
+        `githubLogins`, `startDate`, `endDate`. Matching is by imported PR
+        `authorGithubLogin` (case-insensitive) and inclusive UTC `mergedAt` day
+        range — not by a stored collaborator ownership FK. Each matching PR
+        appears at most once per natural key `(repositoryId, githubPullRequestId)`.
+        Hierarchical DAC still applies to the product users mapped from requested
+        logins (self + recursive subordinates; admin may query any mapped
+        collaborator; peers/superiors denied).
+      tags: [GitHub Pull Requests]
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GithubPullRequestQueryRequest'
+      responses:
+        '200':
+          description: Matching imported pull requests (may be empty)
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [pullRequests]
+                properties:
+                  pullRequests:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ImportedPullRequest'
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Missing or invalid application token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Caller not allowed for one or more requested GitHub logins
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    GithubPullRequestQueryRequest:
+      type: object
+      required: [githubLogins, startDate, endDate]
+      properties:
+        githubLogins:
+          type: array
+          minItems: 1
+          items:
+            type: string
+            minLength: 1
+            maxLength: 39
+        startDate:
+          type: string
+          format: date
+        endDate:
+          type: string
+          format: date
+
+    ImportedPullRequest:
+      type: object
+      description: >
+        Natural key for persistence is `(repositoryId, githubPullRequestId)`.
+        Response does not include collaborator ownership id.
+      required:
+        - id
+        - githubPullRequestId
+        - organization
+        - repository
+        - repositoryId
+        - title
+        - number
+        - changedFilesCount
+        - additionsCount
+        - deletionsCount
+        - sourceBranch
+        - targetBranch
+        - authorGithubLogin
+        - mergedAt
+        - comments
+        - reviews
+      properties:
+        id:
+          type: string
+          format: uuid
+        githubPullRequestId:
+          type: string
+          description: GitHub pull request id (natural key component)
+        organization:
+          type: string
+        repository:
+          type: string
+        repositoryId:
+          type: string
+          description: GitHub repository id (natural key component)
+        title:
+          type: string
+        body:
+          type: string
+          nullable: true
+        number:
+          type: integer
+        changedFilesCount:
+          type: integer
+        additionsCount:
+          type: integer
+        deletionsCount:
+          type: integer
+        sourceBranch:
+          type: string
+        targetBranch:
+          type: string
+        authorGithubLogin:
+          type: string
+        mergedAt:
+          type: string
+          format: date-time
+        url:
+          type: string
+          format: uri
+          nullable: true
+        comments:
+          type: array
+          items:
+            type: object
+            additionalProperties: true
+        reviews:
+          type: array
+          items:
+            type: object
+            additionalProperties: true
+
+    ErrorResponse:
+      type: object
+      required: [code, message]
+      properties:
+        code:
+          type: string
+        message:
+          type: string

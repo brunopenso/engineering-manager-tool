@@ -175,10 +175,12 @@ function buildGithubApiClient(getOctokit: (organization: string) => Octokit): Gi
           }
           const repoFullName = item.repository_url.replace('https://api.github.com/repos/', '');
           const { organization, repository } = parseRepoFullName(repoFullName);
+          // Search payloads expose the issue/PR id but not the repository id.
+          // repositoryId is filled from getPullRequest (data.base.repo.id).
           hits.push({
             organization,
             repository,
-            repositoryId: String(item.id),
+            repositoryId: '',
             number: item.number,
             githubPullRequestId: String(item.id),
           });
