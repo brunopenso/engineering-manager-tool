@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import {
+  applyActivityFilters,
   buildAuthoredWeeklySeries,
   countActorComments,
   countActorReviews,
@@ -26,6 +27,28 @@ describe('US2 activity filter helpers', () => {
     ];
     expect(filterByRepository(rows, 'acme/widgets')).toHaveLength(1);
     expect(filterByRepository(rows, null)).toHaveLength(2);
+  });
+
+  it('filters by classification type and complexity index', () => {
+    const rows = [
+      sampleActivityPr({ id: '1', classificationType: 'feature', complexityIndex: 2 }),
+      sampleActivityPr({ id: '2', classificationType: 'fix', complexityIndex: 4 }),
+      sampleActivityPr({ id: '3', classificationType: 'documentation', complexityIndex: 1 }),
+    ];
+    expect(
+      applyActivityFilters(rows, {
+        repositoryKey: null,
+        classificationType: 'fix',
+        complexityIndex: null,
+      }).map((pr) => pr.id),
+    ).toEqual(['2']);
+    expect(
+      applyActivityFilters(rows, {
+        repositoryKey: null,
+        classificationType: null,
+        complexityIndex: 1,
+      }).map((pr) => pr.id),
+    ).toEqual(['3']);
   });
 });
 

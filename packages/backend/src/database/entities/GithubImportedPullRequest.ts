@@ -10,6 +10,8 @@ import {
 import { GithubPullRequestComment } from './GithubPullRequestComment.js';
 import { GithubPullRequestReview } from './GithubPullRequestReview.js';
 
+export type PullRequestClassificationType = 'feature' | 'fix' | 'documentation' | 'maintenance';
+
 @Entity({ name: 'github_imported_pull_requests' })
 @Unique('UQ_github_imported_pull_requests_repo_pr', ['repositoryId', 'githubPullRequestId'])
 export class GithubImportedPullRequest {
@@ -60,6 +62,12 @@ export class GithubImportedPullRequest {
 
   @Column({ type: 'varchar', length: 1000, nullable: true })
   url!: string | null;
+
+  @Column({ type: 'varchar', length: 32, name: 'classification_type', nullable: true })
+  classificationType!: PullRequestClassificationType | null;
+
+  @Column({ type: 'smallint', name: 'complexity_index', nullable: true })
+  complexityIndex!: number | null;
 
   @OneToMany(() => GithubPullRequestComment, (comment) => comment.pullRequest)
   comments!: GithubPullRequestComment[];

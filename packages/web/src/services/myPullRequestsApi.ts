@@ -21,6 +21,8 @@ export type MyActivityReview = {
   url: string | null;
 };
 
+export type PullRequestClassificationType = 'feature' | 'fix' | 'documentation' | 'maintenance';
+
 export type MyActivityPullRequest = {
   id: string;
   githubPullRequestId: string;
@@ -38,6 +40,8 @@ export type MyActivityPullRequest = {
   authorGithubLogin: string;
   mergedAt: string;
   url: string | null;
+  classificationType: PullRequestClassificationType | null;
+  complexityIndex: number | null;
   comments: MyActivityComment[];
   reviews: MyActivityReview[];
   involvementRole: InvolvementRole;

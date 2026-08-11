@@ -24,6 +24,24 @@ type MyPullRequestsTableProps = {
   onSelect: (pr: MyActivityPullRequest) => void;
 };
 
+function classificationChipColor(
+  type: MyActivityPullRequest['classificationType'],
+): 'primary' | 'warning' | 'info' | 'secondary' | 'default' {
+  if (type === 'feature') {
+    return 'primary';
+  }
+  if (type === 'fix') {
+    return 'warning';
+  }
+  if (type === 'documentation') {
+    return 'info';
+  }
+  if (type === 'maintenance') {
+    return 'secondary';
+  }
+  return 'default';
+}
+
 export default function MyPullRequestsTable({
   pullRequests,
   dateFormatPreference,
@@ -44,6 +62,8 @@ export default function MyPullRequestsTable({
             <TableRow>
               <TableCell>{t('table.repository')}</TableCell>
               <TableCell>{t('table.titleColumn')}</TableCell>
+              <TableCell>{t('table.classificationType')}</TableCell>
+              <TableCell>{t('table.complexityIndex')}</TableCell>
               <TableCell>{t('table.prDate')}</TableCell>
               <TableCell>{t('table.role')}</TableCell>
             </TableRow>
@@ -51,7 +71,7 @@ export default function MyPullRequestsTable({
           <TableBody>
             {pageRows.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={4}>
+                <TableCell colSpan={6}>
                   <Typography color="text.secondary">{t('table.empty')}</Typography>
                 </TableCell>
               </TableRow>
@@ -73,6 +93,21 @@ export default function MyPullRequestsTable({
                 >
                   <TableCell>{repositoryKey(pr)}</TableCell>
                   <TableCell>{pr.title}</TableCell>
+                  <TableCell>
+                    {pr.classificationType ? (
+                      <Chip
+                        size="small"
+                        color={classificationChipColor(pr.classificationType)}
+                        label={t(`classification.${pr.classificationType}`)}
+                        data-testid={`pr-classification-${pr.id}`}
+                      />
+                    ) : (
+                      t('table.unknownValue')
+                    )}
+                  </TableCell>
+                  <TableCell data-testid={`pr-complexity-${pr.id}`}>
+                    {pr.complexityIndex ?? t('table.unknownValue')}
+                  </TableCell>
                   <TableCell>
                     {formatDisplayDate(
                       pr.mergedAt.slice(0, 10),

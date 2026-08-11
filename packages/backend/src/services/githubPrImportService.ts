@@ -10,6 +10,7 @@ import {
   type GithubApiClient,
   type GithubPullRequestDetails,
 } from './githubApiClient.js';
+import { classificationFieldsForDetails } from './githubPrClassification.js';
 import { upsertCollectionControl } from './githubPrCollectionControlService.js';
 import { githubLoginsMatch, type ImportDateRange } from './githubPrImportDateRange.js';
 
@@ -109,6 +110,9 @@ async function defaultUpsertPullRequestBundle(
   pr.authorGithubLogin = details.authorGithubLogin;
   pr.mergedAt = details.mergedAt;
   pr.url = details.url;
+  const classification = classificationFieldsForDetails(details);
+  pr.classificationType = classification.classificationType;
+  pr.complexityIndex = classification.complexityIndex;
   pr = await prRepo.save(pr);
 
   for (const comment of comments) {
