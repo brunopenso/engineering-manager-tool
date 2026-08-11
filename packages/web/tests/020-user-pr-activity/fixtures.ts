@@ -3,6 +3,13 @@ import type { MyActivityPullRequest } from '../../src/services/myPullRequestsApi
 export function sampleActivityPr(
   overrides: Partial<MyActivityPullRequest> = {},
 ): MyActivityPullRequest {
+  const classificationType =
+    'classificationType' in overrides ? (overrides.classificationType ?? null) : 'fix';
+  const userReclassification =
+    'userReclassification' in overrides
+      ? (overrides.userReclassification ?? null)
+      : classificationType;
+
   return {
     id: 'pr-1',
     githubPullRequestId: '1001',
@@ -20,11 +27,12 @@ export function sampleActivityPr(
     authorGithubLogin: 'alice-dev',
     mergedAt: '2026-08-01T12:00:00.000Z',
     url: 'https://github.com/acme/widgets/pull/42',
-    classificationType: 'fix',
     complexityIndex: 2,
     comments: [],
     reviews: [],
     involvementRole: 'owner',
     ...overrides,
+    classificationType,
+    userReclassification,
   };
 }

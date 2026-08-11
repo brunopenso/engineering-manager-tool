@@ -11,6 +11,7 @@ import {
   type GithubPullRequestDetails,
 } from './githubApiClient.js';
 import { classificationFieldsForDetails } from './githubPrClassification.js';
+import type { PullRequestClassificationType } from './githubPrClassification.js';
 import { upsertCollectionControl } from './githubPrCollectionControlService.js';
 import { githubLoginsMatch, type ImportDateRange } from './githubPrImportDateRange.js';
 
@@ -38,6 +39,25 @@ export function assertPullRequestNaturalKey(
       'Pull request natural key requires non-blank repositoryId and githubPullRequestId',
     );
   }
+}
+
+/** Assigns auto classification; preserves an existing user_reclassification. */
+export function assignImportClassificationFields(
+  pr: {
+    classificationType: PullRequestClassificationType | null;
+    userReclassification: PullRequestClassificationType | null;
+    complexityIndex: number | null;
+  },
+  classification: {
+    classificationType: PullRequestClassificationType;
+    complexityIndex: number;
+  },
+): void {
+  pr.classificationType = classification.classificationType;
+  if (pr.userReclassification == null) {
+    pr.userReclassification = classification.classificationType;
+  }
+  pr.complexityIndex = classification.complexityIndex;
 }
 
 export type GithubPrImportDeps = {
@@ -111,8 +131,7 @@ async function defaultUpsertPullRequestBundle(
   pr.mergedAt = details.mergedAt;
   pr.url = details.url;
   const classification = classificationFieldsForDetails(details);
-  pr.classificationType = classification.classificationType;
-  pr.complexityIndex = classification.complexityIndex;
+  assignImportClassificationFields(pr, classification);
   pr = await prRepo.save(pr);
 
   for (const comment of comments) {

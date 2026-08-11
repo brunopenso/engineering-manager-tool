@@ -47,7 +47,21 @@
     "titleColumn": "Title",
     "classificationType": "Type",
     "complexityIndex": "Complexity",
-    "unknownValue": "—"
+    "unknownValue": "—",
+    "selectAllPage": "Select all pull requests on this page",
+    "selectRow": "Select pull request"
+  },
+  "reclassify": {
+    "button": "Change Classification",
+    "title": "Change classification",
+    "confirmBody": "Update the classification for {{count}} selected pull request(s).",
+    "classificationLabel": "New classification",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "saving": "Saving…",
+    "loadingOptions": "Loading classification options…",
+    "loadOptionsError": "Could not load classification options. Please try again.",
+    "saveError": "Could not update classification. Please try again."
   },
   "modal": {
     "title": "Pull request details",

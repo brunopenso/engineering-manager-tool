@@ -1,9 +1,19 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { Alert, Box, CircularProgress, Container, Paper, Stack, Typography } from '@mui/material';
+import {
+  Alert,
+  Box,
+  Button,
+  CircularProgress,
+  Container,
+  Paper,
+  Stack,
+  Typography,
+} from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../auth/AuthProvider.js';
 import ActivitySummaryCards from '../components/my-pull-requests/ActivitySummaryCards.js';
 import AuthoredPrsChart from '../components/my-pull-requests/AuthoredPrsChart.js';
+import ChangeClassificationModal from '../components/my-pull-requests/ChangeClassificationModal.js';
 import MyPullRequestsFilters from '../components/my-pull-requests/MyPullRequestsFilters.js';
 import MyPullRequestsTable from '../components/my-pull-requests/MyPullRequestsTable.js';
 import PullRequestDetailModal from '../components/my-pull-requests/PullRequestDetailModal.js';
@@ -13,6 +23,7 @@ import {
   isValidDateRange,
   MyPullRequestsApiError,
   type MyActivityPullRequest,
+  type PullRequestClassificationType,
 } from '../services/myPullRequestsApi.js';
 import {
   buildAuthoredWeeklySeries,
@@ -46,10 +57,12 @@ export default function MyPullRequestsPage() {
   const [appliedClassificationTypeFilter, setAppliedClassificationTypeFilter] = useState('');
   const [appliedComplexityIndexFilter, setAppliedComplexityIndexFilter] = useState('');
   const [pullRequests, setPullRequests] = useState<MyActivityPullRequest[]>([]);
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(() => new Set());
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [dateRangeError, setDateRangeError] = useState<string | null>(null);
   const [selectedPr, setSelectedPr] = useState<MyActivityPullRequest | null>(null);
+  const [reclassifyOpen, setReclassifyOpen] = useState(false);
   const fetchRequestId = useRef(0);
   const initialSearchDone = useRef(false);
 
@@ -82,6 +95,7 @@ export default function MyPullRequestsPage() {
       const requestId = ++fetchRequestId.current;
       setIsLoading(true);
       setErrorMessage(null);
+      setSelectedIds(new Set());
 
       try {
         const response = await fetchMyPullRequestActivity(accessToken, {
@@ -191,6 +205,49 @@ export default function MyPullRequestsPage() {
     [filtered, githubLogin],
   );
 
+  const handleToggleRow = useCallback((prId: string) => {
+    setSelectedIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(prId)) {
+        next.delete(prId);
+      } else {
+        next.add(prId);
+      }
+      return next;
+    });
+  }, []);
+
+  const handleTogglePage = useCallback((prIds: string[], selected: boolean) => {
+    setSelectedIds((prev) => {
+      const next = new Set(prev);
+      for (const id of prIds) {
+        if (selected) {
+          next.add(id);
+        } else {
+          next.delete(id);
+        }
+      }
+      return next;
+    });
+  }, []);
+
+  const handleReclassifySaved = useCallback(
+    (updates: Array<{ id: string; userReclassification: PullRequestClassificationType }>) => {
+      const byId = new Map(updates.map((item) => [item.id, item.userReclassification]));
+      setPullRequests((prev) =>
+        prev.map((pr) => {
+          const nextClassification = byId.get(pr.id);
+          if (!nextClassification) {
+            return pr;
+          }
+          return { ...pr, userReclassification: nextClassification };
+        }),
+      );
+      setSelectedIds(new Set());
+    },
+    [],
+  );
+
   return (
     <Container maxWidth="lg" sx={{ py: { xs: 2, md: 4 } }}>
       <Stack spacing={3}>
@@ -261,11 +318,26 @@ export default function MyPullRequestsPage() {
                   </Box>
                 </Stack>
 
+                {selectedIds.size > 0 ? (
+                  <Box>
+                    <Button
+                      variant="contained"
+                      onClick={() => setReclassifyOpen(true)}
+                      data-testid="change-classification-button"
+                    >
+                      {t('reclassify.button')}
+                    </Button>
+                  </Box>
+                ) : null}
+
                 <MyPullRequestsTable
                   pullRequests={filtered}
+                  selectedIds={selectedIds}
                   dateFormatPreference={dateFormatPreference}
                   languagePreference={languagePreference}
                   onSelect={setSelectedPr}
+                  onToggleRow={handleToggleRow}
+                  onTogglePage={handleTogglePage}
                 />
               </>
             )}
@@ -280,6 +352,17 @@ export default function MyPullRequestsPage() {
         languagePreference={languagePreference}
         onClose={() => setSelectedPr(null)}
       />
+
+      {accessToken ? (
+        <ChangeClassificationModal
+          open={reclassifyOpen}
+          accessToken={accessToken}
+          selectedCount={selectedIds.size}
+          pullRequestIds={[...selectedIds]}
+          onClose={() => setReclassifyOpen(false)}
+          onSaved={handleReclassifySaved}
+        />
+      ) : null}
     </Container>
   );
 }
