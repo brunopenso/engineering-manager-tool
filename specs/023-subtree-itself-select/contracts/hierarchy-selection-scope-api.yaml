@@ -1,0 +1,236 @@
+openapi: 3.0.3
+info:
+  title: Engineering Manager Tool Hierarchy Selection Scope API
+  version: 0.1.0
+  description: >
+    Cross-cutting contract for leader team filters: optional userId plus scope
+    (subtree | itself) on Team Deliverables, Team Analytics, and Team PR Performance.
+    Extends existing endpoints; does not introduce new paths.
+servers:
+  - url: http://localhost:3001
+paths:
+  /users/leader/team-deliverables:
+    get:
+      summary: Search deliverables for a selected person or their subtree
+      tags: [HierarchySelectionScope]
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/UserIdRequired'
+        - $ref: '#/components/parameters/ScopeOptional'
+        - $ref: '#/components/parameters/StartDate'
+        - $ref: '#/components/parameters/EndDate'
+      responses:
+        '200':
+          description: >
+            Deliverables for the resolved owner set (single person or subtree),
+            within the date range, with per-leader reviewed flags.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TeamDeliverablesScopedResponse'
+        '400':
+          description: Missing/invalid dates, invalid scope, or missing userId
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Missing or invalid application token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Leader role required or userId outside actor subtree
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /users/leader/team-analytics:
+    get:
+      summary: Aggregated team analytics for full team, subtree, or Itself
+      tags: [HierarchySelectionScope]
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/UserIdOptional'
+        - $ref: '#/components/parameters/ScopeOptional'
+        - $ref: '#/components/parameters/StartDate'
+        - $ref: '#/components/parameters/EndDate'
+      responses:
+        '200':
+          description: Aggregates for the resolved owner set
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ScopedFilterEcho'
+        '400':
+          description: Invalid date range or scope
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Missing or invalid application token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Leader role required or userId outside actor subtree
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /users/leader/team-pr-performance:
+    get:
+      summary: Aggregated team PR performance for full team, subtree, or Itself
+      tags: [HierarchySelectionScope]
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/UserIdOptional'
+        - $ref: '#/components/parameters/ScopeOptional'
+        - $ref: '#/components/parameters/StartDate'
+        - $ref: '#/components/parameters/EndDate'
+      responses:
+        '200':
+          description: Aggregates for the resolved owner set
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ScopedFilterEcho'
+        '400':
+          description: Invalid date range or scope
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Missing or invalid application token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Leader role required or userId outside actor subtree
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  parameters:
+    UserIdRequired:
+      name: userId
+      in: query
+      required: true
+      schema:
+        type: string
+        format: uuid
+      description: Selected person in the leader's descendant subtree
+    UserIdOptional:
+      name: userId
+      in: query
+      required: false
+      schema:
+        type: string
+        format: uuid
+      description: >
+        Optional selected person. When omitted, scope is ignored and the full
+        actor descendant team is used.
+    ScopeOptional:
+      name: scope
+      in: query
+      required: false
+      schema:
+        $ref: '#/components/schemas/HierarchyScope'
+      description: >
+        How to expand userId. Default subtree when userId is present.
+        Ignored when userId is omitted. itself = selected person only;
+        subtree = selected person plus all direct and indirect reports.
+    StartDate:
+      name: startDate
+      in: query
+      required: true
+      schema:
+        type: string
+        format: date
+    EndDate:
+      name: endDate
+      in: query
+      required: true
+      schema:
+        type: string
+        format: date
+  schemas:
+    HierarchyScope:
+      type: string
+      enum: [subtree, itself]
+    ErrorResponse:
+      type: object
+      required: [code, message]
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+    ScopedFilterEcho:
+      type: object
+      description: >
+        Existing analytics / PR performance response bodies SHOULD echo the
+        effective filter context so clients can confirm scope application.
+        Concrete chart/table schemas remain defined in their feature contracts;
+        this fragment documents the new filter echo fields.
+      properties:
+        userId:
+          type: string
+          format: uuid
+          nullable: true
+        scope:
+          allOf:
+            - $ref: '#/components/schemas/HierarchyScope'
+          nullable: true
+    TeamDeliverableScopedRow:
+      type: object
+      required: [id, title, description, reviewed]
+      properties:
+        id:
+          type: string
+          format: uuid
+        title:
+          type: string
+        description:
+          type: string
+        reviewed:
+          type: boolean
+        ownerUserId:
+          type: string
+          format: uuid
+          description: Present when results may include multiple owners (subtree)
+        ownerDisplayName:
+          type: string
+          description: Present when results may include multiple owners (subtree)
+        systemTags:
+          type: array
+          items:
+            type: object
+    TeamDeliverablesScopedResponse:
+      type: object
+      required: [ownerUserId, scope, deliverables]
+      properties:
+        ownerUserId:
+          type: string
+          format: uuid
+          description: Selected root person (same as request userId)
+        scope:
+          $ref: '#/components/schemas/HierarchyScope'
+        deliverables:
+          type: array
+          items:
+            $ref: '#/components/schemas/TeamDeliverableScopedRow'
