@@ -174,13 +174,13 @@ _For features that expose collaborator or organizational data, requirements MUST
 
 ### Access Control Matrix _(required when data visibility is in scope)_
 
-| Actor                          | Allowed Data Visibility                                      | Explicitly Denied Visibility                 | Validation Notes                                      |
-| ------------------------------ | ------------------------------------------------------------ | -------------------------------------------- | ----------------------------------------------------- |
-| Top leader                     | Self excluded from team aggregates; all descendant PR metrics | Non-descendants                              | Subtree-wide + single-member filter tests             |
-| Mid leader                     | Descendant subtree PR metrics only                           | Superiors, peers, other branches             | Recursive descendant allow; peer/superior deny        |
-| Individual contributor         | None (no menu / no data)                                     | All team PR performance data                 | Route and data access denied                          |
-| Administrator (non-leader path)| None via this leader screen unless they also hold leader role | Other users' team metrics via this screen    | Admin privilege does not bypass leader-only gate      |
-| Unauthenticated user           | None                                                         | All PR performance data                      | Route/data access denied                              |
+| Actor                           | Allowed Data Visibility                                       | Explicitly Denied Visibility              | Validation Notes                                 |
+| ------------------------------- | ------------------------------------------------------------- | ----------------------------------------- | ------------------------------------------------ |
+| Top leader                      | Self excluded from team aggregates; all descendant PR metrics | Non-descendants                           | Subtree-wide + single-member filter tests        |
+| Mid leader                      | Descendant subtree PR metrics only                            | Superiors, peers, other branches          | Recursive descendant allow; peer/superior deny   |
+| Individual contributor          | None (no menu / no data)                                      | All team PR performance data              | Route and data access denied                     |
+| Administrator (non-leader path) | None via this leader screen unless they also hold leader role | Other users' team metrics via this screen | Admin privilege does not bypass leader-only gate |
+| Unauthenticated user            | None                                                          | All PR performance data                   | Route/data access denied                         |
 
 ### Key Entities _(include if feature involves data)_
 
