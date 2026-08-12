@@ -1,7 +1,12 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Alert, Box, CircularProgress, Container, Stack, Typography } from '@mui/material';
 import { useTranslation } from 'react-i18next';
+import DeveloperPrComparisonChart from '../components/leader-pr-performance/DeveloperPrComparisonChart.js';
+import DeveloperPrDrilldownModal from '../components/leader-pr-performance/DeveloperPrDrilldownModal.js';
+import DeveloperPrPerformanceTable from '../components/leader-pr-performance/DeveloperPrPerformanceTable.js';
 import TeamPrPerformanceFilters from '../components/leader-pr-performance/TeamPrPerformanceFilters.js';
+import TeamPrPerformanceSummaryCards from '../components/leader-pr-performance/TeamPrPerformanceSummaryCards.js';
+import WeeklyAuthoredByClassificationChart from '../components/leader-pr-performance/WeeklyAuthoredByClassificationChart.js';
 import { useAuth } from '../auth/AuthProvider.js';
 import { isLeader } from '../auth/roleGuards.js';
 import {
@@ -9,6 +14,7 @@ import {
   fetchTeamPrPerformance,
   isValidDateRange,
   LeaderPrPerformanceApiError,
+  type DeveloperPrPerformanceRow,
   type TeamPrPerformanceResponse,
 } from '../services/leaderPrPerformanceApi.js';
 import {
@@ -16,10 +22,16 @@ import {
   type LeaderHierarchyViewResponse,
   UsersApiError,
 } from '../services/usersApi.js';
+import {
+  DEFAULT_DATE_FORMAT_PREFERENCE,
+  DEFAULT_LANGUAGE_PREFERENCE,
+} from '../types/profilePreferences.js';
 
 export default function LeaderTeamPrPerformancePage() {
   const { accessToken, user } = useAuth();
   const { t } = useTranslation(['leader', 'common']);
+  const dateFormatPreference = user?.dateFormatPreference ?? DEFAULT_DATE_FORMAT_PREFERENCE;
+  const languagePreference = user?.languagePreference ?? DEFAULT_LANGUAGE_PREFERENCE;
   const defaultRange = useMemo(() => defaultLast60DayRange(), []);
   const [hierarchy, setHierarchy] = useState<LeaderHierarchyViewResponse | null>(null);
   const [selectedUserId, setSelectedUserId] = useState('');
@@ -30,6 +42,9 @@ export default function LeaderTeamPrPerformancePage() {
   const [isLoadingPerformance, setIsLoadingPerformance] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [dateRangeError, setDateRangeError] = useState<string | null>(null);
+  const [drilldownDeveloper, setDrilldownDeveloper] = useState<DeveloperPrPerformanceRow | null>(
+    null,
+  );
   const fetchRequestId = useRef(0);
 
   const dateRangeIsValid = isValidDateRange(startDate, endDate);
@@ -124,7 +139,7 @@ export default function LeaderTeamPrPerformancePage() {
     void loadPerformance();
   }, [accessToken, dateRangeIsValid, isLoadingHierarchy, loadPerformance, t, user]);
 
-  if (!isLeader(user)) {
+  if (!isLeader(user) || !accessToken) {
     return null;
   }
 
@@ -134,7 +149,6 @@ export default function LeaderTeamPrPerformancePage() {
     hasTeamMembers &&
     dateRangeIsValid &&
     performance !== null &&
-    performance.developers.length === 0 &&
     performance.totals.authoredPullRequestCount === 0 &&
     performance.totals.commentCount === 0 &&
     performance.totals.reviewCount === 0;
@@ -183,19 +197,31 @@ export default function LeaderTeamPrPerformancePage() {
         !isLoadingPerformance &&
         hasTeamMembers &&
         dateRangeIsValid &&
-        performance &&
-        !showEmptyFiltered ? (
-          <Alert severity="success" data-testid="team-pr-performance-loaded">
-            {t('teamPrPerformance.loadedSummary', {
-              authored: performance.totals.authoredPullRequestCount,
-              comments: performance.totals.commentCount,
-              reviews: performance.totals.reviewCount,
-              startDate: performance.startDate,
-              endDate: performance.endDate,
-            })}
-          </Alert>
+        performance ? (
+          <Stack spacing={3} data-testid="team-pr-performance-loaded">
+            <TeamPrPerformanceSummaryCards totals={performance.totals} />
+            <WeeklyAuthoredByClassificationChart
+              performance={performance}
+              dateFormatPreference={dateFormatPreference}
+              languagePreference={languagePreference}
+            />
+            <DeveloperPrComparisonChart developers={performance.developers} />
+            <DeveloperPrPerformanceTable
+              developers={performance.developers}
+              onSelectDeveloper={setDrilldownDeveloper}
+            />
+          </Stack>
         ) : null}
       </Stack>
+
+      <DeveloperPrDrilldownModal
+        open={Boolean(drilldownDeveloper)}
+        accessToken={accessToken}
+        developer={drilldownDeveloper}
+        startDate={startDate}
+        endDate={endDate}
+        onClose={() => setDrilldownDeveloper(null)}
+      />
     </Container>
   );
 }

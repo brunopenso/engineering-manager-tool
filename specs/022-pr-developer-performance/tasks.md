@@ -94,15 +94,15 @@
 
 ### Tests for User Story 3 (MANDATORY)
 
-- [ ] T024 [P] [US3] Add backend tests for authored/comment/review totals and per-developer attribution (including author+commenter double-count rules) in `packages/backend/tests/022-pr-developer-performance/summaries-comparison.us3.test.ts`
-- [ ] T025 [P] [US3] Add web UI tests that cards/comparison refresh with filters and show zeros/empty correctly in `packages/web/tests/022-pr-developer-performance/summaries-comparison.us3.test.tsx`
+- [x] T024 [P] [US3] Add backend tests for authored/comment/review totals and per-developer attribution (including author+commenter double-count rules) in `packages/backend/tests/022-pr-developer-performance/summaries-comparison.us3.test.ts`
+- [x] T025 [P] [US3] Add web UI tests that cards/comparison refresh with filters and show zeros/empty correctly in `packages/web/tests/022-pr-developer-performance/summaries-comparison.us3.test.tsx`
 
 ### Implementation for User Story 3
 
-- [ ] T026 [P] [US3] Create `TeamPrPerformanceSummaryCards` in `packages/web/src/components/leader-pr-performance/TeamPrPerformanceSummaryCards.tsx` using `frontend-design` + MUI Cards (authored / comments / reviews)
-- [ ] T027 [P] [US3] Create `DeveloperPrComparisonChart` in `packages/web/src/components/leader-pr-performance/DeveloperPrComparisonChart.tsx` using `frontend-design` + `@mui/x-charts` (accessible legend; email fallback labels)
-- [ ] T028 [US3] Wire summary cards + comparison chart into `packages/web/src/pages/LeaderTeamPrPerformancePage.tsx` from aggregate response `totals` / `developers`
-- [ ] T029 [US3] Add summary/comparison i18n keys to `packages/web/src/locales/{en-US,pt-BR}/leader.json`
+- [x] T026 [P] [US3] Create `TeamPrPerformanceSummaryCards` in `packages/web/src/components/leader-pr-performance/TeamPrPerformanceSummaryCards.tsx` using `frontend-design` + MUI Cards (authored / comments / reviews)
+- [x] T027 [P] [US3] Create `DeveloperPrComparisonChart` in `packages/web/src/components/leader-pr-performance/DeveloperPrComparisonChart.tsx` using `frontend-design` + `@mui/x-charts` (accessible legend; email fallback labels)
+- [x] T028 [US3] Wire summary cards + comparison chart into `packages/web/src/pages/LeaderTeamPrPerformancePage.tsx` from aggregate response `totals` / `developers`
+- [x] T029 [US3] Add summary/comparison i18n keys to `packages/web/src/locales/{en-US,pt-BR}/leader.json`
 
 **Checkpoint**: Leaders can compare developer PR volume signals at a glance under current filters.
 
@@ -116,14 +116,14 @@
 
 ### Tests for User Story 5 (MANDATORY)
 
-- [ ] T030 [P] [US5] Add backend tests for weekly classification bucketing, Unclassified, effective classification precedence, and team vs member scope in `packages/backend/tests/022-pr-developer-performance/chart-prs-by-classification.us5.test.ts`
-- [ ] T031 [P] [US5] Add web UI tests for stacked weekly chart refresh, Unclassified legend, and filter scoping in `packages/web/tests/022-pr-developer-performance/chart-prs-by-classification.us5.test.tsx`
+- [x] T030 [P] [US5] Add backend tests for weekly classification bucketing, Unclassified, effective classification precedence, and team vs member scope in `packages/backend/tests/022-pr-developer-performance/chart-prs-by-classification.us5.test.ts`
+- [x] T031 [P] [US5] Add web UI tests for stacked weekly chart refresh, Unclassified legend, and filter scoping in `packages/web/tests/022-pr-developer-performance/chart-prs-by-classification.us5.test.tsx`
 
 ### Implementation for User Story 5
 
-- [ ] T032 [US5] Create `WeeklyAuthoredByClassificationChart` in `packages/web/src/components/leader-pr-performance/WeeklyAuthoredByClassificationChart.tsx` using `frontend-design` + `@mui/x-charts` stacked bars from `weekStarts` + `authoredByWeekAndClassification` (zero-fill client-side if needed)
-- [ ] T033 [US5] Wire weekly classification chart into `packages/web/src/pages/LeaderTeamPrPerformancePage.tsx` so it refreshes with the same filters as cards/comparison
-- [ ] T034 [US5] Add classification chart + Unclassified legend keys to `packages/web/src/locales/{en-US,pt-BR}/leader.json`
+- [x] T032 [US5] Create `WeeklyAuthoredByClassificationChart` in `packages/web/src/components/leader-pr-performance/WeeklyAuthoredByClassificationChart.tsx` using `frontend-design` + `@mui/x-charts` stacked bars from `weekStarts` + `authoredByWeekAndClassification` (zero-fill client-side if needed)
+- [x] T033 [US5] Wire weekly classification chart into `packages/web/src/pages/LeaderTeamPrPerformancePage.tsx` so it refreshes with the same filters as cards/comparison
+- [x] T034 [US5] Add classification chart + Unclassified legend keys to `packages/web/src/locales/{en-US,pt-BR}/leader.json`
 
 **Checkpoint**: Leaders see weekly authored mix by classification for team or selected member.
 
@@ -137,18 +137,18 @@
 
 ### Tests for User Story 4 (MANDATORY)
 
-- [ ] T035 [P] [US4] Add backend tests for drill-down involvement (owner/involved), subtree DAC, date bounds, and newest-first order in `packages/backend/tests/022-pr-developer-performance/detail-table.us4.test.ts`
-- [ ] T036 [P] [US4] Add web UI tests for table columns/sort, member filter, modal open/close preserving filters in `packages/web/tests/022-pr-developer-performance/detail-table.us4.test.tsx`
+- [x] T035 [P] [US4] Add backend tests for drill-down involvement (owner/involved), subtree DAC, date bounds, and newest-first order in `packages/backend/tests/022-pr-developer-performance/detail-table.us4.test.ts`
+- [x] T036 [P] [US4] Add web UI tests for table columns/sort, member filter, modal open/close preserving filters in `packages/web/tests/022-pr-developer-performance/detail-table.us4.test.tsx`
 
 ### Implementation for User Story 4
 
-- [ ] T037 [P] [US4] Add drill-down DTOs and `getLeaderDeveloperPrDrilldown` in `packages/backend/src/types/leaderPrPerformance.ts` + `packages/backend/src/services/leaderPrPerformanceService.ts` (author OR comment OR review; effectiveClassification; involvementRole)
-- [ ] T038 [US4] Register `GET /users/leader/team-pr-performance/developers/:userId/pull-requests` in `packages/backend/src/routes/users.ts`
-- [ ] T039 [P] [US4] Add `fetchDeveloperPrDrilldown` in `packages/web/src/services/leaderPrPerformanceApi.ts`
-- [ ] T040 [P] [US4] Create `DeveloperPrPerformanceTable` in `packages/web/src/components/leader-pr-performance/DeveloperPrPerformanceTable.tsx` using `frontend-design` + MUI Table (pagination if needed)
-- [ ] T041 [US4] Create `DeveloperPrDrilldownModal` in `packages/web/src/components/leader-pr-performance/DeveloperPrDrilldownModal.tsx` using `frontend-design` + MUI Dialog; dismissible without losing filters
-- [ ] T042 [US4] Wire table + modal into `packages/web/src/pages/LeaderTeamPrPerformancePage.tsx`
-- [ ] T043 [US4] Add table/modal i18n keys to `packages/web/src/locales/{en-US,pt-BR}/leader.json`
+- [x] T037 [P] [US4] Add drill-down DTOs and `getLeaderDeveloperPrDrilldown` in `packages/backend/src/types/leaderPrPerformance.ts` + `packages/backend/src/services/leaderPrPerformanceService.ts` (author OR comment OR review; effectiveClassification; involvementRole)
+- [x] T038 [US4] Register `GET /users/leader/team-pr-performance/developers/:userId/pull-requests` in `packages/backend/src/routes/users.ts`
+- [x] T039 [P] [US4] Add `fetchDeveloperPrDrilldown` in `packages/web/src/services/leaderPrPerformanceApi.ts`
+- [x] T040 [P] [US4] Create `DeveloperPrPerformanceTable` in `packages/web/src/components/leader-pr-performance/DeveloperPrPerformanceTable.tsx` using `frontend-design` + MUI Table (pagination if needed)
+- [x] T041 [US4] Create `DeveloperPrDrilldownModal` in `packages/web/src/components/leader-pr-performance/DeveloperPrDrilldownModal.tsx` using `frontend-design` + MUI Dialog; dismissible without losing filters
+- [x] T042 [US4] Wire table + modal into `packages/web/src/pages/LeaderTeamPrPerformancePage.tsx`
+- [x] T043 [US4] Add table/modal i18n keys to `packages/web/src/locales/{en-US,pt-BR}/leader.json`
 
 **Checkpoint**: Leaders can inspect per-developer metrics and contributing PRs under DAC.
 
@@ -158,10 +158,10 @@
 
 **Purpose**: Hardening across stories.
 
-- [ ] T044 [P] Expand feature test docs under `tests/022-pr-developer-performance/` with acceptance mapping to FR-001–FR-018 and DAC evidence notes
-- [ ] T045 [P] Verify `en-US`/`pt-BR` key parity for all `teamPrPerformance` / `menu.teamPrPerformance` keys in `packages/web/tests/022-pr-developer-performance/i18n-parity.us1.test.ts` (extend as needed)
-- [ ] T046 Run quickstart validation from `specs/022-pr-developer-performance/quickstart.md` (manual leader/non-leader + Unclassified week-sum checks) and fix gaps
-- [ ] T047 [P] Confirm no new migrations introduced; lint/test packages for `022-pr-developer-performance` paths pass (`npm run lint`, targeted vitest)
+- [x] T044 [P] Expand feature test docs under `tests/022-pr-developer-performance/` with acceptance mapping to FR-001–FR-018 and DAC evidence notes
+- [x] T045 [P] Verify `en-US`/`pt-BR` key parity for all `teamPrPerformance` / `menu.teamPrPerformance` keys in `packages/web/tests/022-pr-developer-performance/i18n-parity.us1.test.ts` (extend as needed)
+- [x] T046 Run quickstart validation from `specs/022-pr-developer-performance/quickstart.md` (manual leader/non-leader + Unclassified week-sum checks) and fix gaps
+- [x] T047 [P] Confirm no new migrations introduced; lint/test packages for `022-pr-developer-performance` paths pass (`npm run lint`, targeted vitest)
 
 ---
 

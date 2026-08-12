@@ -1,6 +1,8 @@
 import { AppDataSource } from '../database/connection.js';
 import {
   PR_PERFORMANCE_CLASSIFICATIONS,
+  type DeveloperPrDrilldownItem,
+  type DeveloperPrDrilldownResponse,
   type DeveloperPrPerformanceRow,
   type PerformanceTotals,
   type PrPerformanceClassification,
@@ -9,7 +11,11 @@ import {
   type WeeklyClassificationBucketRow,
 } from '../types/leaderPrPerformance.js';
 import { buildWeekStartsInRange } from './leaderAnalyticsService.js';
-import { getLeaderTeamMembers, toHierarchyDisplayName } from './userService.js';
+import {
+  assertUserInLeaderSubtree,
+  getLeaderTeamMembers,
+  toHierarchyDisplayName,
+} from './userService.js';
 import { validateDateRange } from './teamDeliverablesDate.js';
 
 type DeveloperUserRow = {
@@ -74,11 +80,29 @@ function toCountMap(rows: CountByUserRow[]): Map<string, number> {
   return map;
 }
 
-function normalizeClassification(value: string): PrPerformanceClassification {
+export function normalizeClassification(value: string): PrPerformanceClassification {
   if ((PR_PERFORMANCE_CLASSIFICATIONS as readonly string[]).includes(value)) {
     return value as PrPerformanceClassification;
   }
   return 'unclassified';
+}
+
+export function resolveEffectiveClassification(
+  userReclassification: string | null | undefined,
+  classificationType: string | null | undefined,
+): PrPerformanceClassification {
+  return normalizeClassification(userReclassification ?? classificationType ?? 'unclassified');
+}
+
+export function sortDevelopersByAuthoredThenName(
+  rows: DeveloperPrPerformanceRow[],
+): DeveloperPrPerformanceRow[] {
+  return [...rows].sort((a, b) => {
+    if (b.authoredPullRequestCount !== a.authoredPullRequestCount) {
+      return b.authoredPullRequestCount - a.authoredPullRequestCount;
+    }
+    return a.displayName.localeCompare(b.displayName);
+  });
 }
 
 function mapWeeklyRows(rows: WeeklyClassificationAggregateRow[]): WeeklyClassificationBucketRow[] {
@@ -87,15 +111,6 @@ function mapWeeklyRows(rows: WeeklyClassificationAggregateRow[]): WeeklyClassifi
     classification: normalizeClassification(row.classification),
     count: Number.parseInt(row.count, 10),
   }));
-}
-
-function sortDevelopers(rows: DeveloperPrPerformanceRow[]): DeveloperPrPerformanceRow[] {
-  return [...rows].sort((a, b) => {
-    if (b.authoredPullRequestCount !== a.authoredPullRequestCount) {
-      return b.authoredPullRequestCount - a.authoredPullRequestCount;
-    }
-    return a.displayName.localeCompare(b.displayName);
-  });
 }
 
 export async function getLeaderTeamPrPerformance(
@@ -211,7 +226,7 @@ export async function getLeaderTeamPrPerformance(
     reviewCount: reviewsByUser.get(user.id) ?? 0,
   }));
 
-  const sortedDevelopers = sortDevelopers(developerRows);
+  const sortedDevelopers = sortDevelopersByAuthoredThenName(developerRows);
   const totals: PerformanceTotals = sortedDevelopers.reduce(
     (acc, row) => ({
       authoredPullRequestCount: acc.authoredPullRequestCount + row.authoredPullRequestCount,
@@ -229,5 +244,119 @@ export async function getLeaderTeamPrPerformance(
     developers: sortedDevelopers,
     weekStarts,
     authoredByWeekAndClassification: mapWeeklyRows(weeklyRows),
+  };
+}
+
+type DrilldownPrRow = {
+  id: string;
+  title: string;
+  repository: string;
+  merged_at: Date;
+  author_github_login: string;
+  url: string | null;
+  classification_type: string | null;
+  user_reclassification: string | null;
+  actor_comment_count: string;
+  actor_review_count: string;
+};
+
+export async function getLeaderDeveloperPrDrilldown(
+  actorUserId: string,
+  developerUserId: string,
+  filters: { startDate: string; endDate: string },
+): Promise<DeveloperPrDrilldownResponse> {
+  await assertUserInLeaderSubtree(actorUserId, developerUserId);
+  const { start, end } = validateDateRange(filters.startDate, filters.endDate);
+
+  const users = await AppDataSource.query<DeveloperUserRow[]>(
+    `
+    SELECT id, full_name, email, github_login
+    FROM users
+    WHERE id = $1
+    LIMIT 1
+    `,
+    [developerUserId],
+  );
+  const developer = users[0];
+
+  if (!developer?.github_login) {
+    return {
+      userId: developerUserId,
+      startDate: filters.startDate,
+      endDate: filters.endDate,
+      pullRequests: [],
+    };
+  }
+
+  const login = developer.github_login;
+  const rows = await AppDataSource.query<DrilldownPrRow[]>(
+    `
+    SELECT
+      pr.id,
+      pr.title,
+      pr.repository,
+      pr.merged_at,
+      pr.author_github_login,
+      pr.url,
+      pr.classification_type,
+      pr.user_reclassification,
+      (
+        SELECT COUNT(*)::text
+        FROM github_pull_request_comments c
+        WHERE c.pull_request_id = pr.id
+          AND LOWER(c.author_github_login) = LOWER($4)
+      ) AS actor_comment_count,
+      (
+        SELECT COUNT(*)::text
+        FROM github_pull_request_reviews r
+        WHERE r.pull_request_id = pr.id
+          AND LOWER(r.reviewer_github_login) = LOWER($4)
+      ) AS actor_review_count
+    FROM github_imported_pull_requests pr
+    WHERE pr.merged_at >= $2
+      AND pr.merged_at <= $3
+      AND (
+        LOWER(pr.author_github_login) = LOWER($4)
+        OR EXISTS (
+          SELECT 1
+          FROM github_pull_request_comments c
+          WHERE c.pull_request_id = pr.id
+            AND LOWER(c.author_github_login) = LOWER($4)
+        )
+        OR EXISTS (
+          SELECT 1
+          FROM github_pull_request_reviews r
+          WHERE r.pull_request_id = pr.id
+            AND LOWER(r.reviewer_github_login) = LOWER($4)
+        )
+      )
+    ORDER BY pr.merged_at DESC
+    `,
+    [developerUserId, start, end, login],
+  );
+
+  const pullRequests: DeveloperPrDrilldownItem[] = rows.map((row) => {
+    const isOwner = row.author_github_login.toLowerCase() === login.toLowerCase();
+    return {
+      id: row.id,
+      title: row.title,
+      repository: row.repository,
+      mergedAt: new Date(row.merged_at).toISOString(),
+      involvementRole: isOwner ? 'owner' : 'involved',
+      effectiveClassification: resolveEffectiveClassification(
+        row.user_reclassification,
+        row.classification_type,
+      ),
+      url: row.url,
+      actorCommentCount: Number.parseInt(row.actor_comment_count, 10),
+      actorReviewCount: Number.parseInt(row.actor_review_count, 10),
+    };
+  });
+
+  return {
+    userId: developerUserId,
+    startDate: filters.startDate,
+    endDate: filters.endDate,
+    pullRequests,
   };
 }

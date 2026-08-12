@@ -33,6 +33,25 @@ export type TeamPrPerformanceResponse = {
   authoredByWeekAndClassification: WeeklyClassificationBucketRow[];
 };
 
+export type DeveloperPrDrilldownItem = {
+  id: string;
+  title: string;
+  repository: string;
+  mergedAt: string;
+  involvementRole: 'owner' | 'involved';
+  effectiveClassification: PrPerformanceClassification;
+  url: string | null;
+  actorCommentCount: number;
+  actorReviewCount: number;
+};
+
+export type DeveloperPrDrilldownResponse = {
+  userId: string;
+  startDate: string;
+  endDate: string;
+  pullRequests: DeveloperPrDrilldownItem[];
+};
+
 type ApiErrorCode =
   | 'FORBIDDEN'
   | 'NOT_FOUND'
@@ -95,6 +114,29 @@ export async function fetchTeamPrPerformance(
   }
 
   return (await response.json()) as TeamPrPerformanceResponse;
+}
+
+export async function fetchDeveloperPrDrilldown(
+  accessToken: string,
+  params: { userId: string; startDate: string; endDate: string },
+): Promise<DeveloperPrDrilldownResponse> {
+  const query = new URLSearchParams({
+    startDate: params.startDate,
+    endDate: params.endDate,
+  });
+
+  const response = await fetch(
+    `${API_BASE_URL}/users/leader/team-pr-performance/developers/${encodeURIComponent(params.userId)}/pull-requests?${query}`,
+    {
+      headers: { Authorization: `Bearer ${accessToken}` },
+    },
+  );
+
+  if (!response.ok) {
+    throw await parseError(response);
+  }
+
+  return (await response.json()) as DeveloperPrDrilldownResponse;
 }
 
 export { defaultLast60DayRange, formatDateInput, isValidDateRange } from '../utils/dateRange.js';

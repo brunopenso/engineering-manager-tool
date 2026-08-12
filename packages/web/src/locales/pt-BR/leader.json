@@ -8,7 +8,49 @@
     "loadingPerformance": "Carregando desempenho de PRs da equipe",
     "loadedSummary": "Carregados {{authored}} PRs autorados, {{comments}} comentários e {{reviews}} revisões de {{startDate}} a {{endDate}}.",
     "clearTeamMember": "Limpar membro da equipe",
-    "emptyFiltered": "Nenhuma atividade de pull request corresponde aos filtros atuais."
+    "emptyFiltered": "Nenhuma atividade de pull request corresponde aos filtros atuais.",
+    "comparisonTitle": "Comparação de desenvolvedores",
+    "topDevelopers": "Mostrando os {{max}} principais desenvolvedores por PRs autorados.",
+    "noComparisonData": "Não há desenvolvedores para comparar com os filtros atuais.",
+    "classificationChartTitle": "PRs autorados por semana e classificação",
+    "noClassificationData": "Não há dados semanais de classificação para os filtros atuais.",
+    "tableTitle": "Desenvolvedores",
+    "tableAria": "Tabela de desempenho de pull requests por desenvolvedor",
+    "close": "Fechar",
+    "drilldownTitle": "Pull requests de {{name}}",
+    "drilldownLoadError": "Não foi possível carregar os pull requests contribuintes.",
+    "drilldownEmpty": "Nenhum pull request contribuinte neste período.",
+    "loadingDrilldown": "Carregando pull requests",
+    "drilldownTableAria": "Pull requests contribuintes",
+    "cards": {
+      "authored": "PRs autorados",
+      "comments": "Comentários",
+      "reviews": "Revisões"
+    },
+    "columns": {
+      "developer": "Desenvolvedor",
+      "authored": "Autorados",
+      "comments": "Comentários",
+      "reviews": "Revisões"
+    },
+    "classification": {
+      "feature": "Funcionalidade",
+      "fix": "Correção",
+      "documentation": "Documentação",
+      "maintenance": "Manutenção",
+      "unclassified": "Sem classificação"
+    },
+    "roles": {
+      "owner": "Autor",
+      "involved": "Envolvido"
+    },
+    "drilldownColumns": {
+      "title": "Título",
+      "repository": "Repositório",
+      "mergedAt": "Data do PR",
+      "role": "Papel",
+      "classification": "Classificação"
+    }
   },
   "teamAnalytics": {
     "title": "Análises da equipe",
