@@ -1,9 +1,5 @@
 export type PrPerformanceClassification =
-  | 'feature'
-  | 'fix'
-  | 'documentation'
-  | 'maintenance'
-  | 'unclassified';
+  'feature' | 'fix' | 'documentation' | 'maintenance' | 'unclassified';
 
 export type PerformanceTotals = {
   authoredPullRequestCount: number;

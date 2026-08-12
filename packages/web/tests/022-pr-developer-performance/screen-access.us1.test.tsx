@@ -25,9 +25,7 @@ describe('US1 leader team PR performance access', () => {
 
   it('hides Team PR Performance menu entry for non-leaders', () => {
     const options = getVisibleShellMenuOptions(testUser);
-    expect(options.some((option) => option.route === LEADER_TEAM_PR_PERFORMANCE_ROUTE)).toBe(
-      false,
-    );
+    expect(options.some((option) => option.route === LEADER_TEAM_PR_PERFORMANCE_ROUTE)).toBe(false);
   });
 
   it('redirects non-leader users away from team PR performance', async () => {
