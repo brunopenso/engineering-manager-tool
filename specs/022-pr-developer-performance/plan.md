@@ -103,11 +103,11 @@ packages/web/tests/022-pr-developer-performance/
 
 ## Complexity Tracking
 
-| Item                                         | Why Needed                                                                 | Simpler Alternative Rejected Because                                                         |
-| -------------------------------------------- | -------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------- |
-| Dedicated aggregated leader PR performance API | Team-scale metrics + weekly classification need DAC-safe server rollups   | Client aggregation of raw my-activity-like payloads over-fetches and risks leakage           |
-| Separate drill-down endpoint                 | Keeps primary payload small; loads contributing PRs only when leader drills | Embedding all PR bodies in the aggregate response is heavy for 60-day subtree views          |
-| Unclassified series                          | Clarify session: week totals must equal authored volume                    | Dropping null classifications understates volume; inventing a typed class lies to managers |
+| Item                                           | Why Needed                                                                  | Simpler Alternative Rejected Because                                                       |
+| ---------------------------------------------- | --------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------ |
+| Dedicated aggregated leader PR performance API | Team-scale metrics + weekly classification need DAC-safe server rollups     | Client aggregation of raw my-activity-like payloads over-fetches and risks leakage         |
+| Separate drill-down endpoint                   | Keeps primary payload small; loads contributing PRs only when leader drills | Embedding all PR bodies in the aggregate response is heavy for 60-day subtree views        |
+| Unclassified series                            | Clarify session: week totals must equal authored volume                     | Dropping null classifications understates volume; inventing a typed class lies to managers |
 
 No constitutional violations requiring justification.
 

@@ -96,17 +96,17 @@
 
 ## DAC test matrix
 
-| Case                                              | Expected                             |
-| ------------------------------------------------- | ------------------------------------ |
-| Leader loads without `userId`                     | Aggregates over all descendants only |
-| Leader loads with subtree `userId`                | Scoped aggregates + chart            |
-| Leader passes out-of-subtree `userId`             | 403                                  |
-| Non-leader API                                    | 403                                  |
-| Unauthenticated                                   | 401                                  |
-| Invalid date range                                | 400                                  |
-| Actor’s own PR activity in subtree-wide totals    | Excluded                             |
-| Peer/superior PR activity                         | Never in aggregates or drill-down    |
-| Week segment sum vs authored count                | Equal including Unclassified         |
+| Case                                           | Expected                             |
+| ---------------------------------------------- | ------------------------------------ |
+| Leader loads without `userId`                  | Aggregates over all descendants only |
+| Leader loads with subtree `userId`             | Scoped aggregates + chart            |
+| Leader passes out-of-subtree `userId`          | 403                                  |
+| Non-leader API                                 | 403                                  |
+| Unauthenticated                                | 401                                  |
+| Invalid date range                             | 400                                  |
+| Actor’s own PR activity in subtree-wide totals | Excluded                             |
+| Peer/superior PR activity                      | Never in aggregates or drill-down    |
+| Week segment sum vs authored count             | Equal including Unclassified         |
 
 ## State transitions
 
