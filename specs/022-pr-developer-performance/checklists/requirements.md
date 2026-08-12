@@ -32,4 +32,5 @@
 ## Notes
 
 - Validation passed on first review (2026-08-11). Spec uses product defaults aligned with Team Analytics and My Pull Requests (60-day period, leader-only menu, hierarchical DAC, authored/comment/review metrics from imported PR data).
-- Ready for `/speckit-clarify` (optional) or `/speckit-plan`.
+- Re-validated after clarify session 2026-08-12: User Story 5 (weekly authored PRs by classification), team vs member chart scope, and Unclassified bucket. All checklist items still pass (16/16).
+- Ready for `/speckit-plan`.

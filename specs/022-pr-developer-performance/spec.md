@@ -10,6 +10,7 @@
 ### Session 2026-08-12
 
 - Q: When no team member is selected on Team PR Performance, how should the weekly PRs-by-classification chart behave? → A: Team aggregate by week + classification when unfiltered; switch to the selected member when filtered (Option A)
+- Q: How should the weekly classification chart treat authored pull requests that have no effective classification? → A: Show an Unclassified bucket/series so every authored PR in range is visible and week totals match authored volume (Option A)
 
 ## User Scenarios & Testing _(mandatory, with required automated tests)_
 
@@ -110,15 +111,15 @@ As a leader, I browse a data table of developers in scope with their authored PR
 
 ### User Story 5 - Weekly authored PRs by classification chart (Priority: P1)
 
-As a leader, I see a chart of how many pull requests developers **authored** (created) each calendar week in the selected period, broken down by pull request classification (feature, fix, documentation, maintenance), so I can understand the mix of work being shipped over time—for the whole reporting subtree by default, or for one selected team member.
+As a leader, I see a chart of how many pull requests developers **authored** (created) each calendar week in the selected period, broken down by pull request classification (feature, fix, documentation, maintenance, plus Unclassified when no effective classification exists), so I can understand the mix of work being shipped over time—for the whole reporting subtree by default, or for one selected team member.
 
 **Why this priority**: Explicitly requested for coaching and performance understanding; complements volume totals with classification mix over time.
 
-**Automated Test Requirement**: Add tests at `tests/022-pr-developer-performance/chart-prs-by-classification.us5.test.md` covering: weekly bucketing of authored PRs only; series/segments for each known classification type; team-wide aggregate when no member is selected; single-member series when a member is selected; empty weeks shown as zero; filters refresh the chart; hierarchical DAC (no peer/superior data); effective classification used for bucketing (user reclassification preferred when present, otherwise system classification).
+**Automated Test Requirement**: Add tests at `tests/022-pr-developer-performance/chart-prs-by-classification.us5.test.md` covering: weekly bucketing of authored PRs only; series/segments for each known classification type plus Unclassified; team-wide aggregate when no member is selected; single-member series when a member is selected; empty weeks shown as zero; filters refresh the chart; hierarchical DAC (no peer/superior data); effective classification used for bucketing (user reclassification preferred when present, otherwise system classification); authored PRs with neither value counted in Unclassified; week totals equal authored PR count in that week.
 
-**Frontend Design**: The chart MUST appear on the Team PR Performance screen with a clear title and legend distinguishing classification types. Weeks MUST be labeled in chronological order for the selected date range. Visual treatment SHOULD align with the existing Team Analytics weekly stacked/segmented chart pattern where practical.
+**Frontend Design**: The chart MUST appear on the Team PR Performance screen with a clear title and legend distinguishing classification types including Unclassified. Weeks MUST be labeled in chronological order for the selected date range. Visual treatment SHOULD align with the existing Team Analytics weekly stacked/segmented chart pattern where practical.
 
-**Internationalization**: Chart title, legend labels for each classification (and any unclassified bucket if later defined), empty-state copy, and axis labels MUST be i18n keys in `en-US` and `pt-BR`.
+**Internationalization**: Chart title, legend labels for each classification including Unclassified, empty-state copy, and axis labels MUST be i18n keys in `en-US` and `pt-BR`.
 
 **Access Control Validation**: Counts MUST include only authored pull requests owned by users in the authorized subtree (or the single selected member). No peer, superior, or out-of-branch data.
 
@@ -127,9 +128,10 @@ As a leader, I see a chart of how many pull requests developers **authored** (cr
 1. **Given** no team member is selected and reports authored feature and fix pull requests in the same calendar week within scope, **When** the leader views the weekly classification chart, **Then** that week shows separate counts (or stacked segments) per classification totaling the authored pull requests created that week across the subtree.
 2. **Given** a leader selects one team member, **When** the chart refreshes, **Then** only that member's authored pull requests contribute to weekly classification totals.
 3. **Given** a leader clears the team member selection, **When** the chart refreshes, **Then** it returns to team-wide weekly classification aggregates for the reporting subtree.
-4. **Given** a week in the selected range with no authored pull requests in scope, **When** the chart renders, **Then** that week appears with zero counts for all classification series.
+4. **Given** a week in the selected range with no authored pull requests in scope, **When** the chart renders, **Then** that week appears with zero counts for all classification series (including Unclassified).
 5. **Given** an authored pull request has a user reclassification different from its original system classification, **When** it is counted on the chart, **Then** it is bucketed under the effective classification (user reclassification takes precedence).
 6. **Given** a leader changes the date range to a valid new period, **When** the chart refreshes, **Then** weekly buckets and classification counts reflect only authored PRs whose PR date falls within the inclusive range.
+7. **Given** an authored pull request in scope has no effective classification (neither user reclassification nor system classification), **When** the chart renders, **Then** that PR is counted in the Unclassified series for its week and is not omitted from the week total.
 
 ---
 
@@ -144,7 +146,7 @@ As a leader, I see a chart of how many pull requests developers **authored** (cr
 - Date range includes days/weeks with no activity: comparison and charts treat those periods as zero rather than omitting the timeline in a misleading way when time-series are shown.
 - Peer or superior identity must never appear in pickers, labels, totals, charts, or drill-down lists.
 - Weekly classification chart counts authored (“created”) pull requests only; comments and reviews do not create chart series.
-- Authored PRs with missing or unknown classification: treatment TBD pending clarification (do not silently invent a classification type).
+- Authored PRs with missing or unknown effective classification appear in an Unclassified series/segment; they MUST NOT be silently dropped or forced into feature/fix/documentation/maintenance.
 
 ## Requirements _(mandatory, with required test coverage)_
 
@@ -168,9 +170,10 @@ _For features that expose collaborator or organizational data, requirements MUST
 - **FR-012**: All user-visible web UI strings for this feature MUST be externalized for `en-US` and `pt-BR` with key parity.
 - **FR-013**: Every API, report, and visualization in this feature MUST enforce hierarchical visibility: only the leader's recursive descendants (and selected descendant when filtered). Peer, superior, and out-of-branch data MUST be denied.
 - **FR-014**: Metrics MUST be derived from already imported pull request activity linked to users in scope; the screen MUST NOT invent activity for users without imported data.
-- **FR-015**: System MUST display a weekly chart of authored pull requests broken down by pull request classification (feature, fix, documentation, maintenance) for the selected period.
+- **FR-015**: System MUST display a weekly chart of authored pull requests broken down by pull request classification (feature, fix, documentation, maintenance, and Unclassified) for the selected period.
 - **FR-016**: When no team member is selected, the weekly classification chart MUST aggregate authored PRs across the leader's reporting subtree; when a team member is selected, it MUST show only that member's authored PRs.
 - **FR-017**: Classification bucketing on the weekly chart MUST use the effective classification (user reclassification when present; otherwise the system classification).
+- **FR-018**: Authored pull requests with no effective classification MUST be counted in an Unclassified bucket/series so week totals match authored volume in range; the system MUST NOT invent a typed classification for them.
 
 ### Access Control Matrix _(required when data visibility is in scope)_
 
@@ -188,7 +191,7 @@ _For features that expose collaborator or organizational data, requirements MUST
 - **Developer PR Performance Metrics**: Per-person counts of authored pull requests, comments made, and reviews submitted within the filtered imported PR data.
 - **Team PR Performance Totals**: Aggregated authored, comment, and review counts across the current filter scope.
 - **Contributing Pull Request**: An imported pull request that counts toward a developer's metrics in the selected period (for drill-down).
-- **Weekly Authored PR Classification Series**: Time-bucketed counts of authored pull requests per calendar week, segmented by effective pull request classification, for either the full authorized subtree or one selected member.
+- **Weekly Authored PR Classification Series**: Time-bucketed counts of authored pull requests per calendar week, segmented by effective pull request classification (feature, fix, documentation, maintenance) or Unclassified when none applies, for either the full authorized subtree or one selected member.
 
 ## Success Criteria _(mandatory)_
 
@@ -200,7 +203,8 @@ _For features that expose collaborator or organizational data, requirements MUST
 - **SC-004**: In authorization tests, 0% of peer or superior PR metrics leak into pickers, totals, comparisons, charts, tables, or drill-downs.
 - **SC-005**: Leaders with empty teams or no imported PR data see a clear empty state rather than errors or fabricated performance numbers in 100% of those cases.
 - **SC-006**: All user-visible strings for the screen are available in both English (United States) and Brazilian Portuguese with complete key parity before release.
-- **SC-007**: With default filters, a leader can see for each week in range how many authored PRs fall into each classification category (team-wide), and after selecting a member can see that member's weekly classification mix, without leaving the page.
+- **SC-007**: With default filters, a leader can see for each week in range how many authored PRs fall into each classification category including Unclassified (team-wide), and after selecting a member can see that member's weekly classification mix, without leaving the page.
+- **SC-008**: For any tested week with authored PRs in scope, the sum of classification segments (including Unclassified) equals the authored PR count for that week.
 
 ## Assumptions
 
@@ -214,4 +218,5 @@ _For features that expose collaborator or organizational data, requirements MUST
 - Mobile-responsive layout follows existing app shell patterns; a dedicated native mobile app is out of scope.
 - Drill-down shows contributing PRs already available in imported data; creating deliverables from PRs remains owned by existing features.
 - Weekly classification chart counts authored PRs only (“creating”), using the product’s existing classification types (feature, fix, documentation, maintenance) and effective classification (user reclassification preferred over system classification), consistent with My Pull Requests.
+- Authored PRs without an effective classification are shown as Unclassified rather than excluded or remapped to a typed category.
 - When no team member is selected, the weekly classification chart shows team-wide aggregates; when a member is selected, it shows that member only.
