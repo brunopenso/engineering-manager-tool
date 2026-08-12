@@ -155,4 +155,41 @@ export async function reclassifyPullRequests(
   return (await response.json()) as ReclassifyPullRequestsResponse;
 }
 
+export type DeliverableProposal = {
+  title: string;
+  description: string;
+  roleInDeliverable: string;
+  businessImpact: 'LOW' | 'MEDIUM' | 'HIGH' | 'TRANSFORMATIONAL';
+  improvementPoints: string;
+  systemTagIds: string[];
+  technicalDescription?: string | null;
+  userTags?: string[];
+  links?: { url: string; label?: string | null }[];
+};
+
+export type AnalyzeDeliverableFromPullRequestsResponse = {
+  proposal: DeliverableProposal;
+  sourcePullRequestIds: string[];
+};
+
+export async function analyzeDeliverableFromPullRequests(
+  accessToken: string,
+  params: { pullRequestIds: string[] },
+): Promise<AnalyzeDeliverableFromPullRequestsResponse> {
+  const response = await fetch(`${API_BASE_URL}/deliverables/from-pull-requests/analyze`, {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(params),
+  });
+
+  if (!response.ok) {
+    throw await parseError(response);
+  }
+
+  return (await response.json()) as AnalyzeDeliverableFromPullRequestsResponse;
+}
+
 export { defaultLast60DayRange, formatDateInput, isValidDateRange } from '../utils/dateRange.js';

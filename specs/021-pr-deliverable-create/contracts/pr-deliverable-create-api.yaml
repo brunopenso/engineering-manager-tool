@@ -1,0 +1,161 @@
+openapi: 3.0.3
+info:
+  title: Engineering Manager Tool — Create Deliverable from Pull Requests API
+  version: 0.1.0
+  description: >
+    Authenticated analyze endpoint that returns a mocked deliverable proposal from
+    selected imported pull request IDs. Persistence uses the existing
+    POST /deliverables create contract (feature 006). Live LLM calls are out of scope.
+servers:
+  - url: http://localhost:3001
+paths:
+  /deliverables/from-pull-requests/analyze:
+    post:
+      summary: Analyze selected pull requests into a deliverable proposal (mocked)
+      tags: [Deliverables]
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AnalyzeFromPullRequestsRequest'
+      responses:
+        '200':
+          description: Non-persisted deliverable proposal ready for user confirmation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AnalyzeFromPullRequestsResponse'
+        '400':
+          description: Invalid body (empty IDs, too many IDs, malformed UUIDs)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Missing or invalid application token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: >
+            One or more pull request IDs are not in the caller's authorized
+            activity set (not author and not involved via comment/review)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    AnalyzeFromPullRequestsRequest:
+      type: object
+      required: [pullRequestIds]
+      additionalProperties: false
+      properties:
+        pullRequestIds:
+          type: array
+          minItems: 1
+          maxItems: 50
+          items:
+            type: string
+            format: uuid
+          description: Imported pull request primary keys selected on My Pull Requests
+
+    AnalyzeFromPullRequestsResponse:
+      type: object
+      required: [proposal, sourcePullRequestIds]
+      additionalProperties: false
+      properties:
+        sourcePullRequestIds:
+          type: array
+          items:
+            type: string
+            format: uuid
+          description: Echo of authorized IDs used to build the proposal
+        proposal:
+          $ref: '#/components/schemas/DeliverableProposal'
+
+    DeliverableProposal:
+      type: object
+      required:
+        - title
+        - description
+        - roleInDeliverable
+        - businessImpact
+        - improvementPoints
+        - systemTagIds
+      additionalProperties: false
+      properties:
+        title:
+          type: string
+          minLength: 1
+          maxLength: 200
+        description:
+          type: string
+          minLength: 1
+          maxLength: 5000
+        roleInDeliverable:
+          type: string
+          minLength: 1
+          maxLength: 500
+        businessImpact:
+          type: string
+          enum: [LOW, MEDIUM, HIGH, TRANSFORMATIONAL]
+        improvementPoints:
+          type: string
+          minLength: 1
+          maxLength: 5000
+        systemTagIds:
+          type: array
+          maxItems: 20
+          items:
+            type: string
+            format: uuid
+          description: May be empty; empty is valid for create in current product rules
+        technicalDescription:
+          type: string
+          nullable: true
+          maxLength: 5000
+        userTags:
+          type: array
+          maxItems: 20
+          items:
+            type: string
+            maxLength: 64
+        links:
+          type: array
+          maxItems: 20
+          items:
+            $ref: '#/components/schemas/DeliverableLinkInput'
+
+    DeliverableLinkInput:
+      type: object
+      required: [url]
+      additionalProperties: false
+      properties:
+        url:
+          type: string
+          format: uri
+          description: Must be http or https
+        label:
+          type: string
+          nullable: true
+          maxLength: 120
+
+    ErrorResponse:
+      type: object
+      required: [code, message]
+      properties:
+        code:
+          type: string
+          example: FORBIDDEN
+        message:
+          type: string

@@ -26,6 +26,12 @@ import {
   DeliverableValidationError,
   InvalidSystemTagError,
 } from '../services/deliverableValidation.js';
+import {
+  analyzeDeliverableFromPullRequests,
+  DeliverableFromPrsForbiddenError,
+  DeliverableFromPrsValidationError,
+  validateAnalyzeFromPullRequestsInput,
+} from '../services/deliverableFromPrsService.js';
 
 type DeliverableBody = {
   title?: string;
@@ -116,6 +122,36 @@ function handleDeliverableError(error: unknown, reply: FastifyReply) {
 }
 
 export async function registerDeliverablesRoutes(app: FastifyInstance): Promise<void> {
+  app.post<{ Body: { pullRequestIds?: string[] } }>(
+    '/deliverables/from-pull-requests/analyze',
+    async (request, reply) => {
+      const auth = requireAuth(request, reply);
+      if (!auth) {
+        return {
+          code: AUTH_ERROR_CODES.MISSING_APP_TOKEN,
+          message: 'Authentication token is missing.',
+        };
+      }
+
+      try {
+        const input = validateAnalyzeFromPullRequestsInput(request.body);
+        return await analyzeDeliverableFromPullRequests(auth.userId, input);
+      } catch (error) {
+        if (error instanceof DeliverableFromPrsValidationError) {
+          return validationError(reply, error.message);
+        }
+        if (error instanceof DeliverableFromPrsForbiddenError) {
+          reply.code(403);
+          return {
+            code: AUTH_ERROR_CODES.FORBIDDEN,
+            message: error.message,
+          };
+        }
+        throw error;
+      }
+    },
+  );
+
   app.get<{
     Querystring: {
       startDate?: string;
