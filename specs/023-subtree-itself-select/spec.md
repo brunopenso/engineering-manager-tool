@@ -103,12 +103,12 @@ _For features that expose collaborator or organizational data, requirements MUST
 
 ### Access Control Matrix _(required when data visibility is in scope)_
 
-| Actor                          | Allowed Data Visibility                                                                 | Explicitly Denied Visibility                         | Validation Notes                                      |
-| ------------------------------ | --------------------------------------------------------------------------------------- | ---------------------------------------------------- | ----------------------------------------------------- |
-| Top / mid leader               | Subtree or Itself for any descendant in their authorized reporting tree                 | Peers, superiors, other branches, non-descendants    | Subtree of a child cannot escape actor’s own subtree  |
-| Leader selecting child’s team  | Selected descendant + that descendant’s descendants (still within actor’s tree)         | Anyone outside actor’s authorized tree               | Deep include-all-levels; not direct-reports-only      |
-| Leader selecting Itself        | Only the chosen descendant’s own records                                                | That person’s reports (unless separately selected)   | Itself never widens access beyond the person          |
-| Individual contributor / peer  | No access to these leader team screens / picker scopes                                  | All team scopes                                      | Existing leader-only gates remain                     |
+| Actor                         | Allowed Data Visibility                                                         | Explicitly Denied Visibility                       | Validation Notes                                     |
+| ----------------------------- | ------------------------------------------------------------------------------- | -------------------------------------------------- | ---------------------------------------------------- |
+| Top / mid leader              | Subtree or Itself for any descendant in their authorized reporting tree         | Peers, superiors, other branches, non-descendants  | Subtree of a child cannot escape actor’s own subtree |
+| Leader selecting child’s team | Selected descendant + that descendant’s descendants (still within actor’s tree) | Anyone outside actor’s authorized tree             | Deep include-all-levels; not direct-reports-only     |
+| Leader selecting Itself       | Only the chosen descendant’s own records                                        | That person’s reports (unless separately selected) | Itself never widens access beyond the person         |
+| Individual contributor / peer | No access to these leader team screens / picker scopes                          | All team scopes                                    | Existing leader-only gates remain                    |
 
 ### Key Entities
 
