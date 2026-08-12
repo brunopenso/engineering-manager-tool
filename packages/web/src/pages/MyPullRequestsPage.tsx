@@ -341,15 +341,15 @@ export default function MyPullRequestsPage() {
                   >
                     {t('createDeliverable.button')}
                   </Button>
-                  {selectedIds.size > 0 ? (
-                    <Button
-                      variant="outlined"
-                      onClick={() => setReclassifyOpen(true)}
-                      data-testid="change-classification-button"
-                    >
-                      {t('reclassify.button')}
-                    </Button>
-                  ) : null}
+                  <Button
+                    variant="outlined"
+                    disabled={selectedIds.size === 0}
+                    onClick={() => setReclassifyOpen(true)}
+                    data-testid="change-classification-button"
+                    title={selectedIds.size === 0 ? t('reclassify.emptySelectionHint') : undefined}
+                  >
+                    {t('reclassify.button')}
+                  </Button>
                 </Stack>
 
                 <MyPullRequestsTable
