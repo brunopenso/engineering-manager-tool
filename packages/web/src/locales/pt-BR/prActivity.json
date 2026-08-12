@@ -61,7 +61,8 @@
     "saving": "Salvando…",
     "loadingOptions": "Carregando opções de classificação…",
     "loadOptionsError": "Não foi possível carregar as opções de classificação. Tente novamente.",
-    "saveError": "Não foi possível atualizar a classificação. Tente novamente."
+    "saveError": "Não foi possível atualizar a classificação. Tente novamente.",
+    "emptySelectionHint": "Selecione um ou mais pull requests para alterar a classificação."
   },
   "modal": {
     "title": "Detalhes do pull request",

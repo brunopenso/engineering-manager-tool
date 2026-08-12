@@ -13,7 +13,7 @@ describe('PR reclassification UI', () => {
     vi.unstubAllGlobals();
   });
 
-  it('shows Change Classification after selecting rows and saves via modal', async () => {
+  it('keeps Change Classification visible, enables after selecting rows, and saves via modal', async () => {
     const user = userEvent.setup();
     const fetchMock = vi.fn(async (input: RequestInfo | URL, init?: RequestInit) => {
       const url = String(input);
@@ -78,10 +78,10 @@ describe('PR reclassification UI', () => {
     });
 
     expect(await screen.findByText('PR A')).toBeInTheDocument();
-    expect(screen.queryByTestId('change-classification-button')).not.toBeInTheDocument();
+    expect(screen.getByTestId('change-classification-button')).toBeDisabled();
 
     await user.click(within(screen.getByTestId('pr-select-pr-a')).getByRole('checkbox'));
-    expect(screen.getByTestId('change-classification-button')).toBeInTheDocument();
+    expect(screen.getByTestId('change-classification-button')).toBeEnabled();
 
     await user.click(screen.getByTestId('change-classification-button'));
     expect(await screen.findByTestId('change-classification-modal')).toBeInTheDocument();
@@ -98,7 +98,7 @@ describe('PR reclassification UI', () => {
       expect(screen.queryByTestId('change-classification-modal')).not.toBeInTheDocument();
     });
     expect(screen.getByTestId('pr-classification-pr-a')).toHaveTextContent('Documentation');
-    expect(screen.queryByTestId('change-classification-button')).not.toBeInTheDocument();
+    expect(screen.getByTestId('change-classification-button')).toBeDisabled();
   });
 
   it('displays userReclassification over classificationType', async () => {
