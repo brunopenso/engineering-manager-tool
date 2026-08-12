@@ -15,6 +15,11 @@ describe('021 create deliverable select-and-open', () => {
 
   it('keeps Create deliverable disabled until a row is selected, then opens loading modal', async () => {
     const user = userEvent.setup();
+    let releaseAnalyze!: () => void;
+    const analyzeGate = new Promise<void>((resolve) => {
+      releaseAnalyze = resolve;
+    });
+
     const fetchMock = vi.fn(async (input: RequestInfo | URL, init?: RequestInit) => {
       const url = String(input);
       if (url.includes('/github-pull-requests/my-activity')) {
@@ -29,7 +34,7 @@ describe('021 create deliverable select-and-open', () => {
         };
       }
       if (url.includes('/deliverables/from-pull-requests/analyze')) {
-        await new Promise((resolve) => setTimeout(resolve, 50));
+        await analyzeGate;
         return {
           ok: true,
           json: async () => ({
@@ -72,5 +77,8 @@ describe('021 create deliverable select-and-open', () => {
         ),
       ).toBe(true);
     });
+
+    releaseAnalyze();
+    expect(await screen.findByTestId('create-deliverable-review')).toBeInTheDocument();
   });
 });

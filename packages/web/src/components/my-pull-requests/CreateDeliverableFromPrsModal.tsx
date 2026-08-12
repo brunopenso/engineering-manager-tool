@@ -100,7 +100,9 @@ export default function CreateDeliverableFromPrsModal({
     return () => {
       requestGeneration.current += 1;
     };
-  }, [open, accessToken, pullRequestIds, t]);
+    // Depend on id membership string so a new array instance with the same IDs does not retrigger.
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- pullRequestIds.join(',') is intentional
+  }, [open, accessToken, pullRequestIds.join(','), t]);
 
   const handleClose = () => {
     if (phase === 'creating') {
