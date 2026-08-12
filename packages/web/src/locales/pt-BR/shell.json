@@ -10,6 +10,7 @@
     "githubIntegration": "Integração GitHub",
     "teamDeliverables": "Entregas da equipe",
     "teamAnalytics": "Análises da equipe",
+    "teamPrPerformance": "Desempenho de PRs da equipe",
     "hierarchyManagement": "Gestão de hierarquia"
   },
   "sections": {

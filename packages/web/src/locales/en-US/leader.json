@@ -1,4 +1,57 @@
 {
+  "teamPrPerformance": {
+    "title": "Team PR Performance",
+    "subtitle": "Understand developer contribution from imported pull request activity across your reporting team.",
+    "hierarchyLoadError": "Unable to load team hierarchy.",
+    "performanceLoadError": "Unable to load team PR performance.",
+    "noTeamMembers": "No team members are available in your hierarchy. PR performance will appear when you have direct or indirect reports.",
+    "loadingPerformance": "Loading team PR performance",
+    "loadedSummary": "Loaded {{authored}} authored PRs, {{comments}} comments, and {{reviews}} reviews from {{startDate}} to {{endDate}}.",
+    "clearTeamMember": "Clear team member",
+    "emptyFiltered": "No pull request activity matches the current filters.",
+    "comparisonTitle": "Developer comparison",
+    "topDevelopers": "Showing top {{max}} developers by authored PRs.",
+    "noComparisonData": "No developers to compare for the current filters.",
+    "classificationChartTitle": "Authored PRs by week and classification",
+    "noClassificationData": "No weekly classification data for the current filters.",
+    "tableTitle": "Developers",
+    "tableAria": "Developer pull request performance table",
+    "close": "Close",
+    "drilldownTitle": "Pull requests for {{name}}",
+    "drilldownLoadError": "Unable to load contributing pull requests.",
+    "drilldownEmpty": "No contributing pull requests in this period.",
+    "loadingDrilldown": "Loading pull requests",
+    "drilldownTableAria": "Contributing pull requests",
+    "cards": {
+      "authored": "Authored PRs",
+      "comments": "Comments",
+      "reviews": "Reviews"
+    },
+    "columns": {
+      "developer": "Developer",
+      "authored": "Authored",
+      "comments": "Comments",
+      "reviews": "Reviews"
+    },
+    "classification": {
+      "feature": "Feature",
+      "fix": "Fix",
+      "documentation": "Documentation",
+      "maintenance": "Maintenance",
+      "unclassified": "Unclassified"
+    },
+    "roles": {
+      "owner": "Owner",
+      "involved": "Involved"
+    },
+    "drilldownColumns": {
+      "title": "Title",
+      "repository": "Repository",
+      "mergedAt": "PR date",
+      "role": "Role",
+      "classification": "Classification"
+    }
+  },
   "teamAnalytics": {
     "title": "Team Analytics",
     "subtitle": "Visualize deliverable activity and review workload across your reporting team.",

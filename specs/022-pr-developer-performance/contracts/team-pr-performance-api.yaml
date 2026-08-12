@@ -1,0 +1,286 @@
+openapi: 3.0.3
+info:
+  title: Engineering Manager Tool Leader Team PR Performance API
+  version: 0.1.0
+  description: >
+    Leader-only aggregated pull request performance metrics for the Team PR Performance
+    screen (totals, per-developer comparison, weekly authored PRs by classification,
+    and developer PR drill-down).
+servers:
+  - url: http://localhost:3001
+paths:
+  /users/leader/team-pr-performance:
+    get:
+      summary: Aggregated team PR performance for cards, comparison, and weekly classification chart
+      tags: [LeaderTeamPrPerformance]
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: startDate
+          in: query
+          required: true
+          schema:
+            type: string
+            format: date
+          description: Inclusive start date (YYYY-MM-DD); filters pull request merged_at
+        - name: endDate
+          in: query
+          required: true
+          schema:
+            type: string
+            format: date
+          description: Inclusive end date (YYYY-MM-DD); filters pull request merged_at
+        - name: userId
+          in: query
+          required: false
+          schema:
+            type: string
+            format: uuid
+          description: Optional team member; must be in leader descendant subtree
+      responses:
+        '200':
+          description: Totals, per-developer metrics, and weekly authored classification buckets
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TeamPrPerformanceResponse'
+        '400':
+          description: Invalid date range (e.g. end before start)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Missing or invalid application token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Leader role required or userId outside subtree
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /users/leader/team-pr-performance/developers/{userId}/pull-requests:
+    get:
+      summary: Contributing pull requests for one developer in the date range (drill-down)
+      tags: [LeaderTeamPrPerformance]
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+          description: Team member in leader descendant subtree
+        - name: startDate
+          in: query
+          required: true
+          schema:
+            type: string
+            format: date
+        - name: endDate
+          in: query
+          required: true
+          schema:
+            type: string
+            format: date
+      responses:
+        '200':
+          description: Pull requests the developer authored or was involved in within the period
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeveloperPrDrilldownResponse'
+        '400':
+          description: Invalid date range
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Missing or invalid application token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Leader role required or userId outside subtree
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    ErrorResponse:
+      type: object
+      required: [code, message]
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+
+    PrClassification:
+      type: string
+      enum: [feature, fix, documentation, maintenance, unclassified]
+
+    InvolvementRole:
+      type: string
+      enum: [owner, involved]
+
+    PerformanceTotals:
+      type: object
+      required: [authoredPullRequestCount, commentCount, reviewCount]
+      properties:
+        authoredPullRequestCount:
+          type: integer
+          minimum: 0
+        commentCount:
+          type: integer
+          minimum: 0
+        reviewCount:
+          type: integer
+          minimum: 0
+
+    DeveloperPrPerformanceRow:
+      type: object
+      required:
+        - userId
+        - displayName
+        - email
+        - authoredPullRequestCount
+        - commentCount
+        - reviewCount
+      properties:
+        userId:
+          type: string
+          format: uuid
+        displayName:
+          type: string
+        email:
+          type: string
+        githubLogin:
+          type: string
+          nullable: true
+        authoredPullRequestCount:
+          type: integer
+          minimum: 0
+        commentCount:
+          type: integer
+          minimum: 0
+        reviewCount:
+          type: integer
+          minimum: 0
+
+    WeeklyClassificationBucketRow:
+      type: object
+      required: [weekStart, classification, count]
+      properties:
+        weekStart:
+          type: string
+          format: date
+          description: Monday UTC of the week
+        classification:
+          $ref: '#/components/schemas/PrClassification'
+        count:
+          type: integer
+          minimum: 0
+
+    TeamPrPerformanceResponse:
+      type: object
+      required:
+        - startDate
+        - endDate
+        - totals
+        - developers
+        - weekStarts
+        - authoredByWeekAndClassification
+      properties:
+        startDate:
+          type: string
+          format: date
+        endDate:
+          type: string
+          format: date
+        userId:
+          type: string
+          format: uuid
+          nullable: true
+        totals:
+          $ref: '#/components/schemas/PerformanceTotals'
+        developers:
+          type: array
+          items:
+            $ref: '#/components/schemas/DeveloperPrPerformanceRow'
+        weekStarts:
+          type: array
+          items:
+            type: string
+            format: date
+        authoredByWeekAndClassification:
+          type: array
+          items:
+            $ref: '#/components/schemas/WeeklyClassificationBucketRow'
+
+    DeveloperPrDrilldownItem:
+      type: object
+      required:
+        - id
+        - title
+        - repository
+        - mergedAt
+        - involvementRole
+        - effectiveClassification
+      properties:
+        id:
+          type: string
+          format: uuid
+        title:
+          type: string
+        repository:
+          type: string
+        mergedAt:
+          type: string
+          format: date-time
+        involvementRole:
+          $ref: '#/components/schemas/InvolvementRole'
+        effectiveClassification:
+          $ref: '#/components/schemas/PrClassification'
+        url:
+          type: string
+          nullable: true
+        actorCommentCount:
+          type: integer
+          minimum: 0
+        actorReviewCount:
+          type: integer
+          minimum: 0
+
+    DeveloperPrDrilldownResponse:
+      type: object
+      required: [userId, startDate, endDate, pullRequests]
+      properties:
+        userId:
+          type: string
+          format: uuid
+        startDate:
+          type: string
+          format: date
+        endDate:
+          type: string
+          format: date
+        pullRequests:
+          type: array
+          items:
+            $ref: '#/components/schemas/DeveloperPrDrilldownItem'
