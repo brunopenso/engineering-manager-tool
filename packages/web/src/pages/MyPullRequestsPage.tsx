@@ -346,9 +346,7 @@ export default function MyPullRequestsPage() {
                     disabled={selectedIds.size === 0}
                     onClick={() => setReclassifyOpen(true)}
                     data-testid="change-classification-button"
-                    title={
-                      selectedIds.size === 0 ? t('reclassify.emptySelectionHint') : undefined
-                    }
+                    title={selectedIds.size === 0 ? t('reclassify.emptySelectionHint') : undefined}
                   >
                     {t('reclassify.button')}
                   </Button>
