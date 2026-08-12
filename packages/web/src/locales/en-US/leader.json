@@ -6,7 +6,9 @@
     "performanceLoadError": "Unable to load team PR performance.",
     "noTeamMembers": "No team members are available in your hierarchy. PR performance will appear when you have direct or indirect reports.",
     "loadingPerformance": "Loading team PR performance",
-    "loadedSummary": "Loaded {{authored}} authored PRs, {{comments}} comments, and {{reviews}} reviews from {{startDate}} to {{endDate}}."
+    "loadedSummary": "Loaded {{authored}} authored PRs, {{comments}} comments, and {{reviews}} reviews from {{startDate}} to {{endDate}}.",
+    "clearTeamMember": "Clear team member",
+    "emptyFiltered": "No pull request activity matches the current filters."
   },
   "teamAnalytics": {
     "title": "Team Analytics",

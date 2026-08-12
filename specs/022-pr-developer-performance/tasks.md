@@ -73,14 +73,14 @@
 
 ### Tests for User Story 2 (MANDATORY)
 
-- [ ] T019 [P] [US2] Add backend tests that optional `userId` scopes aggregates and clearing conceptually maps to omitted param in `packages/backend/tests/022-pr-developer-performance/team-pr-performance-filters.us2.test.ts`
-- [ ] T020 [P] [US2] Add web UI tests for default 60-day range, member select/clear, invalid date range, and empty filtered results in `packages/web/tests/022-pr-developer-performance/filters.us2.test.tsx`
+- [x] T019 [P] [US2] Add backend tests that optional `userId` scopes aggregates and clearing conceptually maps to omitted param in `packages/backend/tests/022-pr-developer-performance/team-pr-performance-filters.us2.test.ts`
+- [x] T020 [P] [US2] Add web UI tests for default 60-day range, member select/clear, invalid date range, and empty filtered results in `packages/web/tests/022-pr-developer-performance/filters.us2.test.tsx`
 
 ### Implementation for User Story 2
 
-- [ ] T021 [US2] Create `TeamPrPerformanceFilters` in `packages/web/src/components/leader-pr-performance/TeamPrPerformanceFilters.tsx` using `frontend-design` + MUI: date range + reuse `TeamMemberHierarchyPicker` + `fetchLeaderHierarchyView` (descendants only, exclude self); validation messaging via i18n
-- [ ] T022 [US2] Wire filters into `packages/web/src/pages/LeaderTeamPrPerformancePage.tsx` so period/`userId` changes refetch `fetchTeamPrPerformance` without a separate search button; abort in-flight requests on change
-- [ ] T023 [US2] Add filter-related keys to `packages/web/src/locales/{en-US,pt-BR}/leader.json` (reuse `leader.picker.*` / `common.validation.endDateBeforeStart` where applicable)
+- [x] T021 [US2] Create `TeamPrPerformanceFilters` in `packages/web/src/components/leader-pr-performance/TeamPrPerformanceFilters.tsx` using `frontend-design` + MUI: date range + reuse `TeamMemberHierarchyPicker` + `fetchLeaderHierarchyView` (descendants only, exclude self); validation messaging via i18n
+- [x] T022 [US2] Wire filters into `packages/web/src/pages/LeaderTeamPrPerformancePage.tsx` so period/`userId` changes refetch `fetchTeamPrPerformance` without a separate search button; abort in-flight requests on change
+- [x] T023 [US2] Add filter-related keys to `packages/web/src/locales/{en-US,pt-BR}/leader.json` (reuse `leader.picker.*` / `common.validation.endDateBeforeStart` where applicable)
 
 **Checkpoint**: Filters drive a single consistent performance payload for all widgets.
 

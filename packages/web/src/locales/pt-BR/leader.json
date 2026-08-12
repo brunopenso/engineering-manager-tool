@@ -6,7 +6,9 @@
     "performanceLoadError": "Não foi possível carregar o desempenho de PRs da equipe.",
     "noTeamMembers": "Nenhum membro da equipe está disponível na sua hierarquia. O desempenho de PRs aparecerá quando você tiver reportes diretos ou indiretos.",
     "loadingPerformance": "Carregando desempenho de PRs da equipe",
-    "loadedSummary": "Carregados {{authored}} PRs autorados, {{comments}} comentários e {{reviews}} revisões de {{startDate}} a {{endDate}}."
+    "loadedSummary": "Carregados {{authored}} PRs autorados, {{comments}} comentários e {{reviews}} revisões de {{startDate}} a {{endDate}}.",
+    "clearTeamMember": "Limpar membro da equipe",
+    "emptyFiltered": "Nenhuma atividade de pull request corresponde aos filtros atuais."
   },
   "teamAnalytics": {
     "title": "Análises da equipe",
