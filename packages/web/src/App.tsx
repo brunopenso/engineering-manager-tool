@@ -20,6 +20,7 @@ import AuthLocaleSync from './auth/AuthLocaleSync.js';
 import LeaderHierarchyManagementPage from './pages/LeaderHierarchyManagementPage.js';
 import LeaderTeamDeliverablesPage from './pages/LeaderTeamDeliverablesPage.js';
 import LeaderTeamAnalyticsPage from './pages/LeaderTeamAnalyticsPage.js';
+import LeaderTeamPrPerformancePage from './pages/LeaderTeamPrPerformancePage.js';
 import MyPullRequestsPage from './pages/MyPullRequestsPage.js';
 
 function DefaultRouteRedirect() {
@@ -76,6 +77,14 @@ export default function App() {
             element={
               <LeaderRoute>
                 <LeaderTeamAnalyticsPage />
+              </LeaderRoute>
+            }
+          />
+          <Route
+            path="leader/team-pr-performance"
+            element={
+              <LeaderRoute>
+                <LeaderTeamPrPerformancePage />
               </LeaderRoute>
             }
           />

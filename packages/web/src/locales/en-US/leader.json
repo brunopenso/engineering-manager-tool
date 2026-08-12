@@ -1,4 +1,13 @@
 {
+  "teamPrPerformance": {
+    "title": "Team PR Performance",
+    "subtitle": "Understand developer contribution from imported pull request activity across your reporting team.",
+    "hierarchyLoadError": "Unable to load team hierarchy.",
+    "performanceLoadError": "Unable to load team PR performance.",
+    "noTeamMembers": "No team members are available in your hierarchy. PR performance will appear when you have direct or indirect reports.",
+    "loadingPerformance": "Loading team PR performance",
+    "loadedSummary": "Loaded {{authored}} authored PRs, {{comments}} comments, and {{reviews}} reviews from {{startDate}} to {{endDate}}."
+  },
   "teamAnalytics": {
     "title": "Team Analytics",
     "subtitle": "Visualize deliverable activity and review workload across your reporting team.",

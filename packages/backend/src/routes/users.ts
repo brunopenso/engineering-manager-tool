@@ -30,6 +30,7 @@ import {
 } from '../services/userService.js';
 import { listTeamDeliverablesForReview } from '../services/deliverableService.js';
 import { getLeaderTeamAnalytics } from '../services/leaderAnalyticsService.js';
+import { getLeaderTeamPrPerformance } from '../services/leaderPrPerformanceService.js';
 import { TeamDeliverablesDateError } from '../services/teamDeliverablesDate.js';
 import { UserCreateValidationError } from '../services/userCreateValidation.js';
 import {
@@ -77,6 +78,12 @@ type TeamDeliverablesQuery = {
 };
 
 type TeamAnalyticsQuery = {
+  userId?: string;
+  startDate?: string;
+  endDate?: string;
+};
+
+type TeamPrPerformanceQuery = {
   userId?: string;
   startDate?: string;
   endDate?: string;
@@ -460,6 +467,55 @@ export async function registerUsersRoutes(app: FastifyInstance): Promise<void> {
 
       try {
         return await getLeaderTeamAnalytics(auth.userId, {
+          startDate,
+          endDate,
+          ...(userId ? { userId } : {}),
+        });
+      } catch (error) {
+        if (error instanceof TeamDeliverablesDateError) {
+          return validationError(reply, error.message);
+        }
+
+        throw error;
+      }
+    },
+  );
+
+  app.get<{ Querystring: TeamPrPerformanceQuery }>(
+    '/users/leader/team-pr-performance',
+    async (request, reply) => {
+      const auth = requireAuth(request, reply);
+      if (!auth) {
+        return {
+          code: AUTH_ERROR_CODES.MISSING_APP_TOKEN,
+          message: 'Authentication token is missing.',
+        };
+      }
+
+      try {
+        assertLeaderForHierarchyManagement(auth.roles);
+      } catch {
+        return forbidden(reply);
+      }
+
+      const startDate = request.query.startDate?.trim();
+      const endDate = request.query.endDate?.trim();
+      const userId = request.query.userId?.trim();
+
+      if (!startDate || !endDate) {
+        return validationError(reply, 'startDate and endDate query parameters are required.');
+      }
+
+      if (userId) {
+        try {
+          await assertUserInLeaderSubtree(auth.userId, userId);
+        } catch {
+          return forbidden(reply);
+        }
+      }
+
+      try {
+        return await getLeaderTeamPrPerformance(auth.userId, {
           startDate,
           endDate,
           ...(userId ? { userId } : {}),

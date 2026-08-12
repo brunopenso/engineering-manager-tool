@@ -14,6 +14,7 @@ export const ADMIN_GITHUB_ROUTE = '/app/admin/github';
 export const LEADER_HIERARCHY_ROUTE = '/app/leader/hierarchy';
 export const LEADER_TEAM_DELIVERABLES_ROUTE = '/app/leader/team-deliverables';
 export const LEADER_TEAM_ANALYTICS_ROUTE = '/app/leader/team-analytics';
+export const LEADER_TEAM_PR_PERFORMANCE_ROUTE = '/app/leader/team-pr-performance';
 export const DELIVERABLES_ROUTE = '/app/deliverables';
 export const DELIVERABLES_VIEW_ROUTE = '/app/deliverables/view';
 export const MY_PULL_REQUESTS_ROUTE = '/app/my-pull-requests';
@@ -88,6 +89,12 @@ const LEADER_SHELL_MENU_OPTIONS: ShellMenuOptionDef[] = [
     id: 'leader-team-analytics',
     labelKey: 'menu.teamAnalytics',
     route: LEADER_TEAM_ANALYTICS_ROUTE,
+    available: true,
+  },
+  {
+    id: 'leader-team-pr-performance',
+    labelKey: 'menu.teamPrPerformance',
+    route: LEADER_TEAM_PR_PERFORMANCE_ROUTE,
     available: true,
   },
   {
