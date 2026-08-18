@@ -6,9 +6,7 @@ import { renderWithProviders, testLeaderUser } from '../../src/test/renderWithPr
 
 async function selectTeamMember(name: string) {
   await userEvent.click(screen.getByTestId('team-member-select'));
-  await userEvent.click(
-    await screen.findByRole('button', { name: `Select ${name} itself only` }),
-  );
+  await userEvent.click(await screen.findByRole('button', { name: `Select ${name} itself only` }));
 }
 
 describe('US2 team deliverables date filter', { timeout: 15000 }, () => {

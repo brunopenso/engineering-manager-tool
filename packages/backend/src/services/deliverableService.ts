@@ -254,9 +254,7 @@ export async function listTeamDeliverablesForReview(
     ...(includeOwnerAttribution
       ? {
           ownerUserId: row.userId,
-          ownerDisplayName: row.user
-            ? row.user.fullName?.trim() || row.user.email
-            : row.userId,
+          ownerDisplayName: row.user ? row.user.fullName?.trim() || row.user.email : row.userId,
         }
       : {}),
   }));

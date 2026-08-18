@@ -111,7 +111,9 @@ describe('US1 leader team deliverables page', () => {
 
     await userEvent.click(await screen.findByTestId('team-member-select'));
 
-    expect(screen.getByRole('button', { name: 'Select Alice Lead and their team' })).toBeInTheDocument();
+    expect(
+      screen.getByRole('button', { name: 'Select Alice Lead and their team' }),
+    ).toBeInTheDocument();
     expect(
       screen.queryByRole('button', { name: 'Select Bob Nested itself only' }),
     ).not.toBeInTheDocument();

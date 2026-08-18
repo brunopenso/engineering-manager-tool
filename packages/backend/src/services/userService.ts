@@ -16,10 +16,7 @@ import type {
 } from '../types/hierarchyView.js';
 import type { TeamMemberOption, TeamMembersResponse } from '../types/teamDeliverables.js';
 import type { AdminUserListFilters } from '../types/adminUserListFilters.js';
-import type {
-  HierarchyScope,
-  ScopedOwnerResolution,
-} from '../types/hierarchySelectionScope.js';
+import type { HierarchyScope, ScopedOwnerResolution } from '../types/hierarchySelectionScope.js';
 import type { ParsedProfileSettingsUpdate } from './userProfileValidation.js';
 import {
   buildHierarchyTreeFromRows,

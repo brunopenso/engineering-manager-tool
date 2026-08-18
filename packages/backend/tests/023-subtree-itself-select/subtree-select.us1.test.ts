@@ -13,7 +13,8 @@ import {
 } from '../leader-analytics/leader-analytics-test-app.js';
 
 vi.mock('../../src/services/leaderAnalyticsService.js', async (importOriginal) => {
-  const actual = await importOriginal<typeof import('../../src/services/leaderAnalyticsService.js')>();
+  const actual =
+    await importOriginal<typeof import('../../src/services/leaderAnalyticsService.js')>();
   return { ...actual, getLeaderTeamAnalytics: vi.fn() };
 });
 

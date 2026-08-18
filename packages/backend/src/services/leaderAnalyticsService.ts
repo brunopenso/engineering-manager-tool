@@ -61,7 +61,11 @@ async function resolveOwnerUserIds(
   actorUserId: string,
   userId?: string,
   scope?: TeamAnalyticsFilters['scope'],
-): Promise<{ ownerUserIds: string[]; filteredUserId?: string; scope?: TeamAnalyticsFilters['scope'] }> {
+): Promise<{
+  ownerUserIds: string[];
+  filteredUserId?: string;
+  scope?: TeamAnalyticsFilters['scope'];
+}> {
   return resolveScopedOwnerUserIds(actorUserId, userId, scope);
 }
 
