@@ -24,6 +24,7 @@ export type TeamAnalyticsResponse = {
   startDate: string;
   endDate: string;
   userId?: string;
+  scope?: 'subtree' | 'itself';
   weekStarts: string[];
   deliverablesByWeekAndImpact: ImpactBucketRow[];
   engagementByWeek: EngagementBucketRow[];
@@ -35,4 +36,5 @@ export type TeamAnalyticsFilters = {
   startDate: string;
   endDate: string;
   userId?: string;
+  scope?: 'subtree' | 'itself';
 };

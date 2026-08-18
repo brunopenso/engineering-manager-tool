@@ -121,11 +121,16 @@
     "teamMemberAria": "Membro da equipe: {{name}}",
     "selectMemberPlaceholder": "Selecione um membro da equipe",
     "selectCollaborator": "Selecionar colaborador",
-    "expandLeadersHint": "Expanda líderes para ver seus reportes.",
-    "selectMemberAria": "Selecionar {{name}}",
+    "expandLeadersHint": "Expanda líderes para ver seus reportes. Selecione uma pessoa para incluir toda a equipe abaixo, ou escolha Somente esta pessoa.",
+    "selectMemberAria": "Selecionar {{name}} e a equipe",
+    "selectItselfAria": "Selecionar somente {{name}}",
+    "itself": "Somente esta pessoa",
+    "scopeSubtree": "{{name}} (equipe)",
+    "scopeItself": "{{name}} (somente a pessoa)",
     "expand": "Expandir {{name}}",
     "collapse": "Recolher {{name}}",
-    "hierarchyAria": "Hierarquia de membros da equipe"
+    "hierarchyAria": "Hierarquia de membros da equipe",
+    "ownerColumn": "Responsável"
   },
   "reviewModal": {
     "dialogTitle": "Revisar entrega",

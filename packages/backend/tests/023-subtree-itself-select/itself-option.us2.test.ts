@@ -5,15 +5,11 @@ import * as userService from '../../src/services/userService.js';
 import {
   buildLeaderAnalyticsTestApp,
   registerLeaderAnalyticsTestRoutes,
-} from './leader-analytics-test-app.js';
+} from '../leader-analytics/leader-analytics-test-app.js';
 
 vi.mock('../../src/services/leaderAnalyticsService.js', async (importOriginal) => {
-  const actual =
-    await importOriginal<typeof import('../../src/services/leaderAnalyticsService.js')>();
-  return {
-    ...actual,
-    getLeaderTeamAnalytics: vi.fn(),
-  };
+  const actual = await importOriginal<typeof import('../../src/services/leaderAnalyticsService.js')>();
+  return { ...actual, getLeaderTeamAnalytics: vi.fn() };
 });
 
 vi.mock('../../src/services/userService.js', async (importOriginal) => {
@@ -24,12 +20,12 @@ vi.mock('../../src/services/userService.js', async (importOriginal) => {
   };
 });
 
-describe('US2 leader analytics filters', () => {
+describe('US2 itself option API', () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });
 
-  it('passes optional userId to analytics service', async () => {
+  it('passes scope=itself to analytics service', async () => {
     const app = buildLeaderAnalyticsTestApp({
       userId: 'leader-1',
       roles: [USER_ROLE_TYPES.COLLABORATOR, USER_ROLE_TYPES.LEADER],
@@ -38,27 +34,26 @@ describe('US2 leader analytics filters', () => {
 
     vi.mocked(userService.assertUserInLeaderSubtree).mockResolvedValue(undefined);
     vi.mocked(leaderAnalyticsService.getLeaderTeamAnalytics).mockResolvedValue({
-      startDate: '2026-04-01',
-      endDate: '2026-06-04',
-      userId: 'report-1',
+      startDate: '2026-07-01',
+      endDate: '2026-08-12',
+      userId: 'alice',
+      scope: 'itself',
       weekStarts: [],
       deliverablesByWeekAndImpact: [],
       engagementByWeek: [],
       pendingReviewCount: 0,
+      pendingReviewByImpact: [],
     });
 
-    const response = await app.inject({
+    await app.inject({
       method: 'GET',
-      url: '/users/leader/team-analytics?startDate=2026-04-01&endDate=2026-06-04&userId=report-1',
+      url: '/users/leader/team-analytics?startDate=2026-07-01&endDate=2026-08-12&userId=alice&scope=itself',
     });
 
-    expect(response.statusCode).toBe(200);
-    expect(leaderAnalyticsService.getLeaderTeamAnalytics).toHaveBeenCalledWith('leader-1', {
-      startDate: '2026-04-01',
-      endDate: '2026-06-04',
-      userId: 'report-1',
-      scope: 'subtree',
-    });
+    expect(leaderAnalyticsService.getLeaderTeamAnalytics).toHaveBeenCalledWith(
+      'leader-1',
+      expect.objectContaining({ userId: 'alice', scope: 'itself' }),
+    );
 
     await app.close();
   });

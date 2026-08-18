@@ -17,10 +17,10 @@
 
 **Purpose**: Feature scaffolds, i18n placeholders, and shared test folders.
 
-- [ ] T001 Create feature test doc stubs under `tests/023-subtree-itself-select/` (`subtree-select.us1.test.md`, `itself-option.us2.test.md`, `scope-feedback.us3.test.md`) aligned with spec US1–US3
-- [ ] T002 [P] Create backend test directory scaffold in `packages/backend/tests/023-subtree-itself-select/`
-- [ ] T003 [P] Create web test directory scaffold in `packages/web/tests/023-subtree-itself-select/`
-- [ ] T004 [P] Add placeholder `picker.itself`, `picker.scopeSubtree`, `picker.scopeItself`, and related hint keys to `packages/web/src/locales/en-US/leader.json` and `packages/web/src/locales/pt-BR/leader.json`
+- [x] T001 Create feature test doc stubs under `tests/023-subtree-itself-select/` (`subtree-select.us1.test.md`, `itself-option.us2.test.md`, `scope-feedback.us3.test.md`) aligned with spec US1–US3
+- [x] T002 [P] Create backend test directory scaffold in `packages/backend/tests/023-subtree-itself-select/`
+- [x] T003 [P] Create web test directory scaffold in `packages/web/tests/023-subtree-itself-select/`
+- [x] T004 [P] Add placeholder `picker.itself`, `picker.scopeSubtree`, `picker.scopeItself`, and related hint keys to `packages/web/src/locales/en-US/leader.json` and `packages/web/src/locales/pt-BR/leader.json`
 
 ---
 
@@ -30,10 +30,10 @@
 
 **⚠️ CRITICAL**: No user-story endpoint or picker wiring that depends on subtree/Itself expansion starts until this phase is complete.
 
-- [ ] T005 Add `HierarchyScope` (`subtree` | `itself`) and related filter/DTO types in `packages/backend/src/types/hierarchySelectionScope.ts` per `specs/023-subtree-itself-select/data-model.md` and `contracts/hierarchy-selection-scope-api.yaml`
-- [ ] T006 Implement `resolveScopedOwnerUserIds(actorUserId, userId?, scope?)` in `packages/backend/src/services/userService.ts` (or thin helper module imported by services): no `userId` → actor descendants; `itself` → `[userId]`; `subtree`/default → `userId` + recursive descendants; validate/ignore `scope` when `userId` omitted; reject invalid `scope` values
-- [ ] T007 [P] Add unit/integration tests for resolver defaults, leaf equivalence, deep subtree inclusion, and intersection with actor tree in `packages/backend/tests/023-subtree-itself-select/resolve-scoped-owner-user-ids.test.ts`
-- [ ] T008 [P] Add DAC tests that out-of-subtree `userId` never expands and peer/superior cases remain denied in `packages/backend/tests/023-subtree-itself-select/scope-dac.test.ts`
+- [x] T005 Add `HierarchyScope` (`subtree` | `itself`) and related filter/DTO types in `packages/backend/src/types/hierarchySelectionScope.ts` per `specs/023-subtree-itself-select/data-model.md` and `contracts/hierarchy-selection-scope-api.yaml`
+- [x] T006 Implement `resolveScopedOwnerUserIds(actorUserId, userId?, scope?)` in `packages/backend/src/services/userService.ts` (or thin helper module imported by services): no `userId` → actor descendants; `itself` → `[userId]`; `subtree`/default → `userId` + recursive descendants; validate/ignore `scope` when `userId` omitted; reject invalid `scope` values
+- [x] T007 [P] Add unit/integration tests for resolver defaults, leaf equivalence, deep subtree inclusion, and intersection with actor tree in `packages/backend/tests/023-subtree-itself-select/resolve-scoped-owner-user-ids.test.ts`
+- [x] T008 [P] Add DAC tests that out-of-subtree `userId` never expands and peer/superior cases remain denied in `packages/backend/tests/023-subtree-itself-select/scope-dac.test.ts`
 
 **Checkpoint**: Shared resolver returns correct `ownerUserIds` for cleared / Itself / subtree cases with DAC coverage.
 
@@ -47,21 +47,21 @@
 
 ### Tests for User Story 1 (MANDATORY)
 
-- [ ] T009 [P] [US1] Add backend tests that `scope=subtree` (and omitted `scope` default) expands owner sets on analytics and PR performance in `packages/backend/tests/023-subtree-itself-select/subtree-select.us1.test.ts`
-- [ ] T010 [P] [US1] Add backend tests that Team Deliverables returns combined rows for subtree owners (multi-owner `In(...)`) in `packages/backend/tests/023-subtree-itself-select/team-deliverables-subtree.us1.test.ts`
-- [ ] T011 [P] [US1] Add web tests that picker person-row selection sends `userId` + subtree scope and pages refetch accordingly in `packages/web/tests/023-subtree-itself-select/subtree-select.us1.test.tsx`
-- [ ] T012 [P] [US1] Add i18n key-parity smoke for new picker/subtree strings in `packages/web/tests/023-subtree-itself-select/i18n-parity.us1.test.ts`
+- [x] T009 [P] [US1] Add backend tests that `scope=subtree` (and omitted `scope` default) expands owner sets on analytics and PR performance in `packages/backend/tests/023-subtree-itself-select/subtree-select.us1.test.ts`
+- [x] T010 [P] [US1] Add backend tests that Team Deliverables returns combined rows for subtree owners (multi-owner `In(...)`) in `packages/backend/tests/023-subtree-itself-select/team-deliverables-subtree.us1.test.ts`
+- [x] T011 [P] [US1] Add web tests that picker person-row selection sends `userId` + subtree scope and pages refetch accordingly in `packages/web/tests/023-subtree-itself-select/subtree-select.us1.test.tsx`
+- [x] T012 [P] [US1] Add i18n key-parity smoke for new picker/subtree strings in `packages/web/tests/023-subtree-itself-select/i18n-parity.us1.test.ts`
 
 ### Implementation for User Story 1
 
-- [ ] T013 [US1] Wire `resolveScopedOwnerUserIds` into `packages/backend/src/services/leaderAnalyticsService.ts` `resolveOwnerUserIds` so optional `userId` + default/subtree expands beyond a singleton
-- [ ] T014 [US1] Wire `resolveScopedOwnerUserIds` into `packages/backend/src/services/leaderPrPerformanceService.ts` `resolveOwnerUserIds` with the same subtree default semantics
-- [ ] T015 [US1] Extend `listTeamDeliverablesForReview` in `packages/backend/src/services/deliverableService.ts` to accept multiple owner IDs (`In(ownerUserIds)`), preserve date range + per-leader reviewed flags, and include `ownerUserId` / `ownerDisplayName` on rows when the owner set size is greater than 1
-- [ ] T016 [US1] Accept optional `scope` query param on `GET /users/leader/team-deliverables`, `GET /users/leader/team-analytics`, and `GET /users/leader/team-pr-performance` in `packages/backend/src/routes/users.ts` (assert subtree membership when `userId` present; default `scope=subtree`; echo `scope` on deliverables response per contract)
-- [ ] T017 [US1] Update API clients `packages/web/src/services/teamDeliverablesApi.ts`, `packages/web/src/services/leaderAnalyticsApi.ts`, and `packages/web/src/services/leaderPrPerformanceApi.ts` to pass `scope` with `userId`
-- [ ] T018 [US1] Extend `TeamMemberHierarchyPicker` in `packages/web/src/components/team-deliverables/TeamMemberHierarchyPicker.tsx` using `frontend-design` + Material UI so selecting a person with children emits `{ userId, scope: 'subtree' }` (leaf → single-person scope); keep expand/collapse hierarchy browsing
-- [ ] T019 [US1] Wire subtree selection state through `packages/web/src/pages/LeaderTeamDeliverablesPage.tsx`, `packages/web/src/pages/LeaderTeamAnalyticsPage.tsx`, `packages/web/src/pages/LeaderTeamPrPerformancePage.tsx`, and `packages/web/src/components/leader-pr-performance/TeamPrPerformanceFilters.tsx` so fetches include `scope` and Team Deliverables shows owner attribution when multi-person
-- [ ] T020 [US1] Finalize subtree-related copy in `packages/web/src/locales/{en-US,pt-BR}/leader.json` (hints, owner column labels as needed)
+- [x] T013 [US1] Wire `resolveScopedOwnerUserIds` into `packages/backend/src/services/leaderAnalyticsService.ts` `resolveOwnerUserIds` so optional `userId` + default/subtree expands beyond a singleton
+- [x] T014 [US1] Wire `resolveScopedOwnerUserIds` into `packages/backend/src/services/leaderPrPerformanceService.ts` `resolveOwnerUserIds` with the same subtree default semantics
+- [x] T015 [US1] Extend `listTeamDeliverablesForReview` in `packages/backend/src/services/deliverableService.ts` to accept multiple owner IDs (`In(ownerUserIds)`), preserve date range + per-leader reviewed flags, and include `ownerUserId` / `ownerDisplayName` on rows when the owner set size is greater than 1
+- [x] T016 [US1] Accept optional `scope` query param on `GET /users/leader/team-deliverables`, `GET /users/leader/team-analytics`, and `GET /users/leader/team-pr-performance` in `packages/backend/src/routes/users.ts` (assert subtree membership when `userId` present; default `scope=subtree`; echo `scope` on deliverables response per contract)
+- [x] T017 [US1] Update API clients `packages/web/src/services/teamDeliverablesApi.ts`, `packages/web/src/services/leaderAnalyticsApi.ts`, and `packages/web/src/services/leaderPrPerformanceApi.ts` to pass `scope` with `userId`
+- [x] T018 [US1] Extend `TeamMemberHierarchyPicker` in `packages/web/src/components/team-deliverables/TeamMemberHierarchyPicker.tsx` using `frontend-design` + Material UI so selecting a person with children emits `{ userId, scope: 'subtree' }` (leaf → single-person scope); keep expand/collapse hierarchy browsing
+- [x] T019 [US1] Wire subtree selection state through `packages/web/src/pages/LeaderTeamDeliverablesPage.tsx`, `packages/web/src/pages/LeaderTeamAnalyticsPage.tsx`, `packages/web/src/pages/LeaderTeamPrPerformancePage.tsx`, and `packages/web/src/components/leader-pr-performance/TeamPrPerformanceFilters.tsx` so fetches include `scope` and Team Deliverables shows owner attribution when multi-person
+- [x] T020 [US1] Finalize subtree-related copy in `packages/web/src/locales/{en-US,pt-BR}/leader.json` (hints, owner column labels as needed)
 
 **Checkpoint**: MVP — selecting a manager includes their full subtree on all three leader team screens.
 
@@ -75,15 +75,15 @@
 
 ### Tests for User Story 2 (MANDATORY)
 
-- [ ] T021 [P] [US2] Add backend tests that `scope=itself` returns singleton owner sets and does not include descendants in `packages/backend/tests/023-subtree-itself-select/itself-option.us2.test.ts`
-- [ ] T022 [P] [US2] Add web UI tests for Itself visibility on parents, omission on leaves, selection, and refresh on mode switch in `packages/web/tests/023-subtree-itself-select/itself-option.us2.test.tsx`
+- [x] T021 [P] [US2] Add backend tests that `scope=itself` returns singleton owner sets and does not include descendants in `packages/backend/tests/023-subtree-itself-select/itself-option.us2.test.ts`
+- [x] T022 [P] [US2] Add web UI tests for Itself visibility on parents, omission on leaves, selection, and refresh on mode switch in `packages/web/tests/023-subtree-itself-select/itself-option.us2.test.tsx`
 
 ### Implementation for User Story 2
 
-- [ ] T023 [US2] Add discoverable **"Itself"** selectable control for nodes with children in `packages/web/src/components/team-deliverables/TeamMemberHierarchyPicker.tsx` using `frontend-design` + MUI (accessible label/aria via i18n; does not break expand/collapse)
-- [ ] T024 [US2] Ensure Itself selection emits `{ userId, scope: 'itself' }` and selected state distinguishes Itself vs subtree in `packages/web/src/components/team-deliverables/TeamMemberHierarchyPicker.tsx`
-- [ ] T025 [US2] Confirm route handlers already accept `scope=itself` end-to-end in `packages/backend/src/routes/users.ts` and consumers pass it from `LeaderTeamDeliverablesPage.tsx`, `LeaderTeamAnalyticsPage.tsx`, `LeaderTeamPrPerformancePage.tsx`, and `TeamPrPerformanceFilters.tsx`
-- [ ] T026 [US2] Add/complete `picker.itself` and related strings in `packages/web/src/locales/{en-US,pt-BR}/leader.json` (natural pt-BR wording)
+- [x] T023 [US2] Add discoverable **"Itself"** selectable control for nodes with children in `packages/web/src/components/team-deliverables/TeamMemberHierarchyPicker.tsx` using `frontend-design` + MUI (accessible label/aria via i18n; does not break expand/collapse)
+- [x] T024 [US2] Ensure Itself selection emits `{ userId, scope: 'itself' }` and selected state distinguishes Itself vs subtree in `packages/web/src/components/team-deliverables/TeamMemberHierarchyPicker.tsx`
+- [x] T025 [US2] Confirm route handlers already accept `scope=itself` end-to-end in `packages/backend/src/routes/users.ts` and consumers pass it from `LeaderTeamDeliverablesPage.tsx`, `LeaderTeamAnalyticsPage.tsx`, `LeaderTeamPrPerformancePage.tsx`, and `TeamPrPerformanceFilters.tsx`
+- [x] T026 [US2] Add/complete `picker.itself` and related strings in `packages/web/src/locales/{en-US,pt-BR}/leader.json` (natural pt-BR wording)
 
 **Checkpoint**: Leaders can choose person-only scope without losing subtree selection.
 
@@ -97,15 +97,15 @@
 
 ### Tests for User Story 3 (MANDATORY)
 
-- [ ] T027 [P] [US3] Add web UI tests for closed-picker scope presentation, empty-state copy, and clear-selection behavior in `packages/web/tests/023-subtree-itself-select/scope-feedback.us3.test.tsx`
-- [ ] T028 [P] [US3] Add i18n key-parity tests for scope/empty strings in `packages/web/tests/023-subtree-itself-select/i18n-parity.us3.test.ts`
+- [x] T027 [P] [US3] Add web UI tests for closed-picker scope presentation, empty-state copy, and clear-selection behavior in `packages/web/tests/023-subtree-itself-select/scope-feedback.us3.test.tsx`
+- [x] T028 [P] [US3] Add i18n key-parity tests for scope/empty strings in `packages/web/tests/023-subtree-itself-select/i18n-parity.us3.test.ts`
 
 ### Implementation for User Story 3
 
-- [ ] T029 [US3] Update closed-picker display in `packages/web/src/components/team-deliverables/TeamMemberHierarchyPicker.tsx` using `frontend-design` + MUI to show person name plus subtree vs Itself indicator (chip/suffix via i18n)
-- [ ] T030 [US3] Ensure clear/“all my team” paths in `packages/web/src/pages/LeaderTeamAnalyticsPage.tsx`, `packages/web/src/pages/LeaderTeamPrPerformancePage.tsx`, and `packages/web/src/components/leader-pr-performance/TeamPrPerformanceFilters.tsx` clear both `userId` and `scope`
-- [ ] T031 [US3] Align empty-state messaging for scoped filters in `packages/web/src/pages/LeaderTeamDeliverablesPage.tsx`, `packages/web/src/pages/LeaderTeamAnalyticsPage.tsx`, and `packages/web/src/pages/LeaderTeamPrPerformancePage.tsx` with i18n keys (no auth-failure implication)
-- [ ] T032 [US3] Add remaining scope-feedback / empty-state keys to `packages/web/src/locales/{en-US,pt-BR}/leader.json`
+- [x] T029 [US3] Update closed-picker display in `packages/web/src/components/team-deliverables/TeamMemberHierarchyPicker.tsx` using `frontend-design` + MUI to show person name plus subtree vs Itself indicator (chip/suffix via i18n)
+- [x] T030 [US3] Ensure clear/“all my team” paths in `packages/web/src/pages/LeaderTeamAnalyticsPage.tsx`, `packages/web/src/pages/LeaderTeamPrPerformancePage.tsx`, and `packages/web/src/components/leader-pr-performance/TeamPrPerformanceFilters.tsx` clear both `userId` and `scope`
+- [x] T031 [US3] Align empty-state messaging for scoped filters in `packages/web/src/pages/LeaderTeamDeliverablesPage.tsx`, `packages/web/src/pages/LeaderTeamAnalyticsPage.tsx`, and `packages/web/src/pages/LeaderTeamPrPerformancePage.tsx` with i18n keys (no auth-failure implication)
+- [x] T032 [US3] Add remaining scope-feedback / empty-state keys to `packages/web/src/locales/{en-US,pt-BR}/leader.json`
 
 **Checkpoint**: Leaders can tell which scope is active and interpret empty results correctly.
 
@@ -115,10 +115,10 @@
 
 **Purpose**: Consistency, regression, and quickstart validation across all stories.
 
-- [ ] T033 [P] Cross-screen consistency check/tests that Team Deliverables, Team Analytics, and Team PR Performance apply identical subtree/Itself rules in `packages/web/tests/023-subtree-itself-select/cross-screen-consistency.test.tsx`
-- [ ] T034 [P] Invalid `scope` value returns 400 on affected endpoints in `packages/backend/tests/023-subtree-itself-select/scope-validation.test.ts`
-- [ ] T035 Run manual validation scenarios from `specs/023-subtree-itself-select/quickstart.md` and fix any gaps
-- [ ] T036 [P] Confirm no hard-coded user-visible picker/scope strings remain in `packages/web/src/components/team-deliverables/TeamMemberHierarchyPicker.tsx` and consumer pages
+- [x] T033 [P] Cross-screen consistency check/tests that Team Deliverables, Team Analytics, and Team PR Performance apply identical subtree/Itself rules in `packages/web/tests/023-subtree-itself-select/cross-screen-consistency.test.tsx`
+- [x] T034 [P] Invalid `scope` value returns 400 on affected endpoints in `packages/backend/tests/023-subtree-itself-select/scope-validation.test.ts`
+- [x] T035 Run manual validation scenarios from `specs/023-subtree-itself-select/quickstart.md` and fix any gaps
+- [x] T036 [P] Confirm no hard-coded user-visible picker/scope strings remain in `packages/web/src/components/team-deliverables/TeamMemberHierarchyPicker.tsx` and consumer pages
 
 ---
 

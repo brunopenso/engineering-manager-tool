@@ -35,6 +35,7 @@ export default function LeaderTeamPrPerformancePage() {
   const defaultRange = useMemo(() => defaultLast60DayRange(), []);
   const [hierarchy, setHierarchy] = useState<LeaderHierarchyViewResponse | null>(null);
   const [selectedUserId, setSelectedUserId] = useState('');
+  const [selectedScope, setSelectedScope] = useState<'subtree' | 'itself'>('subtree');
   const [startDate, setStartDate] = useState(defaultRange.startDate);
   const [endDate, setEndDate] = useState(defaultRange.endDate);
   const [performance, setPerformance] = useState<TeamPrPerformanceResponse | null>(null);
@@ -103,7 +104,7 @@ export default function LeaderTeamPrPerformancePage() {
       const data = await fetchTeamPrPerformance(accessToken, {
         startDate,
         endDate,
-        ...(selectedUserId ? { userId: selectedUserId } : {}),
+        ...(selectedUserId ? { userId: selectedUserId, scope: selectedScope } : {}),
       });
       if (fetchRequestId.current === requestId) {
         setPerformance(data);
@@ -122,7 +123,7 @@ export default function LeaderTeamPrPerformancePage() {
         setIsLoadingPerformance(false);
       }
     }
-  }, [accessToken, dateRangeIsValid, endDate, selectedUserId, startDate, t]);
+  }, [accessToken, dateRangeIsValid, endDate, selectedUserId, selectedScope, startDate, t]);
 
   useEffect(() => {
     if (!accessToken || !isLeader(user) || isLoadingHierarchy) {
@@ -166,11 +167,20 @@ export default function LeaderTeamPrPerformancePage() {
         <TeamPrPerformanceFilters
           reports={hierarchy?.reports ?? []}
           selectedUserId={selectedUserId}
+          selectedScope={selectedScope}
           startDate={startDate}
           endDate={endDate}
           disabled={isLoadingHierarchy}
           dateRangeError={dateRangeError}
-          onSelectedUserIdChange={setSelectedUserId}
+          onSelectionChange={(selection) => {
+            if (!selection) {
+              setSelectedUserId('');
+              setSelectedScope('subtree');
+              return;
+            }
+            setSelectedUserId(selection.userId);
+            setSelectedScope(selection.scope);
+          }}
           onStartDateChange={setStartDate}
           onEndDateChange={setEndDate}
         />

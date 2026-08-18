@@ -13,6 +13,16 @@ vi.mock('../../src/services/userService.js', async (importOriginal) => {
   return {
     ...actual,
     assertUserInLeaderSubtree: vi.fn(),
+    resolveScopedOwnerUserIds: vi.fn(async (_actor, userId, scope) => {
+      if (!userId) {
+        return { ownerUserIds: [] };
+      }
+      return {
+        ownerUserIds: [userId],
+        filteredUserId: userId,
+        scope: scope ?? 'subtree',
+      };
+    }),
   };
 });
 

@@ -22,6 +22,7 @@ export type TeamAnalyticsResponse = {
   startDate: string;
   endDate: string;
   userId?: string;
+  scope?: 'subtree' | 'itself';
   weekStarts: string[];
   deliverablesByWeekAndImpact: ImpactBucketRow[];
   engagementByWeek: EngagementBucketRow[];
@@ -71,7 +72,12 @@ async function parseError(response: Response): Promise<LeaderAnalyticsApiError> 
 
 export async function fetchTeamAnalytics(
   accessToken: string,
-  params: { startDate: string; endDate: string; userId?: string },
+  params: {
+    startDate: string;
+    endDate: string;
+    userId?: string;
+    scope?: 'subtree' | 'itself';
+  },
 ): Promise<TeamAnalyticsResponse> {
   const query = new URLSearchParams({
     startDate: params.startDate,
@@ -80,6 +86,7 @@ export async function fetchTeamAnalytics(
 
   if (params.userId) {
     query.set('userId', params.userId);
+    query.set('scope', params.scope ?? 'subtree');
   }
 
   const response = await fetch(`${API_BASE_URL}/users/leader/team-analytics?${query}`, {

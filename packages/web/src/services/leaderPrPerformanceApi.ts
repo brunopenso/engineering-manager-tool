@@ -27,6 +27,7 @@ export type TeamPrPerformanceResponse = {
   startDate: string;
   endDate: string;
   userId?: string;
+  scope?: 'subtree' | 'itself';
   totals: PerformanceTotals;
   developers: DeveloperPrPerformanceRow[];
   weekStarts: string[];
@@ -94,7 +95,12 @@ async function parseError(response: Response): Promise<LeaderPrPerformanceApiErr
 
 export async function fetchTeamPrPerformance(
   accessToken: string,
-  params: { startDate: string; endDate: string; userId?: string },
+  params: {
+    startDate: string;
+    endDate: string;
+    userId?: string;
+    scope?: 'subtree' | 'itself';
+  },
 ): Promise<TeamPrPerformanceResponse> {
   const query = new URLSearchParams({
     startDate: params.startDate,
@@ -103,6 +109,7 @@ export async function fetchTeamPrPerformance(
 
   if (params.userId) {
     query.set('userId', params.userId);
+    query.set('scope', params.scope ?? 'subtree');
   }
 
   const response = await fetch(`${API_BASE_URL}/users/leader/team-pr-performance?${query}`, {

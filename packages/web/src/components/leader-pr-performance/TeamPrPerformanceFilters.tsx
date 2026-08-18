@@ -1,16 +1,20 @@
 import { Alert, Box, Button, Paper, Stack, TextField } from '@mui/material';
 import { useTranslation } from 'react-i18next';
-import TeamMemberHierarchyPicker from '../team-deliverables/TeamMemberHierarchyPicker.js';
+import TeamMemberHierarchyPicker, {
+  type HierarchyMemberSelection,
+  type HierarchySelectionScope,
+} from '../team-deliverables/TeamMemberHierarchyPicker.js';
 import type { HierarchyViewNode } from '../../services/usersApi.js';
 
 export type TeamPrPerformanceFiltersProps = {
   reports: HierarchyViewNode[];
   selectedUserId: string;
+  selectedScope: HierarchySelectionScope;
   startDate: string;
   endDate: string;
   disabled?: boolean;
   dateRangeError: string | null;
-  onSelectedUserIdChange: (userId: string) => void;
+  onSelectionChange: (selection: HierarchyMemberSelection | null) => void;
   onStartDateChange: (value: string) => void;
   onEndDateChange: (value: string) => void;
 };
@@ -18,11 +22,12 @@ export type TeamPrPerformanceFiltersProps = {
 export default function TeamPrPerformanceFilters({
   reports,
   selectedUserId,
+  selectedScope,
   startDate,
   endDate,
   disabled = false,
   dateRangeError,
-  onSelectedUserIdChange,
+  onSelectionChange,
   onStartDateChange,
   onEndDateChange,
 }: TeamPrPerformanceFiltersProps) {
@@ -45,8 +50,9 @@ export default function TeamPrPerformanceFilters({
           <TeamMemberHierarchyPicker
             reports={reports}
             selectedUserId={selectedUserId}
+            selectedScope={selectedScope}
             disabled={disabled}
-            onChange={onSelectedUserIdChange}
+            onChange={onSelectionChange}
           />
 
           <TextField
@@ -78,7 +84,7 @@ export default function TeamPrPerformanceFilters({
           <Box>
             <Button
               size="small"
-              onClick={() => onSelectedUserIdChange('')}
+              onClick={() => onSelectionChange(null)}
               disabled={disabled}
               data-testid="pr-performance-clear-member"
             >

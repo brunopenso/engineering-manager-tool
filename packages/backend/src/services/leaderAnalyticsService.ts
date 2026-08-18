@@ -8,7 +8,7 @@ import {
   type TeamAnalyticsFilters,
   type TeamAnalyticsResponse,
 } from '../types/leaderAnalytics.js';
-import { getLeaderTeamMembers, toHierarchyDisplayName } from './userService.js';
+import { resolveScopedOwnerUserIds, toHierarchyDisplayName } from './userService.js';
 import { validateDateRange } from './teamDeliverablesDate.js';
 
 type ImpactAggregateRow = {
@@ -60,13 +60,9 @@ export function buildWeekStartsInRange(start: Date, end: Date): string[] {
 async function resolveOwnerUserIds(
   actorUserId: string,
   userId?: string,
-): Promise<{ ownerUserIds: string[]; filteredUserId?: string }> {
-  if (userId) {
-    return { ownerUserIds: [userId], filteredUserId: userId };
-  }
-
-  const { members } = await getLeaderTeamMembers(actorUserId);
-  return { ownerUserIds: members.map((member) => member.id) };
+  scope?: TeamAnalyticsFilters['scope'],
+): Promise<{ ownerUserIds: string[]; filteredUserId?: string; scope?: TeamAnalyticsFilters['scope'] }> {
+  return resolveScopedOwnerUserIds(actorUserId, userId, scope);
 }
 
 function mapImpactRows(rows: ImpactAggregateRow[]): ImpactBucketRow[] {
@@ -113,7 +109,11 @@ export async function getLeaderTeamAnalytics(
   filters: TeamAnalyticsFilters,
 ): Promise<TeamAnalyticsResponse> {
   const { start, end } = validateDateRange(filters.startDate, filters.endDate);
-  const { ownerUserIds, filteredUserId } = await resolveOwnerUserIds(actorUserId, filters.userId);
+  const { ownerUserIds, filteredUserId, scope } = await resolveOwnerUserIds(
+    actorUserId,
+    filters.userId,
+    filters.scope,
+  );
   const weekStarts = buildWeekStartsInRange(start, end);
 
   if (ownerUserIds.length === 0) {
@@ -121,6 +121,7 @@ export async function getLeaderTeamAnalytics(
       startDate: filters.startDate,
       endDate: filters.endDate,
       ...(filteredUserId ? { userId: filteredUserId } : {}),
+      ...(scope ? { scope } : {}),
       weekStarts,
       deliverablesByWeekAndImpact: [],
       engagementByWeek: [],
@@ -193,6 +194,7 @@ export async function getLeaderTeamAnalytics(
     startDate: filters.startDate,
     endDate: filters.endDate,
     ...(filteredUserId ? { userId: filteredUserId } : {}),
+    ...(scope ? { scope } : {}),
     weekStarts,
     deliverablesByWeekAndImpact: mapImpactRows(impactRows),
     engagementByWeek: mapEngagementRows(engagementRows),

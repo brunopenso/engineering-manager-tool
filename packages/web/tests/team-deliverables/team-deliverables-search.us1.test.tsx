@@ -111,15 +111,20 @@ describe('US1 leader team deliverables page', () => {
 
     await userEvent.click(await screen.findByTestId('team-member-select'));
 
-    expect(screen.getByRole('button', { name: 'Select Alice Lead' })).toBeInTheDocument();
-    expect(screen.queryByRole('button', { name: 'Select Bob Nested' })).not.toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Select Alice Lead and their team' })).toBeInTheDocument();
+    expect(
+      screen.queryByRole('button', { name: 'Select Bob Nested itself only' }),
+    ).not.toBeInTheDocument();
 
     await userEvent.click(screen.getByRole('button', { name: 'Expand Alice Lead' }));
-    await userEvent.click(await screen.findByRole('button', { name: 'Select Bob Nested' }));
+    await userEvent.click(
+      await screen.findByRole('button', { name: 'Select Bob Nested itself only' }),
+    );
 
     await waitFor(() => {
-      expect(screen.getByTestId('team-member-select')).toHaveValue('Bob Nested');
+      expect(screen.getByTestId('team-member-select')).toHaveValue('Bob Nested (itself)');
       expect(searchCalls[0]).toContain('userId=report-2');
+      expect(searchCalls[0]).toContain('scope=itself');
     });
   });
 });

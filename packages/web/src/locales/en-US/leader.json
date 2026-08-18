@@ -121,11 +121,16 @@
     "teamMemberAria": "Team member: {{name}}",
     "selectMemberPlaceholder": "Select a team member",
     "selectCollaborator": "Select collaborator",
-    "expandLeadersHint": "Expand leaders to see their reports.",
-    "selectMemberAria": "Select {{name}}",
+    "expandLeadersHint": "Expand leaders to see their reports. Select a person to include their full team, or choose Itself for that person only.",
+    "selectMemberAria": "Select {{name}} and their team",
+    "selectItselfAria": "Select {{name}} itself only",
+    "itself": "Itself",
+    "scopeSubtree": "{{name}} (team)",
+    "scopeItself": "{{name}} (itself)",
     "expand": "Expand {{name}}",
     "collapse": "Collapse {{name}}",
-    "hierarchyAria": "Team member hierarchy"
+    "hierarchyAria": "Team member hierarchy",
+    "ownerColumn": "Owner"
   },
   "reviewModal": {
     "dialogTitle": "Review deliverable",

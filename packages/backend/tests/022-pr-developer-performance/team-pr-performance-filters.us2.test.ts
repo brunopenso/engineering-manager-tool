@@ -67,6 +67,7 @@ describe('US2 team PR performance filters', () => {
       startDate: '2026-06-14',
       endDate: '2026-08-12',
       userId: 'report-1',
+      scope: 'subtree',
     });
 
     await app.close();
