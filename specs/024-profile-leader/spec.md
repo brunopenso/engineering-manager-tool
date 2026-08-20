@@ -73,12 +73,12 @@ _All functional requirements MUST be covered by automated tests._
 
 ### Access Control Matrix _(required when data visibility is in scope)_
 
-| Actor              | Allowed Data Visibility                                      | Explicitly Denied Visibility                         | Validation Notes                                      |
-| ------------------ | ------------------------------------------------------------ | ---------------------------------------------------- | ----------------------------------------------------- |
-| Signed-in user     | Own assigned leader’s public name (or empty state)           | Other users’ leaders; leader’s private records       | Profile and session identity for `request.auth` only  |
-| Unauthenticated    | None                                                         | All leader assignment data                           | Profile requires an authenticated session             |
-| Administrator      | Directory payloads may include each listed user’s leader     | Not a Profile browse of arbitrary leaders via `/app/profile` | Admin directory already lists users; no new Profile ACL |
-| Leader (hierarchy) | Unchanged existing hierarchy management                      | Profile is not an alternate assignment editor        | Assignment stays in hierarchy management              |
+| Actor              | Allowed Data Visibility                                  | Explicitly Denied Visibility                                 | Validation Notes                                        |
+| ------------------ | -------------------------------------------------------- | ------------------------------------------------------------ | ------------------------------------------------------- |
+| Signed-in user     | Own assigned leader’s public name (or empty state)       | Other users’ leaders; leader’s private records               | Profile and session identity for `request.auth` only    |
+| Unauthenticated    | None                                                     | All leader assignment data                                   | Profile requires an authenticated session               |
+| Administrator      | Directory payloads may include each listed user’s leader | Not a Profile browse of arbitrary leaders via `/app/profile` | Admin directory already lists users; no new Profile ACL |
+| Leader (hierarchy) | Unchanged existing hierarchy management                  | Profile is not an alternate assignment editor                | Assignment stays in hierarchy management                |
 
 ### Key Entities
 

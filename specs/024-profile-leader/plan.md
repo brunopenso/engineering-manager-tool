@@ -72,10 +72,10 @@ specs/004-user-role-profiles/contracts/user-roles-api.yaml
 
 No constitutional violations.
 
-| Item                         | Why Needed                                      | Simpler Alternative Rejected Because        |
-| ---------------------------- | ----------------------------------------------- | ------------------------------------------- |
-| Leader lookup in mapper      | Session payloads used by Profile have no extra fetch | Profile-only GET adds a round trip and a new route |
-| Shared mapper on admin list  | One identity shape                | Dual mappers would drift `UserProfile`                     |
+| Item                        | Why Needed                                           | Simpler Alternative Rejected Because               |
+| --------------------------- | ---------------------------------------------------- | -------------------------------------------------- |
+| Leader lookup in mapper     | Session payloads used by Profile have no extra fetch | Profile-only GET adds a round trip and a new route |
+| Shared mapper on admin list | One identity shape                                   | Dual mappers would drift `UserProfile`             |
 
 ## Phase 0 & Phase 1 Outputs
 

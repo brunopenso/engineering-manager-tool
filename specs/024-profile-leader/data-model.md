@@ -6,16 +6,16 @@ No schema change. Existing `users.leader_id` (nullable UUID, FK to `users.id`, O
 
 ## API: LeaderSummary
 
-| Field      | Type   | Notes              |
-| ---------- | ------ | ------------------ |
-| `id`       | uuid   | Leader user id     |
+| Field      | Type   | Notes               |
+| ---------- | ------ | ------------------- |
+| `id`       | uuid   | Leader user id      |
 | `fullName` | string | Leader display name |
 
 ## API: UserProfile (extended)
 
-| Field    | Type                    | Required | Notes                                      |
-| -------- | ----------------------- | -------- | ------------------------------------------ |
-| `leader` | `LeaderSummary` \| null | yes      | `null` when unassigned or leader missing   |
+| Field    | Type                    | Required | Notes                                    |
+| -------- | ----------------------- | -------- | ---------------------------------------- |
+| `leader` | `LeaderSummary` \| null | yes      | `null` when unassigned or leader missing |
 
 Existing UserProfile fields are unchanged.
 
@@ -27,17 +27,17 @@ Existing UserProfile fields are unchanged.
 
 ## UI state (Profile page)
 
-| Field    | Source                         | Notes                                      |
-| -------- | ------------------------------ | ------------------------------------------ |
-| Leader   | `user.leader` from auth session | Read-only; name or empty-state translation |
+| Field  | Source                          | Notes                                      |
+| ------ | ------------------------------- | ------------------------------------------ |
+| Leader | `user.leader` from auth session | Read-only; name or empty-state translation |
 
 ## Access control
 
-| Actor          | Read                                      | Update                         |
-| -------------- | ----------------------------------------- | ------------------------------ |
-| Signed-in user | Own `leader` via session + Profile        | Not allowed on Profile         |
-| Unauthenticated | —                                        | Denied (no session)            |
-| Administrator  | Directory users include `leader` if mapped | Hierarchy management unchanged |
+| Actor           | Read                                       | Update                         |
+| --------------- | ------------------------------------------ | ------------------------------ |
+| Signed-in user  | Own `leader` via session + Profile         | Not allowed on Profile         |
+| Unauthenticated | —                                          | Denied (no session)            |
+| Administrator   | Directory users include `leader` if mapped | Hierarchy management unchanged |
 
 ## Key entities
 
