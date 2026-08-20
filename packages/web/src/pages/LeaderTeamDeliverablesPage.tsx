@@ -46,6 +46,7 @@ export default function LeaderTeamDeliverablesPage() {
   const defaultRange = useMemo(() => defaultLast30DayRange(), []);
   const [hierarchy, setHierarchy] = useState<LeaderHierarchyViewResponse | null>(null);
   const [selectedUserId, setSelectedUserId] = useState('');
+  const [selectedScope, setSelectedScope] = useState<'subtree' | 'itself'>('subtree');
   const [startDate, setStartDate] = useState(defaultRange.startDate);
   const [endDate, setEndDate] = useState(defaultRange.endDate);
   const [deliverables, setDeliverables] = useState<TeamDeliverableRow[]>([]);
@@ -125,6 +126,7 @@ export default function LeaderTeamDeliverablesPage() {
         userId: selectedUserId,
         startDate,
         endDate,
+        scope: selectedScope,
       });
 
       if (requestId === searchRequestId.current) {
@@ -144,7 +146,7 @@ export default function LeaderTeamDeliverablesPage() {
         setIsSearching(false);
       }
     }
-  }, [accessToken, selectedUserId, startDate, endDate, dateRangeIsValid]);
+  }, [accessToken, selectedUserId, selectedScope, startDate, endDate, dateRangeIsValid, t]);
 
   useEffect(() => {
     if (!selectedUserId) {
@@ -160,7 +162,7 @@ export default function LeaderTeamDeliverablesPage() {
 
     setDateRangeError(null);
     void runSearch();
-  }, [selectedUserId, startDate, endDate, dateRangeIsValid, runSearch]);
+  }, [selectedUserId, selectedScope, startDate, endDate, dateRangeIsValid, runSearch, t]);
 
   if (!isLeader(user)) {
     return null;
@@ -191,8 +193,12 @@ export default function LeaderTeamDeliverablesPage() {
             <TeamMemberHierarchyPicker
               reports={hierarchy?.reports ?? []}
               selectedUserId={selectedUserId}
+              selectedScope={selectedScope}
               disabled={isLoadingMembers}
-              onChange={setSelectedUserId}
+              onChange={(selection) => {
+                setSelectedUserId(selection.userId);
+                setSelectedScope(selection.scope);
+              }}
             />
 
             <TextField
@@ -270,6 +276,9 @@ export default function LeaderTeamDeliverablesPage() {
               <Table>
                 <TableHead>
                   <TableRow>
+                    {filteredDeliverables.some((item) => item.ownerDisplayName) ? (
+                      <TableCell>{t('picker.ownerColumn')}</TableCell>
+                    ) : null}
                     <TableCell>{t('fields.title', { ns: 'common' })}</TableCell>
                     <TableCell>{t('teamDeliverables.description')}</TableCell>
                     <TableCell>{t('systemTags', { ns: 'common' })}</TableCell>
@@ -279,6 +288,9 @@ export default function LeaderTeamDeliverablesPage() {
                 <TableBody>
                   {filteredDeliverables.map((item) => (
                     <TableRow key={item.id}>
+                      {filteredDeliverables.some((row) => row.ownerDisplayName) ? (
+                        <TableCell>{item.ownerDisplayName ?? '—'}</TableCell>
+                      ) : null}
                       <TableCell>{item.title}</TableCell>
                       <TableCell sx={{ whiteSpace: 'normal', maxWidth: 480 }}>
                         {item.description}

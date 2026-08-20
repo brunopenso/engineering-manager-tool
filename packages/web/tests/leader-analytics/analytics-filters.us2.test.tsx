@@ -67,7 +67,9 @@ describe('US2 leader analytics filters', () => {
     await waitFor(() => expect(analyticsCalls.length).toBeGreaterThanOrEqual(1));
 
     await userEvent.click(screen.getByTestId('team-member-select'));
-    await userEvent.click(await screen.findByRole('button', { name: 'Select Alice Report' }));
+    await userEvent.click(
+      await screen.findByRole('button', { name: 'Select Alice Report itself only' }),
+    );
 
     await waitFor(() => {
       expect(analyticsCalls.some((call) => call.includes('userId=report-1'))).toBe(true);

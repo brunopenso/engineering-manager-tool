@@ -13,6 +13,16 @@ vi.mock('../../src/services/userService.js', async (importOriginal) => {
   return {
     ...actual,
     assertUserInLeaderSubtree: vi.fn(),
+    resolveScopedOwnerUserIds: vi.fn(async (_actor, userId, scope) => {
+      if (!userId) {
+        return { ownerUserIds: [] };
+      }
+      return {
+        ownerUserIds: [userId],
+        filteredUserId: userId,
+        scope: scope ?? 'subtree',
+      };
+    }),
   };
 });
 
@@ -46,7 +56,7 @@ describe('US2 team deliverables date filter', () => {
 
     expect(response.statusCode).toBe(200);
     expect(deliverableService.listTeamDeliverablesForReview).toHaveBeenCalledWith(
-      'report-1',
+      ['report-1'],
       'leader-1',
       '2026-04-01',
       '2026-05-29',

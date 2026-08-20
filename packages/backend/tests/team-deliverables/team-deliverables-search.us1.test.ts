@@ -13,6 +13,16 @@ vi.mock('../../src/services/userService.js', async (importOriginal) => {
     ...actual,
     getLeaderTeamMembers: vi.fn(),
     assertUserInLeaderSubtree: vi.fn(),
+    resolveScopedOwnerUserIds: vi.fn(async (_actor, userId, scope) => {
+      if (!userId) {
+        return { ownerUserIds: [] };
+      }
+      return {
+        ownerUserIds: [userId],
+        filteredUserId: userId,
+        scope: scope ?? 'subtree',
+      };
+    }),
   };
 });
 
@@ -86,7 +96,7 @@ describe('US1 team deliverables search', () => {
     expect(response.statusCode).toBe(200);
     expect(userService.assertUserInLeaderSubtree).toHaveBeenCalledWith('leader-1', 'report-1');
     expect(deliverableService.listTeamDeliverablesForReview).toHaveBeenCalledWith(
-      'report-1',
+      ['report-1'],
       'leader-1',
       '2026-05-01',
       '2026-05-29',

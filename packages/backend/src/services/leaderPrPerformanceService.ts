@@ -13,7 +13,7 @@ import {
 import { buildWeekStartsInRange } from './leaderAnalyticsService.js';
 import {
   assertUserInLeaderSubtree,
-  getLeaderTeamMembers,
+  resolveScopedOwnerUserIds,
   toHierarchyDisplayName,
 } from './userService.js';
 import { validateDateRange } from './teamDeliverablesDate.js';
@@ -39,13 +39,13 @@ type WeeklyClassificationAggregateRow = {
 async function resolveOwnerUserIds(
   actorUserId: string,
   userId?: string,
-): Promise<{ ownerUserIds: string[]; filteredUserId?: string }> {
-  if (userId) {
-    return { ownerUserIds: [userId], filteredUserId: userId };
-  }
-
-  const { members } = await getLeaderTeamMembers(actorUserId);
-  return { ownerUserIds: members.map((member) => member.id) };
+  scope?: TeamPrPerformanceFilters['scope'],
+): Promise<{
+  ownerUserIds: string[];
+  filteredUserId?: string;
+  scope?: TeamPrPerformanceFilters['scope'];
+}> {
+  return resolveScopedOwnerUserIds(actorUserId, userId, scope);
 }
 
 function emptyTotals(): PerformanceTotals {
@@ -60,11 +60,13 @@ function emptyResponse(
   filters: TeamPrPerformanceFilters,
   weekStarts: string[],
   filteredUserId?: string,
+  scope?: TeamPrPerformanceFilters['scope'],
 ): TeamPrPerformanceResponse {
   return {
     startDate: filters.startDate,
     endDate: filters.endDate,
     ...(filteredUserId ? { userId: filteredUserId } : {}),
+    ...(scope ? { scope } : {}),
     totals: emptyTotals(),
     developers: [],
     weekStarts,
@@ -118,11 +120,15 @@ export async function getLeaderTeamPrPerformance(
   filters: TeamPrPerformanceFilters,
 ): Promise<TeamPrPerformanceResponse> {
   const { start, end } = validateDateRange(filters.startDate, filters.endDate);
-  const { ownerUserIds, filteredUserId } = await resolveOwnerUserIds(actorUserId, filters.userId);
+  const { ownerUserIds, filteredUserId, scope } = await resolveOwnerUserIds(
+    actorUserId,
+    filters.userId,
+    filters.scope,
+  );
   const weekStarts = buildWeekStartsInRange(start, end);
 
   if (ownerUserIds.length === 0) {
-    return emptyResponse(filters, weekStarts, filteredUserId);
+    return emptyResponse(filters, weekStarts, filteredUserId, scope);
   }
 
   const developers = await AppDataSource.query<DeveloperUserRow[]>(
@@ -240,6 +246,7 @@ export async function getLeaderTeamPrPerformance(
     startDate: filters.startDate,
     endDate: filters.endDate,
     ...(filteredUserId ? { userId: filteredUserId } : {}),
+    ...(scope ? { scope } : {}),
     totals,
     developers: sortedDevelopers,
     weekStarts,

@@ -111,7 +111,9 @@ describe('US2 team PR performance filters', () => {
     expect(performanceCalls[0]).not.toContain('userId=');
 
     await userEvent.click(screen.getByTestId('team-member-select'));
-    await userEvent.click(await screen.findByRole('button', { name: 'Select Alice Report' }));
+    await userEvent.click(
+      await screen.findByRole('button', { name: 'Select Alice Report itself only' }),
+    );
 
     await waitFor(() => {
       expect(performanceCalls.some((call) => call.includes('userId=report-1'))).toBe(true);

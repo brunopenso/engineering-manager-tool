@@ -204,19 +204,24 @@ export async function listDeliverablesForOwner(
 }
 
 export async function listTeamDeliverablesForReview(
-  ownerUserId: string,
+  ownerUserIds: string | string[],
   reviewerUserId: string,
   startDate: string,
   endDate: string,
 ): Promise<TeamDeliverableRow[]> {
   const { start, end } = validateDateRange(startDate, endDate);
+  const ownerIds = Array.isArray(ownerUserIds) ? ownerUserIds : [ownerUserIds];
+
+  if (ownerIds.length === 0) {
+    return [];
+  }
 
   const rows = await deliverableRepository().find({
     where: {
-      userId: ownerUserId,
+      userId: In(ownerIds),
       updatedAt: Between(start, end),
     },
-    relations: { systemTags: { tag: true } },
+    relations: { systemTags: { tag: true }, user: true },
     order: { updatedAt: 'DESC' },
   });
 
@@ -235,6 +240,7 @@ export async function listTeamDeliverablesForReview(
   });
 
   const reviewedIds = new Set(reviews.map((review) => review.deliverableId));
+  const includeOwnerAttribution = ownerIds.length > 1;
 
   return rows.map((row) => ({
     id: row.id,
@@ -245,6 +251,12 @@ export async function listTeamDeliverablesForReview(
       .map((systemTag) => systemTag.tag)
       .filter((tag): tag is Tag => Boolean(tag))
       .map(mapTagSummary),
+    ...(includeOwnerAttribution
+      ? {
+          ownerUserId: row.userId,
+          ownerDisplayName: row.user ? row.user.fullName?.trim() || row.user.email : row.userId,
+        }
+      : {}),
   }));
 }
 

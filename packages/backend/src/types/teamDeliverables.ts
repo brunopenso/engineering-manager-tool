@@ -19,10 +19,13 @@ export type TeamDeliverableRow = {
   description: string;
   reviewed: boolean;
   systemTags: TeamDeliverableSystemTag[];
+  ownerUserId?: string;
+  ownerDisplayName?: string;
 };
 
 export type TeamDeliverablesSearchResponse = {
   ownerUserId: string;
+  scope: 'subtree' | 'itself';
   deliverables: TeamDeliverableRow[];
 };
 

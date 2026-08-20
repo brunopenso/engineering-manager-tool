@@ -15,7 +15,11 @@ export type TeamDeliverableRow = {
   description: string;
   reviewed: boolean;
   systemTags: TeamDeliverableSystemTag[];
+  ownerUserId?: string;
+  ownerDisplayName?: string;
 };
+
+export type HierarchySelectionScope = 'subtree' | 'itself';
 
 type ApiErrorCode =
   | 'FORBIDDEN'
@@ -72,12 +76,22 @@ export async function fetchTeamMembers(accessToken: string): Promise<TeamMemberO
 
 export async function searchTeamDeliverables(
   accessToken: string,
-  params: { userId: string; startDate: string; endDate: string },
-): Promise<{ ownerUserId: string; deliverables: TeamDeliverableRow[] }> {
+  params: {
+    userId: string;
+    startDate: string;
+    endDate: string;
+    scope?: HierarchySelectionScope;
+  },
+): Promise<{
+  ownerUserId: string;
+  scope: HierarchySelectionScope;
+  deliverables: TeamDeliverableRow[];
+}> {
   const query = new URLSearchParams({
     userId: params.userId,
     startDate: params.startDate,
     endDate: params.endDate,
+    scope: params.scope ?? 'subtree',
   });
 
   const response = await fetch(`${API_BASE_URL}/users/leader/team-deliverables?${query}`, {
@@ -90,6 +104,7 @@ export async function searchTeamDeliverables(
 
   return (await response.json()) as {
     ownerUserId: string;
+    scope: HierarchySelectionScope;
     deliverables: TeamDeliverableRow[];
   };
 }

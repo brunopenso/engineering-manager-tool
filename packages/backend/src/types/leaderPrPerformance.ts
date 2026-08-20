@@ -34,6 +34,7 @@ export type TeamPrPerformanceResponse = {
   startDate: string;
   endDate: string;
   userId?: string;
+  scope?: 'subtree' | 'itself';
   totals: PerformanceTotals;
   developers: DeveloperPrPerformanceRow[];
   weekStarts: string[];
@@ -44,6 +45,7 @@ export type TeamPrPerformanceFilters = {
   startDate: string;
   endDate: string;
   userId?: string;
+  scope?: 'subtree' | 'itself';
 };
 
 export type DeveloperPrDrilldownItem = {

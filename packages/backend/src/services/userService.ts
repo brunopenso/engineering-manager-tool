@@ -16,6 +16,7 @@ import type {
 } from '../types/hierarchyView.js';
 import type { TeamMemberOption, TeamMembersResponse } from '../types/teamDeliverables.js';
 import type { AdminUserListFilters } from '../types/adminUserListFilters.js';
+import type { HierarchyScope, ScopedOwnerResolution } from '../types/hierarchySelectionScope.js';
 import type { ParsedProfileSettingsUpdate } from './userProfileValidation.js';
 import {
   buildHierarchyTreeFromRows,
@@ -330,6 +331,40 @@ export async function getLeaderTeamMembers(actorUserId: string): Promise<TeamMem
   }));
 
   return { members };
+}
+
+/**
+ * Resolves which owner user IDs are included for leader team filters.
+ * - No userId: all descendants of the actor
+ * - itself: only the selected user
+ * - subtree (default when userId present): selected user + all of their descendants
+ */
+export async function resolveScopedOwnerUserIds(
+  actorUserId: string,
+  userId?: string,
+  scope?: HierarchyScope,
+): Promise<ScopedOwnerResolution> {
+  if (!userId) {
+    const { members } = await getLeaderTeamMembers(actorUserId);
+    return { ownerUserIds: members.map((member) => member.id) };
+  }
+
+  const effectiveScope: HierarchyScope = scope ?? 'subtree';
+
+  if (effectiveScope === 'itself') {
+    return {
+      ownerUserIds: [userId],
+      filteredUserId: userId,
+      scope: effectiveScope,
+    };
+  }
+
+  const descendantRows = await fetchLeaderDescendantRows(userId);
+  return {
+    ownerUserIds: [userId, ...descendantRows.map((row) => row.id)],
+    filteredUserId: userId,
+    scope: effectiveScope,
+  };
 }
 
 export async function getLeaderHierarchyView(

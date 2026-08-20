@@ -26,6 +26,7 @@ import {
   updateUserProfileSettings,
   getLeaderHierarchyView,
   getLeaderTeamMembers,
+  resolveScopedOwnerUserIds,
   searchOrphanUsers,
 } from '../services/userService.js';
 import { listTeamDeliverablesForReview } from '../services/deliverableService.js';
@@ -44,6 +45,7 @@ import {
   UserProfileValidationError,
   parseProfileSettingsUpdate,
 } from '../services/userProfileValidation.js';
+import { parseHierarchyScope } from '../types/hierarchySelectionScope.js';
 
 type ProfileSettingsBody = {
   themePreference?: unknown;
@@ -78,18 +80,21 @@ type TeamDeliverablesQuery = {
   userId?: string;
   startDate?: string;
   endDate?: string;
+  scope?: string;
 };
 
 type TeamAnalyticsQuery = {
   userId?: string;
   startDate?: string;
   endDate?: string;
+  scope?: string;
 };
 
 type TeamPrPerformanceQuery = {
   userId?: string;
   startDate?: string;
   endDate?: string;
+  scope?: string;
 };
 
 function forbidden(reply: FastifyReply) {
@@ -407,6 +412,16 @@ export async function registerUsersRoutes(app: FastifyInstance): Promise<void> {
         );
       }
 
+      let scope;
+      try {
+        scope = parseHierarchyScope(request.query.scope?.trim());
+      } catch (error) {
+        return validationError(
+          reply,
+          error instanceof Error ? error.message : 'Invalid scope parameter.',
+        );
+      }
+
       try {
         await assertUserInLeaderSubtree(auth.userId, ownerUserId);
       } catch {
@@ -414,8 +429,14 @@ export async function registerUsersRoutes(app: FastifyInstance): Promise<void> {
       }
 
       try {
-        const deliverables = await listTeamDeliverablesForReview(
+        const effectiveScope = scope ?? 'subtree';
+        const { ownerUserIds } = await resolveScopedOwnerUserIds(
+          auth.userId,
           ownerUserId,
+          effectiveScope,
+        );
+        const deliverables = await listTeamDeliverablesForReview(
+          ownerUserIds,
           auth.userId,
           startDate,
           endDate,
@@ -423,6 +444,7 @@ export async function registerUsersRoutes(app: FastifyInstance): Promise<void> {
 
         return {
           ownerUserId,
+          scope: effectiveScope,
           deliverables,
         };
       } catch (error) {
@@ -460,6 +482,16 @@ export async function registerUsersRoutes(app: FastifyInstance): Promise<void> {
         return validationError(reply, 'startDate and endDate query parameters are required.');
       }
 
+      let scope;
+      try {
+        scope = parseHierarchyScope(request.query.scope?.trim());
+      } catch (error) {
+        return validationError(
+          reply,
+          error instanceof Error ? error.message : 'Invalid scope parameter.',
+        );
+      }
+
       if (userId) {
         try {
           await assertUserInLeaderSubtree(auth.userId, userId);
@@ -473,6 +505,7 @@ export async function registerUsersRoutes(app: FastifyInstance): Promise<void> {
           startDate,
           endDate,
           ...(userId ? { userId } : {}),
+          ...(userId ? { scope: scope ?? 'subtree' } : {}),
         });
       } catch (error) {
         if (error instanceof TeamDeliverablesDateError) {
@@ -509,6 +542,16 @@ export async function registerUsersRoutes(app: FastifyInstance): Promise<void> {
         return validationError(reply, 'startDate and endDate query parameters are required.');
       }
 
+      let scope;
+      try {
+        scope = parseHierarchyScope(request.query.scope?.trim());
+      } catch (error) {
+        return validationError(
+          reply,
+          error instanceof Error ? error.message : 'Invalid scope parameter.',
+        );
+      }
+
       if (userId) {
         try {
           await assertUserInLeaderSubtree(auth.userId, userId);
@@ -522,6 +565,7 @@ export async function registerUsersRoutes(app: FastifyInstance): Promise<void> {
           startDate,
           endDate,
           ...(userId ? { userId } : {}),
+          ...(userId ? { scope: scope ?? 'subtree' } : {}),
         });
       } catch (error) {
         if (error instanceof TeamDeliverablesDateError) {

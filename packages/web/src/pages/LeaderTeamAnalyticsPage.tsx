@@ -42,6 +42,7 @@ export default function LeaderTeamAnalyticsPage() {
   const defaultRange = useMemo(() => defaultLast60DayRange(), []);
   const [hierarchy, setHierarchy] = useState<LeaderHierarchyViewResponse | null>(null);
   const [selectedUserId, setSelectedUserId] = useState('');
+  const [selectedScope, setSelectedScope] = useState<'subtree' | 'itself'>('subtree');
   const [startDate, setStartDate] = useState(defaultRange.startDate);
   const [endDate, setEndDate] = useState(defaultRange.endDate);
   const [analytics, setAnalytics] = useState<TeamAnalyticsResponse | null>(null);
@@ -104,7 +105,7 @@ export default function LeaderTeamAnalyticsPage() {
       const result = await fetchTeamAnalytics(accessToken, {
         startDate,
         endDate,
-        ...(selectedUserId ? { userId: selectedUserId } : {}),
+        ...(selectedUserId ? { userId: selectedUserId, scope: selectedScope } : {}),
       });
 
       if (requestId === fetchRequestId.current) {
@@ -124,7 +125,7 @@ export default function LeaderTeamAnalyticsPage() {
         setIsLoadingAnalytics(false);
       }
     }
-  }, [accessToken, startDate, endDate, selectedUserId, dateRangeIsValid]);
+  }, [accessToken, startDate, endDate, selectedUserId, selectedScope, dateRangeIsValid, t]);
 
   useEffect(() => {
     if (!dateRangeIsValid) {
@@ -135,7 +136,7 @@ export default function LeaderTeamAnalyticsPage() {
 
     setDateRangeError(null);
     void loadAnalytics();
-  }, [startDate, endDate, selectedUserId, dateRangeIsValid, loadAnalytics]);
+  }, [startDate, endDate, selectedUserId, selectedScope, dateRangeIsValid, loadAnalytics, t]);
 
   if (!isLeader(user)) {
     return null;
@@ -168,8 +169,12 @@ export default function LeaderTeamAnalyticsPage() {
             <TeamMemberHierarchyPicker
               reports={hierarchy?.reports ?? []}
               selectedUserId={selectedUserId}
+              selectedScope={selectedScope}
               disabled={isLoadingHierarchy}
-              onChange={setSelectedUserId}
+              onChange={(selection) => {
+                setSelectedUserId(selection.userId);
+                setSelectedScope(selection.scope);
+              }}
             />
 
             <TextField
