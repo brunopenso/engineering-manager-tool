@@ -32,5 +32,6 @@ export function toAuthUserResponse(user: typeof sampleProfileUser) {
     githubLogin: user.githubLogin,
     languagePreference: user.languagePreference,
     dateFormatPreference: user.dateFormatPreference,
+    leader: null,
   };
 }

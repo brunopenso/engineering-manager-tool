@@ -272,6 +272,7 @@ components:
         - roles
         - themePreference
         - githubLogin
+        - leader
       properties:
         id:
           type: string
@@ -298,6 +299,22 @@ components:
           type: string
           nullable: true
           maxLength: 39
+        leader:
+          allOf:
+            - $ref: '#/components/schemas/LeaderSummary'
+          nullable: true
+          description: Assigned leader public identity, or null when unassigned.
+    LeaderSummary:
+      type: object
+      required:
+        - id
+        - fullName
+      properties:
+        id:
+          type: string
+          format: uuid
+        fullName:
+          type: string
     ProfileSettingsUpdate:
       type: object
       minProperties: 1

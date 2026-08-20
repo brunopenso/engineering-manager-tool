@@ -1,0 +1,37 @@
+openapi: 3.0.3
+info:
+  title: Engineering Manager Tool Profile Leader API
+  version: 0.1.0
+  description: |
+    Delta for feature 024-profile-leader.
+    Merge LeaderSummary and UserProfile.leader into
+    specs/004-user-role-profiles/contracts/user-roles-api.yaml during implementation.
+    Applies to login, GET /auth/me, POST /auth/refresh, PATCH /users/me, and admin user payloads
+    that reuse UserProfile.
+servers:
+  - url: http://localhost:3001
+paths: {}
+components:
+  schemas:
+    LeaderSummary:
+      type: object
+      nullable: false
+      required:
+        - id
+        - fullName
+      properties:
+        id:
+          type: string
+          format: uuid
+        fullName:
+          type: string
+    UserProfile:
+      type: object
+      required:
+        - leader
+      properties:
+        leader:
+          allOf:
+            - $ref: '#/components/schemas/LeaderSummary'
+          nullable: true
+          description: Assigned leader public identity, or null when unassigned.

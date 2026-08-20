@@ -23,6 +23,7 @@ type AuthUser = {
   githubLogin: string | null;
   languagePreference: LanguagePreference;
   dateFormatPreference: DateFormatPreference;
+  leader: { id: string; fullName: string } | null;
 };
 
 export type { AuthUser };

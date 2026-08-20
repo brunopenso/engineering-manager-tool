@@ -1,4 +1,5 @@
 import { User } from '../database/entities/User.js';
+import { AppDataSource } from '../database/connection.js';
 import type { UserRoleType } from '../auth/types.js';
 import {
   DEFAULT_DATE_FORMAT_PREFERENCE,
@@ -7,6 +8,11 @@ import {
   type LanguagePreference,
 } from '../types/profilePreferences.js';
 import { loadRolesForUser } from './roleService.js';
+
+export type LeaderSummary = {
+  id: string;
+  fullName: string;
+};
 
 export type AuthUserResponse = {
   id: string;
@@ -19,10 +25,33 @@ export type AuthUserResponse = {
   githubLogin: string | null;
   languagePreference: LanguagePreference;
   dateFormatPreference: DateFormatPreference;
+  leader: LeaderSummary | null;
 };
 
+async function loadLeaderSummary(user: User): Promise<LeaderSummary | null> {
+  if (user.leader) {
+    return { id: user.leader.id, fullName: user.leader.fullName };
+  }
+
+  const leaderId = user.leaderId;
+  if (!leaderId) {
+    return null;
+  }
+
+  const leader = await AppDataSource.getRepository(User).findOne({
+    where: { id: leaderId },
+    select: { id: true, fullName: true },
+  });
+
+  if (!leader) {
+    return null;
+  }
+
+  return { id: leader.id, fullName: leader.fullName };
+}
+
 export async function mapUserToAuthResponse(user: User): Promise<AuthUserResponse> {
-  const roles = await loadRolesForUser(user.id);
+  const [roles, leader] = await Promise.all([loadRolesForUser(user.id), loadLeaderSummary(user)]);
 
   return {
     id: user.id,
@@ -35,5 +64,6 @@ export async function mapUserToAuthResponse(user: User): Promise<AuthUserRespons
     githubLogin: user.githubLogin ?? null,
     languagePreference: user.languagePreference ?? DEFAULT_LANGUAGE_PREFERENCE,
     dateFormatPreference: user.dateFormatPreference ?? DEFAULT_DATE_FORMAT_PREFERENCE,
+    leader,
   };
 }

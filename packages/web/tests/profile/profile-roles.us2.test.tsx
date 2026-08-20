@@ -15,6 +15,6 @@ describe('US2 profile roles', () => {
 
     expect(screen.getByText('Your profile')).toBeInTheDocument();
     expect(screen.getByText('Collaborator')).toBeInTheDocument();
-    expect(screen.getByText('Leader')).toBeInTheDocument();
+    expect(screen.getByText('Leader', { selector: '.MuiChip-label' })).toBeInTheDocument();
   });
 });

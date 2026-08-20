@@ -40,7 +40,8 @@ describe('admin users list filters setup', () => {
       firstLoginAt: sampleAdminListUser.firstLoginAt.toISOString(),
       lastLoginAt: sampleAdminListUser.lastLoginAt.toISOString(),
       roles: adminListAuthRoles,
-    });
+      leader: null,
+    } as never);
 
     const response = await app.inject({ method: 'GET', url: '/users' });
 
