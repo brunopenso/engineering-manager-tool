@@ -167,6 +167,14 @@ export default function ProfilePage() {
             </Stack>
             <Stack spacing={1}>
               <Typography variant="subtitle2" color="text.secondary">
+                {t('fields.leader')}
+              </Typography>
+              <Typography variant="body1">
+                {profileUser.leader?.fullName ?? t('fields.leaderNone')}
+              </Typography>
+            </Stack>
+            <Stack spacing={1}>
+              <Typography variant="subtitle2" color="text.secondary">
                 {t('fields.githubLogin')}
               </Typography>
               <TextField

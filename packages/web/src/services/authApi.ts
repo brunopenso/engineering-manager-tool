@@ -22,6 +22,11 @@ export type UserRoleType = 'COLLABORATOR' | 'LEADER' | 'ADMINISTRATOR';
 
 import type { DateFormatPreference, LanguagePreference } from '../types/profilePreferences.js';
 
+export type LeaderSummary = {
+  id: string;
+  fullName: string;
+};
+
 export type AuthUser = {
   id: string;
   email: string;
@@ -33,6 +38,7 @@ export type AuthUser = {
   githubLogin: string | null;
   languagePreference: LanguagePreference;
   dateFormatPreference: DateFormatPreference;
+  leader: LeaderSummary | null;
 };
 
 type LoginResponse = {

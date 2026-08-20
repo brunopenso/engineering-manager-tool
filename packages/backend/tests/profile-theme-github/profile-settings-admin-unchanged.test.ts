@@ -51,6 +51,7 @@ describe('admin user list profile fields', () => {
       githubLogin: null,
       languagePreference: DEFAULT_LANGUAGE_PREFERENCE,
       dateFormatPreference: DEFAULT_DATE_FORMAT_PREFERENCE,
+      leader: null,
     });
 
     const response = await app.inject({ method: 'GET', url: '/users' });

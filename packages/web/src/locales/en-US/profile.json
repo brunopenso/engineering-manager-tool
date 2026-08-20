@@ -4,6 +4,8 @@
     "githubLogin": "GitHub login",
     "githubPlaceholder": "octocat",
     "githubHelper": "Your GitHub username (handle), not a full profile URL.",
+    "leader": "Leader",
+    "leaderNone": "No leader assigned",
     "activeRoles": "Active roles",
     "appearance": "Appearance",
     "language": "Language",

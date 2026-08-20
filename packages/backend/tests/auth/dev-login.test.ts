@@ -159,6 +159,7 @@ describe('dev auth routes', () => {
         firstLoginAt: '2026-01-01T00:00:00.000Z',
         lastLoginAt: '2026-01-01T00:00:00.000Z',
         roles: ['COLLABORATOR', 'LEADER'],
+        leader: null,
       },
     });
 
@@ -205,6 +206,7 @@ describe('dev auth routes', () => {
         firstLoginAt: '2026-01-01T00:00:00.000Z',
         lastLoginAt: '2026-01-01T00:00:00.000Z',
         roles: ['COLLABORATOR'],
+        leader: null,
       },
     });
 

@@ -23,6 +23,7 @@ export const testUser: AuthUser = {
   githubLogin: null,
   languagePreference: DEFAULT_LANGUAGE_PREFERENCE,
   dateFormatPreference: DEFAULT_DATE_FORMAT_PREFERENCE,
+  leader: null,
 };
 
 export const testAdminUser: AuthUser = {

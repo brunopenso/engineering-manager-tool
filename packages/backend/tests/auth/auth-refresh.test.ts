@@ -65,6 +65,7 @@ describe('POST /auth/refresh', () => {
       githubLogin: null,
       languagePreference: DEFAULT_LANGUAGE_PREFERENCE,
       dateFormatPreference: DEFAULT_DATE_FORMAT_PREFERENCE,
+      leader: null,
     });
 
     const response = await app.inject({ method: 'POST', url: '/auth/refresh' });
