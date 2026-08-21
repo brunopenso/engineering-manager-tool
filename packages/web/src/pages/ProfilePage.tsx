@@ -20,6 +20,7 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../auth/AuthProvider.js';
 import RoleBadgeList from '../components/profile/RoleBadgeList.js';
+import { LabeledField, LabeledValue } from '../components/ui/LabeledField.js';
 import { useAppTheme } from '../theme/AppThemeProvider.js';
 import type { ThemeMode } from '../theme/appTheme.js';
 import {
@@ -153,49 +154,27 @@ export default function ProfilePage() {
               {t('title')}
             </Typography>
             <Divider />
-            <Stack spacing={1}>
-              <Typography variant="subtitle2" color="text.secondary">
-                {tCommon('fields.name')}
-              </Typography>
-              <Typography variant="body1">{profileUser.fullName}</Typography>
-            </Stack>
-            <Stack spacing={1}>
-              <Typography variant="subtitle2" color="text.secondary">
-                {tCommon('fields.email')}
-              </Typography>
-              <Typography variant="body1">{profileUser.email}</Typography>
-            </Stack>
-            <Stack spacing={1}>
-              <Typography variant="subtitle2" color="text.secondary">
-                {t('fields.leader')}
-              </Typography>
-              <Typography variant="body1">
-                {profileUser.leader?.fullName ?? t('fields.leaderNone')}
-              </Typography>
-            </Stack>
-            <Stack spacing={1}>
-              <Typography variant="subtitle2" color="text.secondary">
-                {t('fields.githubLogin')}
-              </Typography>
+            <LabeledValue label={tCommon('fields.name')} value={profileUser.fullName} />
+            <LabeledValue label={tCommon('fields.email')} value={profileUser.email} />
+            <LabeledValue
+              label={t('fields.leader')}
+              value={profileUser.leader?.fullName ?? t('fields.leaderNone')}
+            />
+            <LabeledField label={t('fields.githubLogin')} htmlFor="profile-github-login">
               <TextField
-                label={t('fields.githubLogin')}
+                id="profile-github-login"
+                hiddenLabel
                 value={githubDraft}
                 onChange={(event) => setGithubDraft(event.target.value)}
                 placeholder={t('fields.githubPlaceholder')}
                 helperText={t('fields.githubHelper')}
                 fullWidth
               />
-            </Stack>
-            <Stack spacing={1}>
-              <Typography variant="subtitle2" color="text.secondary">
-                {t('fields.activeRoles')}
-              </Typography>
+            </LabeledField>
+            <LabeledField label={t('fields.activeRoles')}>
               <RoleBadgeList roles={profileUser.roles} />
-            </Stack>
-            <Stack spacing={1}>
-              <Typography variant="subtitle2" color="text.secondary">
-                {t('fields.language')}
-              </Typography>
+            </LabeledField>
+            <LabeledField label={t('fields.language')}>
               <ToggleButtonGroup
                 exclusive
                 value={languageDraft}
@@ -211,11 +190,8 @@ export default function ProfilePage() {
                   {t('language.ptBR')}
                 </ToggleButton>
               </ToggleButtonGroup>
-            </Stack>
-            <Stack spacing={1}>
-              <Typography variant="subtitle2" color="text.secondary">
-                {t('fields.dateFormat')}
-              </Typography>
+            </LabeledField>
+            <LabeledField label={t('fields.dateFormat')}>
               <ToggleButtonGroup
                 exclusive
                 value={dateFormatDraft}
@@ -235,11 +211,8 @@ export default function ProfilePage() {
                   {t('dateFormat.ymd')}
                 </ToggleButton>
               </ToggleButtonGroup>
-            </Stack>
-            <Stack spacing={1}>
-              <Typography variant="subtitle2" color="text.secondary">
-                {t('fields.appearance')}
-              </Typography>
+            </LabeledField>
+            <LabeledField label={t('fields.appearance')}>
               <ToggleButtonGroup
                 exclusive
                 value={themeDraft}
@@ -255,7 +228,7 @@ export default function ProfilePage() {
                   {t('theme.dark')}
                 </ToggleButton>
               </ToggleButtonGroup>
-            </Stack>
+            </LabeledField>
             {saveError ? <Alert severity="error">{saveError}</Alert> : null}
             {saveSuccess ? <Alert severity="success">{saveSuccess}</Alert> : null}
             <Stack direction="row" spacing={2} sx={{ justifyContent: 'flex-end' }}>

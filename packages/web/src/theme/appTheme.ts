@@ -15,6 +15,12 @@ const sharedTypography = {
   fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif',
 };
 
+/** Hairline under field labels — distinct in each theme. */
+export const fieldLabelLineColor: Record<ThemeMode, string> = {
+  light: sharedPalette.primary.main,
+  dark: sharedPalette.secondary.main,
+};
+
 export function createAppTheme(mode: ThemeMode) {
   if (mode === 'dark') {
     return createTheme({
