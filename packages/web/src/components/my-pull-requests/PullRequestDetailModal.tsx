@@ -42,10 +42,7 @@ export default function PullRequestDetailModal({
           <Stack spacing={2}>
             <LabeledValue label={t('modal.fields.title')} value={pullRequest.title} />
             <LabeledValue label={t('modal.fields.organization')} value={pullRequest.organization} />
-            <LabeledValue
-              label={t('modal.fields.repository')}
-              value={repositoryKey(pullRequest)}
-            />
+            <LabeledValue label={t('modal.fields.repository')} value={repositoryKey(pullRequest)} />
             <LabeledValue label={t('modal.fields.number')} value={`#${pullRequest.number}`} />
             <LabeledValue label={t('modal.fields.author')} value={pullRequest.authorGithubLogin} />
             <LabeledValue
