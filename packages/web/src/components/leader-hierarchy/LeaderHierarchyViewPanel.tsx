@@ -3,6 +3,7 @@ import { Alert, Box, CircularProgress, Paper, Stack, Typography } from '@mui/mat
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../auth/AuthProvider.js';
 import HierarchyTree from '../hierarchy/HierarchyTree.js';
+import { LabeledField, LabeledValue } from '../ui/LabeledField.js';
 import {
   fetchLeaderHierarchyView,
   type LeaderHierarchyViewResponse,
@@ -73,20 +74,15 @@ export default function LeaderHierarchyViewPanel() {
         <Paper variant="outlined" sx={{ p: 3 }}>
           <Stack spacing={3}>
             {hierarchy.manager && (
-              <Box>
-                <Typography variant="subtitle2" color="text.secondary" gutterBottom>
-                  {t('hierarchy.yourManager')}
-                </Typography>
-                <Typography variant="body1">{hierarchy.manager.displayName}</Typography>
-              </Box>
+              <LabeledValue
+                label={t('hierarchy.yourManager')}
+                value={hierarchy.manager.displayName}
+              />
             )}
 
-            <Box>
-              <Typography variant="subtitle2" color="text.secondary" gutterBottom>
-                {t('hierarchy.yourTeam')}
-              </Typography>
+            <LabeledField label={t('hierarchy.yourTeam')}>
               <HierarchyTree self={hierarchy.self} reports={hierarchy.reports} />
-            </Box>
+            </LabeledField>
           </Stack>
         </Paper>
       )}

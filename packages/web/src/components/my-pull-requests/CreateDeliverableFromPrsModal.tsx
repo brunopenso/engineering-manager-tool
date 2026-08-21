@@ -1,6 +1,5 @@
 import {
   Alert,
-  Box,
   Button,
   CircularProgress,
   Dialog,
@@ -24,6 +23,7 @@ import {
   type DeliverableProposal,
 } from '../../services/myPullRequestsApi.js';
 import { DELIVERABLES_ROUTE } from '../../routes/shellOptions.js';
+import { LabeledValue } from '../ui/LabeledField.js';
 
 type ModalPhase = 'loading' | 'review' | 'creating' | 'success' | 'error';
 
@@ -164,32 +164,23 @@ export default function CreateDeliverableFromPrsModal({
             <Typography variant="body2" color="text.secondary">
               {t('createDeliverable.review.intro')}
             </Typography>
-            <Box>
-              <Typography variant="subtitle2">{t('createDeliverable.review.title')}</Typography>
-              <Typography>{proposal.title}</Typography>
-            </Box>
-            <Box>
-              <Typography variant="subtitle2">
-                {t('createDeliverable.review.description')}
-              </Typography>
-              <Typography sx={{ whiteSpace: 'pre-wrap' }}>{proposal.description}</Typography>
-            </Box>
-            <Box>
-              <Typography variant="subtitle2">{t('createDeliverable.review.role')}</Typography>
-              <Typography>{proposal.roleInDeliverable}</Typography>
-            </Box>
-            <Box>
-              <Typography variant="subtitle2">
-                {t('createDeliverable.review.businessImpact')}
-              </Typography>
-              <Typography>{proposal.businessImpact}</Typography>
-            </Box>
-            <Box>
-              <Typography variant="subtitle2">
-                {t('createDeliverable.review.improvementPoints')}
-              </Typography>
-              <Typography sx={{ whiteSpace: 'pre-wrap' }}>{proposal.improvementPoints}</Typography>
-            </Box>
+            <LabeledValue label={t('createDeliverable.review.title')} value={proposal.title} />
+            <LabeledValue
+              label={t('createDeliverable.review.description')}
+              value={proposal.description}
+            />
+            <LabeledValue
+              label={t('createDeliverable.review.role')}
+              value={proposal.roleInDeliverable}
+            />
+            <LabeledValue
+              label={t('createDeliverable.review.businessImpact')}
+              value={proposal.businessImpact}
+            />
+            <LabeledValue
+              label={t('createDeliverable.review.improvementPoints')}
+              value={proposal.improvementPoints}
+            />
           </Stack>
         ) : null}
 

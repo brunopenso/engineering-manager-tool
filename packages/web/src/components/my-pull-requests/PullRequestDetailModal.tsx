@@ -15,6 +15,7 @@ import type { MyActivityPullRequest } from '../../services/myPullRequestsApi.js'
 import { repositoryKey } from '../../utils/myPullRequestActivity.js';
 import { formatDisplayDate } from '../../utils/formatDisplayDate.js';
 import type { DateFormatPreference, LanguagePreference } from '../../types/profilePreferences.js';
+import { LabeledValue } from '../ui/LabeledField.js';
 
 type PullRequestDetailModalProps = {
   open: boolean;
@@ -23,17 +24,6 @@ type PullRequestDetailModalProps = {
   languagePreference: LanguagePreference;
   onClose: () => void;
 };
-
-function Field({ label, value }: { label: string; value: string }) {
-  return (
-    <Box>
-      <Typography variant="caption" color="text.secondary">
-        {label}
-      </Typography>
-      <Typography variant="body1">{value}</Typography>
-    </Box>
-  );
-}
 
 export default function PullRequestDetailModal({
   open,
@@ -50,12 +40,12 @@ export default function PullRequestDetailModal({
       <DialogContent dividers>
         {pullRequest ? (
           <Stack spacing={2}>
-            <Field label={t('modal.fields.title')} value={pullRequest.title} />
-            <Field label={t('modal.fields.organization')} value={pullRequest.organization} />
-            <Field label={t('modal.fields.repository')} value={repositoryKey(pullRequest)} />
-            <Field label={t('modal.fields.number')} value={`#${pullRequest.number}`} />
-            <Field label={t('modal.fields.author')} value={pullRequest.authorGithubLogin} />
-            <Field
+            <LabeledValue label={t('modal.fields.title')} value={pullRequest.title} />
+            <LabeledValue label={t('modal.fields.organization')} value={pullRequest.organization} />
+            <LabeledValue label={t('modal.fields.repository')} value={repositoryKey(pullRequest)} />
+            <LabeledValue label={t('modal.fields.number')} value={`#${pullRequest.number}`} />
+            <LabeledValue label={t('modal.fields.author')} value={pullRequest.authorGithubLogin} />
+            <LabeledValue
               label={t('modal.fields.mergedAt')}
               value={formatDisplayDate(
                 pullRequest.mergedAt.slice(0, 10),
@@ -63,28 +53,24 @@ export default function PullRequestDetailModal({
                 languagePreference,
               )}
             />
-            <Field
+            <LabeledValue
               label={t('modal.fields.role')}
               value={
                 pullRequest.involvementRole === 'owner' ? t('table.owner') : t('table.involved')
               }
             />
-            <Field
+            <LabeledValue
               label={t('modal.fields.branches')}
               value={`${pullRequest.sourceBranch} → ${pullRequest.targetBranch}`}
             />
-            <Field
+            <LabeledValue
               label={t('modal.fields.changes')}
               value={`+${pullRequest.additionsCount} / -${pullRequest.deletionsCount} (${pullRequest.changedFilesCount} files)`}
             />
-            <Box>
-              <Typography variant="caption" color="text.secondary">
-                {t('modal.fields.body')}
-              </Typography>
-              <Typography variant="body1" sx={{ whiteSpace: 'pre-wrap' }}>
-                {pullRequest.body?.trim() ? pullRequest.body : t('modal.fields.noBody')}
-              </Typography>
-            </Box>
+            <LabeledValue
+              label={t('modal.fields.body')}
+              value={pullRequest.body?.trim() ? pullRequest.body : t('modal.fields.noBody')}
+            />
             {pullRequest.url ? (
               <Link href={pullRequest.url} target="_blank" rel="noopener noreferrer">
                 {t('modal.fields.url')}

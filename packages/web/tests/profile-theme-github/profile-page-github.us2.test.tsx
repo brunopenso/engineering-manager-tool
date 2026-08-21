@@ -62,4 +62,14 @@ describe('US2 profile page github login', () => {
     const alert = await screen.findByRole('alert');
     expect(alert).toHaveTextContent('GitHub login is invalid.');
   });
+
+  it('exposes github login with a single accessible name', () => {
+    renderWithProviders(<ProfilePage />, {
+      isAuthenticated: true,
+      user: testUser,
+    });
+
+    expect(screen.getAllByRole('textbox', { name: 'GitHub login' })).toHaveLength(1);
+    expect(screen.getAllByText('GitHub login')).toHaveLength(1);
+  });
 });

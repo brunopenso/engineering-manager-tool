@@ -26,6 +26,7 @@ import {
   DEFAULT_LANGUAGE_PREFERENCE,
 } from '../../types/profilePreferences.js';
 import { formatDisplayDateTime } from '../../utils/formatDisplayDate.js';
+import { LabeledValue } from '../ui/LabeledField.js';
 import DeliverableReviewNotesPanel from './DeliverableReviewNotesPanel.js';
 
 type TeamDeliverableReviewModalProps = {
@@ -138,16 +139,7 @@ function DeliverableFieldsPanel({ deliverable }: { deliverable: DeliverableDetai
   return (
     <Stack spacing={2} sx={{ pt: 1 }}>
       {fields.map((field) => (
-        <Box key={field.label}>
-          <Typography variant="overline" color="text.secondary" sx={{ display: 'block' }}>
-            {field.label}
-          </Typography>
-          {typeof field.value === 'string' ? (
-            <Typography sx={{ whiteSpace: 'pre-wrap' }}>{field.value}</Typography>
-          ) : (
-            field.value
-          )}
-        </Box>
+        <LabeledValue key={field.label} label={field.label} value={field.value} />
       ))}
     </Stack>
   );
